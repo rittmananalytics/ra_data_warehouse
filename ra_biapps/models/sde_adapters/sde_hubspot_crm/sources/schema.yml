@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: hubspot_crm
+    database: ra-development
+    schema: stitch_hubspot
+    tables:
+      - name: companies
+      - name: contacts
+      - name: deal_pipelines
+      - name: deals
+      - name: engagements
+      - name: owners
+
+models:
+  - name: sde_hubspot_crm_contacts_ds
+    description: "Hubspot Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_created_date:
+          - not_null

@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'my_new_project'
+name: 'ra_bi_apps'
 version: '1.0.0'
 
 # This setting configures which "profile" dbt uses for this project.
@@ -12,7 +12,7 @@ profile: 'default'
 # The `source-paths` config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
 source-paths: ["models"]
-analysis-paths: ["analysis"] 
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
@@ -30,7 +30,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models:
-  my_new_project:
+  ra_bi_apps:
       # Applies to all files under models/example/
-      example:
+      sde_adapters:
           materialized: view
+      sil_marts:
+          materialized: table
