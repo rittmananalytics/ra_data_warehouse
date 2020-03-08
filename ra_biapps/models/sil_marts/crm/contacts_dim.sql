@@ -27,7 +27,7 @@ SELECT
    contact_created_date,
    contact_last_modified_date
 FROM
-   sde_hubspot_crm_contacts_ds
+   {{ ref('sde_hubspot_crm_contacts_ds') }}
 
 {% if is_incremental() %}
 

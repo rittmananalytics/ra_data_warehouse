@@ -20,5 +20,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: contact_created_date:
+      - name: contact_created_date
+        tests:
           - not_null

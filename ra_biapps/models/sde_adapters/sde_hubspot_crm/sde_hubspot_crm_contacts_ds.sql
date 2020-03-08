@@ -8,6 +8,8 @@ WITH hubspot_contacts as (
     FROM {{ source('hubspot_crm', 'contacts') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
+  AND canonical_vid is not null
+
 ),
 
 contacts_ds as (
@@ -18,10 +20,10 @@ contacts_ds as (
        canonical_vid as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,
-       properties.name.value name as contact_name,
+       concat(properties.firstname.value,' ',properties.lastname.value)  as contact_name,
        properties.jobtitle.value contact_job_title,
        properties.email.value as contact_email,
-       properties.phone.value phone as contact_phone,
+       properties.phone.value as contact_phone,
        properties.mobilephone.value as contact_mobile_phone,
        properties.address.value contact_address,
        properties.city.value contact_city,
@@ -31,9 +33,9 @@ contacts_ds as (
        properties.website.value contact_website,
        safe_cast(properties.associatedcompanyid.value as int64) as contact_company_id,
        properties.hubspot_owner_id.value as contact_owner_id,
-       properties.lifecyclestage.value conctact_lifecycle_stage,
+       properties.lifecyclestage.value as contact_lifecycle_stage,
        properties.createdate.value as contact_created_date,
-       properties.lastmodifieddate.value contact_last_modified_date,
+       properties.lastmodifieddate.value as contact_last_modified_date,
     from hubspot_contacts
 
 )
