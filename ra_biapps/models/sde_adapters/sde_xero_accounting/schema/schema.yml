@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: xero_accounting
+    database: ra-development
+    schema: xero
+    tables:
+      - name: accounts
+      - name: tracking_categories
+      - name: bank_transactions
+      - name: contacts
+      - name: currencies
+      - name: expense_claims
+      - name: invoices
+      - name: payments
+
+
+models:
+  - name: sde_xero_accounting_contacts_ds
+    description: "Xero Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_created_date
+        tests:
+          - not_null

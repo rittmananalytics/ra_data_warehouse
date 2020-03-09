@@ -1,0 +1,9 @@
+version: 2
+models:
+  - name: sde_contacts_ds
+    description: "Contacts Dimension Staging"
+    columns:
+      - name: pk
+        tests:
+          - unique
+          - not_null

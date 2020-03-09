@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+
+- name: harvest_projects
+  database: ra-development
+  schema: rittman_analytics
+  tables:
+    - name: clients
+    - name: contacts
+    - name: estimate_item_categories
+    - name: expense_categories
+    - name: expenses
+    - name: invoice_item_categories
+    - name: invoice_line_items
+    - name: invoice_payments
+    - name: invoices
+    - name: project_tasks
+    - name: project_users
+    - name: projects
+    - name: roles
+    - name: tasks
+    - name: time_entries
+    - name: user_project_tasks
+    - name: user_projects
+    - name: user_roles
+    - name: users

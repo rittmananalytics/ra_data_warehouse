@@ -17,7 +17,7 @@ contacts_ds as (
     select
 
       'hubspot_crm' as source,
-       canonical_vid as contact_id,
+       cast(canonical_vid as string) as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,
        concat(properties.firstname.value,' ',properties.lastname.value)  as contact_name,
@@ -28,11 +28,12 @@ contacts_ds as (
        properties.address.value contact_address,
        properties.city.value contact_city,
        properties.state.value contact_state,
+       properties.country.value as contact_country,
        properties.zip.value contact_postcode_zip,
        properties.company.value contact_company,
        properties.website.value contact_website,
-       safe_cast(properties.associatedcompanyid.value as int64) as contact_company_id,
-       properties.hubspot_owner_id.value as contact_owner_id,
+       cast(properties.associatedcompanyid.value as string) as contact_company_id,
+       cast(properties.hubspot_owner_id.value as string) as contact_owner_id,
        properties.lifecyclestage.value as contact_lifecycle_stage,
        properties.createdate.value as contact_created_date,
        properties.lastmodifieddate.value as contact_last_modified_date,
