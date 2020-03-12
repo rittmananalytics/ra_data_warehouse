@@ -28,7 +28,7 @@ contacts_ds as (
         contacts.firstname as contact_first_name,
         contacts.lastname as contact_last_name,
         cast(null as string) as contact_job_title,
-        contacts.name as contact_name,
+        concat(contacts.firstname,' ',contacts.lastname) as contact_name,
         contacts.emailaddress as contact_email,
         replace(concat(replace(defaultphone.phonecountrycode,'+','00'),defaultphone.phoneareacode,defaultphone.phonenumber),' ','') as contact_phone,
         replace(concat(replace(mobilephone.phonecountrycode,'+','00'),mobilephone.phoneareacode,mobilephone.phonenumber),' ','') as contact_mobile_phone,
