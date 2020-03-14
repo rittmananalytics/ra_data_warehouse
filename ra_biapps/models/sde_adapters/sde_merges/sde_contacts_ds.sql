@@ -8,5 +8,8 @@ with sde_contacts_ds_merge_list as
     UNION ALL
     SELECT *
     FROM   {{ ref('sde_harvest_projects_contacts_ds') }}
+    UNION ALL
+    SELECT *
+    FROM   {{ ref('sde_mailchimp_email_contacts_ds') }}
   )
 select * from sde_contacts_ds_merge_list
