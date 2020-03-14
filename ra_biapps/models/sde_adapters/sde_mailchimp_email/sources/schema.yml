@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: mailchimp_crm
+    database: ra-development
+    schema: stitch_mailchimp
+    tables:
+      - name: campaigns
+      - name: list_members
+      - name: list_segment_members
+      - name: list_segments
+      - name: lists
+      - name: reports_email_activity
+      - name: unsubscribes
+
+models:
+  - name: sde_mailchimp_email_contacts_ds
+    description: "Mailchimp Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_created_date
+        tests:
+          - not_null
