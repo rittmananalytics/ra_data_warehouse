@@ -6,21 +6,22 @@
 }}
 WITH unique_contacts AS
   (
-  SELECT concat(lower(contact_name,':',coalesce(contact_email,''))) as contact_pk
+  SELECT lower(concat(coalesce(contact_name,''),':',coalesce(contact_email,''))) as contact_name_email
   FROM   {{ ref('sde_contacts_ds') }}
   GROUP BY 1
   )
 ,
   unique_contacts_with_uuid AS
   (
-  SELECT contact_name,
-         GENERATE_UUID() as contact_pk
+  SELECT contact_name_email,
+         GENERATE_UUID() as contact_uid
   FROM   unique_contacts
   )
 
 SELECT
    c.source,
-   u.contact_pk,
+   GENERATE_UUID() as contact_pk,
+   u.contact_uid,
    c.contact_id,
    c.contact_first_name,
    c.contact_last_name,
@@ -42,13 +43,5 @@ SELECT
    c.contact_last_modified_date
 FROM
    {{ ref('sde_contacts_ds') }} c
-JOIN unique_contactS_with_uuid  u
-ON concat(lower(contact_name,':',coalesce(contact_email,''))) = contact_name_email
-
-{% if is_incremental() %}
-
-     -- this filter will only be applied on an incremental run
-     where contact_created_date > (select max(contact_created_date) from {{ this }})
-        or contact_last_modified_date > (select max(contact_last_modified_date) from {{ this }})
-
-   {% endif %}
+JOIN unique_contacts_with_uuid  u
+ON lower(concat(contact_name,':',coalesce(contact_email,''))) = contact_name_email

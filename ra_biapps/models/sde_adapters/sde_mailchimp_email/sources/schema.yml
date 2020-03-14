@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: mailchimp_crm
+  - name: mailchimp_email
     database: ra-development
     schema: stitch_mailchimp
     tables:
