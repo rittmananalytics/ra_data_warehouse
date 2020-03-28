@@ -21,7 +21,7 @@ WITH unique_staff AS
 SELECT
    s.source,
    GENERATE_UUID() as staff_pk,
-   s.staff_id,
+   s.staff_id as harvest_staff_id,
    s.staff_full_name,
    s.staff_email,
    s.staff_is_contractor,

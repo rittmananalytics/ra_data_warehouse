@@ -22,7 +22,7 @@ SELECT
    p.source,
    GENERATE_UUID() as project_pk,
    u.project_uid,
-   p.project_id,
+   p.project_id as harvest_project_id,
    p.project_name,
    p.project_code,
    p.project_delivery_start_ts,

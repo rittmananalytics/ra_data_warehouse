@@ -83,14 +83,14 @@ SELECT
   t.user_id                 as timesheet_staff_id,
   t.project_id              as timesheet_project_id,
   t.task_assignment_id      as timesheet_task_assignment_id,
-  ht.id                     as timesheet_task_id
+  ht.id                     as timesheet_task_id,
   t.invoice_id              as timesheet_invoice_id,
   t.spent_date              as timesheet_billing_date,
   t.hours                   as timesheet_hours_billed,
   case when t.is_billed then t.billable_rate * t.hours else 0 end as timesheet_total_amount_billed,
   t.billable                as timesheet_is_billable,
   t.is_billed               as timesheet_has_been_billed,
-  t.is_locked               as timesheet has_been_locked,
+  t.is_locked               as timesheet_has_been_locked,
   t.billable_rate           as timesheet_billable_hourly_rate_amount,
   t.cost_rate               as timesheet_billable_hourly_cost_amount,
   t.notes                   as timesheet_notes
