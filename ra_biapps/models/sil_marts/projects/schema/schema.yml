@@ -1,0 +1,16 @@
+version: 2
+models:
+  - name: sil_projects_dim
+    description: "Projects Dimension"
+    columns:
+      - name: project_pk
+        tests:
+          - unique
+          - not_null
+  - name: sil_staff_dim
+    description: "Staff Dimension"
+    columns:
+      - name: staff_pk
+        tests:
+          - unique
+          - not_null

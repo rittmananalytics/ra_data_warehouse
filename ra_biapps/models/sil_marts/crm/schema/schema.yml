@@ -1,0 +1,23 @@
+version: 2
+models:
+  - name: sil_companies_dim
+    description: "Companies Dimension"
+    columns:
+      - name: company_pk
+        tests:
+          - unique
+          - not_null
+  - name: sil_contacts_dim
+    description: "Contacts Dimension"
+    columns:
+      - name: contact_pk
+        tests:
+          - unique
+          - not_null
+  - name: sil_deals_fact
+    description: "Deals Facts"
+    columns:
+      - name: deal_pk
+        tests:
+          - unique
+          - not_null

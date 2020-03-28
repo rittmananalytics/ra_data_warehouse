@@ -1,6 +1,6 @@
 {{
     config(
-        alias='deals_fact'
+        alias='timesheets_fact'
     )
 }}
 SELECT

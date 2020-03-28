@@ -47,6 +47,7 @@ hubspot_deals as (
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
     properties.dealname.value AS deal_name,
+    associations.associatedcompanyids[offset(off)] as deal_company_id, -- added 18/12/2019
     properties.hubspot_owner_id.value AS deal_owner_id,
     properties.hs_lastmodifieddate.value AS deal_last_modified_ts,
     properties.dealstage.value AS deal_stage_name,
@@ -73,7 +74,7 @@ hubspot_deals as (
     properties.number_of_sprints.value deal_number_of_sprints,
     properties.number_of_sprints.value * 14 as deal_duration_days,
     properties.deal_components.value as deal_count_components,
-    associations.associatedcompanyids[offset(off)] as deal_associated_company_ids, -- added 18/12/2019
+
     _sdc_batched_at
 
   from hubspot_deals_latest,
