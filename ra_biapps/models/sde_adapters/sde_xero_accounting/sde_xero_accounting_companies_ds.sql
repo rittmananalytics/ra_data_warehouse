@@ -31,18 +31,10 @@ companies_ds as (
         string_agg(distinct addresses.country) as company_country,
         replace(concat(replace(defaultphone.phonecountrycode,'+','00'),defaultphone.phoneareacode,defaultphone.phonenumber),' ','') as company_phone,
         string_agg(distinct addresses.region) as company_state,
-        contacts.contactstatus as company_contact_status,
-        string_agg(distinct addresses.postalcode) as contact_postcode_zip,
-        cast(null as timestamp) as contact_created_date,
-        contacts.firstname as contact_first_name,
-        contacts.lastname as contact_last_name,
-        cast(null as string) as contact_job_title,
-        contacts.emailaddress as contact_email,
-        replace(concat(replace(mobilephone.phonecountrycode,'+','00'),mobilephone.phoneareacode,mobilephone.phonenumber),' ','') as contact_mobile_phone,
-        cast(null as string) as contact_company,
-        cast(null as string) as contact_company_id,
-        cast(null as string) as contact_owner_id,
-        contacts.updateddateutc as contact_last_modified_date
+        contacts.contactstatus as company_status,
+        string_agg(distinct addresses.postalcode) as company_zip,
+        cast(null as timestamp) as company_created_date,
+        contacts.updateddateutc as company_last_modified_date
  from xero_companies contacts
  left outer join addresses as addresses
  on contacts.contactid = addresses.contactid
@@ -54,6 +46,6 @@ companies_ds as (
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
  where replace(contacts.firstname,' ','') is not null
- group by 1,2,3,7,9,11,12,13,14,15,16,17,18,19,20)
+ group by 1,2,3,7,9,11,12)
 
 select * from companies_ds

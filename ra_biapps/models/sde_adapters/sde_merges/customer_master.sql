@@ -33,23 +33,29 @@ with combined_raw_companies as (
            x.company_phone as  xero_company_phone,
            x.company_state as  xero_company_state,
            x.company_zip as  xero_company_zip,
-           x.company_created_date as  xero_company_created_date
+           x.company_created_date as  xero_company_created_date,
+           h.company_id as harvest_company_id,
+           h.company_name as harvest_company_name,
+           h.company_address as harvest_company_address,
+           h.company_created_date as harvest_company_created_date,
+           h.company_last_modified_date as harvest_company_last_modified_date
     from {{ ref('sde_hubspot_crm_companies')}} c
-    full outer join {{ ref('sde_xero_accounting_companies_ds')}} x
-    on lower(c.hubspot_company_name) = lower(x.contact_name)
+    full outer join {{ ref('sde_xero_accounting_companies_ds')}} x on lower(c.company_name) = lower(x.company_name)
+    full outer join {{ ref('sde_harvest_projects_companies_ds')}} h on lower(c.company_name) = lower(h.company_name)
   )
 
 select
-      coalesce(
-      case when company_id is not null then concat('hubspot-',company_id) end,
-      concat('xero-',xero_contact_id)) as customer_id,
-      coalesce(company_name, xero_company_name) as customer_name,
+      case when company_id is not null then concat('hubspot-',company_id)
+           when company_id is null and xero_company_id is not null then concat('hubspot-',xero_company_id)
+           when company_id is null and xero_company_id is null and harvest_company_id is not null then concat('harvest-',harvest_company_id)
+           end as customer_id,
+      coalesce(company_name, xero_company_name, harvest_company_name) as customer_name,
       company_id,
       xero_company_id,
       company_description,
       company_linkedin_company_page,
       company_twitterhandle,
-      coalesce(company_address,xero_company_address) as company_address,
+      coalesce(company_address,xero_company_address,harvest_company_address) as company_address,
       company_address2,
       coalesce(company_city,xero_company_city) as company_city,
       coalesce(company_country,xero_company_country) as company_country,
@@ -62,7 +68,5 @@ select
       coalesce(company_state,xero_company_state) as company_state,
       company_lifecycle_stage,
       coalesce(company_zip,xero_company_zip) as company_zip,
-      coalesce(company_created_date,xero_company_created_date) as company_created_date,
-      row_number() over (partition by lower(coalesce(hubspot_company_name, contact_name))) as c_r
-
+      coalesce(company_created_date,xero_company_created_date,harvest_company_created_date) as company_created_date
     from combined_raw_companies
