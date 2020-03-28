@@ -13,7 +13,10 @@ FROM (
     CASE WHEN DATE_DIFF(DATE(due_date),DATE(paid_at),DAY) <=0 THEN true ELSE false END AS was_paid_ontime
 
     FROM
-        {{ source('harvest', 'invoices') }}
+        {{ source('harvest_projects', 'invoices') }}
+    )
+    WHERE
+        _sdc_batched_at = latest_sdc_batched_at
     ),
 harvest_invoice_line_items as (
       SELECT
@@ -23,13 +26,11 @@ harvest_invoice_line_items as (
               *,
                MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
           FROM
-              {{ source('harvest', 'invoice_line_items') }}
+              {{ source('harvest_projects', 'invoice_line_items') }}
           )
       WHERE
           _sdc_batched_at = latest_sdc_batched_at
-    )
-WHERE
-    _sdc_batched_at = latest_sdc_batched_at),
+    ),
 harvest_expenses as (
   SELECT
       *
@@ -38,7 +39,7 @@ harvest_expenses as (
           *,
            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
       FROM
-          {{ source('harvest', 'expenses') }}
+          {{ source('harvest_projects', 'expenses') }}
       )
   WHERE
       _sdc_batched_at = latest_sdc_batched_at

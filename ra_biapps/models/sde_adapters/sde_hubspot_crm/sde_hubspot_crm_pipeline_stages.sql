@@ -6,7 +6,7 @@
 
 with deal_pipelines as (
 
-    select * from {{ ref('hubspot_deal_pipelines') }}
+    select * from {{ source('hubspot_crm', 'deal_pipelines') }}
 
 ),
 

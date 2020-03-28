@@ -1,6 +1,6 @@
 with deals as (
 
-        select * from {{ ref('hubspot_deals') }}
+        select * from {{ source('hubspot_crm', 'deals') }}
 
 ),
 

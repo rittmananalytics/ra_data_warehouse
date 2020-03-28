@@ -30,7 +30,7 @@ models:
         tests:
               - not_null
               - unique
-  - name: sde_hubspot_crm_ipelines
+  - name: sde_hubspot_crm_pipelines
     columns:
       - name: pipelineid
         description: This is a unique identifier for the pipe line
@@ -42,10 +42,6 @@ models:
         description: This is a unique identifier for the pipe line
         tests:
               - not_null
-  - name: sde_hubspot_crm_companies
-    columns:
-      - name: hubspot_owner_id
-        description: HubSpot uses owners to assign CRM objects (contacts, companies, and deals) to specific people in your organization.
   - name: sde_hubspot_crm_owners
     columns:
       - name: ownerid

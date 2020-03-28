@@ -11,7 +11,7 @@ with harvest_projects as (
       *,
       MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
     FROM
-      {{ source('harvest', 'projects') }})
+      {{ source('harvest_projects', 'projects') }})
   WHERE
     latest_sdc_batched_at = _sdc_batched_at
 )
@@ -31,4 +31,4 @@ select p.starts_on,
        p.client_id,
        p.is_billable,
        p.hourly_rate
-from {{ ref('harvest_projects')}} p
+from harvest_projects p

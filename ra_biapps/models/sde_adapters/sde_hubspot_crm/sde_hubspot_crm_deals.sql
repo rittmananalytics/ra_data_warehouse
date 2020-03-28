@@ -4,7 +4,7 @@ with hubspot_deals_latest as (
       select *  from (
         select *,
         MAX(_sdc_batched_at) OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) latest_sdc_batched_at
-         from {{ source('hubspot', 'deals') }})
+         from {{ source('hubspot_crm', 'deals') }})
           where latest_sdc_batched_at = _sdc_batched_at
 
 
@@ -39,21 +39,21 @@ hubspot_deal_stages as (
     unnest (stages) stages
 
 )
-
+,
 hubspot_deals as (
 
   select
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
     properties.dealname.value AS deal_name,
-    properties.hubspot_owner_id.value AS deal_owner_id
+    properties.hubspot_owner_id.value AS deal_owner_id,
     timestamp(properties.hs_lastmodifieddate.value) AS deal_last_modified_ts,
     properties.dealstage.value AS deal_stage_name,
     properties.dealstage.value as deal_stage_id,
     properties.dealstage.timestamp as deal_stage_ts,
     properties.pipeline.value AS deal_pipeline_name,
     properties.closedate.value AS deal_closed_date,
-    timestamp(properties.createdate.value) AS deal_created_ts,
+    properties.createdate.value AS deal_created_ts,
     properties.amount_in_home_currency.value AS deal_amount,
     properties.amount_in_home_currency.value AS deal_local_amount,
     properties.description.value AS deal_description,
@@ -80,7 +80,7 @@ hubspot_deals as (
             unnest(associations.associatedcompanyids) with offset off
 
 )
-
+,
 
 deals_fs as (
 
@@ -108,11 +108,4 @@ deals_fs as (
 
 )
 
-select * from deals_ds
-
-
-
-
-)
-
-select * except (pipelineid,_sdc_batched_at) from date_difference
+select * from deals_fs

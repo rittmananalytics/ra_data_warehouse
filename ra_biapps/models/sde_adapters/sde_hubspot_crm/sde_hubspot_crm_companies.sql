@@ -37,7 +37,6 @@ companies_ds as (
       properties.lifecyclestage.value AS company_lifecycle_stage,
       properties.zip.value AS company_zip,
       properties.createdate.value AS company_created_date,
-      properties.lastmodifieddate.value as contact_last_modified_date,
     from hubspot_companies
 
 )

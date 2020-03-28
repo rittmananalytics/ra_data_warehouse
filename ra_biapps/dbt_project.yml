@@ -34,5 +34,6 @@ models:
       # Applies to all files under models/example/
       sde_adapters:
           materialized: view
+          schema: staging
       sil_marts:
           materialized: table
