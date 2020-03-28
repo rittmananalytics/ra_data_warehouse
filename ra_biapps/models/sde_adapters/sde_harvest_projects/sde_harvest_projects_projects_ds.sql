@@ -1,8 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
 with harvest_projects as (
   SELECT
     *
@@ -15,20 +10,22 @@ with harvest_projects as (
   WHERE
     latest_sdc_batched_at = _sdc_batched_at
 )
-select p.starts_on,
-       p.is_active,
-       p.id,
-       p.cost_budget,
-       p.name,
-       p.is_fixed_fee,
-       p.cost_budget_include_expenses,
-       p.fee,
-       p.budget,
-       p.over_budget_notification_percentage,
-       p.code,
-       p.ends_on,
-       p.budget_by,
-       p.client_id,
-       p.is_billable,
-       p.hourly_rate
+select
+       'harvest_projects'                       as source,
+       p.id                                     as project_id,
+       p.name                                   as project_name,
+       p.code                                   as project_code,
+       p.starts_on                              as project_delivery_start_ts,
+       p.ends_on                                as project_delivery_end_ts,
+       p.is_active                              as project_is_active,
+       p.is_billable                            as project_is_billable,
+       p.hourly_rate                            as project_hourly_rate,
+       p.cost_budget                            as project_cost_budget,
+       p.is_fixed_fee                           as project_is_fixed_fee,
+       p.cost_budget_include_expenses           as project_is_expenses_included_in_cost_budget,
+       p.fee                                    as project_fee_amount,
+       p.budget                                 as project_budget_amount,
+       p.over_budget_notification_percentage    as project_over_budget_notification_pct,
+       p.budget_by                              as project_budget_by,
+       p.client_id                              as project_client_id
 from harvest_projects p

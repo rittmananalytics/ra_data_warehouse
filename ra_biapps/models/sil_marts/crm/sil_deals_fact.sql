@@ -1,0 +1,38 @@
+{{
+    config(
+        alias='deals_fact'
+    )
+}}
+SELECT
+   source,
+   GENERATE_UUID() as deal_pk,
+   hubspot_deal_id,
+   deal_name,
+   deal_amount,
+   deal_local_amount,
+   deal_type,
+   deal_description,
+   deal_pricing_model,
+   deal_products_in_solution,
+   deal_sprint_type,
+   deal_days_to_close,
+   deal_delivery_start_ts,
+   deal_delivery_schedule_ts,
+   deal_number_of_sprints,
+   deal_duration_days,
+   deal_source,
+   deal_partner_referral_type,
+   deal_components,
+   deal_assigned_consultant,
+   deal_owner_id,
+   deal_last_modified_ts,
+   deal_stage_name,
+   deal_stage_id,
+   deal_stage_ts,
+   deal_pipeline_name,
+   deal_closed_date,
+   deal_created_ts,
+   deal_closed_lost_reason,
+   deal_salesperson_email
+FROM
+   {{ ref('sde_deals_fs') }} d

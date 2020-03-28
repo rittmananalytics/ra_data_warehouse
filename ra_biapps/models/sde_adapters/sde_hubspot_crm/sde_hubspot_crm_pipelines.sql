@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
-
 with deal_pipelines as (
 
     select * from {{ source('hubspot_crm', 'deal_pipelines') }}

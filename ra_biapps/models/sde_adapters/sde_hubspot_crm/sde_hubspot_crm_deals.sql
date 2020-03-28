@@ -43,6 +43,7 @@ hubspot_deal_stages as (
 hubspot_deals as (
 
   select
+    'hubspot_crm' as source,
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
     properties.dealname.value AS deal_name,

@@ -1,7 +1,7 @@
 {{
     config(
-        materialized='table',
-        unique_key='contact_pk'
+        unique_key='contact_pk',
+        alias='contacts_dim'
     )
 }}
 WITH unique_contacts AS

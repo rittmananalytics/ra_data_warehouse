@@ -1,8 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
 with harvest_time_entries as (
   SELECT
       *

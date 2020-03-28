@@ -1,8 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
 
 with base_hubspot_owners as (
 

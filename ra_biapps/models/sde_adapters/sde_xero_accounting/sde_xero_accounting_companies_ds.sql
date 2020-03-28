@@ -45,7 +45,7 @@ companies_ds as (
  left outer join phones as defaultphone
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
- where replace(contacts.firstname,' ','') is not null
+ where lastname is null
  group by 1,2,3,7,9,11,12)
 
 select * from companies_ds

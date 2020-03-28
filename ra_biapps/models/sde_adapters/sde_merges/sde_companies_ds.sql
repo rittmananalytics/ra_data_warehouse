@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
-
 with combined_raw_companies as (
 
     select c.company_id,
@@ -46,12 +40,13 @@ with combined_raw_companies as (
 
 select
       case when company_id is not null then concat('hubspot-',company_id)
-           when company_id is null and xero_company_id is not null then concat('hubspot-',xero_company_id)
+           when company_id is null and xero_company_id is not null then concat('xero-',xero_company_id)
            when company_id is null and xero_company_id is null and harvest_company_id is not null then concat('harvest-',harvest_company_id)
-           end as customer_id,
-      coalesce(company_name, xero_company_name, harvest_company_name) as customer_name,
-      company_id,
+           end as company_id,
+      coalesce(company_name, xero_company_name, harvest_company_name) as company_name,
+      company_id as hubspot_company_id,
       xero_company_id,
+      harvest_company_id,
       company_description,
       company_linkedin_company_page,
       company_twitterhandle,

@@ -1,10 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
-
-
 WITH
   deduped_communications AS (
   SELECT
