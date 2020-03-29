@@ -21,3 +21,18 @@ models:
         tests:
           - unique
           - not_null
+      - name: deal_company_pk
+        tests:
+          - relationships:
+              to: ref('sil_companies_dim')
+              field: company_pk
+      - name: deal_assigned_consultant_staff_pk
+        tests:
+          - relationships:
+              to: ref('sil_staff_dim')
+              field: staff_pk
+      - name: deal_salesperson_staff_pk
+        tests:
+          - relationships:
+              to: ref('sil_staff_dim')
+              field: staff_pk

@@ -36,8 +36,12 @@ with combined_raw_companies as (
     from {{ ref('sde_hubspot_crm_companies')}} c
     full outer join {{ ref('sde_xero_accounting_companies_ds')}} x on lower(c.company_name) = lower(x.company_name)
     full outer join {{ ref('sde_harvest_projects_companies_ds')}} h on lower(c.company_name) = lower(h.company_name)
-  )
-
+  ),
+companies_merges as (
+    select *
+    from   {{ ref('companies_merges') }}
+),
+companies_pre_merged as (
 select
       case when company_id is not null then concat('hubspot-',company_id)
            when company_id is null and xero_company_id is not null then concat('xero-',xero_company_id)
@@ -65,3 +69,15 @@ select
       coalesce(company_zip,xero_company_zip) as company_zip,
       coalesce(company_created_date,xero_company_created_date,harvest_company_created_date) as company_created_date
     from combined_raw_companies
+),
+companies_merged as (
+  select c.* except(company_id),
+  coalesce(m.company_id,c.company_id) as company_id
+  from companies_pre_merged c
+  left outer join companies_merges m
+  on c.company_id = companies_merges.old_company_id
+),
+companies_ds as (
+  select * from companies_merged
+)
+select * from companies_ds

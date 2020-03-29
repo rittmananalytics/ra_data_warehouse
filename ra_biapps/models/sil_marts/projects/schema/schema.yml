@@ -14,3 +14,41 @@ models:
         tests:
           - unique
           - not_null
+  - name: sil_tasks_dim
+    description: "Projects Dimension"
+    columns:
+      - name: task_pk
+        tests:
+          - unique
+          - not_null
+  - name: sil_timesheets_fact
+    description: "Projects Dimension"
+    columns:
+      - name: timesheet_pk
+        tests:
+          - unique
+          - not_null
+      - name: company_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sil_companies_dim')
+              field: company_pk
+      - name: staff_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sil_staff_dim')
+              field: staff_pk
+      - name: project_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sil_projects_dim')
+              field: project_pk
+      - name: task_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sil_tasks_dim')
+              field: task_pk

@@ -20,9 +20,9 @@ WITH unique_companies AS
 
 SELECT
    GENERATE_UUID() as company_pk,
+   c.company_id,
    u.company_uid,
    c.company_name,
-   c.company_id,
    c.hubspot_company_id,
    c.xero_company_id,
    c.harvest_company_id,

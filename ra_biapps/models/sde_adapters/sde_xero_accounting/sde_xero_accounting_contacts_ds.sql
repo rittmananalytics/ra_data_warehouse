@@ -8,7 +8,7 @@ WITH xero_contacts as (
     FROM {{ source('xero_accounting', 'contacts') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
-  AND lastname is not null
+  --AND lastname is not null
 
 ),
 
@@ -54,7 +54,7 @@ contacts_ds as (
  left outer join phones as defaultphone
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
- where replace(contacts.firstname,' ','') is not null
+ where concat(contacts.firstname,' ',contacts.lastname) is not null
  group by 1,2,3,4,5,6,7,8,9,15,16,17,18,19,20,21
 )
 

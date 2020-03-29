@@ -15,8 +15,8 @@ companies_ds as (
 
   SELECT
   'harvest_projects' as source,
-  cast(id as string) AS company_id,
-  name AS company_name,
+  id AS company_id,
+  replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
   address as company_address,
   created_at as company_created_date,
   updated_at as company_last_modified_date

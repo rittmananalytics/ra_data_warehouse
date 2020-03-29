@@ -8,7 +8,7 @@ WITH xero_companies as (
     FROM {{ source('xero_accounting', 'contacts') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
-  AND lastname is not null
+  --AND lastname is not null
 
 ),
 
@@ -25,7 +25,7 @@ companies_ds as (
  select
         'xero_accounting' as source,
         cast(contacts.contactid as string) as company_id,
-        concat(contacts.firstname,' ',contacts.lastname) as company_name,
+        replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') as company_name,
         string_agg(distinct addresses.addressline1) as company_address,
         string_agg(distinct addresses.city) as company_city,
         string_agg(distinct addresses.country) as company_country,
@@ -45,7 +45,7 @@ companies_ds as (
  left outer join phones as defaultphone
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
- where lastname is null
+ where contacts.lastname is null
  group by 1,2,3,7,9,11,12)
 
 select * from companies_ds

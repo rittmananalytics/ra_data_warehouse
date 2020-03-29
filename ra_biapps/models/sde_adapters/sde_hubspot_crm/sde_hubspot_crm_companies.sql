@@ -18,7 +18,7 @@ companies_ds as (
     'hubspot_crm' as source,
 
       companyid AS company_id,
-      properties.name.value AS company_name,
+      replace(replace(replace(properties.name.value,'Limited',''),'ltd',''),', Inc.','') AS company_name,
       properties.description.value AS company_description,
 
       properties.linkedin_company_page.value AS company_linkedin_company_page,

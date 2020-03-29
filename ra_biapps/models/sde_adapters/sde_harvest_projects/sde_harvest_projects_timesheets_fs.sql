@@ -78,7 +78,7 @@ with harvest_time_entries as (
  )
 SELECT
   'harvest_projects'        as source,
-  t.id                      as timesheet_id,
+  cast(t.id as string)      as timesheet_id,
   t.client_id               as timesheet_company_id,
   t.user_id                 as timesheet_staff_id,
   t.project_id              as timesheet_project_id,
