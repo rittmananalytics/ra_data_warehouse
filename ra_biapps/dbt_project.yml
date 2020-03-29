@@ -35,5 +35,9 @@ models:
       sde_adapters:
           materialized: view
           schema: staging
+
       sil_marts:
           materialized: table
+seeds:
+  ra_bi_apps:
+    schema: seed_data
