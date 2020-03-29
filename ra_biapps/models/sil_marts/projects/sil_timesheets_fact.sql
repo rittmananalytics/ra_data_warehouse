@@ -22,8 +22,8 @@ SELECT
     timesheet_notes
 FROM
    {{ ref('sde_timesheets_fs') }} t
-LEFT OUTER JOIN {{ ref('sil_companies_dim') }} c
-   ON t.timesheet_company_id = c.harvest_company_id
+JOIN {{ ref('sil_companies_dim') }} c
+   ON cast(t.timesheet_company_id as string) IN UNNEST(c.all_company_ids)
 LEFT OUTER JOIN {{ ref('sil_projects_dim') }} p
    ON t.timesheet_project_id = p.harvest_project_id
 LEFT OUTER JOIN {{ ref('sil_tasks_dim') }} ta

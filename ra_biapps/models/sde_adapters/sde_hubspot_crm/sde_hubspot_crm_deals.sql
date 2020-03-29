@@ -37,6 +37,7 @@ hubspot_deal_stages as (
 
     from hubspot_deal_pipelines,
     unnest (stages) stages
+    group by 1,2,3,4,5,6,7
 
 )
 ,
@@ -47,7 +48,7 @@ hubspot_deals as (
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
     properties.dealname.value AS deal_name,
-    cast(associations.associatedcompanyids[offset(off)] as string) as company_id, -- added 18/12/2019
+    cast(associations.associatedcompanyids[offset(off)] as string) as hubspot_company_id, -- added 18/12/2019
     properties.hubspot_owner_id.value AS deal_owner_id,
     properties.hs_lastmodifieddate.value AS deal_last_modified_ts,
     properties.dealstage.value AS deal_stage_name,
@@ -80,16 +81,23 @@ hubspot_deals as (
   from hubspot_deals_latest,
             unnest(associations.associatedcompanyids) with offset off
 
+),
+companies_pre_merged as
+(
+  select company_id, hubspot_company_id
+  from {{ ref('sde_companies_pre_merged') }}
+  where hubspot_company_id is not null
 )
 ,
 
 deals_fs as (
 
     select d.*,
+    pm.company_id as company_id,
     s.probability as deal_probability_pct,
     s.stage_label as deal_stage_label,
     s.stage_displayorder as deal_stage_display_order,
-    p.*,
+    p.label as pipeline_label,
     timestamp_diff(current_timestamp,d.deal_delivery_start_ts,DAY) as deal_days_until_end,
     timestamp(date_add(date(d.deal_delivery_start_ts), interval safe_cast(d.deal_duration_days as int64) day)) as deal_delivery_end_date_ts,
     case when s.stage_label like '%Closed Won%' then true else false end AS deal_is_closed, -- added 18/12/2019
@@ -103,6 +111,8 @@ deals_fs as (
       then true else false end as is_active
 
      from hubspot_deals d
+
+    left outer join companies_pre_merged pm on d.hubspot_company_id = cast(pm.hubspot_company_id as string)
 
     left join hubspot_deal_stages s on d.deal_stage_id = s.stageid
 
