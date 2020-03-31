@@ -75,11 +75,18 @@ with harvest_time_entries as (
        )
    WHERE
        _sdc_batched_at = latest_sdc_batched_at
+ ),
+ companies_pre_merged as
+ (
+   select company_id, harvest_company_id
+   from {{ ref('sde_companies_pre_merged') }}
+   where harvest_company_id is not null
  )
 SELECT
   'harvest_projects'        as source,
+  pm.company_id             as company_id,
   cast(t.id as string)      as timesheet_id,
-  t.client_id               as timesheet_company_id,
+  t.client_id               as harvest_company_id,
   t.user_id                 as timesheet_staff_id,
   t.project_id              as timesheet_project_id,
   t.task_assignment_id      as timesheet_task_assignment_id,
@@ -101,3 +108,4 @@ FROM
   join harvest_project_tasks pt on upt.project_task_id = pt.id
   join harvest_tasks ht on pt.task_id = ht.id
   join harvest_users u on t.user_id = u.id
+  join companies_pre_merged pm on t.client_id = pm.harvest_company_id

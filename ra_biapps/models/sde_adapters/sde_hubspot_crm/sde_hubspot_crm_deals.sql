@@ -92,7 +92,8 @@ companies_pre_merged as
 
 deals_fs as (
 
-    select d.*,
+    select
+    d.*,
     pm.company_id as company_id,
     s.probability as deal_probability_pct,
     s.stage_label as deal_stage_label,

@@ -47,13 +47,13 @@ company_merged_company_ids as (
   group by 1
   )
 ),
-companies_ds as (
+companies_merged as (
   select c.company_id,
          c.company_name,
          l.all_company_ids,
          c.* except (company_id, company_name)
   from (
-  select
+    select
          company_id,
          max(company_name) as company_name,
          max(company_description) as company_description,
@@ -75,14 +75,47 @@ companies_ds as (
          max(company_created_date) as company_created_date
   from companies_merged_ids m
          group by 1
-  union all
-  select * from
-  (select * except (hubspot_company_id, xero_company_id, harvest_company_id)
-   from companies_pre_merged
-   where company_id not in (select old_company_id from companies_merge_list)
-     AND company_id not in (select company_id from companies_merge_list)   )) c
+   ) c
    left outer join company_merged_company_ids l
+   on c.company_id = l.company_id )
+,
+ companies_not_merged as (
+   select c.company_id,
+         c.company_name,
+         array_agg(l.company_id),
+         c.* except (company_id, company_name)
+  from (
+   select
+         company_id,
+         company_name as company_name,
+         company_description as company_description,
+         company_linkedin_company_page as company_linkedin_company_page,
+         company_twitterhandle as company_twitterhandle,
+         company_address as company_address,
+         company_address2 as company_address2,
+         company_city as company_city,
+         company_state as company_state,
+         company_country as company_country,
+         company_zip as company_zip,
+         company_website as company_website,
+         company_contact_owner_id as company_contact_owner_id,
+         company_industry as company_industry,
+         company_linkedin_bio as company_linkedin_bio,
+         company_domain as company_domain,
+         company_phone as company_phone,
+         company_lifecycle_stage as company_lifecycle_stage,
+         company_created_date as company_created_date
+  from companies_pre_merged m
+         where m.company_id not in (select company_id from companies_merge_list)
+         and   m.company_id not in (select old_company_id from companies_merge_list)
+   ) c
+   left outer join companies_pre_merged l
    on c.company_id = l.company_id
-)
-
+   group by 1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+),
+  companies_ds as (
+  select * from companies_merged
+  union all
+  select * from companies_not_merged
+  )
 select * from companies_ds

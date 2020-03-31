@@ -38,10 +38,16 @@ harvest_expenses as (
       )
   WHERE
       _sdc_batched_at = latest_sdc_batched_at
+),companies_pre_merged as
+(
+  select company_id, harvest_company_id
+  from {{ ref('sde_companies_pre_merged') }}
+  where harvest_company_id is not null
 )
 ,
 harvest_invoices as (
 select i.*,
+  pm.company_id as company_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
   date_diff(date(i.created_at),date(first_value(i.created_at) over (partition by i.client_id order by i.created_at)),MONTH) as months_since_first_invoice,
@@ -73,16 +79,19 @@ join (select *,
 group by 1,2,3,4,6,7,8,9)) a
 on   i.id = a.invoice_id
 left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expenses FROM harvest_expenses  where billable group by 1 ) e
-on i.id = e.invoice_id)
+on i.id = e.invoice_id
+join companies_pre_merged pm on i.client_id = pm.harvest_company_id
+)
 select 'harvest_projects' as source,
+        company_id as company_id,
         id as invoice_id,
         number as invoice_number,
-        project_id as invoice_project_id,
-        client_id as invoice_company_id,
+        project_id as harvest_project_id,
+        client_id as harvest_company_id,
         subject as invoice_subject,
         revenue_amount_billed as invoice_local_revenue_amount_billed,
         amount as invoice_local_amount,
-        currency as invoice_,
+        currency as invoice_currency,
         total_amount_billed as invoice_total_local_amount_billed,
         services_amount_billed as invoice_local_services_amount_billed,
         license_referral_fee_amount_billed as invoice_local_license_referral_fee_amount_billed,
