@@ -1,6 +1,6 @@
 {{
     config(
-        alias='invoices_fact'
+        alias='project_invoices_fact'
     )
 }}
 with companies_dim as (
