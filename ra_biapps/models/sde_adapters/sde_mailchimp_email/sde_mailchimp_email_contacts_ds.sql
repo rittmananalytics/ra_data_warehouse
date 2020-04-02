@@ -18,7 +18,7 @@ contacts_ds as (
       id as contact_id,
       merge_fields.fname as contact_first_name,
       merge_fields.lname as contact_last_name,
-      concat(merge_fields.fname,' ',merge_fields.lname) as contact_name,
+      case when concat(merge_fields.fname,' ',merge_fields.lname) = ' ' then email_address else concat(merge_fields.fname,' ',merge_fields.lname) end as contact_name,
       cast(null as string) as contact_job_title,
       email_address as contact_email,
       merge_fields.phone as contact_phone,

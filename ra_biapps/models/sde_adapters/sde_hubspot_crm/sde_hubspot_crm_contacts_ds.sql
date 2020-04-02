@@ -20,7 +20,7 @@ contacts_ds as (
        cast(canonical_vid as string) as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,
-       concat(properties.firstname.value,' ',properties.lastname.value)  as contact_name,
+       coalesce(concat(properties.firstname.value,' ',properties.lastname.value),properties.email.value) as contact_name,
        properties.jobtitle.value contact_job_title,
        properties.email.value as contact_email,
        properties.phone.value as contact_phone,

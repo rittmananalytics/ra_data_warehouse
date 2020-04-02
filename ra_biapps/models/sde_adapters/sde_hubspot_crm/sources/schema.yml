@@ -30,6 +30,35 @@ models:
         tests:
           - not_null
           - unique
+  - name: sde_hubspot_crm_deals
+    columns:
+      - name: hubspot_company_id
+        description: This is a unique identifier for the customer within HubSpot
+        tests:
+          - not_null
+          - unique
+      - name: deal_stage_label
+        tests:
+          - not_null
+      - name: deal_delivery_start_ts
+        tests:
+          - not_null
+      - name: hubspot_company_name
+        description: This is a unique identifier for the customer within HubSpot
+        tests:
+          - not_null
+          - unique
+      - name: deal_delivery_schedule_ts
+        tests:
+          - not_null
+      - name: hubspot_company_name
+        description: This is a unique identifier for the customer within HubSpot
+        tests:
+          - not_null
+          - unique
+      - name: deal_number_of_sprints
+        tests:
+          - not_null
   - name: sde_hubspot_crm_pipelines
     columns:
       - name: pipelineid

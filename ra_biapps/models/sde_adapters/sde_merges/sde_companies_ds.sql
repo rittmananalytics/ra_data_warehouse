@@ -32,8 +32,8 @@ companies_merged_ids as (
     from companies_pre_merged c
   left outer join companies_merge_list m
   on c.company_id = m.old_company_id
-  --join companies_pre_merged o
-  --on m.company_id = o.company_id
+  join companies_pre_merged o
+  on m.company_id = o.company_id
   {{ dbt_utils.group_by(19) }}
 ),
 company_merged_company_ids as (
