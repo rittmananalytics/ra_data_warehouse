@@ -35,7 +35,7 @@ with combined_raw_companies as (
            h.company_last_modified_date as harvest_company_last_modified_date
     from {{ ref('sde_hubspot_crm_companies')}} c
     full outer join {{ ref('sde_xero_accounting_companies_ds')}} x on lower(c.company_name) = lower(x.company_name)
-    full outer join {{ ref('sde_harvest_projects_companies_ds')}} h on lower(c.company_name) = lower(h.company_name)
+    full outer join {{ ref('sde_harvest_projects_companies')}} h on lower(c.company_name) = lower(h.company_name)
   ),
 companies_merge_list as (
     select *

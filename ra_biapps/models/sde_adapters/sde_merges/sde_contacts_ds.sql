@@ -13,7 +13,7 @@ with sde_contacts_ds_merge_list as
     SELECT * except (contact_id, contact_company_id, source),
            concat('harvest-',contact_id) as contact_id,
            concat('harvest-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_harvest_projects_contacts_ds') }}
+    FROM   {{ ref('sde_harvest_projects_contacts') }}
     UNION ALL
     SELECT * except (contact_id, contact_company_id, source),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,

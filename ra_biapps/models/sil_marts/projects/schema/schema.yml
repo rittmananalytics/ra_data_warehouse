@@ -7,10 +7,10 @@ models:
         tests:
           - unique
           - not_null
-  - name: sil_staff_dim
+  - name: sil_users_dim
     description: "Staff Dimension"
     columns:
-      - name: staff_pk
+      - name: user_pk
         tests:
           - unique
           - not_null
@@ -34,12 +34,12 @@ models:
           - relationships:
               to: ref('sil_companies_dim')
               field: company_pk
-      - name: staff_pk
+      - name: user_pk
         tests:
           - not_null
           - relationships:
-              to: ref('sil_staff_dim')
-              field: staff_pk
+              to: ref('sil_users_dim')
+              field: user_pk
       - name: project_pk
         tests:
           - not_null

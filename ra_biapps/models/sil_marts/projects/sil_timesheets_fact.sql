@@ -7,9 +7,9 @@ with companies_dim as (
     select *
     from {{ ref('sil_companies_dim') }}
 ),
-  staff_dim as (
+  user_dim as (
     select *
-    from {{ ref('sil_staff_dim') }}
+    from {{ ref('sil_users_dim') }}
 ),
   tasks_dim as (
       select *
@@ -18,7 +18,7 @@ with companies_dim as (
 ,
   projects_dim as (
       select *
-      from {{ ref('sil_projects_dim') }}
+      from {{ ref('sil_timesheet_projects_dim') }}
 )
 ,
   timesheets_fs as (
@@ -30,7 +30,7 @@ SELECT
     GENERATE_UUID() as timesheet_pk,
     c.company_pk,
     t.source,
-    s.staff_pk,
+    s.user_pk,
     p.project_pk,
     ta.task_pk,
     timesheet_invoice_id,
@@ -51,5 +51,5 @@ LEFT OUTER JOIN projects_dim p
    ON t.timesheet_project_id = p.harvest_project_id
 LEFT OUTER JOIN tasks_dim ta
    ON t.timesheet_task_id = ta.harvest_task_id
-LEFT OUTER JOIN staff_dim s
-   ON t.timesheet_staff_id = s.harvest_staff_id
+JOIN user_dim s
+   ON cast(t.timesheet_users_id as string) IN UNNEST(s.all_user_ids)

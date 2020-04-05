@@ -7,21 +7,21 @@ with companies_dim as (
     select *
     from {{ ref('sil_companies_dim') }}
 ),
-  staff_dim as (
-    select *
-    from {{ ref('sil_staff_dim') }}
+  user_dim as (
+    select user_pk, all_user_emails
+    from {{ ref('sil_users_dim') }}
   )
 SELECT
    GENERATE_UUID() as deal_pk,
    c.company_pk,
    d.* except (company_id,deal_assigned_consultant,deal_salesperson_email),
-   s.staff_pk as deal_assigned_consultant_staff_pk,
-   sp.staff_pk as deal_salesperson_staff_pk
+   s.user_pk as deal_assigned_consultant_users_pk,
+   sp.user_pk as deal_salesperson_users_pk
 FROM
    {{ ref('sde_deals_fs') }} d
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
-LEFT OUTER JOIN staff_dim s
-   ON d.deal_assigned_consultant = s.staff_full_name
-LEFT OUTER JOIN staff_dim sp
-   ON d.deal_salesperson_email = sp.staff_email
+JOIN user_dim s
+   ON d.deal_assigned_consultant in UNNEST(s.all_user_emails)
+JOIN user_dim sp
+   ON d.deal_salesperson_email IN UNNEST(sp.all_user_emails)

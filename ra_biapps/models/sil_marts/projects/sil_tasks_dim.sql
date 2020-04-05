@@ -1,6 +1,6 @@
 {{
     config(
-        unique_key='staff_pk',
+        unique_key='user_pk',
         alias='tasks_dim'
     )
 }}

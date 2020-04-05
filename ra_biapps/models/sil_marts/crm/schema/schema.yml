@@ -30,13 +30,13 @@ models:
           - relationships:
               to: ref('sil_companies_dim')
               field: company_pk
-      - name: deal_assigned_consultant_staff_pk
+      - name: deal_assigned_consultant_users_pk
         tests:
           - relationships:
-              to: ref('sil_staff_dim')
-              field: staff_pk
-      - name: deal_salesperson_staff_pk
+              to: ref('sil_users_dim')
+              field: user_pk
+      - name: deal_salesperson_users_pk
         tests:
           - relationships:
-              to: ref('sil_staff_dim')
-              field: staff_pk
+              to: ref('sil_users_dim')
+              field: user_pk

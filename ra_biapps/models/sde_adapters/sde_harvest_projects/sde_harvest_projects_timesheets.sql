@@ -24,7 +24,7 @@ with harvest_time_entries as (
     WHERE
       latest_sdc_batched_at = _sdc_batched_at
   ),
-  harvest_user_project_tasks as (
+  harvest_users_project_tasks as (
     SELECT
         *
     FROM (
@@ -63,7 +63,7 @@ with harvest_time_entries as (
     WHERE
         _sdc_batched_at = latest_sdc_batched_at
   ),
- harvest_users as (
+ harvest_userss as (
    SELECT
        *
    FROM (
@@ -87,7 +87,7 @@ SELECT
   pm.company_id             as company_id,
   cast(t.id as string)      as timesheet_id,
   t.client_id               as harvest_company_id,
-  t.user_id                 as timesheet_staff_id,
+  concat('harvest-',t.user_id) as timesheet_users_id,
   t.project_id              as timesheet_project_id,
   t.task_assignment_id      as timesheet_task_assignment_id,
   ht.id                     as timesheet_task_id,
@@ -104,8 +104,8 @@ SELECT
 FROM
   harvest_time_entries t
   join harvest_projects p on t.project_id = p.id
-  join harvest_user_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
+  join harvest_users_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
   join harvest_project_tasks pt on upt.project_task_id = pt.id
   join harvest_tasks ht on pt.task_id = ht.id
-  join harvest_users u on t.user_id = u.id
+  join harvest_userss u on t.user_id = u.id
   join companies_pre_merged pm on t.client_id = pm.harvest_company_id

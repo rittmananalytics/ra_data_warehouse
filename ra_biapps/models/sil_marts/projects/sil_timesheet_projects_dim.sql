@@ -1,13 +1,13 @@
 {{
     config(
         unique_key='project_pk',
-        alias='projects_dim'
+        alias='timesheet_projects_dim'
     )
 }}
 WITH unique_projects AS
   (
   SELECT lower(project_name) as project_name
-  FROM   {{ ref('sde_projects_ds') }}
+  FROM   {{ ref('sde_timesheet_projects_ds') }}
   GROUP BY 1
   )
 ,
@@ -39,6 +39,6 @@ SELECT
    p.project_budget_by,
    p.project_client_id
 FROM
-   {{ ref('sde_projects_ds') }} p
+   {{ ref('sde_timesheet_projects_ds') }} p
 JOIN unique_projects_with_uuid  u
 ON lower(p.project_name) = u.project_name

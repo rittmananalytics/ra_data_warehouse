@@ -16,7 +16,7 @@ sources:
     - name: invoice_payments
     - name: invoices
     - name: project_tasks
-    - name: project_users
+    - name: project_userss
     - name: projects
     - name: roles
     - name: tasks
@@ -27,14 +27,14 @@ sources:
     - name: users
 
 models:
-  - name: sde_harvest_projects_contacts_ds
+  - name: sde_harvest_projects_contacts
     columns:
         - name: id
           description: "Unique identifier of a Harvest invoice entry, primary key"
           tests:
               - unique
               - not_null
-  - name: sde_harvest_projects_timesheets_fs
+  - name: sde_harvest_projects_timesheets
     columns:
         - name: id
           description: "Unique identifier of a Harvest time entry, primary key"
