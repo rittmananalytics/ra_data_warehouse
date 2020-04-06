@@ -1,8 +1,7 @@
-SELECT
-  _sdc_batched_at AS _sdc_batched_at,
-  _sdc_received_at AS _sdc_received_at,
-  _sdc_sequence AS _sdc_sequence,
-  _sdc_table_version AS _sdc_table_version,
+WITH lists AS (
+  SELECT * FROM
+  (
+  SELECT
   campaign_defaults.from_email AS default_from_email,
   campaign_defaults.from_name AS default_from_name,
   campaign_defaults.LANGUAGE AS default_language,
@@ -35,8 +34,38 @@ SELECT
   stats.unsubscribe_count_since_send AS unsubscribe_count_since_send,
   subscribe_url_long AS subscribe_url_long,
   visibility AS visibility,
+  _sdc_batched_at AS _sdc_batched_at,
+  MAX(_sdc_batched_at) over (PARTITION BY list_id ORDER BY _sdc_batched_at RANGE BETWEEN unbounded preceding AND unbounded following ) AS max_sdc_batched_at
+
 FROM
-  {{ source(
-    'stitch_mailchimp',
-    'lists'
-  ) }}
+  {{ source('mailchimp_email','lists') }} )
+  WHERE
+    _sdc_batched_at = max_sdc_batched_at
+),
+select_lists AS (
+  SELECT
+    list_id,
+    default_from_email,
+    default_from_name,
+    default_language,
+    default_subject,
+    default_from_address1,
+    default_from_address2,
+    default_from_city,
+    default_from_company,
+    default_from_country,
+    default_from_phone,
+    default_from_state,
+    default_from_zip,
+    name,
+    last_sub_date,
+    last_unsub_date,
+    member_count,
+    member_count_since_send,
+    open_rate,
+    target_sub_rate,
+    unsubscribe_count,
+    unsubscribe_count_since_send,
+    subscribe_url_long,
+    visibility
+    FROM lists

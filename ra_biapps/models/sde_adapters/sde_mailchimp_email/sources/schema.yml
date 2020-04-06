@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: mailchimp_email
     database: ra-development
-    schema: stitch_mailchimp
+    schema: mailchimp_email
     tables:
       - name: campaigns
       - name: list_members
@@ -14,7 +14,7 @@ sources:
       - name: unsubscribes
 
 models:
-  - name: sde_mailchimp_email_contacts_ds
+  - name: sde_mailchimp_email_contacts
     description: "Mailchimp Contacts Dimension Staging"
     columns:
       - name: contact_id
@@ -24,3 +24,67 @@ models:
       - name: contact_created_date
         tests:
           - not_null
+  - name: sde_mailchimp_email_campaign_content_links
+    tests:
+        - unique:
+              column_name: "CONCAT(campaign_id,url)"
+        - not_null:
+               column_name: campaign_id
+        - relationships:
+               column_name: campaign_id
+               to: ref('email_campaigns_dim')
+               field: campaign_id
+  - name: sde_mailchimp_email_campaigns
+    columns:
+      - name: campaign_id
+        description: This is a unique identifier for the campaign
+        tests:
+              - not_null
+              - unique
+  - name: sde_mailchimp_email_audience_membership
+    tests:
+        - unique:
+               column_name: "CONCAT(list_member_id, STRING(valid_from))"
+        - not_null:
+               column_name: list_member_id
+               column_name: email_id
+               column_name: valid_from
+  - name: sde_mailchimp_email_audiences
+    columns:
+      - name: list_id
+        description: The unique identifier for each list.
+        tests:
+              - not_null
+              - unique
+  - name: sde_mailchimp_email_audience_segment_membership
+    tests:
+        - unique:
+               column_name: "CONCAT(list_member_id,'-',CAST(segment_id as STRING), STRING(valid_from))"
+        - not_null:
+               column_name: list_member_id
+               column_name: email_id
+               column_name: segment_id
+               column_name: valid_from
+  - name: sde_mailchimp_email_segments
+    tests:
+        - unique:
+               column_name: segment_id
+        - not_null:
+               column_name: segment_id
+  - name: sde_mailchimp_email_sends
+    tests:
+        - unique:
+               column_name: send_id
+        - not_null:
+               column_name: send_id
+               column_name: campaign_id
+               column_name: list_id
+  - name: sde_mailchimp_email_send_responses
+    tests:
+        - unique:
+               column_name: event_id
+        - not_null:
+               column_name: send_id
+               column_name: campaign_id
+               column_name: list_id
+               column_name: event_at
