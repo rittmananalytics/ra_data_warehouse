@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: mailchimp_email
     database: ra-development
-    schema: mailchimp_email
+    schema: stitch_mailchimp
     tables:
       - name: campaigns
       - name: list_members

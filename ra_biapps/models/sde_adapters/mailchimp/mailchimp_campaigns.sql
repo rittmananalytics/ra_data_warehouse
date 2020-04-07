@@ -1,6 +1,8 @@
-WITH campaigns AS (
-  SELECT * FROM
-  (SELECT
+SELECT
+  _sdc_batched_at AS _sdc_batched_at,
+  _sdc_received_at AS _sdc_received_at,
+  _sdc_sequence AS _sdc_sequence,
+  _sdc_table_version AS _sdc_table_version,
   content_type AS content_type,
   create_time AS created_at,
   emails_sent AS number_emails_sent,
@@ -46,47 +48,9 @@ WITH campaigns AS (
   tracking.google_analytics AS tracking_google_analytics,
   tracking.html_clicks AS tracking_html_clicks,
   tracking.opens AS tracking_opens,
-  tracking.text_clicks AS tracking_text_clicks,
-  _sdc_batched_at AS _sdc_batched_at,
-  MAX(_sdc_batched_at) over (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN unbounded preceding AND unbounded following ) AS max_sdc_batched_at
-
+  tracking.text_clicks AS tracking_text_clicks
 FROM
   {{ source(
-    'mailchimp_email',
+    'stitch_mailchimp',
     'campaigns'
-  ) }})
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
-)
-  SELECT
-    content_type,
-    created_at,
-    number_emails_sent,
-    campaign_id,
-    archive_url,
-    list_id,
-    list_is_active,
-    list_name,
-    recipient_count,
-    segment_opts,
-    segment_text,
-    segment_conditions,
-    segment_match,
-    resendable,
-    sent_at,
-    has_authenticate,
-    has_auto_footer,
-    has_auto_tweet,
-    is_drag_and_drop,
-    has_fb_comments,
-    from_name,
-    preview_text,
-    reply_to,
-    subject_line,
-    template_id,
-    timewarp,
-    title,
-    to_name,
-    status
-  FROM
-    campaigns
+  ) }}

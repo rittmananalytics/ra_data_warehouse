@@ -16,10 +16,11 @@ SELECT
   unique_email_id AS email_id,
   unsubscribe_reason AS unsubscribe_reason,
   _sdc_batched_at AS _sdc_batched_at,
-  MAX(_sdc_batched_at) over (PARTITION BY list_id ORDER BY _sdc_batched_at RANGE BETWEEN unbounded preceding AND unbounded following ) AS max_sdc_batched_at
+  MAX(_sdc_batched_at) over (PARTITION BY listmembers.id ORDER BY _sdc_batched_at RANGE BETWEEN unbounded preceding AND unbounded following ) AS max_sdc_batched_at
 FROM
   {{ source(
     'mailchimp_email','list_members'
   ) }} AS listmembers,
   UNNEST(tags) AS Tags )
-WHERE _sdc_batched_at = max_sdc_batched_at
+WHERE _sdc_batched_at = max_sdc_batched_at)
+select * from list_membership

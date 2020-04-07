@@ -74,7 +74,7 @@ send_stats AS (
     COALESCE(latest_response_counts.count_clicks,0) AS count_clicks
   FROM sends
   LEFT JOIN
-  latest_response_counts ON
+  responses ON
   sends.send_id = latest_response_counts.send_id
 )
 

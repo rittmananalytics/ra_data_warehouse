@@ -1,6 +1,4 @@
-WITH segments AS (
-  SELECT * FROM (
-  SELECT
+SELECT
   _sdc_batched_at AS _sdc_batched_at,
   _sdc_received_at AS _sdc_received_at,
   _sdc_sequence AS _sdc_sequence,
@@ -11,13 +9,8 @@ WITH segments AS (
   member_count AS member_count,
   name AS name,
   updated_at AS updated_at,
-  MAX(_sdc_batched_at) over (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN unbounded preceding AND unbounded following ) AS max_sdc_batched_at
-
 FROM
   {{ source(
-    'mailchimp_email',
+    'stitch_mailchimp',
     'list_segments'
-  ) }})
-  WHERE _sdc_batched_at = max_sdc_batched_at
-)
-select * from segments
+  ) }}
