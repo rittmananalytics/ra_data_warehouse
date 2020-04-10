@@ -1,28 +1,18 @@
 {{
     config(
-        unique_key='project_pk',
+        unique_key='timesheet_project_pk',
         alias='timesheet_projects_dim'
     )
 }}
-WITH unique_projects AS
+WITH timesheet_projects AS
   (
-  SELECT lower(project_name) as project_name
+  SELECT *
   FROM   {{ ref('sde_timesheet_projects_ds') }}
-  GROUP BY 1
   )
-,
-  unique_projects_with_uuid AS
-  (
-  SELECT project_name,
-         GENERATE_UUID() as project_uid
-  FROM   unique_projects
-  )
-
 SELECT
+   GENERATE_UUID() as timesheet_project_pk,
    p.source,
-   GENERATE_UUID() as project_pk,
-   u.project_uid,
-   p.project_id as harvest_project_id,
+   p.timesheet_project_id,
    p.project_name,
    p.project_code,
    p.project_delivery_start_ts,
@@ -39,6 +29,4 @@ SELECT
    p.project_budget_by,
    p.project_client_id
 FROM
-   {{ ref('sde_timesheet_projects_ds') }} p
-JOIN unique_projects_with_uuid  u
-ON lower(p.project_name) = u.project_name
+   timesheet_projects p

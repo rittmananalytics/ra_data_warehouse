@@ -5,6 +5,9 @@ with sde_users_ds_merge_list as
     union all
     SELECT *
     FROM   {{ ref('sde_jira_projects_users') }}
+    union all
+    SELECT *
+    FROM   {{ ref('sde_asana_projects_users') }}
   )
 ,
 user_emails as (

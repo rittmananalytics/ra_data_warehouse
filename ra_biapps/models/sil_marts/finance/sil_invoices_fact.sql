@@ -25,7 +25,7 @@ SELECT
    GENERATE_UUID() as invoice_pk,
    s.user_pk as creator_users_pk,
    c.company_pk,
-   p.project_pk,
+   p.timesheet_project_pk,
    i.* except (harvest_invoice_id, xero_invoice_id),
 
 FROM
@@ -35,4 +35,4 @@ JOIN user_dim s
 JOIN companies_dim c
    ON i.company_id = c.company_id
 LEFT OUTER JOIN projects_dim p
-   ON i.invoice_project_id = p.harvest_project_id
+   ON cast(i.timesheet_project_id as string) = p.timesheet_project_id

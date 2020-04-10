@@ -13,7 +13,7 @@ with companies_dim as (
 ),
   tasks_dim as (
       select *
-      from {{ ref('sil_tasks_dim') }}
+      from {{ ref('sil_timesheet_tasks_dim') }}
 )
 ,
   projects_dim as (
@@ -31,8 +31,8 @@ SELECT
     c.company_pk,
     t.source,
     s.user_pk,
-    p.project_pk,
-    ta.task_pk,
+    p.timesheet_project_pk,
+    ta.timesheet_task_pk,
     timesheet_invoice_id,
     timesheet_billing_date,
     timesheet_hours_billed,
@@ -48,8 +48,8 @@ FROM
 JOIN companies_dim c
    ON cast(t.company_id as string) IN UNNEST(c.all_company_ids)
 LEFT OUTER JOIN projects_dim p
-   ON t.timesheet_project_id = p.harvest_project_id
+   ON cast(t.timesheet_project_id as string) = p.timesheet_project_id
 LEFT OUTER JOIN tasks_dim ta
-   ON t.timesheet_task_id = ta.harvest_task_id
+   ON t.timesheet_task_id = ta.task_id
 JOIN user_dim s
    ON cast(t.timesheet_users_id as string) IN UNNEST(s.all_user_ids)

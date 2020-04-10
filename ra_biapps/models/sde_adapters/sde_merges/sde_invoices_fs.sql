@@ -49,7 +49,7 @@ with harvest_invoices as (
 ),
   joined_invoices as (
   select coalesce(cast(h.invoice_number as string),cast(x.invoice_number as string)) invoice_number,
-         h.invoice_project_id,
+         h.invoice_project_id as timesheet_project_id,
          h.invoice_id as harvest_invoice_id,
          x.invoice_id as xero_invoice_id,
          h.company_id,
