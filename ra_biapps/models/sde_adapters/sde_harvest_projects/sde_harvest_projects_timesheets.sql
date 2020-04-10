@@ -10,7 +10,6 @@ with harvest_time_entries as (
       )
   WHERE
       _sdc_batched_at = latest_sdc_batched_at
-  {{ dbt_utils.group_by(n=29) }}
 ),
   harvest_projects as (
     SELECT
@@ -63,7 +62,7 @@ with harvest_time_entries as (
     WHERE
         _sdc_batched_at = latest_sdc_batched_at
   ),
- harvest_userss as (
+ harvest_users as (
    SELECT
        *
    FROM (
@@ -107,5 +106,6 @@ FROM
   join harvest_users_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
   join harvest_project_tasks pt on upt.project_task_id = pt.id
   join harvest_tasks ht on pt.task_id = ht.id
-  join harvest_userss u on t.user_id = u.id
+  join harvest_users u on t.user_id = u.id
   join companies_pre_merged pm on t.client_id = pm.harvest_company_id
+  {{ dbt_utils.group_by(n=18) }}

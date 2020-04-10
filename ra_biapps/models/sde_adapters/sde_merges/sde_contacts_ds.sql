@@ -18,7 +18,7 @@ with sde_contacts_ds_merge_list as
     SELECT * except (contact_id, contact_company_id, source),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
            concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id
-    FROM   {{ ref('sde_mailchimp_email_contacts_ds') }}
+    FROM   {{ ref('sde_mailchimp_email_contacts') }}
   ),
   contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails

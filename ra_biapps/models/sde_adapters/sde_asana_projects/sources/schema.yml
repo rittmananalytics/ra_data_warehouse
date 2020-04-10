@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: jira
+    database: ra-development
+    schema: stitch_jira
+    tables:
+      - name: projects
+      - name: issues
+      - name: users
+      - name: roles
+      - name: issue_comments
+      - name: project_categories
+      - name: project_types

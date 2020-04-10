@@ -1,3 +1,9 @@
 packages:
   - package: fishtown-analytics/dbt-utils
     version: 0.1.7
+  - package: fishtown-analytics/logging
+    version: 0.2.2
+  - package: fishtown-analytics/codegen
+    version: 0.0.4
+  - package: fishtown-analytics/audit_helper
+    version: 0.0.5
