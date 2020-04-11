@@ -1,4 +1,4 @@
-with harvest_users as (
+with source as (
   SELECT
     *
   FROM (
@@ -9,7 +9,8 @@ with harvest_users as (
       {{ source('harvest_projects', 'users') }})
   WHERE
     latest_sdc_batched_at = _sdc_batched_at
-)
+),
+renamed as (
 select
        'harvest_projects'                 as source,
        concat('harvest-',id)              as user_id,
@@ -24,4 +25,8 @@ select
        is_active                          as user_is_active,
        created_at                         as user_created_ts,
        updated_at                         as user_last_modified_ts
-from harvest_users u
+from source u)
+SELECT
+  *
+FROM
+  renamed

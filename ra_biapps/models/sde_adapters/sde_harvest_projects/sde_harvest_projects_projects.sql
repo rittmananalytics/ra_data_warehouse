@@ -1,4 +1,4 @@
-with harvest_projects as (
+with source as (
   SELECT
     *
   FROM (
@@ -9,7 +9,8 @@ with harvest_projects as (
       {{ source('harvest_projects', 'projects') }})
   WHERE
     latest_sdc_batched_at = _sdc_batched_at
-)
+),
+renamed as (
 select
        'harvest_projects'                       as source,
        concat('harvest-',p.id)                                     as timesheet_project_id,
@@ -28,4 +29,8 @@ select
        p.over_budget_notification_percentage    as project_over_budget_notification_pct,
        p.budget_by                              as project_budget_by,
        p.client_id                              as project_client_id
-from harvest_projects p
+from source p)
+SELECT
+  *
+FROM
+  renamed

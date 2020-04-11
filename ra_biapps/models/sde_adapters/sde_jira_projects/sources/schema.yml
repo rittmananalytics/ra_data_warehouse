@@ -12,3 +12,19 @@ sources:
       - name: issue_comments
       - name: project_categories
       - name: project_types
+
+models:
+  - name: sde_jira_projects_projects
+    description: "Jira Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: lead_user_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('sde_asana_projects_users')
+              field: user_id

@@ -44,8 +44,8 @@ select source,
        task_type,
        task_description,
        task_status,
+       cast(null as boolean) as task_is_completed,
+       cast(null as timestamp)  as task_completed_ts,
        task_created_ts,
        task_last_modified_ts
-
-
  from tasks

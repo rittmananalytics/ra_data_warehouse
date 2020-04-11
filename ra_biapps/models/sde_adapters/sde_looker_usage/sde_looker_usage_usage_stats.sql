@@ -17,5 +17,5 @@ average_runtime_in_seconds as usage_response_time_secs,
 _fivetran_synced,
 max(_fivetran_synced) OVER (PARTITION BY pk ORDER BY _fivetran_synced RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_fivetran_synced
 FROM
-`ra-development`.`fivetran_looker_usage_stats`.`usage_stats`)
+`ra-development`.`fivetran_email`.`usage_stats`)
 where _fivetran_synced = max_fivetran_synced

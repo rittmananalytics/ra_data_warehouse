@@ -1,4 +1,4 @@
-with harvest_time_entries as (
+with source_harvest_time_entries as (
   SELECT
       *
   FROM (
@@ -11,7 +11,7 @@ with harvest_time_entries as (
   WHERE
       _sdc_batched_at = latest_sdc_batched_at
 ),
-  harvest_projects as (
+source_harvest_projects as (
     SELECT
       *
     FROM (
@@ -23,7 +23,7 @@ with harvest_time_entries as (
     WHERE
       latest_sdc_batched_at = _sdc_batched_at
   ),
-  harvest_users_project_tasks as (
+source_harvest_users_project_tasks as (
     SELECT
         *
     FROM (
@@ -36,7 +36,7 @@ with harvest_time_entries as (
     WHERE
         _sdc_batched_at = latest_sdc_batched_at
   ),
-  harvest_project_tasks as (
+source_harvest_project_tasks as (
     SELECT
       *
     FROM (
@@ -49,7 +49,7 @@ with harvest_time_entries as (
     WHERE
       _sdc_batched_at = latest_sdc_batched_at
   ),
-  harvest_tasks as (
+source_harvest_tasks as (
     SELECT
         *
     FROM (
@@ -62,7 +62,7 @@ with harvest_time_entries as (
     WHERE
         _sdc_batched_at = latest_sdc_batched_at
   ),
- harvest_users as (
+source_harvest_users as (
    SELECT
        *
    FROM (
@@ -75,12 +75,13 @@ with harvest_time_entries as (
    WHERE
        _sdc_batched_at = latest_sdc_batched_at
  ),
- companies_pre_merged as
+source_companies_pre_merged as
  (
    select company_id, harvest_company_id
    from {{ ref('sde_companies_pre_merged') }}
    where harvest_company_id is not null
- )
+ ),
+renamed as (
 SELECT
   'harvest_projects'        as source,
   pm.company_id             as company_id,
@@ -102,10 +103,14 @@ SELECT
   t.notes                   as timesheet_notes
 FROM
   harvest_time_entries t
-  join harvest_projects p on t.project_id = p.id
-  join harvest_users_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
-  join harvest_project_tasks pt on upt.project_task_id = pt.id
-  join harvest_tasks ht on pt.task_id = ht.id
-  join harvest_users u on t.user_id = u.id
-  join companies_pre_merged pm on t.client_id = pm.harvest_company_id
-  {{ dbt_utils.group_by(n=18) }}
+  join source_harvest_projects p on t.project_id = p.id
+  join source_harvest_users_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
+  join source_harvest_project_tasks pt on upt.project_task_id = pt.id
+  join source_harvest_tasks ht on pt.task_id = ht.id
+  join source_harvest_users u on t.user_id = u.id
+  join source_companies_pre_merged pm on t.client_id = pm.harvest_company_id
+  {{ dbt_utils.group_by(n=18) }})
+SELECT
+    *
+  FROM
+    renamed

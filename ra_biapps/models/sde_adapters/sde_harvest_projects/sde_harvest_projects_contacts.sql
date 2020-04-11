@@ -1,18 +1,18 @@
-WITH harvest_contacts as (
-
-  SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
+WITH source AS (
+  SELECT
+    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
   FROM
-  (
-    SELECT *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('harvest_projects', 'contacts') }}
-  )
-  WHERE _sdc_batched_at = max_sdc_batched_at
-
+    (
+      SELECT
+        *,
+        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+      FROM
+        {{ source('harvest_projects','contacts') }}
+    )
+  WHERE
+    _sdc_batched_at = max_sdc_batched_at
 ),
-
-contacts_ds as (
-
+renamed as (
   SELECT
   'harvest_projects' as source,
   cast(id as string) AS contact_id,
@@ -36,7 +36,9 @@ contacts_ds as (
   min(updated_at) over (partition by id order by updated_at) AS contact_created_date,
   updated_at as contact_last_modified_date
 FROM
-  harvest_contacts
+  source
 )
-
-select * from contacts_ds
+SELECT
+  *
+FROM
+  renamed
