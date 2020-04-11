@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: segment_warehouse
+    schema: company_website
+    tables:
+      - name: pages
+      - name: tracks

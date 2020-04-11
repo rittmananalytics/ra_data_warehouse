@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: stitch_stripe
+    tables:
+      - name: balance_transactions
+      - name: charges
+      - name: events
+      - name: payout_transactions
+      - name: payouts

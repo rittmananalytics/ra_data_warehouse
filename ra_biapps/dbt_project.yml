@@ -35,8 +35,43 @@ models:
       sde_adapters:
           materialized: view
           schema: staging
+              sde_harvest_projects:
+                  enabled: true
+                  tags: ["harvest", "projects","stitch"]
+              sde_jira_projects:
+                  enabled: true
+                  tags: ["jira", "projects","stitch"]
+              sde_asana_projects:
+                  enabled: true
+                  tags: ["asana", "projects","stitch"]
+              sde_hubspot_crm:
+                  enabled: true
+                  tags: ["hubspot", "crm","stitch"]
+              sde_mailchimp_email:
+                  enabled: true
+                  tags: ["mailchimp", "email","stitch"]
+              sde_segment_events:
+                  enabled: true
+                  tags: ["segment", "events","segment_warehouse"]
+              sde_stripe_payments:
+                  enabled: false
+                  tags: ["stripe", "payments","stitch"]
+              sde_xero_accounting:
+                  enabled: false
+                  sde_stripe_payments:
+                  tags: ["xero", "accounting","stitch"]
       sil_marts:
           materialized: table
+              sil_crm:
+                  enabled: true
+                  tags: ["crm","projects","email","payments","accounting"]
+              sil_finance:
+                  enabled: true
+                  tags: ["payments","accounting"]
+              sil_marketing:
+                  enabled: true
+                  tags: ["payments","accounting"]           
+
 seeds:
   ra_bi_apps:
     schema: seed_data

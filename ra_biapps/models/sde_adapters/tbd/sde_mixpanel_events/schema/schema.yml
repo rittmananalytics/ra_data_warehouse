@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: stitch_mixpanel
+    tables:
+      - name: _sdc_rejected
+      - name: mixpanel_engage
+      - name: mixpanel_export

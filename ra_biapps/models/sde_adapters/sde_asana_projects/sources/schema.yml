@@ -22,7 +22,7 @@ models:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('sde_asana_project_users')
+              to: ref('sde_asana_projects_users')
               field: user_id
       - name: project_name
         tests:
