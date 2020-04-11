@@ -13,22 +13,10 @@ Objectives for this package are as follows:
 
 ### Current Modules
 
-|--------------|---------------------|-----------------------------|
 | Module       | Implemented Sources | Planned Sources             |
 |--------------|---------------------|-----------------------------|
 | CRM & Sales  | Hubspot CRM         | Salesforce CRM              |
-|--------------|---------------------|-----------------------------|
-| Projects     | Harvest Timesheets  | Netsuite Projects           |
-|              | Asana               |                             |
-|              | Jira                |                             |
-|--------------|---------------------|-----------------------------|
-| Finance      | Xero                | Chargebee                   |
-|              | Stripe              | Freshbooks                  |
-|--------------|---------------------|-----------------------------|
-| Marketing    | Mailchimp           | Salesforce Marketing Cloud  |
-|              |                     | Hubspot Email Marketing     |
-|--------------|---------------------|-----------------------------|
-| Events + Web | Segment             | Mixpanel                    |
-|              |                     | Google Analytics (Free)     |
-|              |                     | Qubit Live Tap              |
-|--------------|---------------------|-----------------------------|
+| Projects     | Harvest Timesheets, Asana, Jira  | Netsuite Projects           |
+| Finance      | Xero, Stripe                | Chargebee, Freshbooks                    |
+| Marketing    | Mailchimp           | Salesforce Marketing Cloud, Hubspot Email Marketing  |
+| Events + Web | Segment             | Mixpanel, Google Analytics (Free), Qubit Live Tap                   |
