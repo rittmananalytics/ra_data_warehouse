@@ -37,8 +37,6 @@ models:
           schema: staging
       sil_marts:
           materialized: table
-  pre-hook: "{{ logging.log_model_start_event() }}"
-  post-hook: "{{ logging.log_model_end_event() }}"
 seeds:
   ra_bi_apps:
     schema: seed_data
