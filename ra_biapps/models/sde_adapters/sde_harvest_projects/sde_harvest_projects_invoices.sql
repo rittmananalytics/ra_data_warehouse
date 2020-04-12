@@ -1,3 +1,11 @@
+{% if not enable_harvest_projects %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with source_harvest_base_invoices as (
 SELECT
     *

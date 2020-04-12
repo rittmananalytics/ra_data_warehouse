@@ -1,3 +1,11 @@
+{% if not enable_xero_accounting %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH xero_companies as (
 
   SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)

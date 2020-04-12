@@ -1,3 +1,9 @@
+{% if not enable_harvest_projects %}
+{{
+    config(
+        enabled=false
+    )
+}}
 with sde_projects_ds_merge_list as
   (
     SELECT *

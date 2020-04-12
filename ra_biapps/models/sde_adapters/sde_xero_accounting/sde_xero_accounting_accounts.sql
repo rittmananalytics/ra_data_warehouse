@@ -1,3 +1,10 @@
+{% if not enable_xero_accounting %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
 
 with accounts as
 (

@@ -1,3 +1,11 @@
+{% if not enable_hubspot_crm %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH hubspot_contacts as (
 
   SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)

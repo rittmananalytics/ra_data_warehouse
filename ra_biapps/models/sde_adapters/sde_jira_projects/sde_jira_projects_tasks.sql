@@ -1,3 +1,11 @@
+{% if not enable_jira_projects %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with tasks as (SELECT
   *
   FROM (

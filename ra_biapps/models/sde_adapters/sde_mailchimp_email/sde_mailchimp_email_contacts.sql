@@ -1,3 +1,11 @@
+{% if not enable_mailchimp_email %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH mailchimp_contacts AS (
   SELECT
     *

@@ -1,3 +1,11 @@
+{% if not enable_mailchimp_email %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH campaigns AS (
   SELECT * except (_sdc_batched_at, max_sdc_batched_at)
   FROM (

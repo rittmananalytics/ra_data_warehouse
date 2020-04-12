@@ -1,3 +1,11 @@
+{% if not enable_segment_events %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with source as (
 
     select * from {{ source('segment_warehouse', 'pages') }}

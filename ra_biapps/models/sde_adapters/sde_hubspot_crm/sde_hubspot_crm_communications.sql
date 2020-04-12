@@ -1,3 +1,11 @@
+{% if not enable_hubspot_crm %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH
   deduped_communications AS (
   SELECT

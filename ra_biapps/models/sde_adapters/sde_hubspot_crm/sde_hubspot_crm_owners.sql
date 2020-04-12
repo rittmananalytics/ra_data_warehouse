@@ -1,3 +1,10 @@
+{% if not enable_hubspot_crm %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
 
 with base_hubspot_owners as (
 

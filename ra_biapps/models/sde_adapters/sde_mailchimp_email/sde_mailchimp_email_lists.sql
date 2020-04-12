@@ -1,3 +1,9 @@
+{% if not enable_mailchimp_email %}
+{{
+    config(
+        enabled=false
+    )
+}}
 WITH audiences as (
 
   SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)

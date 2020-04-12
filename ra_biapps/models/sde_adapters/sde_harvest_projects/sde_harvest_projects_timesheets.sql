@@ -1,3 +1,11 @@
+{% if not enable_harvest_projects %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with source_harvest_time_entries as (
   SELECT
       *
@@ -102,7 +110,7 @@ SELECT
   t.cost_rate               as timesheet_billable_hourly_cost_amount,
   t.notes                   as timesheet_notes
 FROM
-  harvest_time_entries t
+  source_harvest_time_entries t
   join source_harvest_projects p on t.project_id = p.id
   join source_harvest_users_project_tasks upt on t.task_assignment_id = upt.project_task_id and upt.user_id = t.user_id
   join source_harvest_project_tasks pt on upt.project_task_id = pt.id

@@ -1,3 +1,11 @@
+{% if not enable_stripe_payments %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 WITH source AS (
   SELECT
     * EXCEPT (_sdc_batched_at, max_sdc_batched_at)

@@ -1,3 +1,11 @@
+{% if not enable_hubspot_crm %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with deal_pipelines as (
 
     select * from {{ source('hubspot_crm', 'deal_pipelines') }}

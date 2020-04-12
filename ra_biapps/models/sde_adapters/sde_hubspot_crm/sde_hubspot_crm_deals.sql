@@ -1,3 +1,10 @@
+{% if not enable_hubspot_crm %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
 
 with hubspot_deals_latest as (
 

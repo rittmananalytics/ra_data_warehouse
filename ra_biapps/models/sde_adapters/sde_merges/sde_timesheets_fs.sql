@@ -1,3 +1,9 @@
+{% if not enable_harvest_projects %}
+{{
+    config(
+        enabled=false
+    )
+}}
 with sde_timesheets_fs_merge_list as
   (
     SELECT * except (timesheet_id),

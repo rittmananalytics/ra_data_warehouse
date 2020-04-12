@@ -1,13 +1,33 @@
+{% if not enable_jira_projects and not enable_asana_projects and not enable_harvest_projects%}
+{{
+    config(
+        enabled=false
+    )
+}}
 with sde_users_ds_merge_list as
   (
+    {% if enable_harvest_projects %}
     SELECT *
     FROM   {{ ref('sde_harvest_projects_users') }}
-    union all
+    {% endif %}
+
+    {% if enable_jira_projects and enable_harvest_projects %}
+    UNION ALL
+    {% endif %}
+
+    {% if enable_jira_projects %}
     SELECT *
     FROM   {{ ref('sde_jira_projects_users') }}
-    union all
+    {% endif %}
+
+    {% if enable_harvest_projects or enable_jira_projects %}
+    UNION ALL
+    {% endif %}
+
+    {% if enable_asana_projects %}
     SELECT *
     FROM   {{ ref('sde_asana_projects_users') }}
+    {% endif %}
   )
 ,
 user_emails as (
