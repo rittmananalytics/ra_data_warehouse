@@ -70,7 +70,15 @@ models:
           sil_marketing:
             enabled: true
             tags: ["payments","accounting"]
-
+  vars:
+      enable_harvest_projects:  true
+      enable_hubspot_crm:       true
+      enable_asana_projects:    true
+      enable_jira_projects:     true
+      enable_stripe_payments:   true
+      enable_xero_accounting:   true
+      enable_mailchimp_email:   true
+      enable_segment_events:    true 
 seeds:
   ra_bi_apps:
     schema: seed_data
