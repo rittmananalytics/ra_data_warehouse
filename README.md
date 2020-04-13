@@ -27,6 +27,7 @@ Customers, contacts, projects and other shared dimensions are automatically crea
 
 #### Data sources implemented for a particular customer can be selected in dbt_project.yml config file
 
+```
 vars:
     enable_harvest_projects:      true
     enable_hubspot_crm:           true
@@ -39,11 +40,11 @@ vars:
     enable_crm_warehouse:         true
     enable_finance_warehouse:     true
     enable_projects_warehouse:    true
-    enable_marketing_warehouse:   true
+    enable_marketing_warehouse:   true```
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
-models:
+```models:
   ra_bi_apps:
       # Applies to all files under models/example/
       sde_adapters:
@@ -53,4 +54,4 @@ models:
           materialized: table
 seeds:
   ra_bi_apps:
-      schema: seed_data
+      schema: seed_data```
