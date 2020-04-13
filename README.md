@@ -42,6 +42,9 @@ vars:
     enable_projects_warehouse:           true
     enable_marketing_warehouse:          true
     ```
+#### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
+
+![SDE and SIL ](/img/sde_sil_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
@@ -57,3 +60,35 @@ seeds:
   ra_bi_apps:
       schema: seed_data
       ```
+#### Predefined Data Quality tests on sources and warehouse tables
+
+```
+  - name: sde_asana_projects_projects
+    description: "Asana Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: lead_user_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('sde_asana_projects_users')
+              field: user_id
+
+  - name: sil_timesheets_fact
+    description: "Projects Dimension"
+    columns:
+      - name: timesheet_pk
+        tests:
+          - unique
+          - not_null
+      - name: company_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('sil_companies_dim')
+              field: company_pk
+              ```
