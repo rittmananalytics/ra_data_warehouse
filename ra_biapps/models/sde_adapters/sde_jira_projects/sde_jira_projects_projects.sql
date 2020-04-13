@@ -1,4 +1,4 @@
-{% if not enable_jira_projects %}
+{% if not var("enable_jira_projects") %}
 {{
     config(
         enabled=false
@@ -6,11 +6,10 @@
 }}
 {% endif %}
 
-with projects as (SELECT
+with source as (SELECT
   *
   FROM (
   SELECT
-    'jira_projects'               as source,
     concat('jira-',id) as project_id,
     concat('jira-',lead.key) as lead_user_id,
     name as project_name,
@@ -51,8 +50,7 @@ WHERE
         {{ source('jira', 'project_categories') }})
     WHERE
       _sdc_batched_at = max_sdc_batched_at)
-select p.source,
-       p.project_id,
+select p.project_id,
        p.lead_user_id,
        p.project_name,
        p.project_status,
@@ -63,6 +61,6 @@ select p.source,
        cast (null as timestamp) as project_created_at_ts,
        cast (null as timestamp) as project_modified_at_ts
 
-from projects p
+from source p
 join types t on p.project_type_id = t.project_type_id
 join categories c on p.project_category_id = c.project_category_id

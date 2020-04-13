@@ -1,4 +1,4 @@
-{% if not enable_harvest_projects %}
+{% if not var("enable_harvest_projects") %}
 {{
     config(
         enabled=false
@@ -12,14 +12,14 @@ SELECT
 FROM (
     SELECT
         *,
-         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at,
+         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at,
     CASE WHEN DATE_DIFF(DATE(due_date),DATE(paid_at),DAY) <=0 THEN true ELSE false END AS was_paid_ontime
 
     FROM
         {{ source('harvest_projects', 'invoices') }}
     )
     WHERE
-        _sdc_batched_at = latest_sdc_batched_at
+        _sdc_batched_at = max_sdc_batched_at
     ),
 source_harvest_invoice_line_items as (
       SELECT
@@ -27,12 +27,12 @@ source_harvest_invoice_line_items as (
       FROM (
           SELECT
               *,
-               MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+               MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
           FROM
               {{ source('harvest_projects', 'invoice_line_items') }}
           )
       WHERE
-          _sdc_batched_at = latest_sdc_batched_at
+          _sdc_batched_at = max_sdc_batched_at
     ),
 source_harvest_expenses as (
   SELECT
@@ -40,22 +40,17 @@ source_harvest_expenses as (
   FROM (
       SELECT
           *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+           MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
           {{ source('harvest_projects', 'expenses') }}
       )
   WHERE
-      _sdc_batched_at = latest_sdc_batched_at
+      _sdc_batched_at = max_sdc_batched_at
     ),
-source_companies_pre_merged as
-(
-  select company_id, harvest_company_id
-  from {{ ref('sde_companies_pre_merged') }}
-  where harvest_company_id is not null
-),
 stg_harvest_invoices as (
 select i.*,
-  pm.company_id as company_id,
+  concat('harvest-',client_id) as company_id,
+  id as invoice_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
   date_diff(date(i.created_at),date(first_value(i.created_at) over (partition by i.client_id order by i.created_at)),MONTH) as months_since_first_invoice,
@@ -88,37 +83,39 @@ group by 1,2,3,4,6,7,8,9)) a
 on   i.id = a.invoice_id
 left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expenses FROM source_harvest_expenses  where billable group by 1 ) e
 on i.id = e.invoice_id
-join source_companies_pre_merged pm on i.client_id = pm.harvest_company_id
 ),
 renamed as (
-select 'harvest_projects' as source,
+select  number as invoice_number,
         company_id,
-        id as invoice_id,
-        number as invoice_number,
-        project_id as invoice_project_id,
-        client_id as invoice_company_id,
+        concat('harvest-',invoice_id) as invoice_id,
+        concat('harvest-',project_id) as project_id,
+        concat('harvest-',creator_id) as invoice_creator_users_id,
         subject as invoice_subject,
+        created_at as invoice_created_at_ts,
+        issue_date as invoice_issue_at_ts,
+        due_date as invoice_due_at_ts,
+        sent_at as invoice_sent_at_ts,
+        paid_at as invoice_paid_at_ts,
+        period_start as invoice_period_start_at_ts,
+        period_end as invoice_period_end_at_ts,
         revenue_amount_billed as invoice_local_total_revenue_amount,
         currency as invoice_currency,
         amount as total_local_amount,
-        total_amount_billed as invoice_local_total_amount,
-        services_amount_billed as invoice_local_total_service_amount,
+        total_amount_billed as invoice_local_total_billed_amount,
+        services_amount_billed as invoice_local_total_services_amount,
         license_referral_fee_amount_billed as invoice_local_total_licence_referral_fee_amount,
         expenses_amount_billed as invoice_local_total_expenses_amount,
         support_amount_billed as invoice_local_total_support_amount,
+        tax as invoice_tax_rate_pct,
         tax_billed as invoice_local_total_tax_amount,
-        issue_date as invoice_issue_date,
-        due_date as invoice_due_date,
-        sent_at as invoice_sent_at,
-        created_at as invoice_created_at,
-        concat('harvest-',creator_id) as invoice_creator_users_id,
         due_amount as invoice_local_total_due_amount,
-        tax as invoice_tax,
         payment_term as invoice_payment_term,
-        period_start as invoice_period_start,
-        period_end as invoice_period_end,
-        paid_at as invoice_paid_at,
-        paid_date as invoice_paid_date
+        case when state = 'open' then 'Authorised'
+             when state = 'paid' then 'Paid'
+             when state = 'draft' then 'Draft'
+             else 'Other' end as invoice_status,
+        'Sales' as invoice_type,
+
 from stg_harvest_invoices)
 SELECT
   *

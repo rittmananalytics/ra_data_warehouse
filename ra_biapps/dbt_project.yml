@@ -38,14 +38,18 @@ models:
       sil_marts:
           materialized: table
   vars:
-      enable_harvest_projects:  true
-      enable_hubspot_crm:       true
-      enable_asana_projects:    false
-      enable_jira_projects:     true
-      enable_stripe_payments:   true
-      enable_xero_accounting:   true
-      enable_mailchimp_email:   true
-      enable_segment_events:    true
+      enable_harvest_projects:      true
+      enable_hubspot_crm:           true
+      enable_asana_projects:        true
+      enable_jira_projects:         true
+      enable_stripe_payments:       true
+      enable_xero_accounting:       true
+      enable_mailchimp_email:       true
+      enable_segment_events:        true
+      enable_crm_warehouse:         true
+      enable_finance_warehouse:     true
+      enable_projects_warehouse:    true
+      enable_marketing_warehouse:   true
 seeds:
   ra_bi_apps:
     schema: seed_data

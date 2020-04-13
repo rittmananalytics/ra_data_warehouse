@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -23,11 +23,11 @@ hubspot_owners as (
       concat(concat(firstname,' '),lastname) as salesperson_full_name,
       email,
       _sdc_batched_at,
-      max(_sdc_batched_at) over (partition by ownerid order by _sdc_batched_at range between unbounded preceding and unbounded following) as latest_sdc_batched_at
+      max(_sdc_batched_at) over (partition by ownerid order by _sdc_batched_at range between unbounded preceding and unbounded following) as max_sdc_batched_at
 
     from base_hubspot_owners
 
 )
 
 select * from hubspot_owners
-where _sdc_batched_at = latest_sdc_batched_at
+where _sdc_batched_at = max_sdc_batched_at

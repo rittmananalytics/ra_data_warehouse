@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -10,9 +10,9 @@ with hubspot_deals_latest as (
 
       select *  from (
         select *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) latest_sdc_batched_at
+        MAX(_sdc_batched_at) OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) max_sdc_batched_at
          from {{ source('hubspot_crm', 'deals') }})
-          where latest_sdc_batched_at = _sdc_batched_at
+          where max_sdc_batched_at = _sdc_batched_at
 
 
 ),
@@ -51,7 +51,6 @@ hubspot_deal_stages as (
 hubspot_deals as (
 
   select
-    'hubspot_crm' as source,
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
     properties.dealname.value AS deal_name,
@@ -89,19 +88,11 @@ hubspot_deals as (
             unnest(associations.associatedcompanyids) with offset off
 
 ),
-companies_pre_merged as
-(
-  select company_id, hubspot_company_id
-  from {{ ref('sde_companies_pre_merged') }}
-  where hubspot_company_id is not null
-)
-,
-
 deals_fs as (
 
     select
-    d.*,
-    pm.company_id as company_id,
+    concat('hubspot-',d.hubspot_company_id) as company_id,
+    d.* except(hubspot_company_id),
     s.probability as deal_probability_pct,
     s.stage_label as deal_stage_label,
     s.stage_displayorder as deal_stage_display_order,
@@ -119,15 +110,9 @@ deals_fs as (
       then true else false end as is_active
 
      from hubspot_deals d
-
-    left outer join companies_pre_merged pm on d.hubspot_company_id = cast(pm.hubspot_company_id as string)
-
     left join hubspot_deal_stages s on d.deal_stage_id = s.stageid
-
     left join hubspot_deal_pipelines p on s.pipelineid = p.pipelineid
-
     left outer join {{ ref('sde_hubspot_crm_owners') }} u
-
     on safe_cast(d.deal_owner_id as int64) = u.ownerid
 
 )

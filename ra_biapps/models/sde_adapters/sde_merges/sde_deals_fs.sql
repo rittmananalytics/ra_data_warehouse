@@ -1,7 +1,14 @@
+{% if not var("enable_crm_warehouse") or not var("enable_hubspot_crm")%}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with sde_deals_fs_merge_list as
   (
-    SELECT * except (deal_id),
-           deal_id as hubspot_deal_id
+    SELECT *
     FROM   {{ ref('sde_hubspot_crm_deals') }}
   )
 select * from sde_deals_fs_merge_list

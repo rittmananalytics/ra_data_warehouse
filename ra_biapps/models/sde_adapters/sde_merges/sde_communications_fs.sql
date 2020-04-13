@@ -1,3 +1,11 @@
+{% if not var("enable_crm_warehouse") or not var("enable_hubspot_crm")%}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with sde_communications_merge_list as
   (
     SELECT *

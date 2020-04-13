@@ -1,4 +1,4 @@
-{% if not enable_asana_projects %}
+{% if not var("enable_asana_projects") %}
 {{
     config(
         enabled=false
@@ -22,7 +22,6 @@ WITH source AS (
 ),
 renamed AS (
   SELECT
-  'asana_projects'               as source,
   concat('asana-',gid)           as user_id,
   name                   as user_name  ,
   email                  as user_email ,

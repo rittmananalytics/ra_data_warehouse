@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-WITH hubspot_companies as (
+WITH source as (
 
   SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
   FROM
@@ -19,33 +19,29 @@ WITH hubspot_companies as (
 
 ),
 
-companies_ds as (
-
+renamed as (
     select
-    'hubspot_crm' as source,
-
-      companyid AS company_id,
+      concat('hubspot-',companyid) AS company_id,
       replace(replace(replace(properties.name.value,'Limited',''),'ltd',''),', Inc.','') AS company_name,
-      properties.description.value AS company_description,
-
-      properties.linkedin_company_page.value AS company_linkedin_company_page,
-      properties.twitterhandle.value AS company_twitterhandle,
       properties.address.value AS company_address,
       properties.address2.value AS company_address2,
       properties.city.value AS company_city,
-      properties.country.value AS company_country,
-      properties.website.value AS company_website,
-      properties.hubspot_owner_id.value AS company_contact_owner_id,
-      properties.industry.value AS company_industry,
-      properties.linkedinbio.value AS company_linkedin_bio,
-      properties.domain.value AS company_domain,
-      properties.phone.value AS company_phone,
       properties.state.value AS company_state,
-      properties.lifecyclestage.value AS company_lifecycle_stage,
+      properties.country.value AS company_country,
       properties.zip.value AS company_zip,
+      properties.phone.value AS company_phone,
+      properties.website.value AS company_website,
+      properties.industry.value AS company_industry,
+      properties.linkedin_company_page.value AS company_linkedin_company_page,
+      properties.linkedinbio.value AS company_linkedin_bio,
+      properties.twitterhandle.value AS company_twitterhandle,
+      properties.description.value AS company_description,
+      cast (null as string) as company_finance_status,
       properties.createdate.value AS company_created_date,
-    from hubspot_companies
-
+      properties.hs_lastmodifieddate.value company_last_modified_date
+    from source
 )
-
-select * from companies_ds
+SELECT
+  *
+FROM
+  renamed

@@ -1,4 +1,4 @@
-{% if not enable_asana_projects %}
+{% if not var("enable_asana_projects") %}
 {{
     config(
         enabled=false
@@ -22,7 +22,6 @@ WITH source AS (
 ),
 renamed AS (
   SELECT
-  'asana_projects' as source,
   source.gid as task_id,
   projects.gid AS project_id,
   concat('asana-',assignee.gid)  as task_creator_user_id,
@@ -39,7 +38,7 @@ renamed AS (
     source,
     unnest(projects) projects
   GROUP BY
-    1,2,3,4,5,6,7,8,9,10,11,12,13
+    1,2,3,4,5,6,7,8,9,10,11,12
 )
 SELECT
   *

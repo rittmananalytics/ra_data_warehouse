@@ -1,9 +1,18 @@
+{% if not var("enable_harvest_projects") or (not var("enable_projects_warehouse")) %}
 {{
     config(
-        unique_key='timesheet_project_pk',
+        enabled=false
+    )
+}}
+{% else %}
+{{
+    config(
+        unique_key='timesheet_projects_pk',
         alias='timesheet_projects_dim'
     )
 }}
+{% endif %}
+
 WITH timesheet_projects AS
   (
   SELECT *
@@ -11,7 +20,6 @@ WITH timesheet_projects AS
   )
 SELECT
    GENERATE_UUID() as timesheet_project_pk,
-   p.source,
    p.timesheet_project_id,
    p.project_name,
    p.project_code,

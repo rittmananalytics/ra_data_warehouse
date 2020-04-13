@@ -1,9 +1,11 @@
-{% if not enable_harvest_projects %}
+{% if not var("enable_harvest_projects") or not var("enable_projects_warehouse") %}
 {{
     config(
         enabled=false
     )
 }}
+{% endif %}
+
 with sde_timesheets_fs_merge_list as
   (
     SELECT * except (timesheet_id),

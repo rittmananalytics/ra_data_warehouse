@@ -1,9 +1,18 @@
+{% if not var("enable_projects_warehouse") %}
 {{
     config(
-        unique_key='delivery_project_pk',
+        enabled=false
+    )
+}}
+{% else %}
+{{
+    config(
+        unique_key='delivery_projects_pk',
         alias='delivery_projects_dim'
     )
 }}
+{% endif %}
+
 WITH delivery_projects AS
   (
   SELECT *
@@ -11,7 +20,6 @@ WITH delivery_projects AS
   )
 SELECT
    GENERATE_UUID() as delivery_project_pk,
-   p.source,
    p.project_id,
    p.lead_user_id,
    p.project_name,

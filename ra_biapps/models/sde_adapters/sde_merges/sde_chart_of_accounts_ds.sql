@@ -1,3 +1,11 @@
+{% if not var("enable_finance_warehouse") or not var("enable_xero_accounting") %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with sde_chart_of_accounts_merge_list as
   (
     SELECT *

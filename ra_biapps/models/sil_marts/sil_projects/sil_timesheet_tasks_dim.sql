@@ -1,16 +1,24 @@
+{% if not var("enable_harvest_projects") or (not var("enable_projects_warehouse")) %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% else %}
 {{
     config(
         unique_key='timesheet_task_pk',
         alias='timesheet_tasks_dim'
     )
 }}
+{% endif %}
+
 WITH tasks AS
   (
   SELECT *
   FROM   {{ ref('sde_timesheet_tasks_ds') }}
   )
 SELECT
-   t.source,
    GENERATE_UUID() as timesheet_task_pk,
    t.task_id,
    t.task_name,

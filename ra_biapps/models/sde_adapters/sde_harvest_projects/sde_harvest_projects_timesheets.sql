@@ -1,4 +1,4 @@
-{% if not enable_harvest_projects %}
+{% if not var("enable_harvest_projects") %}
 {{
     config(
         enabled=false
@@ -12,12 +12,12 @@ with source_harvest_time_entries as (
   FROM (
       SELECT
           *,
-          MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+          MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
           {{ source('harvest_projects', 'time_entries') }}
       )
   WHERE
-      _sdc_batched_at = latest_sdc_batched_at
+      _sdc_batched_at = max_sdc_batched_at
 ),
 source_harvest_projects as (
     SELECT
@@ -25,11 +25,11 @@ source_harvest_projects as (
     FROM (
       SELECT
         *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
         {{ source('harvest_projects', 'projects') }})
     WHERE
-      latest_sdc_batched_at = _sdc_batched_at
+      max_sdc_batched_at = _sdc_batched_at
   ),
 source_harvest_users_project_tasks as (
     SELECT
@@ -37,12 +37,12 @@ source_harvest_users_project_tasks as (
     FROM (
         SELECT
             *,
-             MAX(_sdc_batched_at) OVER (PARTITION BY project_task_id,user_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+             MAX(_sdc_batched_at) OVER (PARTITION BY project_task_id,user_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
             {{ source('harvest_projects', 'user_project_tasks') }}
         )
     WHERE
-        _sdc_batched_at = latest_sdc_batched_at
+        _sdc_batched_at = max_sdc_batched_at
   ),
 source_harvest_project_tasks as (
     SELECT
@@ -50,12 +50,12 @@ source_harvest_project_tasks as (
     FROM (
       SELECT
         *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
         {{ source('harvest_projects', 'project_tasks') }}
       )
     WHERE
-      _sdc_batched_at = latest_sdc_batched_at
+      _sdc_batched_at = max_sdc_batched_at
   ),
 source_harvest_tasks as (
     SELECT
@@ -63,12 +63,12 @@ source_harvest_tasks as (
     FROM (
         SELECT
             *,
-             MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+             MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
             {{ source('harvest_projects', 'tasks') }}
         )
     WHERE
-        _sdc_batched_at = latest_sdc_batched_at
+        _sdc_batched_at = max_sdc_batched_at
   ),
 source_harvest_users as (
    SELECT
@@ -76,25 +76,17 @@ source_harvest_users as (
    FROM (
        SELECT
            *,
-            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
        FROM
            {{ source('harvest_projects', 'users') }}
        )
    WHERE
-       _sdc_batched_at = latest_sdc_batched_at
- ),
-source_companies_pre_merged as
- (
-   select company_id, harvest_company_id
-   from {{ ref('sde_companies_pre_merged') }}
-   where harvest_company_id is not null
+       _sdc_batched_at = max_sdc_batched_at
  ),
 renamed as (
 SELECT
-  'harvest_projects'        as source,
-  pm.company_id             as company_id,
+  concat('harvest-',t.client_id)               as company_id,
   cast(t.id as string)      as timesheet_id,
-  t.client_id               as harvest_company_id,
   concat('harvest-',t.user_id) as timesheet_users_id,
   t.project_id              as timesheet_project_id,
   t.task_assignment_id      as timesheet_task_assignment_id,
@@ -116,8 +108,7 @@ FROM
   join source_harvest_project_tasks pt on upt.project_task_id = pt.id
   join source_harvest_tasks ht on pt.task_id = ht.id
   join source_harvest_users u on t.user_id = u.id
-  join source_companies_pre_merged pm on t.client_id = pm.harvest_company_id
-  {{ dbt_utils.group_by(n=18) }})
+  {{ dbt_utils.group_by(n=16) }})
 SELECT
     *
   FROM

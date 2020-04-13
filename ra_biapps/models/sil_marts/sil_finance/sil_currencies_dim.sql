@@ -1,9 +1,18 @@
+{% if not var("enable_finance_warehouse") %}
 {{
     config(
-        unique_key='currency_pk',
+        enabled=false
+    )
+}}
+{% else %}
+{{
+    config(
+        unique_key='account_pk',
         alias='currency_dim'
     )
 }}
+{% endif %}
+
 WITH currencies AS
   (
   SELECT *

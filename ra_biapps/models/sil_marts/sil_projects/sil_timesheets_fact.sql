@@ -1,8 +1,18 @@
+{% if not var("enable_harvest_projects") or (not var("enable_projects_warehouse")) %}
 {{
     config(
+        enabled=false
+    )
+}}
+{% else %}
+{{
+    config(
+        unique_key='timesheet_projects_pk',
         alias='timesheets_fact'
     )
 }}
+{% endif %}
+
 with companies_dim as (
     select *
     from {{ ref('sil_companies_dim') }}
@@ -29,7 +39,6 @@ SELECT
 
     GENERATE_UUID() as timesheet_pk,
     c.company_pk,
-    t.source,
     s.user_pk,
     p.timesheet_project_pk,
     ta.timesheet_task_pk,

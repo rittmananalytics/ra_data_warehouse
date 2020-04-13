@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -16,7 +16,7 @@ deal_stage_with_max as (
 
     select
       *,
-      max(_sdc_batched_at) over (partition by pipelineid order by _sdc_batched_at range between unbounded preceding and unbounded following) as latest_sdc_batched_at
+      max(_sdc_batched_at) over (partition by pipelineid order by _sdc_batched_at range between unbounded preceding and unbounded following) as max_sdc_batched_at
 
     from deal_pipelines
 
@@ -25,7 +25,7 @@ deal_stage_with_max as (
 latest_version as (
 
     select * from deal_stage_with_max
-    where _sdc_batched_at = latest_sdc_batched_at
+    where _sdc_batched_at = max_sdc_batched_at
 
 ),
 

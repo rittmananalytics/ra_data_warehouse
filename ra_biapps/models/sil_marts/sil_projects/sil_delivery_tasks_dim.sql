@@ -1,9 +1,18 @@
+{% if not var("enable_projects_warehouse") %}
 {{
     config(
-        unique_key='delivery_task_pk',
+        enabled=false
+    )
+}}
+{% else %}
+{{
+    config(
+        unique_key='timesheet_projects_pk',
         alias='delivery_tasks_dim'
     )
 }}
+{% endif %}
+
 WITH tasks AS
   (
   SELECT *

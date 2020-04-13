@@ -1,4 +1,4 @@
-{% if not enable_harvest_projects %}
+{% if not var("enable_harvest_projects") %}
 {{
     config(
         enabled=false
@@ -22,7 +22,6 @@ WITH source AS (
 ),
 renamed as (
   SELECT
-  'harvest_projects' as source,
   cast(id as string) AS contact_id,
   first_name AS contact_first_name,
   last_name AS contact_last_name,

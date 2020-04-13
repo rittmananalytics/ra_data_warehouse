@@ -1,4 +1,4 @@
-{% if not enable_mailchimp_email %}
+{% if not var("enable_mailchimp_email") %}
 {{
     config(
         enabled=false
@@ -35,7 +35,6 @@ WITH mailchimp_contacts AS (
 ),
 contacts_ds AS (
   SELECT
-    'mailchimp_email' AS source,
     id AS contact_id,
     merge_fields.fname AS contact_first_name,
     merge_fields.lname AS contact_last_name,

@@ -1,9 +1,10 @@
-{% if not enable_harvest_projects %}
+{% if not var("enable_harvest_projects") or not var("enable_projects_warehouse") %}
 {{
     config(
         enabled=false
     )
 }}
+{% endif %}
 with sde_tasks_ds_merge_list as
   (
     SELECT *

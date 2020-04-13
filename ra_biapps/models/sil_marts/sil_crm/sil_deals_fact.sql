@@ -1,8 +1,17 @@
+{% if not var("enable_crm_warehouse") %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% else %}
 {{
     config(
         alias='deals_fact'
     )
 }}
+{% endif %}
+
 with companies_dim as (
     select *
     from {{ ref('sil_companies_dim') }}

@@ -16,7 +16,7 @@ sources:
 
 
 models:
-  - name: sde_xero_accounting_contacts_ds
+  - name: sde_xero_accounting_contacts
     description: "Xero Contacts Dimension Staging"
     columns:
       - name: contact_id

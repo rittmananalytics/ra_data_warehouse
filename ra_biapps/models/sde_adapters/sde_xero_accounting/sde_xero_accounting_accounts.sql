@@ -1,4 +1,4 @@
-{% if not enable_xero_accounting %}
+{% if not var("enable_xero_accounting") %}
 {{
     config(
         enabled=false
@@ -13,14 +13,13 @@ with accounts as
   FROM (
     SELECT
       *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY accountid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BY accountid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ source('xero_accounting', 'accounts') }})
   WHERE
-    latest_sdc_batched_at = _sdc_batched_at
+    max_sdc_batched_at = _sdc_batched_at
   )
-select  'xero_accounting'       source,
-        accountid as            account_id,
+select  accountid as            account_id,
         name as                 account_name,
         code as                 account_code,
         type as                 account_type,

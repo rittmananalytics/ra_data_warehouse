@@ -1,4 +1,4 @@
-{% if not enable_xero_accounting %}
+{% if not var("enable_xero_accounting") %}
 {{
     config(
         enabled=false
@@ -31,7 +31,6 @@ contacts_ds as (
  unnest(addresses) as addresses
  )
  select
-        'xero_accounting' as source,
         cast(contacts.contactid as string) as contact_id,
         contacts.firstname as contact_first_name,
         contacts.lastname as contact_last_name,
@@ -63,7 +62,7 @@ contacts_ds as (
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
  where concat(contacts.firstname,' ',contacts.lastname) is not null
- group by 1,2,3,4,5,6,7,8,9,15,16,17,18,19,20,21
+ group by 1,2,3,4,5,6,7,8,14,15,16,17,18,19,20
 )
 
 select * from contacts_ds

@@ -1,3 +1,10 @@
+{% if (not var("enable_asana_projects") and not var("enable_jira_projects")) or not var("enable_projects_warehouse") %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
 with sde_delivery_projects_ds_merge_list as
   (
     SELECT *

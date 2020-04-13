@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -13,24 +13,23 @@ WITH
   FROM (
     SELECT
       *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY engagement_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BY engagement_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ source('hubspot_crm', 'engagements') }} )
   WHERE
-    _sdc_batched_at = latest_sdc_batched_at),
+    _sdc_batched_at = max_sdc_batched_at),
   owners AS (
   SELECT
     *
   FROM (
     SELECT
       *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY ownerid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BY ownerid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ source('hubspot_crm', 'owners') }} )
   WHERE
-    _sdc_batched_at = latest_sdc_batched_at)
+    _sdc_batched_at = max_sdc_batched_at)
 SELECT
-  'hubspot_crm' as source,
 
   engagement_id AS communication_id,
   concat(cast(engagement_id as string),coalesce(cast(associations.companyids[OFFSET(off)] as string),'')) as communication_uid,

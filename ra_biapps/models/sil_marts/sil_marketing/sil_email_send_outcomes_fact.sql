@@ -1,8 +1,17 @@
+{% if not var("enable_mailchimp_email") or (not var("enable_marketing_warehouse")) %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% else %}
 {{
     config(
         alias='email_send_outcomes_fact'
     )
 }}
+{% endif %}
+
 with email_sends_dim as (
       select *
       from {{ ref('sil_email_sends_dim') }}

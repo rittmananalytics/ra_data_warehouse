@@ -1,9 +1,18 @@
+{% if not var("enable_mailchimp_email") or (not var("enable_marketing_warehouse")) %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% else %}
 {{
     config(
         unique_key='list_pk',
         alias='email_lists_dim'
     )
 }}
+{% endif %}
+
 WITH lists AS
   (
   SELECT * from {{ ref('sde_email_lists_ds') }}

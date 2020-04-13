@@ -1,4 +1,4 @@
-{% if not enable_hubspot_crm %}
+{% if not var("enable_hubspot_crm") %}
 {{
     config(
         enabled=false
@@ -24,7 +24,6 @@ contacts_ds as (
 
     select
 
-      'hubspot_crm' as source,
        cast(canonical_vid as string) as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,

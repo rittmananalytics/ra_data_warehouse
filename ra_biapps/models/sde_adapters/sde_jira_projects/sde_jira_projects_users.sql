@@ -1,4 +1,4 @@
-{% if not enable_jira_projects %}
+{% if not var("enable_jira_projects") %}
 {{
     config(
         enabled=false
@@ -6,11 +6,21 @@
 }}
 {% endif %}
 
-with users as (SELECT
-  *
-  FROM (
+with source as (
   SELECT
-    'jira_projects'               as source,
+    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
+  FROM (
+    SELECT
+      *,
+      MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+    FROM
+      {{ source('jira', 'users') }})
+  WHERE
+    max_sdc_batched_at = _sdc_batched_at
+),
+ renamed as
+ (
+  SELECT
     concat('jira-',key)           as user_id,
     displayname                   as user_name  ,
     emailaddress                  as user_email,
@@ -23,12 +33,9 @@ with users as (SELECT
     active                        as user_is_active,
     cast(null as timestamp)       as user_created_ts,
     cast(null as timestamp)       as user_last_modified_ts,
-    _sdc_batched_at,
-    MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-  FROM
-    {{ source('jira', 'users') }})
-WHERE
-  _sdc_batched_at = max_sdc_batched_at)
-select u.* except (_sdc_batched_at, max_sdc_batched_at)
-from users u
-where user_id not like '%addon%'
+  FROM source
+  WHERE concat('jira-',key)  NOT LIKE '%addon%')
+SELECT
+ *
+FROM
+ renamed

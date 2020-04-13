@@ -1,24 +1,46 @@
+{% if not var("enable_crm_warehouse") and not var("enable_finance_warehouse") and not var("enable_marketing_warehouse") and not var("enable_projects_warehouse") %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
+
 with sde_contacts_ds_merge_list as
   (
-    SELECT * except (contact_id, contact_company_id, source),
+    {% if var("enable_hubspot_crm") is true %}
+    SELECT * except (contact_id, contact_company_id),
            concat('hubspot-',contact_id) as contact_id,
            concat('hubspot-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_hubspot_crm_contacts_ds') }}
+    FROM   {{ ref('sde_hubspot_crm_contacts') }}
+    {% endif %}
+    {% if var("enable_hubspot_crm") is true and var("enable_harvest_projects") is true %}
     UNION ALL
-    SELECT * except (contact_id, contact_company_id, source),
-           concat('xero-',contact_id) as contact_id,
-           concat('xero-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_xero_accounting_contacts_ds') }}
-    UNION ALL
-    SELECT * except (contact_id, contact_company_id, source),
+    {% endif %}
+    {% if var("enable_harvest_projects") is true %}
+    SELECT * except (contact_id, contact_company_id),
            concat('harvest-',contact_id) as contact_id,
            concat('harvest-',contact_company_id) as contact_company_id
     FROM   {{ ref('sde_harvest_projects_contacts') }}
+    {% endif %}
+    {% if (var("enable_hubspot_crm") or var("enable_harvest_projects")) and var("enable_xero_accounting") %}
     UNION ALL
-    SELECT * except (contact_id, contact_company_id, source),
+    {% endif %}
+    {% if var("enable_xero_accounting") is true %}
+    SELECT * except (contact_id, contact_company_id),
+           concat('xero-',contact_id) as contact_id,
+           concat('xero-',contact_company_id) as contact_company_id
+    FROM   {{ ref('sde_xero_accounting_contacts') }}
+    {% endif %}
+    {% if (var("enable_hubspot_crm") or var("enable_harvest_projects") or var("enable_xero_accounting")) and var("enable_mailchimp_email") %}
+    UNION ALL
+    {% endif %}
+    {% if var("enable_mailchimp_email") is true %}
+    SELECT * except (contact_id, contact_company_id),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
            concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id
     FROM   {{ ref('sde_mailchimp_email_contacts') }}
+    {% endif %}
   ),
   contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails

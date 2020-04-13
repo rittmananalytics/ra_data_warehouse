@@ -1,73 +1,75 @@
-with combined_raw_companies as (
+{% if not var("enable_crm_warehouse") and not var("enable_finance_warehouse") and not var("enable_marketing_warehouse") and not var("enable_projects_warehouse") %}
+{{
+    config(
+        enabled=false
+    )
+}}
+{% endif %}
 
-    select c.company_id,
-           c.company_name,
-           c.company_description,
-           c.company_linkedin_company_page,
-           c.company_twitterhandle,
-           c.company_address,
-           c.company_address2,
-           c.company_city,
-           c.company_country,
-           c.company_website,
-           c.company_contact_owner_id,
-           c.company_industry,
-           c.company_linkedin_bio,
-           c.company_domain,
-           c.company_phone,
-           c.company_state,
-           c.company_lifecycle_stage,
-           c.company_zip,
-           c.company_created_date,
-           x.company_id as xero_company_id,
-           x.company_name as  xero_company_name,
-           x.company_address as  xero_company_address,
-           x.company_city as  xero_company_city,
-           x.company_country as  xero_company_country,
-           x.company_phone as  xero_company_phone,
-           x.company_state as  xero_company_state,
-           x.company_zip as  xero_company_zip,
-           x.company_created_date as  xero_company_created_date,
-           h.company_id as harvest_company_id,
-           h.company_name as harvest_company_name,
-           h.company_address as harvest_company_address,
-           h.company_created_date as harvest_company_created_date,
-           h.company_last_modified_date as harvest_company_last_modified_date
-    from {{ ref('sde_hubspot_crm_companies')}} c
-    full outer join {{ ref('sde_xero_accounting_companies_ds')}} x on lower(c.company_name) = lower(x.company_name)
-    full outer join {{ ref('sde_harvest_projects_companies')}} h on lower(c.company_name) = lower(h.company_name)
-  ),
+with sde_companies_pre_merged as (
+
+      {% if var("enable_hubspot_crm") is true %}
+      SELECT *
+      FROM   {{ ref('sde_hubspot_crm_companies') }}
+      {% endif %}
+
+      {% if var("enable_hubspot_crm") is true and var("enable_harvest_projects") is true %}
+      UNION ALL
+      {% endif %}
+
+      {% if var("enable_harvest_projects") is true %}
+      SELECT *
+      FROM   {{ ref('sde_harvest_projects_companies') }}
+      {% endif %}
+
+      {% if (var("enable_hubspot_crm") or var("enable_harvest_projects")) and var("enable_xero_accounting") %}
+      UNION ALL
+      {% endif %}
+
+      {% if var("enable_xero_accounting") is true %}
+      SELECT *
+      FROM   {{ ref('sde_xero_accounting_companies') }}
+      {% endif %}
+    ),
 companies_merge_list as (
     select *
     from   {{ ref('companies_merge_list') }}
 ),
-companies_pre_merged as (
-select
-      case when company_id is not null then concat('hubspot-',company_id)
-           when company_id is null and xero_company_id is not null then concat('xero-',xero_company_id)
-           when company_id is null and xero_company_id is null and harvest_company_id is not null then concat('harvest-',harvest_company_id)
-           end as company_id,
-      coalesce(company_name, xero_company_name, harvest_company_name) as company_name,
-      company_id as hubspot_company_id,
-      xero_company_id,
-      harvest_company_id,
-      company_description,
-      company_linkedin_company_page,
-      company_twitterhandle,
-      coalesce(company_address,xero_company_address,harvest_company_address) as company_address,
-      company_address2,
-      coalesce(company_city,xero_company_city) as company_city,
-      coalesce(company_country,xero_company_country) as company_country,
-      company_website,
-      company_contact_owner_id,
-      company_industry,
-      company_linkedin_bio,
-      company_domain,
-      coalesce(company_phone,xero_company_phone) as company_phone,
-      coalesce(company_state,xero_company_state) as company_state,
-      company_lifecycle_stage,
-      coalesce(company_zip,xero_company_zip) as company_zip,
-      coalesce(company_created_date,xero_company_created_date,harvest_company_created_date) as company_created_date
-    from combined_raw_companies
+all_company_ids as (
+       SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids
+       FROM sde_companies_pre_merged
+       group by 1),
+all_company_addresses as (
+       SELECT company_name, array_agg(struct(company_address,
+                                             company_address2,
+                                             case when length(trim(company_city)) = 0 then null else company_city end as company_city,
+                                             case when length(trim(company_state)) = 0 then null else company_state end as company_state,
+                                             case when length(trim(company_country)) = 0 then null else company_country end as company_country,
+                                             case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
+       FROM sde_companies_pre_merged
+       group by 1),
+grouped as (
+      SELECT
+      company_name,
+      max(company_phone) as company_phone,
+      max(company_website) as company_website,
+      max(company_industry) as company_industry,
+      max(company_linkedin_company_page) as company_linkedin_company_page,
+      max(company_linkedin_bio) as company_linkedin_bio,
+      max(company_twitterhandle) as company_twitterhandle,
+      max(company_description) as company_description,
+      max(company_finance_status) as company_finance_status,
+      min(company_created_date) as company_created_date,
+      max(company_last_modified_date) as company_last_modified_date
+    from sde_companies_pre_merged
+      group by 1
+),
+joined as (
+      SELECT i.all_company_ids,
+      g.*,
+      a.all_company_addresses
+      FROM grouped g
+      JOIN all_company_ids i ON g.company_name = i.company_name
+      LEFT OUTER JOIN all_company_addresses a ON g.company_name = a.company_name
 )
-select * from companies_pre_merged
+select * from joined
