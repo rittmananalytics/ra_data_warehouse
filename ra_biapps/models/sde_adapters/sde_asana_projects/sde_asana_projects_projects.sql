@@ -1,4 +1,4 @@
-{% if not var("enable_asana_projects") %}
+{% if not var("enable_asana_projects_source") %}
 {{
     config(
         enabled=false

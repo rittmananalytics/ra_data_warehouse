@@ -8,25 +8,25 @@
 
 with sde_companies_pre_merged as (
 
-      {% if var("enable_hubspot_crm") is true %}
+      {% if var("enable_hubspot_crm_source") is true %}
       SELECT *
       FROM   {{ ref('sde_hubspot_crm_companies') }}
       {% endif %}
 
-      {% if var("enable_hubspot_crm") is true and var("enable_harvest_projects") is true %}
+      {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
       UNION ALL
       {% endif %}
 
-      {% if var("enable_harvest_projects") is true %}
+      {% if var("enable_harvest_projects_source") is true %}
       SELECT *
       FROM   {{ ref('sde_harvest_projects_companies') }}
       {% endif %}
 
-      {% if (var("enable_hubspot_crm") or var("enable_harvest_projects")) and var("enable_xero_accounting") %}
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
       UNION ALL
       {% endif %}
 
-      {% if var("enable_xero_accounting") is true %}
+      {% if var("enable_xero_accounting_source") is true %}
       SELECT *
       FROM   {{ ref('sde_xero_accounting_companies') }}
       {% endif %}

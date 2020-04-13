@@ -1,4 +1,4 @@
-{% if not var("enable_mailchimp_email") or (not var("enable_marketing_warehouse")) %}
+{% if not var("enable_mailchimp_email_source") or (not var("enable_marketing_warehouse")) %}
 {{
     config(
         enabled=false

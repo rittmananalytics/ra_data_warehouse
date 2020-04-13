@@ -8,34 +8,34 @@
 
 with sde_contacts_ds_merge_list as
   (
-    {% if var("enable_hubspot_crm") is true %}
+    {% if var("enable_hubspot_crm_source") is true %}
     SELECT * except (contact_id, contact_company_id),
            concat('hubspot-',contact_id) as contact_id,
            concat('hubspot-',contact_company_id) as contact_company_id
     FROM   {{ ref('sde_hubspot_crm_contacts') }}
     {% endif %}
-    {% if var("enable_hubspot_crm") is true and var("enable_harvest_projects") is true %}
+    {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
     UNION ALL
     {% endif %}
-    {% if var("enable_harvest_projects") is true %}
+    {% if var("enable_harvest_projects_source") is true %}
     SELECT * except (contact_id, contact_company_id),
            concat('harvest-',contact_id) as contact_id,
            concat('harvest-',contact_company_id) as contact_company_id
     FROM   {{ ref('sde_harvest_projects_contacts') }}
     {% endif %}
-    {% if (var("enable_hubspot_crm") or var("enable_harvest_projects")) and var("enable_xero_accounting") %}
+    {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
     UNION ALL
     {% endif %}
-    {% if var("enable_xero_accounting") is true %}
+    {% if var("enable_xero_accounting_source") is true %}
     SELECT * except (contact_id, contact_company_id),
            concat('xero-',contact_id) as contact_id,
            concat('xero-',contact_company_id) as contact_company_id
     FROM   {{ ref('sde_xero_accounting_contacts') }}
     {% endif %}
-    {% if (var("enable_hubspot_crm") or var("enable_harvest_projects") or var("enable_xero_accounting")) and var("enable_mailchimp_email") %}
+    {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
     UNION ALL
     {% endif %}
-    {% if var("enable_mailchimp_email") is true %}
+    {% if var("enable_mailchimp_email_source") is true %}
     SELECT * except (contact_id, contact_company_id),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
            concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id

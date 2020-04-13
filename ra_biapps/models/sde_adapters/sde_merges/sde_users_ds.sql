@@ -1,4 +1,4 @@
-{% if (not var("enable_jira_projects") and not var("enable_asana_projects") and not var("enable_harvest_projects")) or not var("enable_projects_warehouse") %}
+{% if (not var("enable_jira_projects_source") and not var("enable_asana_projects_source") and not var("enable_harvest_projects_source")) or not var("enable_projects_warehouse") %}
 {{
     config(
         enabled=false
@@ -8,25 +8,25 @@
 
 with sde_users_ds_merge_list as
   (
-    {% if var("enable_harvest_projects") %}
+    {% if var("enable_harvest_projects_source") %}
     SELECT *
     FROM   {{ ref('sde_harvest_projects_users') }}
     {% endif %}
 
-    {% if var("enable_jira_projects") and var("enable_harvest_projects") %}
+    {% if var("enable_jira_projects_source") and var("enable_harvest_projects_source") %}
     UNION ALL
     {% endif %}
 
-    {% if var("enable_jira_projects") %}
+    {% if var("enable_jira_projects_source") %}
     SELECT *
     FROM   {{ ref('sde_jira_projects_users') }}
     {% endif %}
 
-    {% if (var("enable_harvest_projects") or var("enable_jira_projects")) and var("enable_asana_projects") %}
+    {% if (var("enable_harvest_projects_source") or var("enable_jira_projects_source")) and var("enable_asana_projects_source") %}
     UNION ALL
     {% endif %}
 
-    {% if var("enable_asana_projects") %}
+    {% if var("enable_asana_projects_source") %}
     SELECT *
     FROM   {{ ref('sde_asana_projects_users') }}
     {% endif %}

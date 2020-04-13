@@ -1,4 +1,4 @@
-{% if not var("enable_harvest_projects") or not var("enable_projects_warehouse") %}
+{% if not var("enable_harvest_projects_source") or not var("enable_projects_warehouse") %}
 {{
     config(
         enabled=false

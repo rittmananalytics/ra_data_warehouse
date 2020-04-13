@@ -1,15 +1,15 @@
 with sde_invoices_merge_list as (
 
-      {% if var("enable_harvest_projects") is true %}
+      {% if var("enable_harvest_projects_source") is true %}
       SELECT *
       FROM   {{ ref('sde_harvest_projects_invoices') }}
       {% endif %}
 
-      {% if var("enable_xero_accounting") is true and var("enable_harvest_projects") is true %}
+      {% if var("enable_xero_accounting_source") is true and var("enable_harvest_projects_source") is true %}
       UNION ALL
       {% endif %}
 
-      {% if var("enable_xero_accounting") is true %}
+      {% if var("enable_xero_accounting_source") is true %}
       SELECT *
       FROM   {{ ref('sde_xero_accounting_invoices') }}
       {% endif %}
@@ -21,7 +21,7 @@ with sde_invoices_merge_list as (
        merged as (
        SELECT invoice_number,
        max(company_id) as company_id,
-       {% if var("enable_harvest_projects") %}
+       {% if var("enable_harvest_projects_source") %}
        max(project_id) as project_id,
        max(invoice_creator_users_id) as invoice_creator_users_id,
        {% endif %}
@@ -36,7 +36,7 @@ with sde_invoices_merge_list as (
        max(invoice_local_total_revenue_amount) as invoice_local_total_revenue_amount,
        max(invoice_currency) as invoice_currency,
        max(total_local_amount) as total_local_amount,
-       {% if var("enable_harvest_projects") %}
+       {% if var("enable_harvest_projects_source") %}
        max(invoice_local_total_billed_amount) as invoice_local_total_billed_amount,
        max(invoice_local_total_services_amount) as invoice_local_total_services_amount,
        max(invoice_local_total_licence_referral_fee_amount) as invoice_local_total_licence_referral_fee_amount,

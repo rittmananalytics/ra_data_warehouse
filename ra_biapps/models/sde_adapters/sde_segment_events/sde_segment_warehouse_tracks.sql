@@ -1,4 +1,4 @@
-{% if not var("enable_segment_events") %}
+{% if not var("enable_segment_events_source") %}
 {{
     config(
         enabled=false

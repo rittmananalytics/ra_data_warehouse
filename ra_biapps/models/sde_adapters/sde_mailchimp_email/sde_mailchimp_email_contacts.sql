@@ -1,4 +1,4 @@
-{% if not var("enable_mailchimp_email") %}
+{% if not var("enable_mailchimp_email_source") %}
 {{
     config(
         enabled=false

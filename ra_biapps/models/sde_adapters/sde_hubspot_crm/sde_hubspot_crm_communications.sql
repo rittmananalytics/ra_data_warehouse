@@ -1,4 +1,4 @@
-{% if not var("enable_hubspot_crm") %}
+{% if not var("enable_hubspot_crm_source") %}
 {{
     config(
         enabled=false

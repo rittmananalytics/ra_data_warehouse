@@ -22,7 +22,7 @@ WITH invoices AS
       select *
       from {{ ref('sil_companies_dim') }}
   )
-    {% if var("enable_harvest_projects") %},
+    {% if var("enable_harvest_projects_source") %},
   projects_dim as (
       select *
       from {{ ref('sil_timesheet_projects_dim') }}
@@ -34,7 +34,7 @@ WITH invoices AS
 SELECT
    GENERATE_UUID() as invoice_pk,
    c.company_pk,
-   {% if var("enable_harvest_projects") %}
+   {% if var("enable_harvest_projects_source") %}
    s.user_pk as creator_users_pk,
    p.timesheet_project_pk,
    {% endif %}
@@ -45,7 +45,7 @@ FROM
 
 JOIN companies_dim c
       ON i.company_id IN UNNEST(c.all_company_ids)
-{% if var("enable_harvest_projects") %}
+{% if var("enable_harvest_projects_source") %}
 JOIN user_dim s
    ON cast(i.invoice_creator_users_id as string) IN UNNEST(s.all_user_ids)
 JOIN projects_dim p

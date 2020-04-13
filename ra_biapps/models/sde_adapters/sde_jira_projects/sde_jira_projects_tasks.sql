@@ -1,4 +1,4 @@
-{% if not var("enable_jira_projects") %}
+{% if not var("enable_jira_projects_source") %}
 {{
     config(
         enabled=false

@@ -1,4 +1,4 @@
-{% if not var("enable_finance_warehouse") or not var("enable_xero_accounting") %}
+{% if not var("enable_finance_warehouse") or not var("enable_xero_accounting_source") %}
 {{
     config(
         enabled=false
