@@ -20,3 +20,37 @@ Objectives for this package are as follows:
 | Finance      | Xero, Stripe                | Chargebee, Freshbooks                    |
 | Marketing    | Mailchimp           | Salesforce Marketing Cloud, Hubspot Email Marketing  |
 | Events + Web | Segment             | Mixpanel, Google Analytics (Free), Qubit Live Tap                   |
+
+#### Pre-Integrated Conformed Dimensional Model
+
+Customers, contacts, projects and other shared dimensions are automatically created from all data sources, deduplicating by name and merge lookup files using a process that preserves source system keys whilst assigning a unique ID for each customer, contact etc.
+
+#### Data sources implemented for a particular customer can be selected in dbt_project.yml config file
+
+vars:
+    enable_harvest_projects:      true
+    enable_hubspot_crm:           true
+    enable_asana_projects:        true
+    enable_jira_projects:         true
+    enable_stripe_payments:       true
+    enable_xero_accounting:       true
+    enable_mailchimp_email:       true
+    enable_segment_events:        true
+    enable_crm_warehouse:         true
+    enable_finance_warehouse:     true
+    enable_projects_warehouse:    true
+    enable_marketing_warehouse:   true
+
+#### All transformation models and seed files deployed in separate datasets to main dimensional model tables
+
+models:
+  ra_bi_apps:
+      # Applies to all files under models/example/
+      sde_adapters:
+          materialized: view
+          schema: staging
+      sil_marts:
+          materialized: table
+seeds:
+  ra_bi_apps:
+      schema: seed_data
