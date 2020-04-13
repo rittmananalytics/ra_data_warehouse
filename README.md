@@ -44,11 +44,12 @@ vars:
     ```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/sde_sil_diagram.png)
+![SDE and SIL ]https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/sde_sil_diagram.png
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
-```models:
+```
+models:
   ra_bi_apps:
       # Applies to all files under models/example/
       sde_adapters:
@@ -59,7 +60,7 @@ vars:
 seeds:
   ra_bi_apps:
       schema: seed_data
-      ```
+```
 #### Predefined Data Quality tests on sources and warehouse tables
 
 ```
@@ -91,4 +92,4 @@ seeds:
           - relationships:
               to: ref('sil_companies_dim')
               field: company_pk
-              ```
+```
