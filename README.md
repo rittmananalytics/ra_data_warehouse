@@ -37,10 +37,11 @@ vars:
     enable_xero_accounting_source:       true
     enable_mailchimp_email_source:       true
     enable_segment_events_source:        true
-    enable_crm_warehouse:         true
-    enable_finance_warehouse:     true
-    enable_projects_warehouse:    true
-    enable_marketing_warehouse:   true```
+    enable_crm_warehouse:                true
+    enable_finance_warehouse:            true
+    enable_projects_warehouse:           true
+    enable_marketing_warehouse:          true
+    ```
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
@@ -54,4 +55,5 @@ vars:
           materialized: table
 seeds:
   ra_bi_apps:
-      schema: seed_data```
+      schema: seed_data
+      ```
