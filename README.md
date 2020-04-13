@@ -41,7 +41,7 @@ vars:
     enable_finance_warehouse:            true
     enable_projects_warehouse:           true
     enable_marketing_warehouse:          true
-    ```
+```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
 ![SDE and SIL ]https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/sde_sil_diagram.png
