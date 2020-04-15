@@ -29,12 +29,32 @@ clean-targets:         # directories to be removed by `dbt clean`
 # In this example config, we tell dbt to build all models in the example/ directory
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
+
+on-run-end: "insert into bi_apps_dev_meta.audit
+select current_timestamp as load_timestamp, 'chart_of_accounts_dim' as table_name, count(*) as row_count, 'warehouse' as table_type  from `ra-development.bi_apps_dev.chart_of_accounts_dim` union all
+select current_timestamp as load_timestamp, 'companies_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.companies_dim`  union all
+select current_timestamp as load_timestamp, 'contacts_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.contacts_dim`  union all
+select current_timestamp as load_timestamp, 'currency_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.currency_dim` union all
+select current_timestamp as load_timestamp, 'deals_fact' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.deals_fact` union all
+select current_timestamp as load_timestamp, 'delivery_projects_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.delivery_projects_dim`  union all
+select current_timestamp as load_timestamp, 'delivery_tasks_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.delivery_tasks_dim` union all
+select current_timestamp as load_timestamp, 'email_lists_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.email_lists_dim` union all
+select current_timestamp as load_timestamp, 'email_send_outcomes_fact' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.email_send_outcomes_fact`  union all
+select current_timestamp as load_timestamp, 'email_sends_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.email_sends_dim`  union all
+select current_timestamp as load_timestamp, 'timesheet_projects_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.timesheet_projects_dim`  union all
+select current_timestamp as load_timestamp, 'invoices_fact' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.invoices_fact`  union all
+select current_timestamp as load_timestamp, 'staff_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.staff_dim`  union all
+select current_timestamp as load_timestamp, 'timesheet_tasks_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.timesheet_tasks_dim` union all
+select current_timestamp as load_timestamp, 'timesheets_fact' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.timesheets_fact`  union all
+select current_timestamp as load_timestamp, 'user_dim' as table_name, count(*) as row_count, 'warehouse' as table_type from `ra-development.bi_apps_dev.user_dim`"
+
 models:
   ra_bi_apps:
       # Applies to all files under models/example/
       sde_adapters:
           materialized: view
           schema: staging
+
       sil_marts:
           materialized: table
   vars:
