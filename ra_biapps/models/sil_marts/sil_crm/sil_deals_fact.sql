@@ -31,6 +31,6 @@ FROM
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
 JOIN user_dim s
-   ON d.deal_assigned_consultant in UNNEST(s.all_user_emails)
+   ON coalesce(d.deal_assigned_consultant,'Unassigned') in UNNEST(s.all_user_emails)
 JOIN user_dim sp
-   ON d.deal_salesperson_email IN UNNEST(sp.all_user_emails)
+   ON coalesce(d.deal_salesperson_email,'Unassigned') IN UNNEST(sp.all_user_emails)

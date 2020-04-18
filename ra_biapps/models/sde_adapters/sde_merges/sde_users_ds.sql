@@ -29,7 +29,11 @@ with sde_users_ds_merge_list as
     {% if var("enable_asana_projects_source") %}
     SELECT *
     FROM   {{ ref('sde_asana_projects_users') }}
+    UNION ALL
     {% endif %}
+
+    SELECT *
+    FROM   {{ ref('sde_unknown_users') }}
   )
 ,
 user_emails as (
@@ -56,5 +60,5 @@ min(user_created_ts) as user_created_ts,
 max(user_last_modified_ts) as user_last_modified_ts,
 FROM sde_users_ds_merge_list
 group by 1) u
-join user_emails e on u.user_name = e.user_name
+join user_emails e on u.user_name = coalesce(e.user_name
 join user_ids i on u.user_name = i.user_name
