@@ -17,7 +17,8 @@ with companies_dim as (
     select *
     from {{ ref('wh_companies_dim') }}
 ),
-  user_dim as (
+
+user_dim as (
     select *
     from {{ ref('wh_users_dim') }}
 ),

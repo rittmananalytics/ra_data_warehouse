@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-WITH mailchimp_contacts AS (
+WITH source AS (
   SELECT
     *
   EXCEPT
@@ -33,7 +33,7 @@ WITH mailchimp_contacts AS (
   WHERE
     _sdc_batched_at = max_sdc_batched_at
 ),
-contacts_ds AS (
+renamed AS (
   SELECT
     id AS contact_id,
     merge_fields.fname AS contact_first_name,
@@ -79,9 +79,9 @@ contacts_ds AS (
     timestamp_opt AS contact_created_date,
     last_changed AS contact_last_modified_date
   FROM
-    mailchimp_contacts
+    source
 )
 SELECT
   *
 FROM
-  contacts_ds
+  renamed

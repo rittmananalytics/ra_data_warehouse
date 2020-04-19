@@ -18,6 +18,7 @@ with source as (
   WHERE
     max_sdc_batched_at = _sdc_batched_at
 ),
+
 renamed as (
 select
        concat('harvest-',id)              as user_id,

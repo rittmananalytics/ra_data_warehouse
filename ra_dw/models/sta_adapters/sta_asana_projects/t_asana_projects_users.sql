@@ -20,6 +20,7 @@ WITH source AS (
   WHERE
     _sdc_batched_at = max_sdc_batched_at
 ),
+
 renamed AS (
   SELECT
   concat('asana-',gid)           as user_id,

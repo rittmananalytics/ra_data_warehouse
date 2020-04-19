@@ -18,7 +18,8 @@ with source as (
   WHERE
     max_sdc_batched_at = _sdc_batched_at
 ),
- renamed as
+
+renamed as
  (
   SELECT
     concat('jira-',key)           as user_id,

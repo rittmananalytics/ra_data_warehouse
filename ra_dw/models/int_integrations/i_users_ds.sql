@@ -36,7 +36,7 @@ with t_users_ds_merge_list as
     FROM   {{ ref('t_unknown_users') }}
   )
 ,
-user_emails as (
+ user_emails as (
        SELECT user_name, array_agg(distinct lower(user_email) ignore nulls) as all_user_emails
        FROM t_users_ds_merge_list
        group by 1),
