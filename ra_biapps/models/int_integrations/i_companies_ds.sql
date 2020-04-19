@@ -16,7 +16,7 @@ with
 companies_pre_merged as (
 select
       *
-    from {{ ref('t_companies_pre_merged') }}
+    from {{ ref('i_companies_pre_merged') }}
 )
 select c.company_name,
        case when m.company_name is not null then m.all_company_ids else c.all_company_ids end as all_company_ids,

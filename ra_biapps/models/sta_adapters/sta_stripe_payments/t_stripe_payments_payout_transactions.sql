@@ -15,7 +15,7 @@ WITH source AS (
         *,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ source('stitch_stripe','payout_transactions') }}
+        {{ source('stitch_stripe','s_payout_transactions') }}
     )
   WHERE
     _sdc_batched_at = max_sdc_batched_at

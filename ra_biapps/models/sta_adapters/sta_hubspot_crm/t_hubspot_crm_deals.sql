@@ -13,7 +13,7 @@ with source as (
         MAX(_sdc_batched_at)
          OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
          AS max_sdc_batched_at
-         from {{ source('hubspot_crm', 'deals') }})
+         from {{ source('hubspot_crm', 's_deals') }})
           where max_sdc_batched_at = _sdc_batched_at
 
 
@@ -26,7 +26,7 @@ hubspot_deal_pipelines_source as (
     (
       SELECT *,
              MAX(_sdc_batched_at) OVER (PARTITION BY pipelineid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM {{ source('hubspot_crm', 'deal_pipelines') }}
+      FROM {{ source('hubspot_crm', 's_deal_pipelines') }}
     )
     WHERE _sdc_batched_at = max_sdc_batched_at
 

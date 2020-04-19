@@ -8,7 +8,7 @@
 
 with base_hubspot_owners as (
 
-    select * from {{ source('hubspot_crm', 'owners') }}
+    select * from {{ source('hubspot_crm', 's_owners') }}
 
  ),
 

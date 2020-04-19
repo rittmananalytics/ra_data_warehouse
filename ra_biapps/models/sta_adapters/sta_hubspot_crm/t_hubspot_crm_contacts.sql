@@ -13,7 +13,7 @@ WITH hubspot_contacts as (
   (
     SELECT *,
            MAX(_sdc_batched_at) OVER (PARTITION BY vid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('hubspot_crm', 'contacts') }}
+    FROM {{ source('hubspot_crm', 's_contacts') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
   AND canonical_vid is not null

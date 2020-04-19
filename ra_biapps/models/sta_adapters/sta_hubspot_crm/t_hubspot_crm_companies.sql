@@ -13,7 +13,7 @@ WITH source as (
   (
     SELECT *,
            MAX(_sdc_batched_at) OVER (PARTITION BY companyid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('hubspot_crm', 'companies') }}
+    FROM {{ source('hubspot_crm', 's_companies') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
 

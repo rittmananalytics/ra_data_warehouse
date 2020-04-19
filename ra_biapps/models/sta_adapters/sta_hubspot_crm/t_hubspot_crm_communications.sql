@@ -15,7 +15,7 @@ WITH
       *,
       MAX(_sdc_batched_at) OVER (PARTITION BY engagement_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ source('hubspot_crm', 'engagements') }} )
+      {{ source('hubspot_crm', 's_engagements') }} )
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
   owners AS (
@@ -26,7 +26,7 @@ WITH
       *,
       MAX(_sdc_batched_at) OVER (PARTITION BY ownerid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ source('hubspot_crm', 'owners') }} )
+      {{ source('hubspot_crm', 's_owners') }} )
   WHERE
     _sdc_batched_at = max_sdc_batched_at)
 SELECT

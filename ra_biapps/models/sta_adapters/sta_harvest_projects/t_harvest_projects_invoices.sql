@@ -29,7 +29,7 @@ t_harvest_invoice_line_items as (
               *,
                MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
           FROM
-              {{ source('harvest_projects', 'invoice_line_items') }}
+              {{ source('harvest_projects', 's_invoice_line_items') }}
           )
       WHERE
           _sdc_batched_at = max_sdc_batched_at
@@ -42,7 +42,7 @@ t_harvest_expenses as (
           *,
            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-          {{ source('harvest_projects', 'expenses') }}
+          {{ source('harvest_projects', 's_expenses') }}
       )
   WHERE
       _sdc_batched_at = max_sdc_batched_at
