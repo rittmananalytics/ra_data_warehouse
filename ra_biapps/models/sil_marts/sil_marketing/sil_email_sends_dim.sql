@@ -15,7 +15,7 @@
 
 WITH sends AS
   (
-  SELECT * from {{ ref('sde_email_sends_ds') }}
+  SELECT * from {{ ref('t_email_sends_ds') }}
 )
 select GENERATE_UUID() as send_pk,
        s.*

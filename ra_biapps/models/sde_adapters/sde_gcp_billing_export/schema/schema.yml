@@ -9,7 +9,7 @@ sources:
 
 
 models:
-  - name: sde_gcp_billing_companies
+  - name: t_gcp_billing_companies
     columns:
       - name: company_id
         tests:
@@ -19,14 +19,14 @@ models:
         tests:
           - unique
           - not_null
-  - name: sde_gcp_billing_usage_fact
+  - name: t_gcp_billing_usage_fact
     columns:
       - name: company_id
         tests:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('sde_gcp_billing_companies')
+              to: ref('t_gcp_billing_companies')
               field: company_id
       - name: billing_account_id
         tests:

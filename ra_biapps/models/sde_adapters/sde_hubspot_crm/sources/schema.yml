@@ -13,7 +13,7 @@ sources:
       - name: owners
 
 models:
-  - name: sde_hubspot_crm_contacts
+  - name: t_hubspot_crm_contacts
     description: "Hubspot Contacts Dimension Staging"
     columns:
       - name: contact_id
@@ -23,14 +23,14 @@ models:
       - name: contact_created_date
         tests:
           - not_null
-  - name: sde_hubspot_crm_companies
+  - name: t_hubspot_crm_companies
     columns:
       - name: hubspot_company_id
         description: This is a unique identifier for the customer within HubSpot
         tests:
           - not_null
           - unique
-  - name: sde_hubspot_crm_deals
+  - name: t_hubspot_crm_deals
     columns:
       - name: hubspot_company_id
         description: This is a unique identifier for the customer within HubSpot
@@ -59,21 +59,21 @@ models:
       - name: deal_number_of_sprints
         tests:
           - not_null
-  - name: sde_hubspot_crm_pipelines
+  - name: t_hubspot_crm_pipelines
     columns:
       - name: pipelineid
         description: This is a unique identifier for the pipe line
         tests:
           - unique
           - not_null
-  - name: sde_hubspot_crm_pipeline_stages
+  - name: t_hubspot_crm_pipeline_stages
     columns:
       - name: stageid
         description: This is a unique identifier for the pipe line
         tests:
           - unique
           - not_null
-  - name: sde_hubspot_crm_owners
+  - name: t_hubspot_crm_owners
     columns:
       - name: ownerid
         description: HubSpot uses owners to assign CRM objects (contacts, companies, and deals) to specific people in your organization.

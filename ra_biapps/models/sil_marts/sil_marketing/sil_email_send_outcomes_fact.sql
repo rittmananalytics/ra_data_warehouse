@@ -28,7 +28,7 @@ contacts_dim AS
 email_send_outcomes_fs AS
   (
     SELECT *
-    FROM   {{ ref('sde_email_send_outcomes_fs') }}
+    FROM   {{ ref('t_email_send_outcomes_fs') }}
   )
 SELECT
 

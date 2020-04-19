@@ -1,8 +1,8 @@
-with sde_invoices_merge_list as (
+with t_invoices_merge_list as (
 
       {% if var("enable_harvest_projects_source") is true %}
       SELECT *
-      FROM   {{ ref('sde_harvest_projects_invoices') }}
+      FROM   {{ ref('t_harvest_projects_invoices') }}
       {% endif %}
 
       {% if var("enable_xero_accounting_source") is true and var("enable_harvest_projects_source") is true %}
@@ -11,12 +11,12 @@ with sde_invoices_merge_list as (
 
       {% if var("enable_xero_accounting_source") is true %}
       SELECT *
-      FROM   {{ ref('sde_xero_accounting_invoices') }}
+      FROM   {{ ref('t_xero_accounting_invoices') }}
       {% endif %}
     ),
     all_invoice_ids as (
            SELECT invoice_number, array_agg(distinct invoice_id ignore nulls) as all_invoice_ids
-           FROM sde_invoices_merge_list
+           FROM t_invoices_merge_list
            group by 1),
        merged as (
        SELECT invoice_number,
@@ -49,7 +49,7 @@ with sde_invoices_merge_list as (
        max(invoice_payment_term) as invoice_payment_term,
        max(invoice_status) as invoice_status,
        max(invoice_type) as invoice_type
-       from sde_invoices_merge_list
+       from t_invoices_merge_list
        group by 1),
     joined as (
       SELECT i.*,

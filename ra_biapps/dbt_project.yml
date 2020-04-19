@@ -36,7 +36,7 @@ on-run-end:
 
 models:
   ra_bi_apps:
-      sde_adapters:
+      t_adapters:
           materialized: view
           schema: staging
       sil_marts:

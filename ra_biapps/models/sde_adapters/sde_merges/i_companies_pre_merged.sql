@@ -6,11 +6,11 @@
 }}
 {% endif %}
 
-with sde_companies_pre_merged as (
+with t_companies_pre_merged as (
 
       {% if var("enable_hubspot_crm_source") is true %}
       SELECT *
-      FROM   {{ ref('sde_hubspot_crm_companies') }}
+      FROM   {{ ref('t_hubspot_crm_companies') }}
       {% endif %}
 
       {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
@@ -19,7 +19,7 @@ with sde_companies_pre_merged as (
 
       {% if var("enable_harvest_projects_source") is true %}
       SELECT *
-      FROM   {{ ref('sde_harvest_projects_companies') }}
+      FROM   {{ ref('t_harvest_projects_companies') }}
       {% endif %}
 
       {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
@@ -28,7 +28,7 @@ with sde_companies_pre_merged as (
 
       {% if var("enable_xero_accounting_source") is true %}
       SELECT *
-      FROM   {{ ref('sde_xero_accounting_companies') }}
+      FROM   {{ ref('t_xero_accounting_companies') }}
       {% endif %}
     ),
 companies_merge_list as (
@@ -37,7 +37,7 @@ companies_merge_list as (
 ),
 all_company_ids as (
        SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids
-       FROM sde_companies_pre_merged
+       FROM t_companies_pre_merged
        group by 1),
 all_company_addresses as (
        SELECT company_name, array_agg(struct(company_address,
@@ -46,7 +46,7 @@ all_company_addresses as (
                                              case when length(trim(company_state)) = 0 then null else company_state end as company_state,
                                              case when length(trim(company_country)) = 0 then null else company_country end as company_country,
                                              case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
-       FROM sde_companies_pre_merged
+       FROM t_companies_pre_merged
        group by 1),
 grouped as (
       SELECT
@@ -61,7 +61,7 @@ grouped as (
       max(company_finance_status) as company_finance_status,
       min(company_created_date) as company_created_date,
       max(company_last_modified_date) as company_last_modified_date
-    from sde_companies_pre_merged
+    from t_companies_pre_merged
       group by 1
 ),
 joined as (

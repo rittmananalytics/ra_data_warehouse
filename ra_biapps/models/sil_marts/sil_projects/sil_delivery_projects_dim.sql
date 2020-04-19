@@ -16,7 +16,7 @@
 WITH delivery_projects AS
   (
   SELECT *
-  FROM   {{ ref('sde_delivery_projects_ds') }}
+  FROM   {{ ref('t_delivery_projects_ds') }}
   )
 SELECT
    GENERATE_UUID() as delivery_project_pk,

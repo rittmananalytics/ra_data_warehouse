@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-with source_harvest_base_invoices as (
+with t_harvest_base_invoices as (
 SELECT
     *
 FROM (
@@ -21,7 +21,7 @@ FROM (
     WHERE
         _sdc_batched_at = max_sdc_batched_at
     ),
-source_harvest_invoice_line_items as (
+t_harvest_invoice_line_items as (
       SELECT
           *
       FROM (
@@ -34,7 +34,7 @@ source_harvest_invoice_line_items as (
       WHERE
           _sdc_batched_at = max_sdc_batched_at
     ),
-source_harvest_expenses as (
+t_harvest_expenses as (
   SELECT
       *
   FROM (
@@ -65,7 +65,7 @@ select i.*,
   ifnull(a.services_amount_billed,0) + ifnull(a.license_referral_fee_amount_billed,0) + ifnull(a.support_amount_billed,0) as revenue_amount_billed,
   project_id,
   invoice_line_item_id
-from source_harvest_base_invoices i
+from t_harvest_base_invoices i
 join (select *,
        case when taxed then total_amount_billed *.2 end as tax_billed
        from (
@@ -78,10 +78,10 @@ join (select *,
          ifnull((case when kind = 'License Referral Fee' then amount end),0) as license_referral_fee_amount_billed,
          ifnull((case when kind = 'Product' then amount end),0) as expenses_amount_billed,
          ifnull((case when kind = 'Support' then amount end),0) as support_amount_billed
-    FROM source_harvest_invoice_line_items
+    FROM t_harvest_invoice_line_items
 group by 1,2,3,4,6,7,8,9)) a
 on   i.id = a.invoice_id
-left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expenses FROM source_harvest_expenses  where billable group by 1 ) e
+left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expenses FROM t_harvest_expenses  where billable group by 1 ) e
 on i.id = e.invoice_id
 ),
 renamed as (

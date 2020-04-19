@@ -16,7 +16,7 @@
 WITH timesheet_projects AS
   (
   SELECT *
-  FROM   {{ ref('sde_timesheet_projects_ds') }}
+  FROM   {{ ref('t_timesheet_projects_ds') }}
   )
 SELECT
    GENERATE_UUID() as timesheet_project_pk,

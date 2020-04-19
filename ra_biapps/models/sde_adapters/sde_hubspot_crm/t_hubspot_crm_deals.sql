@@ -6,18 +6,20 @@
 }}
 {% endif %}
 
-with hubspot_deals_latest as (
+with source as (
 
       select *  from (
         select *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) max_sdc_batched_at
+        MAX(_sdc_batched_at)
+         OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+         AS max_sdc_batched_at
          from {{ source('hubspot_crm', 'deals') }})
           where max_sdc_batched_at = _sdc_batched_at
 
 
 ),
 
-hubspot_deal_pipelines as (
+hubspot_deal_pipelines_source as (
 
     SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
     FROM
@@ -42,13 +44,18 @@ hubspot_deal_stages as (
       concat (cast( pipelineid as string), cast (stageid as string)) as pk
 
 
-    from hubspot_deal_pipelines,
+    from hubspot_deal_pipelines_source,
     unnest (stages) stages
     group by 1,2,3,4,5,6,7
 
-)
-,
-hubspot_deals as (
+),
+
+owners as (
+  SELECT *
+  FROM {{ ref('t_hubspot_crm_owners') }}
+),
+
+deals_renamed as (
 
   select
     dealid AS deal_id,
@@ -84,11 +91,12 @@ hubspot_deals as (
 
     _sdc_batched_at
 
-  from hubspot_deals_latest,
+  from source,
             unnest(associations.associatedcompanyids) with offset off
 
 ),
-deals_fs as (
+
+joined as (
 
     select
     concat('hubspot-',d.hubspot_company_id) as company_id,
@@ -109,12 +117,12 @@ deals_fs as (
        and date_add(date(d.deal_delivery_start_ts), interval safe_cast(d.deal_duration_days as int64) day) > current_date)
       then true else false end as is_active
 
-     from hubspot_deals d
+     from renamed d
     left join hubspot_deal_stages s on d.deal_stage_id = s.stageid
-    left join hubspot_deal_pipelines p on s.pipelineid = p.pipelineid
-    left outer join {{ ref('sde_hubspot_crm_owners') }} u
+    left join hubspot_deal_pipelines_source p on s.pipelineid = p.pipelineid
+    left outer join owners u
     on safe_cast(d.deal_owner_id as int64) = u.ownerid
 
 )
 
-select * from deals_fs
+select * from joined

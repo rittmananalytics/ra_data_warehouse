@@ -6,9 +6,9 @@
 }}
 {% endif %}
 
-with sde_deals_fs_merge_list as
+with t_communications_merge_list as
   (
     SELECT *
-    FROM   {{ ref('sde_hubspot_crm_deals') }}
+    FROM   {{ ref('t_hubspot_crm_communications') }}
   )
-select * from sde_deals_fs_merge_list
+select * from t_communications_merge_list

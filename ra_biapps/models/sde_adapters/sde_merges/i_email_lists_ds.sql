@@ -6,9 +6,9 @@
 }}
 {% endif %}
 
-with sde_email_campaigns_merge_list as
+with t_email_lists_merge_list as
   (
     SELECT *
-    FROM   {{ ref('sde_mailchimp_email_sends') }}
+    FROM   {{ ref('t_mailchimp_email_lists') }}
   )
-select * from sde_email_campaigns_merge_list
+select * from t_email_lists_merge_list

@@ -4,14 +4,14 @@
   ) }}
 {% endif %}
 
-WITH sde_currencies_merge_list AS (
+WITH t_currencies_merge_list AS (
 
   SELECT
     *
   FROM
-    {{ ref('sde_xero_accounting_currencies') }}
+    {{ ref('t_xero_accounting_currencies') }}
 )
 SELECT
   *
 FROM
-  sde_currencies_merge_list
+  t_currencies_merge_list

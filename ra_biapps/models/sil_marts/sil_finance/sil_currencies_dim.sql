@@ -16,7 +16,7 @@
 WITH currencies AS
   (
   SELECT *
-  FROM   {{ ref('sde_currencies_ds') }}
+  FROM   {{ ref('t_currencies_ds') }}
   )
 
 SELECT

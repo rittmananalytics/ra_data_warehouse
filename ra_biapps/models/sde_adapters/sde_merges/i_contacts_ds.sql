@@ -6,13 +6,13 @@
 }}
 {% endif %}
 
-with sde_contacts_ds_merge_list as
+with t_contacts_ds_merge_list as
   (
     {% if var("enable_hubspot_crm_source") is true %}
     SELECT * except (contact_id, contact_company_id),
            concat('hubspot-',contact_id) as contact_id,
            concat('hubspot-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_hubspot_crm_contacts') }}
+    FROM   {{ ref('t_hubspot_crm_contacts') }}
     {% endif %}
     {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
     UNION ALL
@@ -21,7 +21,7 @@ with sde_contacts_ds_merge_list as
     SELECT * except (contact_id, contact_company_id),
            concat('harvest-',contact_id) as contact_id,
            concat('harvest-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_harvest_projects_contacts') }}
+    FROM   {{ ref('t_harvest_projects_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
     UNION ALL
@@ -30,7 +30,7 @@ with sde_contacts_ds_merge_list as
     SELECT * except (contact_id, contact_company_id),
            concat('xero-',contact_id) as contact_id,
            concat('xero-',contact_company_id) as contact_company_id
-    FROM   {{ ref('sde_xero_accounting_contacts') }}
+    FROM   {{ ref('t_xero_accounting_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
     UNION ALL
@@ -39,24 +39,24 @@ with sde_contacts_ds_merge_list as
     SELECT * except (contact_id, contact_company_id),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
            concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id
-    FROM   {{ ref('sde_mailchimp_email_contacts') }}
+    FROM   {{ ref('t_mailchimp_email_contacts') }}
     {% endif %}
   ),
   contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
-         FROM sde_contacts_ds_merge_list
+         FROM t_contacts_ds_merge_list
          group by 1),
    contact_ids as (
          SELECT contact_name, array_agg(contact_id ignore nulls) as all_contact_ids
-         FROM sde_contacts_ds_merge_list
+         FROM t_contacts_ds_merge_list
          group by 1),
    contact_company_ids as (
                SELECT contact_name, array_agg(contact_company_id ignore nulls) as all_contact_company_ids
-               FROM sde_contacts_ds_merge_list
+               FROM t_contacts_ds_merge_list
                group by 1),
    contact_company_addresses as (
          select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
-         FROM sde_contacts_ds_merge_list
+         FROM t_contacts_ds_merge_list
          group by 1)
   select all_contact_ids,
           c.contact_name,
@@ -75,7 +75,7 @@ with sde_contacts_ds_merge_list as
   max(contact_mobile_phone) as contact_mobile_phone ,
   min(contact_created_date) as contact_created_date,
   max(contact_last_modified_date) as contact_last_modified_date
-  FROM sde_contacts_ds_merge_list
+  FROM t_contacts_ds_merge_list
   group by 1) c
   join contact_emails e on c.contact_name = e.contact_name
   join contact_ids i on c.contact_name = i.contact_name

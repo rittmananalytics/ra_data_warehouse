@@ -46,7 +46,7 @@ vars:
 ```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/sde_sil_diagram.png)
+![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_sil_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
@@ -54,7 +54,7 @@ vars:
 models:
   ra_bi_apps:
       # Applies to all files under models/example/
-      sde_adapters:
+      t_adapters:
           materialized: view
           schema: staging
       sil_marts:
@@ -66,7 +66,7 @@ seeds:
 #### Predefined Data Quality tests on sources and warehouse tables
 
 ```
-  - name: sde_asana_projects_projects
+  - name: t_asana_projects_projects
     description: "Asana Delivery Projects"
     columns:
       - name: project_id
@@ -78,7 +78,7 @@ seeds:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('sde_asana_projects_users')
+              to: ref('t_asana_projects_users')
               field: user_id
 
   - name: sil_timesheets_fact

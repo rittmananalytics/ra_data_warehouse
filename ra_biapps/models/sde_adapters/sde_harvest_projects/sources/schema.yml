@@ -27,14 +27,14 @@ sources:
     - name: users
 
 models:
-  - name: sde_harvest_projects_contacts
+  - name: t_harvest_projects_contacts
     columns:
         - name: id
           description: "Unique identifier of a Harvest invoice entry, primary key"
           tests:
               - unique
               - not_null
-  - name: sde_harvest_projects_timesheets
+  - name: t_harvest_projects_timesheets
     columns:
         - name: id
           description: "Unique identifier of a Harvest time entry, primary key"

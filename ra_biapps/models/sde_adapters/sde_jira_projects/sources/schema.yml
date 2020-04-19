@@ -14,7 +14,7 @@ sources:
       - name: project_types
 
 models:
-  - name: sde_jira_projects_projects
+  - name: t_jira_projects_projects
     description: "Jira Delivery Projects"
     columns:
       - name: project_id
@@ -26,5 +26,5 @@ models:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('sde_asana_projects_users')
+              to: ref('t_asana_projects_users')
               field: user_id

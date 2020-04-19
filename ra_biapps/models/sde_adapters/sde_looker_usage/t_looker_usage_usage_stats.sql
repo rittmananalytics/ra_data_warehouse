@@ -4,7 +4,7 @@ SELECT
 pk as usage_log_id,
 client AS customer_name,
 created_time as usage_created_time,
-dialect as usage_source_database_type,
+dialect as usage_t_database_type,
 explore as usage_subject_area,
 issuer_source usage_originator_type,
 name AS user_name,

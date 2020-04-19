@@ -16,7 +16,7 @@
 WITH tasks AS
   (
   SELECT *
-  FROM   {{ ref('sde_delivery_tasks_ds') }}
+  FROM   {{ ref('t_delivery_tasks_ds') }}
   )
 SELECT
    GENERATE_UUID() as task_pk,

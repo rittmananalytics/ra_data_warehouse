@@ -15,7 +15,7 @@
 
 WITH users AS
   (
-  SELECT * from {{ ref('sde_users_ds') }}
+  SELECT * from {{ ref('t_users_ds') }}
 )
 select GENERATE_UUID() as user_pk,
        u.*

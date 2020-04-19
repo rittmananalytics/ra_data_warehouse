@@ -25,7 +25,7 @@ with source as (SELECT
     {{ source('jira', 'projects') }})
 WHERE
   _sdc_batched_at = max_sdc_batched_at),
-  types as (SELECT
+types as (SELECT
     *
     FROM (
     SELECT

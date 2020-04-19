@@ -33,7 +33,7 @@ with companies_dim as (
 ,
   timesheets_fs as (
       select *
-      from {{ ref('sde_timesheets_fs') }}
+      from {{ ref('t_timesheets_fs') }}
 )
 SELECT
 

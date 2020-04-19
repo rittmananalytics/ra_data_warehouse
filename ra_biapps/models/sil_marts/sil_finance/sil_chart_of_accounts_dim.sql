@@ -16,7 +16,7 @@
 WITH chart_of_accounts AS
   (
   SELECT *
-  FROM   {{ ref('sde_chart_of_accounts_ds') }}
+  FROM   {{ ref('t_chart_of_accounts_ds') }}
   )
 
 SELECT

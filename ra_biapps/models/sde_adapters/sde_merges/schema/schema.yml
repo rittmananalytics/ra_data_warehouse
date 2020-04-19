@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: sde_contacts
+  - name: t_contacts
     description: "Contacts Dimension Staging"
     columns:
       - name: pk

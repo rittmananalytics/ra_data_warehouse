@@ -5,9 +5,9 @@
     )
 }}
 {% endif %}
-with sde_tasks_ds_merge_list as
+with t_tasks_ds_merge_list as
   (
     SELECT *
-    FROM   {{ ref('sde_harvest_projects_tasks') }}
+    FROM   {{ ref('t_harvest_projects_tasks') }}
   )
-select * from sde_tasks_ds_merge_list
+select * from t_tasks_ds_merge_list
