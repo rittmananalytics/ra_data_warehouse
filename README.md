@@ -44,9 +44,9 @@ vars:
     enable_projects_warehouse:           true
     enable_marketing_warehouse:          true
 ```
-#### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
+#### Split between Source Extract and Transform, Integrate and Deduplicate and Warehouse Load Models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_wh_diagram.png)
+![STA, INT and WH ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_wh_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
