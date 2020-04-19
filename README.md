@@ -44,7 +44,7 @@ vars:
 ```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/sde_sil_diagram.png)
+![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/components_of_a_data_source.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
