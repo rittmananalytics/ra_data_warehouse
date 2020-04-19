@@ -11,6 +11,8 @@ Objectives for this package are as follows:
 5. In-time, to create a means of selecting sources or subject areas ("modules") and have just those sources/modules loaded (and deployed for a customer)
 6. To do all of this in a way that embraces, rather than avoids, community additions to these sources and derived analytics models
 
+* [Design Approach and Coding Standards](https://github.com/rittmananalytics/ra_bi_apps/wiki/BI-Apps-Design-Documentation)
+
 ### Current Modules
 
 | Module       | Implemented Sources | Planned Sources             |
@@ -44,7 +46,7 @@ vars:
 ```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/blob/master/ra_biapps/img/sde_sil_diagram.png)
+![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/sde_sil_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
