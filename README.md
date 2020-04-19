@@ -46,7 +46,7 @@ vars:
 ```
 #### Split between Source Extract and Transform, Integrate and Deduplicate and Warehouse Load Models
 
-![STA, INT and WH ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_wh_diagram.png)
+![STA, INT and WH ](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/sta_int_wh_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
