@@ -1,7 +1,7 @@
-# Rittman Analytics Business Intelligence Applications
+# Rittman Analytics Data Warehouse
 
 ## Introduction
-This dbt package contains a set of pre-build, pre-integrated Load and Transform dbt models for common SaaS applications.
+This dbt package contains a set of pre-built, pre-integrated Load and Transform dbt models for common SaaS applications.
 Objectives for this package are as follows:
 
 1. To standardise how we source and model SaaS data sources in-general
