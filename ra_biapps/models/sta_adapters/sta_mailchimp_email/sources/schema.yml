@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: stitch_mailchimp
+    database: ra-development
+    schema: stitch_mailchimp
+    tables:
+      - name: s_campaigns
+        identifier: campaigns
+      - name: s_list_members
+        identifier: list_members
+      - name: s_list_segment_members
+        identifier: list_segment_members
+      - name: s_list_segments
+        identifier: list_segments
+      - name: s_lists
+        identifier: lists
+      - name: s_reports_email_activity
+        identifier: reports_email_activity
+      - name: s_unsubscribes
+        identifier: unsubscribes

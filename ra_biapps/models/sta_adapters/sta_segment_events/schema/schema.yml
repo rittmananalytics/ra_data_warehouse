@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: segment_warehouse
+    schema: company_website
+    tables:
+      - name: s_pages
+        identifier: pages
+      - name: s_tracks
+        identifier: tracks

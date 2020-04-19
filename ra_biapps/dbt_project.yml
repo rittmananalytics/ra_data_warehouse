@@ -36,10 +36,13 @@ on-run-end:
 
 models:
   ra_bi_apps:
-      t_adapters:
+      sta_adapters:
           materialized: view
           schema: staging
-      sil_marts:
+      int_integrations:
+          materialized: view
+          schema: staging
+      wh_modules:
           materialized: table
 
   vars:

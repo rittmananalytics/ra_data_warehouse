@@ -1,9 +1,0 @@
-version: 2
-models:
-  - name: t_contacts
-    description: "Contacts Dimension Staging"
-    columns:
-      - name: pk
-        tests:
-          - unique
-          - not_null

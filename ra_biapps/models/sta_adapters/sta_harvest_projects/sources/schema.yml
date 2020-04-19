@@ -1,0 +1,62 @@
+version: 2
+
+sources:
+
+- name: harvest_projects
+  database: ra-development
+  schema: rittman_analytics
+  tables:
+    - name: s_clients
+      identifier: clients
+    - name: s_contacts
+      identifier: contacts
+    - name: s_estimate_item_categories
+      identifier: estimate_item_categories
+    - name: s_expense_categories
+      identifier: expense_categories
+    - name: s_expenses
+      identifier: expenses
+    - name: s_invoice_item_categories
+      identifier: invoice_item_categories
+    - name: s_invoice_line_items
+      identifier: invoice_line_items
+    - name: s_invoice_payments
+      identifier: invoice_payments
+    - name: s_invoices
+      identifier: invoices
+    - name: s_project_tasks
+      identifier: project_tasks
+    - name: s_project_users
+      identifier: project_users
+    - name: s_projects
+      identifier: projects
+    - name: s_roles
+      identifier: roles
+    - name: s_tasks
+      identifier: tasks
+    - name: s_time_entries
+      identifier: time_entries
+    - name: s_user_project_tasks
+      identifier: user_project_tasks
+    - name: s_user_projects
+      identifier: user_projects
+    - name: s_user_roles
+      identifier: user_roles
+    - name: s_users
+      identifier: users
+
+models:
+  - name: t_harvest_projects_contacts
+    columns:
+        - name: id
+          description: "Unique identifier of a Harvest invoice entry, primary key"
+          tests:
+              - unique
+              - not_null
+  - name: t_harvest_projects_timesheets
+    columns:
+        - name: id
+          description: "Unique identifier of a Harvest time entry, primary key"
+          tests:
+              - unique
+              - not_null

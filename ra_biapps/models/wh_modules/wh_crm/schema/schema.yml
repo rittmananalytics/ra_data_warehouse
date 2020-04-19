@@ -1,0 +1,50 @@
+version: 2
+models:
+  - name: wh_companies_dim
+    description: "Companies Dimension"
+    columns:
+      - name: company_pk
+        tests:
+          - unique
+          - not_null
+      - name: company_name
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+  - name: wh_contacts_dim
+    description: "Contacts Dimension"
+    columns:
+      - name: contact_pk
+        tests:
+          - unique
+          - not_null
+      - name: contact_name
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+  - name: wh_deals_fact
+    description: "Deals Facts"
+    columns:
+      - name: deal_pk
+        tests:
+          - unique
+          - not_null
+      - name: deal_company_pk
+        tests:
+          - relationships:
+              to: ref('wh_companies_dim')
+              field: company_pk
+      - name: deal_assigned_consultant_users_pk
+        tests:
+          - relationships:
+              to: ref('wh_users_dim')
+              field: user_pk
+      - name: deal_salesperson_users_pk
+        tests:
+          - relationships:
+              to: ref('wh_users_dim')
+              field: user_pk

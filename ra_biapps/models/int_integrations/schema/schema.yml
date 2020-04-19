@@ -1,0 +1,9 @@
+version: 2
+models:
+  - name: i_contacts
+    description: "Contacts Dimension Staging"
+    columns:
+      - name: pk
+        tests:
+          - unique
+          - not_null

@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: jira
+    database: ra-development
+    schema: stitch_jira
+    tables:
+      - name: s_projects
+        identifier: projects
+      - name: s_issues
+        identifier: issues
+      - name: s_users
+        identifier: users
+      - name: s_roles
+        identifier: roles
+      - name: s_issue_comments
+        identifier: issue_comments
+      - name: s_project_categories
+        identifier: project_categories
+      - name: s_project_types
+        identifier: project_types
+
+models:
+  - name: t_jira_projects_projects
+    description: "Jira Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: lead_user_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('t_asana_projects_users')
+              field: user_id

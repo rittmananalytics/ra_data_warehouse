@@ -46,7 +46,7 @@ vars:
 ```
 #### Split between Source-Dependent data extract, transform and merge models, and Source-Independent warehouse load models
 
-![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_sil_diagram.png)
+![SDE and SIL ](https://github.com/rittmananalytics/ra_bi_apps/raw/master/ra_biapps/img/t_wh_diagram.png)
 
 #### All transformation models and seed files deployed in separate datasets to main dimensional model tables
 
@@ -57,7 +57,7 @@ models:
       t_adapters:
           materialized: view
           schema: staging
-      sil_marts:
+      wh_marts:
           materialized: table
 seeds:
   ra_bi_apps:
@@ -81,7 +81,7 @@ seeds:
               to: ref('t_asana_projects_users')
               field: user_id
 
-  - name: sil_timesheets_fact
+  - name: wh_timesheets_fact
     description: "Projects Dimension"
     columns:
       - name: timesheet_pk
@@ -92,6 +92,6 @@ seeds:
         tests:
           - not_null
           - relationships:
-              to: ref('sil_companies_dim')
+              to: ref('wh_companies_dim')
               field: company_pk
 ```
