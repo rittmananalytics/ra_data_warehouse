@@ -30,9 +30,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 on-run-start:
-    - "create table if not exists {{ target.schema }}_meta.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, error_message string, load_ts timestamp)"
+    - "create table if not exists {{ target.schema }}_meta.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 on-run-end:
-    - "insert into {{ target.schema }}_meta.audit_dbt_results (object, status, row_count, execution_time, error_message, load_ts) values {{ results_values(results) }}"
+    - "insert into {{ target.schema }}_meta.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
 
 models:
   ra_bi_apps:
