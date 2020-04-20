@@ -13,7 +13,7 @@ WITH source as (
   (
     SELECT *,
            MAX(_sdc_batched_at) OVER (PARTITION BY contactid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('xero_accounting', 'contacts') }}
+    FROM {{ source('xero_accounting', 's_contacts') }}
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
   --AND lastname is not null

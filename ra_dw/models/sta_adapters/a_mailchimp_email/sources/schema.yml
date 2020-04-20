@@ -7,15 +7,22 @@ sources:
     tables:
       - name: s_campaigns
         identifier: campaigns
+        loaded_at_field: _sdc_batched_at
       - name: s_list_members
         identifier: list_members
+        loaded_at_field: _sdc_batched_at
       - name: s_list_segment_members
         identifier: list_segment_members
+        loaded_at_field: _sdc_batched_at
       - name: s_list_segments
         identifier: list_segments
+        loaded_at_field: _sdc_batched_at
       - name: s_lists
         identifier: lists
+        loaded_at_field: _sdc_batched_at
       - name: s_reports_email_activity
         identifier: reports_email_activity
+        loaded_at_field: _sdc_batched_at
       - name: s_unsubscribes
         identifier: unsubscribes
+        loaded_at_field: _sdc_batched_at

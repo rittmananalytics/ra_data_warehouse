@@ -16,7 +16,7 @@ WITH
         *,
         MAX(_sdc_batched_at) OVER (PARTITION BY banktransactionid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ source('xero_accounting', 'bank_transactions') }})
+        {{ source('xero_accounting', 's_bank_transactions') }})
     WHERE
       max_sdc_batched_at = _sdc_batched_at
     )

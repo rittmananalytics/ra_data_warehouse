@@ -2,11 +2,11 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'ra_bi_apps'
-version: '1.0.0'
+name: 'ra_data_warehouse'
+version: '0.0.1'
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'ra_bi_apps'
+profile: 'ra_data_warehouse'
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -35,9 +35,9 @@ on-run-end:
     - "insert into {{ target.schema }}_meta.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
 
 models:
-  ra_bi_apps:
+  ra_data_warehouse:
       sta_adapters:
-          materialized: view
+          materialized: ephemeral
           schema: staging
       int_integrations:
           materialized: view

@@ -7,16 +7,22 @@ sources:
     tables:
       - name: s_companies
         identifier: companies
+        loaded_at_field: _sdc_batched_at
       - name: s_contacts
         identifier: contacts
+        loaded_at_field: _sdc_batched_at
       - name: s_deal_pipelines
         identifier: deal_pipelines
+        loaded_at_field: _sdc_batched_at
       - name: s_deals
         identifier: deals
+        loaded_at_field: _sdc_batched_at
       - name: s_engagements
         identifier: engagements
+        loaded_at_field: _sdc_batched_at
       - name: s_owners
         identifier: owners
+        loaded_at_field: _sdc_batched_at
 
 models:
   - name: t_hubspot_crm_contacts

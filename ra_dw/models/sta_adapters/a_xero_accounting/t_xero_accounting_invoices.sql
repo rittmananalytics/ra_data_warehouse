@@ -16,7 +16,7 @@ WITH
           *,
           MAX(_sdc_batched_at) OVER (PARTITION BY invoiceid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
-          {{ source('xero_accounting', 'invoices') }})
+          {{ source('xero_accounting', 's_invoices') }})
       WHERE
         max_sdc_batched_at = _sdc_batched_at
       ),

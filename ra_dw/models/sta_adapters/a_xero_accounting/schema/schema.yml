@@ -1,0 +1,44 @@
+version: 2
+
+sources:
+  - name: xero_accounting
+    database: ra-development
+    schema: xero
+    tables:
+      - name: s_accounts
+        identifier: accounts
+        loaded_at_field: _sdc_batched_at
+      - name: s_tracking_categories
+        identifier: tracking_categories
+        loaded_at_field: _sdc_batched_at
+      - name: s_bank_transactions
+        identifier: bank_transactions
+        loaded_at_field: _sdc_batched_at
+      - name: s_contacts
+        identifier: contacts
+        loaded_at_field: _sdc_batched_at
+      - name: s_currencies
+        identifier: currencies
+        loaded_at_field: _sdc_batched_at
+      - name: s_expense_claims
+        identifier: expense_claims
+        loaded_at_field: _sdc_batched_at
+      - name: s_invoices
+        identifier: invoices
+        loaded_at_field: _sdc_batched_at
+      - name: s_payments
+        identifier: payments
+        loaded_at_field: _sdc_batched_at
+
+
+models:
+  - name: t_xero_accounting_contacts
+    description: "Xero Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_created_date
+        tests:
+          - not_null
