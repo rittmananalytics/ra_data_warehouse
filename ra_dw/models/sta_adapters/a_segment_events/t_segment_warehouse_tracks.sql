@@ -40,7 +40,7 @@ renamed as (
         context_campaign_source,
         context_campaign_term,
         context_campaign_content,
-        context_protocols_t_id,
+        context_protocols_source_id,
         context_locale
 
     from source

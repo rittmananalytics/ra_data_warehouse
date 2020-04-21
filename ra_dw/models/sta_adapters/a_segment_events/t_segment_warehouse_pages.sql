@@ -43,7 +43,7 @@ renamed as (
         uuid_ts,
         user_id,
         context_campaign_term,
-        context_protocols_t_id,
+        context_protocols_source_id,
         context_locale
 
     from source

@@ -60,5 +60,5 @@ min(user_created_ts) as user_created_ts,
 max(user_last_modified_ts) as user_last_modified_ts,
 FROM t_users_ds_merge_list
 group by 1) u
-join user_emails e on u.user_name = coalesce(e.user_name
+join user_emails e on u.user_name = coalesce(e.user_name,'Unassigned')
 join user_ids i on u.user_name = i.user_name

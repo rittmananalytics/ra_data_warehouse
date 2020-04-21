@@ -30,7 +30,7 @@ renamed as (
         created as payout_created_ts,
         destination as payout_destination,
         currency as payout_currency,
-        t_type as payout_t_type,
+        source_type as payout_source_type,
         arrival_date as payout_arrival_date,
         method as payout_method,
         bank_account as payout_bank_account,
