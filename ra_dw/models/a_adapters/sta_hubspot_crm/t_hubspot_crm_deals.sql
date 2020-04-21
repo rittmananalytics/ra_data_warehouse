@@ -55,7 +55,7 @@ owners as (
   FROM {{ ref('t_hubspot_crm_owners') }}
 ),
 
-renamed as (
+deals_renamed as (
 
   select
     dealid AS deal_id,
