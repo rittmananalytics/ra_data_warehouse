@@ -3,5 +3,9 @@ version: 2
 sources:
   - name: stitch_google_ads
     tables:
-      - name: accounts
-      - name: campaigns
+      - name: s_accounts
+        identifier: accounts
+        loaded_at_field: _sdc_batched_at
+      - name: s_campaigns
+        identifier: campaigns
+        loaded_at_field: _sdc_batched_at

@@ -17,7 +17,7 @@ sources:
 
 
 models:
-  - name: t_asana_projects_projects
+  - name: stg_asana_projects_projects
     description: "Asana Delivery Projects"
     columns:
       - name: project_id
@@ -29,7 +29,7 @@ models:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('t_asana_projects_users')
+              to: ref('stg_asana_projects_users')
               field: user_id
       - name: project_name
         tests:
@@ -40,7 +40,7 @@ models:
         tests:
           - not_null:
               severity: warn
-  - name: t_asana_projects_tasks
+  - name: stg_asana_projects_tasks
     description: "Asana Delivery Tasks"
     columns:
       - name: task_id
@@ -52,7 +52,7 @@ models:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('t_asana_projects_projects')
+              to: ref('stg_asana_projects_projects')
               field: project_id
       - name: task_name
         tests:
@@ -65,9 +65,9 @@ models:
           - not_null:
               severity: warn
           - relationships:
-              to: ref('t_asana_projects_users')
+              to: ref('stg_asana_projects_users')
               field: user_id
-  - name: t_asana_projects_users
+  - name: stg_asana_projects_users
     description: "Asana Delivery Tasks"
     columns:
         - name: user_id
