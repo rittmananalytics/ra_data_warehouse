@@ -28,14 +28,9 @@ renamed as (
         id,
         actor_id,
         name,
-        _sdc_table_version,
         status,
-        _sdc_received_at,
-        _sdc_sequence,
         object_story_spec,
         account_id,
-        _sdc_batched_at,
-        _sdc_extracted_at,
         object_type
 
     from source

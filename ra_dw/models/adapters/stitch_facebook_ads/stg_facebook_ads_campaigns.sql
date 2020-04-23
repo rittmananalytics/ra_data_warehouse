@@ -28,16 +28,11 @@ renamed as (
         updated_time,
         id,
         name,
-        _sdc_table_version,
         objective,
-        _sdc_received_at,
-        _sdc_sequence,
         buying_type,
         start_time,
         account_id,
-        _sdc_batched_at,
-        ads,
-        _sdc_extracted_at
+        ads     
 
     from source
 

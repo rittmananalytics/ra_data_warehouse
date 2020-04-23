@@ -54,11 +54,13 @@ models:
       enable_xero_accounting_source:       true
       enable_mailchimp_email_source:       true
       enable_segment_events_source:        true
-      enable_google_ads_source:            true 
+      enable_google_ads_source:            true
+      enable_facebook_ads_source:          true
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true
       enable_projects_warehouse:    true
       enable_marketing_warehouse:   true
+      enable_ads_warehouse:         true
 seeds:
   ra_data_warehouse:
     schema: seed_data

@@ -39,12 +39,8 @@ renamed as (
         _sdc_table_version,
         created_time,
         status,
-        _sdc_received_at,
-        _sdc_sequence,
         last_updated_by_app_id,
         account_id,
-        _sdc_batched_at,
-        _sdc_extracted_at,
         creative
 
     from source
