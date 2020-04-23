@@ -12,6 +12,8 @@ Objectives for this package are as follows:
 5. In-time, to create a means of selecting sources or subject areas ("modules") and have just those sources/modules loaded (and deployed for a customer)
 6. To do all of this in a way that embraces, rather than avoids, community additions to these sources and derived analytics models
 
+## Modular Design with Source Adapters, Integrators and Warehouse Modules 
+
 dbt Models are separated into source-specific data source adapters, integration and deduplication transformations and warehouse facts/dimension models.
 
 ![diagram](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/diagram.png)
