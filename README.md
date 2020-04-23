@@ -3,8 +3,6 @@
 ## Introduction
 This dbt package contains a set of pre-built, pre-integrated Load and Transform dbt models for common SaaS applications.
 
-![diagram](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/components_of_a_data_source.png)
-
 Objectives for this package are as follows:
 
 1. To standardise how we source and model SaaS data sources in-general
@@ -13,6 +11,10 @@ Objectives for this package are as follows:
 4. To pre-create derived analytics measures for individual and combinations of sources
 5. In-time, to create a means of selecting sources or subject areas ("modules") and have just those sources/modules loaded (and deployed for a customer)
 6. To do all of this in a way that embraces, rather than avoids, community additions to these sources and derived analytics models
+
+dbt Models are separated into source-specific data source adapters, integration and deduplication transformations and warehouse facts/dimension models.
+
+![diagram](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/diagram.png)
 
 ## What Databases Are Supported
 
