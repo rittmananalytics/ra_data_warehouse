@@ -66,9 +66,6 @@ models:
       enable_ads_warehouse:         true
 # schema names
       logs_schema: "_logs"
-      staging_schema: "_staging"
-      seed_schema: "_seed"
-
 
 seeds:
   ra_data_warehouse:

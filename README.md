@@ -13,33 +13,7 @@ Objectives for this package are as follows:
 
 ## Setting up a dev environment
 
-From the Terminal CLI, set the `schema_prefix` env variable:
-
-```
-export schema_prefix=test_dev
-```
-
-Now run the following `dbt run operation` command supplying values for these parameters:
-
-- staging : staging dataset suffix, typically `staging`
-- seed : seed dataset suffix, typically `seed`
-- logs : logs dataset suffix, typically `logs`
-
-```
-dbt run-operation bootstrap_schemas --args '{staging_schema_name: staging, seed_schema_name: seed,  logs_schema_name: logs, reset : true}' --profile ra_data_warehouse --target ra_dw_dev
-```
-
-To drop all schemas, first set the `schema_prefix` env variable:
-
-```
-export schema_prefix=test_dev
-```
-
-Then run this `dbt run operation` command:
-
-```
-dbt run-operation drop_schemas --args '{staging_schema_name: staging, seed_schema_name: seed,  logs_schema_name: logs}' --profile ra_data_warehouse --target ra_dw_dev
-```
+See [Setting up a New Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment).
 
 ## Documentation Wiki
 
