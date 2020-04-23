@@ -6,9 +6,9 @@
 }}
 {% endif %}
 
-with t_deals_fs_merge_list as
+with t_deals_merge_list as
   (
     SELECT *
     FROM   {{ ref('stg_hubspot_crm_deals') }}
   )
-select * from t_deals_fs_merge_list
+select * from t_deals_merge_list

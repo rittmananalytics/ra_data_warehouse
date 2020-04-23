@@ -20,7 +20,7 @@ models:
         tests:
           - unique
           - not_null
-  - name: stg_gcp_billing_usage_fact
+  - name: stg_gcp_billing_billing_fact
     columns:
       - name: company_id
         tests:

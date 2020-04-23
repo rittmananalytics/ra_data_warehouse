@@ -54,6 +54,7 @@ models:
       enable_xero_accounting_source:       true
       enable_mailchimp_email_source:       true
       enable_segment_events_source:        true
+      enable_google_ads_source:            true 
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true
       enable_projects_warehouse:    true

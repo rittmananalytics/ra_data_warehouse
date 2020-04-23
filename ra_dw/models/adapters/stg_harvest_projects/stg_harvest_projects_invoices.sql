@@ -120,4 +120,4 @@ from joined)
 SELECT
   *
 FROM
-  joined
+  renamed

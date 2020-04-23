@@ -5,7 +5,7 @@
     )
 }}
 {% endif %}
-with t_tasks_ds_merge_list as
+with t_tasks_merge_list as
   (
     {% if var("enable_jira_projects_source") %}
     SELECT *
@@ -19,4 +19,4 @@ with t_tasks_ds_merge_list as
     FROM   {{ ref('stg_asana_projects_tasks') }}
     {% endif %}
   )
-select * from t_tasks_ds_merge_list
+select * from t_tasks_merge_list

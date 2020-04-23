@@ -16,7 +16,7 @@
 WITH currencies AS
   (
   SELECT *
-  FROM   {{ ref('i_currencies_ds') }}
+  FROM   {{ ref('int_currencies') }}
   )
 
 SELECT

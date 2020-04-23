@@ -32,7 +32,7 @@ sources:
 
 
 models:
-  - name: t_xero_accounting_contacts
+  - name: stg_xero_accounting_contacts
     description: "Xero Contacts Dimension Staging"
     columns:
       - name: contact_id

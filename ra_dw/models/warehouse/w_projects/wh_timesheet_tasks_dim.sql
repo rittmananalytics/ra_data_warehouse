@@ -16,7 +16,7 @@
 WITH tasks AS
   (
   SELECT *
-  FROM   {{ ref('i_timesheet_tasks_ds') }}
+  FROM   {{ ref('int_timesheet_tasks') }}
   )
 SELECT
    GENERATE_UUID() as timesheet_task_pk,

@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-with t_contacts_ds_merge_list as
+with t_contacts_merge_list as
   (
     {% if var("enable_hubspot_crm_source") is true %}
     SELECT * except (contact_id, contact_company_id),
@@ -44,19 +44,19 @@ with t_contacts_ds_merge_list as
   ),
   contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
-         FROM t_contacts_ds_merge_list
+         FROM t_contacts_merge_list
          group by 1),
    contact_ids as (
          SELECT contact_name, array_agg(contact_id ignore nulls) as all_contact_ids
-         FROM t_contacts_ds_merge_list
+         FROM t_contacts_merge_list
          group by 1),
    contact_company_ids as (
                SELECT contact_name, array_agg(contact_company_id ignore nulls) as all_contact_company_ids
-               FROM t_contacts_ds_merge_list
+               FROM t_contacts_merge_list
                group by 1),
    contact_company_addresses as (
          select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
-         FROM t_contacts_ds_merge_list
+         FROM t_contacts_merge_list
          group by 1)
   select all_contact_ids,
           c.contact_name,
@@ -75,7 +75,7 @@ with t_contacts_ds_merge_list as
   max(contact_mobile_phone) as contact_mobile_phone ,
   min(contact_created_date) as contact_created_date,
   max(contact_last_modified_date) as contact_last_modified_date
-  FROM t_contacts_ds_merge_list
+  FROM t_contacts_merge_list
   group by 1) c
   join contact_emails e on c.contact_name = e.contact_name
   join contact_ids i on c.contact_name = i.contact_name

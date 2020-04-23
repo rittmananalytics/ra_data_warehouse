@@ -16,7 +16,7 @@
 WITH contacts AS
   (
   SELECT *
-  FROM   {{ ref('i_contacts_ds') }}
+  FROM   {{ ref('int_contacts') }}
 )
 select    GENERATE_UUID() as contact_pk,
           *

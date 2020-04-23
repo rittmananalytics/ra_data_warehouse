@@ -16,7 +16,7 @@
 WITH chart_of_accounts AS
   (
   SELECT *
-  FROM   {{ ref('i_chart_of_accounts_ds') }}
+  FROM   {{ ref('int_chart_of_accounts') }}
   )
 
 SELECT

@@ -32,9 +32,9 @@ user_dim as (
       from {{ ref('wh_timesheet_projects_dim') }}
 )
 ,
-  timesheets_fs as (
+  timesheets as (
       select *
-      from {{ ref('i_timesheets_fs') }}
+      from {{ ref('int_timesheets') }}
 )
 SELECT
 
@@ -54,7 +54,7 @@ SELECT
     timesheet_billable_hourly_cost_amount,
     timesheet_notes
 FROM
-   timesheets_fs t
+   timesheets t
 JOIN companies_dim c
    ON cast(t.company_id as string) IN UNNEST(c.all_company_ids)
 LEFT OUTER JOIN projects_dim p

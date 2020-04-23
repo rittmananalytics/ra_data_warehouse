@@ -6,10 +6,10 @@
 }}
 {% endif %}
 
-with t_timesheets_fs_merge_list as
+with t_timesheets_merge_list as
   (
     SELECT * except (timesheet_id),
            timesheet_id as harvest_timesheet_id
     FROM   {{ ref('stg_harvest_projects_timesheets') }}
   )
-select * from t_timesheets_fs_merge_list
+select * from t_timesheets_merge_list

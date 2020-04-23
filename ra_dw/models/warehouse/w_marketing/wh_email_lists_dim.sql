@@ -15,7 +15,7 @@
 
 WITH lists AS
   (
-  SELECT * from {{ ref('i_email_lists_ds') }}
+  SELECT * from {{ ref('int_email_lists') }}
 )
 select GENERATE_UUID() as list_pk,
        l.*

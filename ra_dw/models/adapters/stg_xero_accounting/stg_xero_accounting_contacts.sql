@@ -20,7 +20,7 @@ WITH xero_contacts as (
 
 ),
 
-contacts_ds as (
+contacts as (
 
   WITH phones as (SELECT contacts.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM xero_contacts contacts,
@@ -65,4 +65,4 @@ contacts_ds as (
  group by 1,2,3,4,5,6,7,8,14,15,16,17,18,19,20
 )
 
-select * from contacts_ds
+select * from contacts

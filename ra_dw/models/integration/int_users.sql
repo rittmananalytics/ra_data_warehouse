@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-with t_users_ds_merge_list as
+with t_users_merge_list as
   (
     {% if var("enable_harvest_projects_source") %}
     SELECT *
@@ -38,11 +38,11 @@ with t_users_ds_merge_list as
 ,
  user_emails as (
        SELECT user_name, array_agg(distinct lower(user_email) ignore nulls) as all_user_emails
-       FROM t_users_ds_merge_list
+       FROM t_users_merge_list
        group by 1),
  user_ids as (
        SELECT user_name, array_agg(user_id ignore nulls) as all_user_ids
-       FROM t_users_ds_merge_list
+       FROM t_users_merge_list
        group by 1)
  select i.all_user_ids,
         u.*,
@@ -58,7 +58,7 @@ max(user_cost_rate) as user_cost_rate,
 max(user_is_active) as user_is_active,
 min(user_created_ts) as user_created_ts,
 max(user_last_modified_ts) as user_last_modified_ts,
-FROM t_users_ds_merge_list
+FROM t_users_merge_list
 group by 1) u
 join user_emails e on u.user_name = coalesce(e.user_name,'Unknown')
 join user_ids i on u.user_name = i.user_name

@@ -16,7 +16,7 @@
 WITH invoices AS
   (
   SELECT *
-  FROM   {{ ref('i_invoices_fs') }}
+  FROM   {{ ref('int_invoices') }}
   ),
   companies_dim as (
       select *

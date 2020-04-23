@@ -25,10 +25,10 @@ contacts_dim AS
   SELECT *
   FROM   {{ ref('wh_contacts_dim') }}
 ),
-email_send_outcomes_fs AS
+email_send_outcomes AS
   (
     SELECT *
-    FROM   {{ ref('i_email_send_outcomes_fs') }}
+    FROM   {{ ref('int_email_send_outcomes') }}
   )
 SELECT
 
@@ -40,7 +40,7 @@ SELECT
                send_id,
                contact_id)
 FROM
-   email_send_outcomes_fs o
+   email_send_outcomes o
 JOIN contacts_dim c
    ON concat('mailchimp-',o.contact_id) IN UNNEST(c.all_contact_ids)
 JOIN email_lists_dim l

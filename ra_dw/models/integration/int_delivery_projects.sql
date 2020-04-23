@@ -5,7 +5,7 @@
     )
 }}
 {% endif %}
-with t_delivery_projects_ds_merge_list as
+with t_delivery_projects_merge_list as
   (
     SELECT *
     FROM   {{ ref('stg_jira_projects_projects') }}
@@ -17,4 +17,4 @@ with t_delivery_projects_ds_merge_list as
     FROM   {{ ref('stg_asana_projects_projects') }}
     {% endif %}
   )
-select * from t_delivery_projects_ds_merge_list
+select * from t_delivery_projects_merge_list

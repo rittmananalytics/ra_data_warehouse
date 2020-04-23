@@ -27,7 +27,7 @@ SELECT
    s.user_pk as deal_assigned_consultant_users_pk,
    sp.user_pk as deal_salesperson_users_pk
 FROM
-   {{ ref('i_deals_fs') }} d
+   {{ ref('int_deals') }} d
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
 JOIN user_dim s

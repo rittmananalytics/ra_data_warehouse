@@ -20,7 +20,7 @@ WITH hubspot_contacts as (
 
 ),
 
-contacts_ds as (
+contacts as (
 
     select
 
@@ -48,4 +48,4 @@ contacts_ds as (
 
 )
 
-select * from contacts_ds
+select * from contacts

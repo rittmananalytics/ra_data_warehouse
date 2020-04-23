@@ -1,20 +1,20 @@
 version: 2
 models:
-  - name: i_contacts_fs
+  - name: int_contacts
     description: "Contacts Dimension Staging"
     columns:
       - name: contact_id
         tests:
           - unique
           - not_null
-  - name: i_communications_fs
+  - name: int_communications
     description: "Contacts Dimension Staging"
     columns:
       - name: communication_id
         tests:
           - unique
           - not_null
-  - name: i_companies_ds
+  - name: int_companies
     description: "Contacts Dimension Staging"
     columns:
       - name: company_name

@@ -18,6 +18,6 @@ WITH companies_dim as (
     GENERATE_UUID() as company_pk,
     *
   FROM
-    {{ ref('i_companies_ds') }} c
+    {{ ref('int_companies') }} c
 )
 select * from companies_dim
