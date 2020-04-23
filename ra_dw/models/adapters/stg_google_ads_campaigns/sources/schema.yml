@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: stitch_google_ads
+    tables:
+      - name: accounts
+      - name: campaigns

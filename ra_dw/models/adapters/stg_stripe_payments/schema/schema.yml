@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: stitch_stripe
+    tables:
+      - name: s_balance_transactions
+        identifier: balance_transactions
+        loaded_at_field: _sdc_batched_at
+      - name: s_charges
+        identifier: charges
+        loaded_at_field: _sdc_batched_at
+      - name: s_events
+        identifier: events
+        loaded_at_field: _sdc_batched_at
+      - name: s_payout_transactions
+        identifier: payout_transactions
+        loaded_at_field: _sdc_batched_at
+      - name: s_payouts
+        identifier: payouts
+        loaded_at_field: _sdc_batched_at
