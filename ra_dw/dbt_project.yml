@@ -30,9 +30,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 on-run-start:
-    - "create table if not exists {{ target.schema }}_meta.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
+    - "create table if not exists {{ generate_prefixed_target_name() }}{{logs_schema}}.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
+
 on-run-end:
-    - "insert into {{ target.schema }}_meta.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
+    - "insert into {{ generate_prefixed_target_name() }}{{logs_schema}}.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
 
 models:
   ra_data_warehouse:
@@ -46,6 +47,7 @@ models:
           materialized: table
 
   vars:
+# data sources
       enable_harvest_projects_source:      true
       enable_hubspot_crm_source:           true
       enable_asana_projects_source:        true
@@ -56,11 +58,18 @@ models:
       enable_segment_events_source:        true
       enable_google_ads_source:            true
       enable_facebook_ads_source:          true
+# warehouse modules
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true
       enable_projects_warehouse:    true
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
+# schema names
+      logs_schema: "_logs"
+      staging_schema: "_staging"
+      seed_schema: "_seed"
+
+
 seeds:
   ra_data_warehouse:
-    schema: seed_data
+    schema: logs
