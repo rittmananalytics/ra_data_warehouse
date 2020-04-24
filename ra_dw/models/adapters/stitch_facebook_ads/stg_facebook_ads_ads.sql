@@ -24,27 +24,24 @@ WITH source AS (
 renamed as (
 
     select
-        tracking_specs,
-        effective_status,
-        targeting,
-        recommendations,
-        campaign_id,
-        conversion_specs,
-        source_ad_id,
-        updated_time,
-        id,
-        adset_id,
-        bid_type,
-        name,
-        _sdc_table_version,
-        created_time,
-        status,
-        last_updated_by_app_id,
-        account_id,
-        creative
-
+    id as ad_id,
+    name as ad_name,
+    adset_id as adset_id,
+    source_ad_id,
+    campaign_id as campaign_id,
+    account_id as account_id,
+    bid_type as ad_bid_type,
+    tracking_specs as ad_tracking_specs,
+    effective_status as ad_effective_status,
+    targeting as ad_targeting,
+    recommendations as ad_recommendations,
+    conversion_specs as ad_conversion_specs,
+    status as ad_status,
+    last_updated_by_app_id as ad_last_updated_by_app_id,
+    creative as ad_creative,
+    created_time as ad_created_ts,
+    updated_time as ad_last_modified_ts,
     from source
-
 )
 
 select * from renamed

@@ -24,16 +24,14 @@ WITH source AS (
 renamed as (
 
     select
-        effective_status,
-        updated_time,
-        id,
-        name,
-        objective,
-        buying_type,
-        start_time,
-        account_id,
-        ads     
-
+        id      as campaign_id,
+        name      as campaign_name,
+        account_id as account_id,
+        objective as campaign_objective,
+        effective_status as campaign_effective_status,
+        buying_type as campaign_buying_type,
+        start_time as campaign_start_ts,
+        updated_timeas campaign_last_modified_ts
     from source
 
 )
