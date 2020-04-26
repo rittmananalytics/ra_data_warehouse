@@ -24,27 +24,16 @@ WITH source AS (
 renamed as (
 
     select
-        id as payout_id,
-        object as payout_object,
-        balance_transaction as payout_balance_transaction,
-        created as payout_created_ts,
-        destination as payout_destination,
-        currency as payout_currency,
-        type as payout_t_type,
-        arrival_date as payout_arrival_date,
-        method as payout_method,
-        bank_account as payout_bank_account,
-        status as payout_status,
-        livemode as payout_livemode,
-        type as payout_type,
-        amount as payout_amount,
-        automatic as payout_automatic,
-        date as payout_date,
-        updated as payout_updated_ts,
-        amount_reversed  as payout_amount_reversed,
-        description  as payout_description
-
-    from source
+    id as payout_id,
+    amount/100 as payout_local_amount,
+    amount_reversed/100 as payout_local_reversed_amount,
+    status as payout_status,
+    currency as payout_currency,
+    arrival_date as payout_arrived_ts,
+    bank_account.bank_name as payout_bank_name,
+    bank_account.routing_number as payout_bank_sort_code,
+    created as payout_created_ts
+from source
 
 )
 

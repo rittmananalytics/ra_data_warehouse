@@ -5,7 +5,11 @@
     )
 }}
 {% endif %}
-
+{{
+    config(
+        materialized="table"
+    )
+}}
 with t_companies_pre_merged as (
 
       {% if var("enable_hubspot_crm_source") is true %}
@@ -29,6 +33,15 @@ with t_companies_pre_merged as (
       {% if var("enable_xero_accounting_source") is true %}
       SELECT *
       FROM   {{ ref('stg_xero_accounting_companies') }}
+      {% endif %}
+
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") and var("enable_stripe_payments_source")  %}
+      UNION ALL
+      {% endif %}
+
+      {% if var("enable_stripe_payments_source") is true %}
+      SELECT *
+      FROM   {{ ref('stg_stripe_payments_companies') }}
       {% endif %}
     ),
 companies_merge_list as (

@@ -7,19 +7,11 @@
 {% endif %}
 
 WITH source AS (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-    (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+        SELECT
+        *
       FROM
-        {{ source('stitch_facebook_ads', 's_adinsights_age_and_gender') }}
-    )
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
-),
+        {{ source('stitch_facebook_ads', 's_ads_insights_age_and_gender') }}
+    ),
 renamed as (
   SELECT
    adset_id,
@@ -55,5 +47,6 @@ renamed as (
    cost_per_inline_post_engagement
  FROM
    source
+   {{ dbt_utils.group_by(n=31) }}
 )
 select * from renamed

@@ -31,7 +31,7 @@ renamed as (
         effective_status as campaign_effective_status,
         buying_type as campaign_buying_type,
         start_time as campaign_start_ts,
-        updated_timeas campaign_last_modified_ts
+        updated_time as campaign_last_modified_ts
     from source
 
 )
