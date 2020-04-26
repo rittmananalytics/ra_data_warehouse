@@ -7,7 +7,7 @@
 {% else %}
 {{
     config(
-        unique_key='account_pk',
+        unique_key='currency_pk',
         alias='currency_dim'
     )
 }}
@@ -20,7 +20,7 @@ WITH currencies AS
   )
 
 SELECT
-   GENERATE_UUID() as account_pk,
+   GENERATE_UUID() as currency_pk,
    *
 FROM
    currencies

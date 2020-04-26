@@ -7,19 +7,8 @@
 {% endif %}
 
 with source as (
-SELECT
-    *
-FROM (
-    SELECT
-        *,
-         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at,
-    CASE WHEN DATE_DIFF(DATE(due_date),DATE(paid_at),DAY) <=0 THEN true ELSE false END AS was_paid_ontime
+  {{ filter_source('harvest_projects','s_invoices','id') }}
 
-    FROM
-        {{ source('harvest_projects', 's_invoices') }}
-    )
-    WHERE
-        _sdc_batched_at = max_sdc_batched_at
     ),
 harvest_invoice_line_items as (
       SELECT

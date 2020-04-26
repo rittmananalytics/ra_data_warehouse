@@ -7,17 +7,7 @@
 {% endif %}
 
 WITH source as (
-
-  SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-  (
-    SELECT *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY contactid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('xero_accounting', 's_contacts') }}
-  )
-  WHERE _sdc_batched_at = max_sdc_batched_at
-  --AND lastname is not null
-
+  {{ filter_source('xero_accounting','s_contacts','contactid') }}
 ),
   phones as (SELECT companies.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM source companies,
@@ -26,7 +16,8 @@ WITH source as (
       addresses as (SELECT companies.contactid, addresses.addresstype, addresses.addressline1, addresses.addressline2, addresses.addressline3, addresses.addressline4, addresses.city, addresses.region, addresses.country, addresses.postalcode
          FROM source companies,
  unnest(addresses) as addresses
-),renamed as (
+),
+renamed as (
  select
         concat('xero-',cast(contacts.contactid as string)) as company_id,
         replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') as company_name,

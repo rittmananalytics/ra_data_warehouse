@@ -7,29 +7,18 @@
 {% endif %}
 
 WITH source AS (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-    (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ source('stitch_facebook_ads', 's_ads') }}
-    )
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
+  {{ filter_source('stitch_facebook_ads','s_ads','id') }}
 ),
 
 renamed as (
 
     select
-    id as ad_id,
+    concat('facebook-ads-',id) as ad_id,
     name as ad_name,
-    adset_id as adset_id,
+    concat('facebook-ads-',adset_id) as adset_id,
     source_ad_id,
-    campaign_id as campaign_id,
-    account_id as account_id,
+    concat('facebook-ads-',campaign_id) as campaign_id,
+    concat('facebook-ads-',account_id) as account_id,
     bid_type as ad_bid_type,
     tracking_specs as ad_tracking_specs,
     effective_status as ad_effective_status,

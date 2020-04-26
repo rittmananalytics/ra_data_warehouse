@@ -1,0 +1,26 @@
+version: 2
+models:
+  - name: wh_currencies_dim
+    columns:
+      - name: currency_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_invoices_fact
+    columns:
+      - name: invoice_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_transactions_fact
+    columns:
+      - name: transaction_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_chart_of_accounts_dim
+    columns:
+      - name: account_pk
+        tests:
+          - unique
+          - not_null

@@ -7,18 +7,10 @@
 {% endif %}
 
 WITH
-  payments AS (
-          SELECT
-            *
-          FROM (
-            SELECT
-              *,
-              MAX(_sdc_batched_at) OVER (PARTITION BY paymentid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-            FROM
-              {{ source('xero_accounting', 's_payments') }})
-          WHERE
-            max_sdc_batched_at = _sdc_batched_at
-          )
+  source AS (
+    {{ filter_source('xero_accounting','s_payments','paymentid') }}
+  ),
+renamed as (
   SELECT
     paymentid as payment_id,
     account.accountid as payment_account_id,
@@ -37,4 +29,6 @@ WITH
     isreconciled as payment_is_reconciled,
     bankamount as payment_bank_amount,
     currencyrate as payment_currency_rate
-  FROM payments
+  FROM source
+)
+select * from renamed 

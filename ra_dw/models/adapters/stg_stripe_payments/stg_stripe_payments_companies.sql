@@ -6,24 +6,13 @@
 }}
 {% endif %}
 WITH source AS (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-    (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ source('stitch_stripe','s_charges') }}
-    )
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
+    {{ filter_source('stitch_stripe','s_charges','id') }}
 ),
 renamed as (
 select * from (
 SELECT
-concat('stripe-',charge_client_name) AS company_id,
-    replace(replace(replace(charge_client_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
+concat('stripe-',replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','')) AS company_id,
+    replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,
     cast (null as string) AS company_city,
@@ -38,8 +27,8 @@ concat('stripe-',charge_client_name) AS company_id,
     cast (null as string) AS company_twitterhandle,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
-    min(charge_created_ts) over (partition by charge_client_name) as company_created_date,
-    max(charge_created_ts) over (partition by charge_client_name) as company_last_modified_date
-    FROM `ra-development.mark_bi_apps_dev_staging.stg_stripe_payments_charges` )
+    min(created) over (partition by metadata.client_name) as company_created_date,
+    max(created) over (partition by metadata.client_name) as company_last_modified_date
+    FROM source )
     group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
 select * from renamed

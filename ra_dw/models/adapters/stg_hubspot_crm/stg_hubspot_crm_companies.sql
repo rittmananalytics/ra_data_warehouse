@@ -7,18 +7,8 @@
 {% endif %}
 
 WITH source as (
-
-  SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-  (
-    SELECT *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY companyid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('hubspot_crm', 's_companies') }}
-  )
-  WHERE _sdc_batched_at = max_sdc_batched_at
-
+  {{ filter_source('hubspot_crm','s_companies','companyid') }}
 ),
-
 renamed as (
     select
       concat('hubspot-',companyid) AS company_id,

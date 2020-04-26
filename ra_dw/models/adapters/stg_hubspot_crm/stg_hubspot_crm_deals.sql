@@ -7,33 +7,13 @@
 {% endif %}
 
 with source as (
-
-      select *  from (
-        select *,
-        MAX(_sdc_batched_at)
-         OVER (PARTITION BY dealid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-         AS max_sdc_batched_at
-         from {{ source('hubspot_crm', 's_deals') }})
-          where max_sdc_batched_at = _sdc_batched_at
-
-
+  {{ filter_source('hubspot_crm','s_deals','dealid') }}
 ),
-
 hubspot_deal_pipelines_source as (
-
-    SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-    FROM
-    (
-      SELECT *,
-             MAX(_sdc_batched_at) OVER (PARTITION BY pipelineid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM {{ source('hubspot_crm', 's_deal_pipelines') }}
-    )
-    WHERE _sdc_batched_at = max_sdc_batched_at
-
-  ),
-
+  {{ filter_source('hubspot_crm','s_deal_pipelines','pipelineid') }}
+)
+,
 hubspot_deal_stages as (
-
     select
       pipelineid,
       stageid,
@@ -42,21 +22,15 @@ hubspot_deal_stages as (
       stages.label as stage_label,
       stages.displayorder as stage_displayorder,
       concat (cast( pipelineid as string), cast (stageid as string)) as pk
-
-
     from hubspot_deal_pipelines_source,
     unnest (stages) stages
-    group by 1,2,3,4,5,6,7
-
+    {{ dbt_utils.group_by(7) }}
 ),
-
 owners as (
   SELECT *
   FROM {{ ref('stg_hubspot_crm_owners') }}
 ),
-
 renamed as (
-
   select
     dealid AS deal_id,
     properties.closed_lost_reason.value AS deal_closed_lost_reason,
@@ -88,16 +62,10 @@ renamed as (
     properties.number_of_sprints.value deal_number_of_sprints,
     properties.number_of_sprints.value * 14 as deal_duration_days,
     properties.deal_components.value as deal_count_components,
-
-    _sdc_batched_at
-
   from source,
             unnest(associations.associatedcompanyids) with offset off
-
 ),
-
 joined as (
-
     select
     concat('hubspot-',d.hubspot_company_id) as company_id,
     d.* except(hubspot_company_id),
@@ -116,13 +84,10 @@ joined as (
        d.deal_delivery_start_ts < current_timestamp
        and date_add(date(d.deal_delivery_start_ts), interval safe_cast(d.deal_duration_days as int64) day) > current_date)
       then true else false end as is_active
-
      from renamed d
     left join hubspot_deal_stages s on d.deal_stage_id = s.stageid
     left join hubspot_deal_pipelines_source p on s.pipelineid = p.pipelineid
     left outer join owners u
     on safe_cast(d.deal_owner_id as int64) = u.ownerid
-
 )
-
 select * from joined

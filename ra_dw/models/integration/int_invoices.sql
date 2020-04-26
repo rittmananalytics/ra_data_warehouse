@@ -14,14 +14,7 @@ with t_invoices_merge_list as (
       FROM   {{ ref('stg_xero_accounting_invoices') }}
       {% endif %}
 
-      {% if var("enable_xero_accounting_source") is true and var("enable_harvest_projects_source") is true and var("enable_stripe_payments_source") is true %}
-      UNION ALL
-      {% endif %}
-
-      {% if var("enable_stripe_payments_source") is true %}
-      SELECT *
-      FROM   {{ ref('stg_stripe_payments_invoices') }}
-      {% endif %}
+      
     ),
     all_invoice_ids as (
            SELECT invoice_number, array_agg(distinct invoice_id ignore nulls) as all_invoice_ids

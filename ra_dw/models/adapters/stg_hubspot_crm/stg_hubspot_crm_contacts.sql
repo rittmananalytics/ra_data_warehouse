@@ -7,23 +7,10 @@
 {% endif %}
 
 WITH hubspot_contacts as (
-
-  SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-  (
-    SELECT *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY vid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM {{ source('hubspot_crm', 's_contacts') }}
-  )
-  WHERE _sdc_batched_at = max_sdc_batched_at
-  AND canonical_vid is not null
-
+  {{ filter_source('hubspot_crm','s_contacts','canonical_vid') }}
 ),
-
 contacts as (
-
     select
-
        cast(canonical_vid as string) as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,

@@ -7,19 +7,8 @@
 {% endif %}
 
 WITH source AS (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-    (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY gid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ source('stitch_asana','s_users') }}
-    )
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
-),
+  {{ filter_source('stitch_asana','s_users','gid') }}
+  ),
 
 renamed AS (
   SELECT

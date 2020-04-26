@@ -18,3 +18,6 @@ sources:
       - name: s_ads_insights_age_and_gender
         identifier: ads_insights_age_and_gender
         loaded_at_field: _sdc_batched_at
+      - name: s_ads_insights
+        identifier: ads_insights
+        loaded_at_field: _sdc_batched_at

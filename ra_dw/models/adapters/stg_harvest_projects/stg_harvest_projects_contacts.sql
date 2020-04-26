@@ -7,18 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-    (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ source('harvest_projects','s_contacts') }}
-    )
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at
+  {{ filter_source('harvest_projects','s_contacts','id') }}
 ),
 renamed as (
   SELECT

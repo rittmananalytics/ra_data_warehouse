@@ -35,7 +35,7 @@ with t_companies_pre_merged as (
       FROM   {{ ref('stg_xero_accounting_companies') }}
       {% endif %}
 
-      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") and var("enable_stripe_payments_source")  %}
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_stripe_payments_source")  %}
       UNION ALL
       {% endif %}
 

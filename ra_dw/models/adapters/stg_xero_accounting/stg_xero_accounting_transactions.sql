@@ -7,21 +7,13 @@
 {% endif %}
 
 WITH
-  bank_transactions AS
+  source AS
   (
-    SELECT
-      *
-    FROM (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY banktransactionid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ source('xero_accounting', 's_bank_transactions') }})
-    WHERE
-      max_sdc_batched_at = _sdc_batched_at
-    )
+    {{ filter_source('xero_accounting','s_bank_transactions','banktransactionid') }}
+  ),
+renamed as (
   SELECT
-      banktransactionid as transaction_id,
+      concat('xero-',banktransactionid) as transaction_id,
       lineitems.description as transaction_description,
       currencycode as transaction_currency,
       cast(null as numeric) as transaction_exchange_rate,
@@ -34,5 +26,6 @@ WITH
       date as transaction_created_ts,
       cast(null as timestamp) as transaction_updated_ts
   FROM
-    bank_transactions i,
-         UNNEST(i.lineitems) AS lineitems
+    source i,
+         UNNEST(i.lineitems) AS lineitems)
+select * from renamed

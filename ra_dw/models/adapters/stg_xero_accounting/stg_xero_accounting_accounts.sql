@@ -8,16 +8,7 @@
 
 with accounts as
 (
-  SELECT
-    *
-  FROM (
-    SELECT
-      *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY accountid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM
-      {{ source('xero_accounting', 's_accounts') }})
-  WHERE
-    max_sdc_batched_at = _sdc_batched_at
+  {{ filter_source('xero_accounting','s_accounts','accountid') }}
   )
 select  accountid as            account_id,
         name as                 account_name,
