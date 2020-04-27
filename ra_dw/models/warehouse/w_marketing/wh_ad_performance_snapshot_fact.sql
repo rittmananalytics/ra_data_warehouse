@@ -34,18 +34,18 @@ ad_performance_snapshot AS
 SELECT
 
     GENERATE_UUID() as ad_performance_snapshot_pk,
-    c.contact_pk,
-    l.list_pk,
-    s.send_pk,
-    o.* except (list_id,
-               send_id,
-               contact_id)
+    a.ad_pk,
+    d.adset_pk,
+    c.campaign_pk,
+    s.* except (ad_id,
+               adset_id,
+               campaign_id)
 FROM
    ad_performance_snapshot s
 JOIN ads_dim a
    ON s.ad_id = a.ad_id
 JOIN ad_campaigns_dim c
-   ON s.campaign_id c.campaign_id
+   ON s.campaign_id = c.campaign_id
 JOIN adsets_dim d
    ON s.adset_id = d.adset_id
 

@@ -30,10 +30,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 on-run-start:
-    - "create table if not exists {{ generate_prefixed_target_name() }}{{logs_schema}}.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
+    - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 
 on-run-end:
-    - "insert into {{ generate_prefixed_target_name() }}{{logs_schema}}.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
+    - "insert into {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
 
 models:
   ra_data_warehouse:
@@ -45,6 +45,9 @@ models:
           schema: staging
       warehouse:
           materialized: table
+      utils:
+          materialized: view
+          schema: logs
 
   vars:
 # data sources
@@ -64,8 +67,6 @@ models:
       enable_projects_warehouse:    true
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
-# schema names
-      logs_schema: "_logs"
 
 seeds:
   ra_data_warehouse:

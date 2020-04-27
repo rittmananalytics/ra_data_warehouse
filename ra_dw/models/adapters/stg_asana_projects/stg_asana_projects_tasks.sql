@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_source('stitch_asana','s_tasks','gid') }}  
+  {{ filter_source('stitch_asana','s_tasks','gid') }}
 ),
 renamed AS (
   SELECT
@@ -27,7 +27,7 @@ renamed AS (
     source,
     unnest(projects) projects
   GROUP BY
-    1,2,3,4,5,6,7,8,9,10,11,12
+    {{ dbt_utils.group_by(12) }}
 )
 SELECT
   *
