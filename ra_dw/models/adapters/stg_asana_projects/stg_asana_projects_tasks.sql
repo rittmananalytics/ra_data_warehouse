@@ -26,8 +26,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  GROUP BY
-    {{ dbt_utils.group_by(12) }}
+  {{ dbt_utils.group_by(12) }}
 )
 SELECT
   *
