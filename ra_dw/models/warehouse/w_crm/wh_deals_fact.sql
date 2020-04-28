@@ -17,7 +17,7 @@ with companies_dim as (
     from {{ ref('wh_companies_dim') }}
 ),
   user_dim as (
-    select user_pk, all_user_emails
+    select user_pk, user_name
     from {{ ref('wh_users_dim') }}
   )
 SELECT
@@ -30,7 +30,7 @@ FROM
    {{ ref('int_deals') }} d
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
-JOIN user_dim s
-   ON coalesce(d.deal_assigned_consultant,'Unassigned') in UNNEST(s.all_user_emails)
-JOIN user_dim sp
-   ON coalesce(d.deal_salesperson_email,'Unassigned') IN UNNEST(sp.all_user_emails)
+LEFT OUTER JOIN user_dim s
+  ON coalesce(d.deal_assigned_consultant,'Unassigned') = s.user_name
+LEFT OUTER JOIN user_dim sp
+  ON coalesce(d.deal_salesperson_email,'Unassigned') = sp.user_name
