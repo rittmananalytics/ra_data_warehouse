@@ -6,3 +6,4 @@ SELECT *,
       max(load_ts) over (partition by object order by load_ts range between unbounded preceding and unbounded following) as max_load_ts
       FROM {{target.project}}.{{ generate_prefixed_target_name() }}_logs.audit_dbt_results)
 where load_ts = max_load_ts
+and status != 'CREATE VIEW'

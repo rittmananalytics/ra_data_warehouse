@@ -61,12 +61,14 @@ models:
       enable_segment_events_source:        true
       enable_google_ads_source:            true
       enable_facebook_ads_source:          true
+      enable_looker_usage_source:          true
 # warehouse modules
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true
       enable_projects_warehouse:    true
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
+      enable_product_warehouse:     true 
 
 seeds:
   ra_data_warehouse:

@@ -43,6 +43,15 @@ with t_companies_pre_merged as (
       SELECT *
       FROM   {{ ref('stg_stripe_payments_companies') }}
       {% endif %}
+
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source")) and var("enable_looker_usage_source") %}
+      UNION ALL
+      {% endif %}
+
+      {% if var("enable_looker_usage_source") is true %}
+      SELECT *
+      FROM   {{ ref('stg_looker_usage_companies') }}
+      {% endif %}
     ),
 companies_merge_list as (
     select *

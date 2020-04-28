@@ -8,7 +8,7 @@
 {{
     config(
         unique_key='user_pk',
-        alias='users_fact'
+        alias='users_dim'
     )
 }}
 {% endif %}
