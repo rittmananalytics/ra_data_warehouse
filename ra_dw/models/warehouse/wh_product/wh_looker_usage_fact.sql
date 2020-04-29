@@ -13,10 +13,17 @@
 }}
 {% endif %}
 
-WITH usage AS
+with companies_dim as (
+    select *
+    from {{ ref('wh_companies_dim') }}
+),
+usage AS
   (
   SELECT * from {{ ref('int_looker_usage') }}
 )
 select GENERATE_UUID() as usage_pk,
-       u.*
+       c.company_pk,
+       u.* except (company_id)
 from usage u
+JOIN companies_dim c
+   ON cast(u.company_id as string) IN UNNEST(c.all_company_ids)
