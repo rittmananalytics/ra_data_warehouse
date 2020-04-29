@@ -14,6 +14,7 @@ with source as (
 renamed as (
 select
        concat('harvest-',p.id)                  as timesheet_project_id,
+       concat('harvest-',p.client_id)           as company_id,
        p.name                                   as project_name,
        p.code                                   as project_code,
        p.starts_on                              as project_delivery_start_ts,
@@ -27,8 +28,7 @@ select
        p.fee                                    as project_fee_amount,
        p.budget                                 as project_budget_amount,
        p.over_budget_notification_percentage    as project_over_budget_notification_pct,
-       p.budget_by                              as project_budget_by,
-       p.client_id                              as project_client_id
+       p.budget_by                              as project_budget_by
 from source p)
 SELECT
   *

@@ -8,7 +8,6 @@
 
 WITH source AS (
   {{ filter_source('stitch_asana','s_projects','gid') }}
-  where project_name = 'BI Roadmap for Looker'
 ),
 
 renamed AS (
@@ -25,6 +24,8 @@ renamed AS (
   modified_at as project_modified_at_ts,
   FROM
     source
+  where name = 'BI Roadmap for Looker'
+
 )
 SELECT
   *

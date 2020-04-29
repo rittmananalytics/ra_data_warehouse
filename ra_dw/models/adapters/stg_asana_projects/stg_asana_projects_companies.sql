@@ -1,4 +1,4 @@
-{% if not var("enable_jira_projects_source") %}
+{% if not var("enable_asana_projects_source") %}
 {{
     config(
         enabled=false
@@ -6,16 +6,9 @@
 }}
 {% endif %}
 
-WITH source AS (
-  WITH source AS (
-      {{ filter_source('jira_','s_projects','id') }}
-  ),
-),
-renamed as (
-select * from (
-SELECT
-concat('jira-',replace(name,' ','_') AS company_id,
-    name AS company_name,
+WITH renamed as (
+select concat('asana-FluentU') AS company_id,
+    'FluentU' AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,
     cast (null as string) AS company_city,
@@ -31,7 +24,5 @@ concat('jira-',replace(name,' ','_') AS company_id,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
     cast (null as timestamp) as company_created_date,
-    cast (null as timestamp) as company_last_modified_date
-    FROM source )
-    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+    cast (null as timestamp) as company_last_modified_date)
 select * from renamed
