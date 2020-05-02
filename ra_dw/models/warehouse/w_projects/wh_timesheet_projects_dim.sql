@@ -17,9 +17,14 @@ WITH timesheet_projects AS
   (
   SELECT *
   FROM   {{ ref('int_timesheet_projects') }}
-  )
+),
+companies_dim as (
+    select *
+    from {{ ref('wh_companies_dim') }}
+)
 SELECT
    GENERATE_UUID() as timesheet_project_pk,
+   c.company_pk,
    p.timesheet_project_id,
    p.project_name,
    p.project_code,
@@ -34,7 +39,8 @@ SELECT
    p.project_fee_amount,
    p.project_budget_amount,
    p.project_over_budget_notification_pct,
-   p.project_budget_by,
-   p.project_client_id
+   p.project_budget_by
 FROM
    timesheet_projects p
+   JOIN companies_dim c
+      ON cast(p.company_id as string) IN UNNEST(c.all_company_ids)

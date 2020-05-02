@@ -68,7 +68,10 @@ models:
       enable_projects_warehouse:    true
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
-      enable_product_warehouse:     true 
+      enable_product_warehouse:     true
+
+      segment_sessionization_trailing_window: 3
+      segment_inactivity_cutoff: 30 * 60
 
 seeds:
   ra_data_warehouse:
