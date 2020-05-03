@@ -11,9 +11,11 @@ This dbt package contains a set of pre-built, pre-integrated Load and Transform 
 5. In-time, to create a means of selecting sources or subject areas ("modules") and have just those sources/modules loaded (and deployed for a customer)
 6. To do all of this in a way that embraces, rather than avoids, community additions to these sources and derived analytics models
 
-See [Design and Coding Approach for Implementation Details](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach)
+## What are the Layers in the Warehouse Data Model?
 
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment) for instructions on how to set-up your own dev environment, or a new client environment
+![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/data_flow.png)
+
+See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach) for Implementation Details
 
 ## Current Dimensional Model
 
@@ -48,3 +50,7 @@ data sources on roadmap for Q2 2020 include:
 * CRM (Deals, Contacts, Companies)
 * Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Web Page Views, Web Sessions)
+
+## How Do We Setup a New Environment for Testing, Client Deployment?
+
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment) for instructions on how to set-up your own dev environment, or a new client environment
