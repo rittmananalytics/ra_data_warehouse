@@ -1,9 +1,8 @@
-# Rittman Analytics Data Warehouse
-
 ## Introduction
-This dbt package contains a set of pre-built, pre-integrated Load and Transform dbt models for common SaaS applications.
 
-Objectives for this package are as follows:
+This dbt package contains a set of pre-built, pre-integrated Load and Transform dbt models for common SaaS applications. 
+
+## Design Goals
 
 1. To standardise how we source and model SaaS data sources in-general
 2. To make it simpler to run data quality tests than to not, by defining these tests in-advance
@@ -12,40 +11,40 @@ Objectives for this package are as follows:
 5. In-time, to create a means of selecting sources or subject areas ("modules") and have just those sources/modules loaded (and deployed for a customer)
 6. To do all of this in a way that embraces, rather than avoids, community additions to these sources and derived analytics models
 
-## Modular Design with Source Adapters, Integrators and Warehouse Modules 
+See [Design and Coding Approach for Implementation Details](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach)
 
-dbt Models are separated into source-specific data source adapters, integration and deduplication transformations and warehouse facts/dimension models.
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment) for instructions on how to set-up your own dev environment, or a new client environment
 
-![diagram](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/diagram.png)
+## Current Dimensional Model
 
-## What Databases Are Supported
-
-Right now, just Google BigQuery. Support for Snowflake is the next project priority.
+![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/dimensional_model.png)
 
 ## What SaaS Sources are Currently Supported?
-Hubspot CRM
-Harvest Timesheets
-Xero Accounting
-Stripe Payments
-Asana Projects
-Jira Projects
-Mailchimp Email Marketing
-Segment Events
-GCP Billing Exports
-Google Ads
-Facebook Ads
+
+* Hubspot CRM
+* Harvest Timesheets
+* Xero Accounting
+* Stripe Payments 
+* Asana Projects
+* Jira Projects
+* Mailchimp Email Marketing
+* Segment Events 
+* GCP Billing Exports 
+* Google Ads 
+* Facebook Ads
+
+data sources on roadmap for Q2 2020 include:
+
+* Mixpanel Events
+* Salesforce CRM
+* Bamboo HRMS
+* Chargebee Payments
+* Intercom Messaging
+* Google Analytics (Free & 360)
 
 ## What Warehouse modules are Currently Modelled?
 
-Finance (Invoices, Chart of Accounts, Currencies)
-CRM (Deals, Contacts, Companies)
-Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
-Marketing (email lists, email sends, email
-
-## Setting up a dev environment
-
-See [Setting up a New Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment).
-
-## Documentation Wiki
-
-Full documentation, design patterns and coding standards are being put together in an [associated Github wiki](https://github.com/rittmananalytics/ra_data_warehouse/wiki).
+* Finance (Invoices, Chart of Accounts, Currencies)
+* CRM (Deals, Contacts, Companies)
+* Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
+* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Web Page Views, Web Sessions)
