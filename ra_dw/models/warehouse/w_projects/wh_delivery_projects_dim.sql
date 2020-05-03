@@ -17,10 +17,11 @@ WITH delivery_projects AS
   (
   SELECT *
   FROM   {{ ref('int_delivery_projects') }}
-  )
+)
 SELECT
    GENERATE_UUID() as delivery_project_pk,
    p.project_id,
+   p.company_id,
    p.lead_user_id,
    p.project_name,
    p.project_status,

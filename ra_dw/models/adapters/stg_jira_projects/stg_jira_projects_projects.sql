@@ -11,6 +11,7 @@ with source as (SELECT
   FROM (
   SELECT
     concat('jira-',id) as project_id,
+    concat('jira-',replace(name,' ','_')) AS company_id,
     concat('jira-',lead.key) as lead_user_id,
     name as project_name,
     projectkeys as jira_project_key,
@@ -52,6 +53,7 @@ types as (SELECT
       _sdc_batched_at = max_sdc_batched_at)
 select p.project_id,
        p.lead_user_id,
+       p.company_id,
        p.project_name,
        p.project_status,
        p.project_notes,

@@ -43,4 +43,8 @@ joined as (
 
 )
 
-select * from joined
+select *,
+       timestamp_diff (lead(session_start_tstamp, 1) OVER (PARTITION BY blended_user_id ORDER BY session_start_tstamp DESC),session_start_tstamp,MINUTE) AS mins_between_sessions
+
+
+        from joined

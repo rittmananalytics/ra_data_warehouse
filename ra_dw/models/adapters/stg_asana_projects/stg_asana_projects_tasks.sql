@@ -11,8 +11,8 @@ WITH source AS (
 ),
 renamed AS (
   SELECT
-  source.gid as task_id,
-  projects.gid AS project_id,
+  concat('asana-',source.gid) as task_id,
+  concat('asana-',projects.gid) AS project_id,
   concat('asana-',assignee.gid)  as task_creator_user_id,
   name  as task_name,
   cast(null as string) as task_priority,

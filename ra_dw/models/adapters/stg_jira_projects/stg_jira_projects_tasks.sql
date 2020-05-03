@@ -21,8 +21,8 @@ with source as (
     max_sdc_batched_at = _sdc_batched_at
 ),
 renamed as (
-select id as task_id,
-       fields.project.id as project_id,
+select concat('jira-',id) as task_id,
+       concat('jira-',fields.project.id) as project_id,
        concat('jira-',fields.reporter.key) as task_creator_user_id,
        fields.summary as task_name,
        fields.priority.name as task_priority,
