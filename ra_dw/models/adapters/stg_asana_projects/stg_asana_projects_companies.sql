@@ -6,9 +6,12 @@
 }}
 {% endif %}
 
-WITH renamed as (
-select concat('asana-FluentU') AS company_id,
-    'FluentU' AS company_name,
+WITH WITH source AS (
+  {{ filter_source('stitch_asana','s_workspaces','gid') }}
+),
+renamed as (
+select concat('asana-',gid) AS company_id,
+    name AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,
     cast (null as string) AS company_city,
@@ -24,5 +27,7 @@ select concat('asana-FluentU') AS company_id,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
     cast (null as timestamp) as company_created_date,
-    cast (null as timestamp) as company_last_modified_date)
+    cast (null as timestamp) as company_last_modified_date
+where name != 'My Company'
+  )
 select * from renamed

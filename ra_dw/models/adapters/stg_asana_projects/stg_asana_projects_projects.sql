@@ -14,7 +14,7 @@ renamed AS (
   SELECT
   concat('asana-',gid) as project_id,
   concat('asana-',owner.gid) as lead_user_id,
-  'asana-FluentU' as company_id,
+  concat('asana-',workspace.gid) as company_id,
   name as project_name,
   current_status as project_status,
   notes as project_notes,
