@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-WITH WITH source AS (
+WITH source AS (
   {{ filter_source('stitch_asana','s_workspaces','gid') }}
 ),
 renamed as (
@@ -28,6 +28,7 @@ select concat('asana-',gid) AS company_id,
     cast (null as string) as company_finance_status,
     cast (null as timestamp) as company_created_date,
     cast (null as timestamp) as company_last_modified_date
+    from source
 where name != 'My Company'
   )
 select * from renamed
