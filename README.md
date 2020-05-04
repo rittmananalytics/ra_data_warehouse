@@ -1,6 +1,10 @@
 ## Introduction
 
-This dbt package contains a set of pre-built, pre-integrated Load and Transform dbt models for common SaaS applications. 
+This repository contains a set of pre-built dbt Load and Transform models for common SaaS applications to create an integrated ("conformed") data warehouse dimensional model. In its current incarnation it supports Google BigQuery as the target data warehouse and Stitch (and Segment warehouse destinations) as the data pipeline technology.
+
+### Current Dimensional Model
+
+![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/dimensional_model.png)
 
 ## Design Goals
 
@@ -16,10 +20,6 @@ This dbt package contains a set of pre-built, pre-integrated Load and Transform 
 ![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/data_flow.png)
 
 See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach) for Implementation Details
-
-## Current Dimensional Model
-
-![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/dimensional_model.png)
 
 ## What SaaS Sources are Currently Supported?
 
