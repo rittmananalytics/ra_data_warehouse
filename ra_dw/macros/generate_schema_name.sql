@@ -1,6 +1,6 @@
 {% macro generate_schema_name(custom_schema_name, node) -%}
     {%- set default_schema = target.schema -%}
-    {%- set schema_prefix = env_var('schema_prefix') -%}
+    {%- set schema_prefix = env_var('schema_prefix','') -%}
 
     {% if schema_prefix|length %}
     {%- set schema_prefix = schema_prefix~"_" -%}
@@ -15,7 +15,7 @@
 
 {% macro generate_prefixed_target_name() -%}
 {%- set default_schema = target.schema -%}
-{%- set schema_prefix = env_var('schema_prefix') -%}
+{%- set schema_prefix = env_var('schema_prefix','') -%}
 
 {% if schema_prefix|length %}
 {%- set schema_prefix = schema_prefix~"_" -%}

@@ -62,6 +62,7 @@ models:
       enable_google_ads_source:            true
       enable_facebook_ads_source:          true
       enable_looker_usage_source:          true
+      enable_intercom_messaging_source:    true
 # warehouse modules
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true
