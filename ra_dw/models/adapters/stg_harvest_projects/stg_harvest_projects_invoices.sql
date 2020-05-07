@@ -99,7 +99,7 @@ select  number as invoice_number,
         tax_billed as invoice_local_total_tax_amount,
         due_amount as invoice_local_total_due_amount,
         payment_term as invoice_payment_term,
-        case when state = 'open' then 'Authorised'
+        case when state = 'open' then 'Open'
              when state = 'paid' then 'Paid'
              when state = 'draft' then 'Draft'
              else 'Other' end as invoice_status,

@@ -17,12 +17,15 @@ WITH delivery_projects AS
   (
   SELECT *
   FROM   {{ ref('int_delivery_projects') }}
+),
+companies_dim as (
+    select *
+    from {{ ref('wh_companies_dim') }}
 )
 SELECT
    GENERATE_UUID() as delivery_project_pk,
    p.project_id,
-   p.company_id,
-   p.lead_user_id,
+   c.company_pk,
    p.project_name,
    p.project_status,
    p.project_notes,
@@ -33,3 +36,5 @@ SELECT
    p.project_modified_at_ts
 FROM
    delivery_projects p
+   JOIN companies_dim c
+      ON cast(p.company_id as string) IN UNNEST(c.all_company_ids)

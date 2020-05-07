@@ -58,7 +58,7 @@ FROM
 JOIN companies_dim c
    ON cast(t.company_id as string) IN UNNEST(c.all_company_ids)
 LEFT OUTER JOIN projects_dim p
-   ON cast(t.timesheet_project_id as string) = p.timesheet_project_id
+   ON concat('harvest-',cast(t.timesheet_project_id as string)) = p.timesheet_project_id
 LEFT OUTER JOIN tasks_dim ta
    ON t.timesheet_task_id = ta.task_id
 JOIN user_dim s

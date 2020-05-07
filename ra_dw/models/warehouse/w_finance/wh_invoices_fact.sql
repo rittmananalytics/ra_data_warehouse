@@ -34,9 +34,15 @@ WITH invoices AS
 SELECT
    GENERATE_UUID() as invoice_pk,
    c.company_pk,
+   row_number() over (partition by c.company_pk order by invoice_sent_at_ts) as invoice_seq,
+   date_diff(date(invoice_sent_at_ts),min(date(invoice_sent_at_ts)) over (partition by c.company_pk),MONTH) as months_since_first_invoice,
+   timestamp(date_trunc(min(date(invoice_sent_at_ts)) over (partition by c.company_pk),MONTH)) first_invoice_month,
+   date_diff(date(invoice_sent_at_ts),min(date(invoice_sent_at_ts)) over (partition by c.company_pk),QUARTER) as quarters_since_first_invoice,
+   timestamp(date_trunc(min(date(invoice_sent_at_ts)) over (partition by c.company_pk),QUARTER)) first_invoice_quarter,
    {% if var("enable_harvest_projects_source") %}
    s.user_pk as creator_users_pk,
    p.timesheet_project_pk,
+
    {% endif %}
    i.*
 
