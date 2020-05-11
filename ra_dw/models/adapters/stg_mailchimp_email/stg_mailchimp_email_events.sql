@@ -22,6 +22,12 @@ SELECT
   email_id as contact_id,
   timestamp,
   action,
+  case when action = 'open' then 1 end as total_opens,
+  case when action = 'bounce' then 1 end as total_bounces,
+  case when action = 'click' then 1 end as total_clicks,
+  case when action = 'open' then email_id end as contact_opened,
+  case when action = 'bounce' then email_id end as contact_bounced,
+  case when action = 'click' then email_id end as contact_clicked,
   type,
   email_address
 from events

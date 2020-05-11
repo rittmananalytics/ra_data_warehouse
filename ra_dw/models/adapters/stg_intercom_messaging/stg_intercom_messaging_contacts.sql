@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-      {{ filter_source('stitch_intercom','s_contacts','id') }}
+      {{ filter_stitch_source('stitch_intercom','s_contacts','id') }}
   ),
 renamed as (
   SELECT

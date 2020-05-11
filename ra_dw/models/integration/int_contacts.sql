@@ -8,13 +8,13 @@
 
 with t_contacts_merge_list as
   (
-    {% if var("enable_hubspot_crm_source") is true %}
+    {% if var("enable_hubspot_crm_source") %}
     SELECT * except (contact_id, contact_company_id),
            concat('hubspot-',contact_id) as contact_id,
            concat('hubspot-',contact_company_id) as contact_company_id
     FROM   {{ ref('stg_hubspot_crm_contacts') }}
     {% endif %}
-    {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
+    {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source") is true %}
     UNION ALL
     {% endif %}
     {% if var("enable_harvest_projects_source") is true %}

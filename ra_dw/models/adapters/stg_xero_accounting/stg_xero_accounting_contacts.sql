@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH xero_contacts as (
-  {{ filter_source('xero_accounting','s_contacts','contactid') }}
+  {{ filter_stitch_source('xero_accounting','s_contacts','contactid') }}
 ),
 
 contacts as (

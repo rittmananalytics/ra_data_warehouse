@@ -8,7 +8,7 @@
 
 with accounts as
 (
-  {{ filter_source('xero_accounting','s_accounts','accountid') }}
+  {{ filter_stitch_source('xero_accounting','s_accounts','accountid') }}
   )
 select  accountid as            account_id,
         name as                 account_name,

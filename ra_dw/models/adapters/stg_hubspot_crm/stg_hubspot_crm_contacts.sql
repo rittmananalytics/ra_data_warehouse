@@ -1,15 +1,44 @@
-{% if not var("enable_hubspot_crm_source") %}
+{% if not var("enable_hubspot_crm_source")  %}
 {{
     config(
         enabled=false
     )
 }}
 {% endif %}
-
-WITH hubspot_contacts as (
-  {{ filter_source('hubspot_crm','s_contacts','canonical_vid') }}
+{% if var("hubspot_crm_source_type") == 'fivetran' %}
+WITH source as (
+  select * from
+  {{ source('fivetran_hubspot_crm','s_contact') }}
 ),
-contacts as (
+renamed as (
+    select
+       cast(canonical_vid as string) as contact_id,
+       property_firstname as contact_first_name,
+       property_lastname as contact_last_name,
+       coalesce(concat(property_firstname,' ',property_lastname),property_email) as contact_name,
+       property_jobtitle contact_job_title,
+       property_email as contact_email,
+       property_phone as contact_phone,
+       property_mobilephone as contact_mobile_phone,
+       property_address contact_address,
+       property_city contact_city,
+       property_state contact_state,
+       property_country as contact_country,
+       property_zip contact_postcode_zip,
+       property_company contact_company,
+       property_website contact_website,
+       cast(property_associatedcompanyid as string) as contact_company_id,
+       cast(property_hubspot_owner_id as string) as contact_owner_id,
+       property_lifecyclestage as contact_lifecycle_stage,
+       property_createdate as contact_created_date,
+       property_lastmodifieddate as contact_last_modified_date,
+    from source
+)
+{% elif var("hubspot_crm_source_type") == 'stitch' %}
+WITH source as (
+  {{ filter_stitch_source('stitch_hubspot_crm','s_contacts','canonical_vid') }}
+),
+renamed as (
     select
        cast(canonical_vid as string) as contact_id,
        properties.firstname.value as contact_first_name,
@@ -31,8 +60,7 @@ contacts as (
        properties.lifecyclestage.value as contact_lifecycle_stage,
        properties.createdate.value as contact_created_date,
        properties.lastmodifieddate.value as contact_last_modified_date,
-    from hubspot_contacts
-
+    from source
 )
-
-select * from contacts
+{% endif %}
+select * from renamed

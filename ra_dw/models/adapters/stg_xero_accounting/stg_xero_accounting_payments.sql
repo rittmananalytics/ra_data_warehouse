@@ -8,7 +8,7 @@
 
 WITH
   source AS (
-    {{ filter_source('xero_accounting','s_payments','paymentid') }}
+    {{ filter_stitch_source('xero_accounting','s_payments','paymentid') }}
   ),
 renamed as (
   SELECT
@@ -31,4 +31,4 @@ renamed as (
     currencyrate as payment_currency_rate
   FROM source
 )
-select * from renamed 
+select * from renamed

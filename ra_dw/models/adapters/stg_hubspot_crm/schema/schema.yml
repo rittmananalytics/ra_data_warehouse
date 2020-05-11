@@ -1,7 +1,38 @@
-version: 2
+version:  2
 
 sources:
-  - name: hubspot_crm
+  - name: fivetran_hubspot_crm
+    database: ra-development
+    schema: fivetran_hubspot_euwest2
+    tables:
+      - name: s_company
+        identifier: company
+        loaded_at_field: _fivetran_synced
+      - name: s_contact
+        identifier: contact
+        loaded_at_field: _fivetran_synced
+      - name: s_deal_pipeline
+        identifier: deal_pipeline
+        loaded_at_field: _fivetran_synced
+      - name: s_deal_pipeline_stages
+        identifier: deal_pipeline_stage
+        loaded_at_field: _fivetran_synced
+      - name: s_deal
+        identifier: deal
+        loaded_at_field: _fivetran_synced
+      - name: s_engagement
+        identifier: engagement
+        loaded_at_field: _fivetran_synced
+      - name: s_owner
+        identifier: owner
+        loaded_at_field: _fivetran_synced
+      - name: s_deal_company
+        identifier: deal_company
+        loaded_at_field: _fivetran_synced
+      - name: s_property_history
+        identifier: deal_property_history
+        loaded_at_field: _fivetran_synced
+  - name: stitch_hubspot_crm
     database: ra-development
     schema: stitch_hubspot
     tables:
@@ -23,7 +54,6 @@ sources:
       - name: s_owners
         identifier: owners
         loaded_at_field: _sdc_batched_at
-
 models:
   - name: stg_hubspot_crm_contacts
     description: "Hubspot Contacts Dimension Staging"

@@ -1,13 +1,40 @@
-{% if not var("enable_hubspot_crm_source") %}
+{% if not var("enable_hubspot_crm_source")  %}
 {{
     config(
         enabled=false
     )
 }}
 {% endif %}
-
+{% if var("hubspot_crm_source_type") == 'fivetran' %}
 WITH source as (
-  {{ filter_source('hubspot_crm','s_companies','companyid') }}
+  select * from
+  {{ source('fivetran_hubspot_crm','s_company') }}
+),
+renamed as (
+    select
+      concat('hubspot-',id) AS company_id,
+      replace(replace(replace(property_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
+      property_address AS company_address,
+      property_address_2 AS company_address2,
+      property_city AS company_city,
+      property_state AS company_state,
+      property_country AS company_country,
+      property_zip AS company_zip,
+      property_phone AS company_phone,
+      property_website AS company_website,
+      property_industry AS company_industry,
+      property_linkedin_company_page AS company_linkedin_company_page,
+      property_linkedinbio AS company_linkedin_bio,
+      property_twitterhandle AS company_twitterhandle,
+      property_description AS company_description,
+      cast (null as string) as company_finance_status,
+      property_createdate AS company_created_date,
+      property_hs_lastmodifieddate company_last_modified_date
+    from source
+)
+{% elif var("hubspot_crm_source_type") == 'stitch' %}
+WITH source as (
+  {{ filter_stitch_source('stitch_hubspot_crm','s_companies','companyid') }}
 ),
 renamed as (
     select
@@ -31,6 +58,7 @@ renamed as (
       properties.hs_lastmodifieddate.value company_last_modified_date
     from source
 )
+{% endif %}
 SELECT
   *
 FROM

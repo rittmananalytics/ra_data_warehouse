@@ -12,12 +12,12 @@
 }}
 with t_companies_pre_merged as (
 
-      {% if var("enable_hubspot_crm_source") is true %}
+      {% if var("enable_hubspot_crm_source") %}
       SELECT *
       FROM   {{ ref('stg_hubspot_crm_companies') }}
       {% endif %}
 
-      {% if var("enable_hubspot_crm_source") is true and var("enable_harvest_projects_source") is true %}
+      {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
       UNION ALL
       {% endif %}
 

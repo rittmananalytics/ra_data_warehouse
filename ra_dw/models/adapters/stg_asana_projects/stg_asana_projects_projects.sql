@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_source('stitch_asana','s_projects','gid') }}
+  {{ filter_stitch_source('stitch_asana','s_projects','gid') }}
 ),
 
 renamed AS (

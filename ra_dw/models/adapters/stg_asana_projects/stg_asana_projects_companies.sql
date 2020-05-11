@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_source('stitch_asana','s_workspaces','gid') }}
+  {{ filter_stitch_source('stitch_asana','s_workspaces','gid') }}
 ),
 renamed as (
 select concat('asana-',gid) AS company_id,

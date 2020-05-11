@@ -9,7 +9,7 @@
 WITH
   source AS
   (
-    {{ filter_source('xero_accounting','s_bank_transactions','banktransactionid') }}
+    {{ filter_stitch_source('xero_accounting','s_bank_transactions','banktransactionid') }}
   ),
 renamed as (
   SELECT

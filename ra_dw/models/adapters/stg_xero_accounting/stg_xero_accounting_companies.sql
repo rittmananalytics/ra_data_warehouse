@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source as (
-  {{ filter_source('xero_accounting','s_contacts','contactid') }}
+  {{ filter_stitch_source('xero_accounting','s_contacts','contactid') }}
 ),
   phones as (SELECT companies.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM source companies,

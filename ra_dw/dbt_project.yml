@@ -53,6 +53,7 @@ models:
 # data sources
       enable_harvest_projects_source:      true
       enable_hubspot_crm_source:           true
+      hubspot_crm_source_type:             fivetran
       enable_asana_projects_source:        true
       enable_jira_projects_source:         true
       enable_stripe_payments_source:       true

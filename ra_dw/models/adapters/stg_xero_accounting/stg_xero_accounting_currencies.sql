@@ -7,7 +7,7 @@
 {% endif %}
 
 with source as (
-{{ filter_source('xero_accounting','s_currencies','code') }}
+{{ filter_stitch_source('xero_accounting','s_currencies','code') }}
 ),
 renamed as (
 select code currency_code,
