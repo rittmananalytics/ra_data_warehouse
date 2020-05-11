@@ -1,6 +1,6 @@
 ## Introduction
 
-This repository contains a set of pre-built dbt Load and Transform models for common SaaS applications to create an integrated ("conformed") data warehouse dimensional model. In its current incarnation it supports Google BigQuery as the target data warehouse and Stitch (and Segment warehouse destinations) as the data pipeline technology.
+This repository contains a set of pre-built dbt Load and Transform models for common SaaS applications to create an integrated ("conformed") data warehouse dimensional model. In its current incarnation it supports Google BigQuery as the target data warehouse with Stitch (primarily), Fivetran and Segment (for certain sources) as the data pipeline technology.
 
 ### Current Dimensional Model
 
