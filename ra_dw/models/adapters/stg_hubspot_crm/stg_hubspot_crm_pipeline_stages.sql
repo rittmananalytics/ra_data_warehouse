@@ -30,7 +30,7 @@ renamed as (
       pipelineid as pipeline_id,
       stageid as pipeline_stage_id,
       stages.label as pipeline_stage_label,
-      stages.displayorder as pipeline_stage_display_order
+      stages.displayorder as pipeline_stage_display_order,
       probability as pipeline_stage_close_probability_pct,
       closedwon as pipeline_stage_closed_won
     from source,

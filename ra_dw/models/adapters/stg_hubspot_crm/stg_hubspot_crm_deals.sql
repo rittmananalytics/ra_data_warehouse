@@ -55,7 +55,7 @@ renamed as (
 joined as (
     select
     d.deal_id,
-    cast(a.company_id as string) as company_id,
+    concat('hubspot-',cast(a.company_id as string)) as company_id,
     d.* except (deal_id),
     timestamp_millis(safe_cast(h.value as int64)) as deal_pipeline_stage_ts,
     p.pipeline_label,
@@ -80,51 +80,44 @@ with source as (
   {{ filter_stitch_source('stitch_hubspot_crm','s_deals','dealid') }}
 ),
 hubspot_deal_pipelines_source as (
-  {{ filter_stitch_source('stitch_hubspot_crm','s_deal_pipelines','pipelineid') }}
+  SELECT *
+  FROM
+  {{ ref('stg_hubspot_crm_pipelines') }}
 )
 ,
 hubspot_deal_stages as (
-    select
-      pipelineid as ,
-      stageid,
-      probability,
-      closedwon,
-      stages.label as stage_label,
-      stages.displayorder as stage_displayorder,
-      concat (cast( pipelineid as string), cast (stageid as string)) as pk
-    from hubspot_deal_pipelines_source,
-    unnest (stages) stages
-    {{ dbt_utils.group_by(7) }}
+  select *
+  from  {{ ref('stg_hubspot_crm_pipeline_stages') }}
 ),
-owners as (
+hubspot_deal_owners as (
   SELECT *
   FROM {{ ref('stg_hubspot_crm_owners') }}
 ),
 renamed as (
   SELECT
-      deal_id,
-      cast(associations.associatedcompanyids[offset(off)] as string) as hubspot_company_id,
+      dealid as deal_id,
+      concat('hubspot-',cast(associations.associatedcompanyids[offset(off)] as string)) as company_id,
       properties.dealname.value     as deal_name,
       properties.dealtype.value     as deal_type,
       properties.description.value  as deal_description,
       properties.dealstage.value as deal_pipeline_stage_id,
+      properties.dealstage.timestamp as deal_pipeline_stage_ts,
       properties.pipeline.value     as deal_pipeline_id,
       cast (null as boolean)        as deal_is_deleted,
       properties.amount.value        as deal_amount,
       properties.hubspot_owner_id.value as deal_owner_id,
       properties.amount_in_home_currency.value    as deal_amount_local_currency,
-      properties.closed_lost_reason.valuen         as deal_closed_lost_reason,
+      properties.closed_lost_reason.value         as deal_closed_lost_reason,
       properties.closedate.value                  as deal_closed_date,
       properties.createdate.value                 as deal_created_date,
       properties.hs_lastmodifieddate.value        as deal_last_modified_date
       FROM
-      from source,
+      source,
                 unnest(associations.associatedcompanyids) with offset off
 ),
 joined as (
     select
     d.*,
-    timestamp_millis(safe_cast(h.value as int64)) as deal_pipeline_stage_ts,
     p.pipeline_label,
     p.pipeline_display_order,
     s.pipeline_stage_label,
@@ -134,8 +127,7 @@ joined as (
     u.owner_full_name,
     u.owner_email
     from renamed d
-    left outer join hubspot_deal_company a on d.deal_id = a.deal_id
-    join hubspot_deal_stages s on d.deal_stage_id = s.pipeline_stage_id
+    join hubspot_deal_stages s on d.deal_pipeline_stage_id = s.pipeline_stage_id
     join hubspot_deal_pipelines_source p on s.pipeline_id = p.pipeline_id
     left outer join hubspot_deal_owners u on safe_cast(d.deal_owner_id as int64) = u.owner_id
 )
