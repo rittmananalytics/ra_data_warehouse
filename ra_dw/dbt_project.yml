@@ -62,8 +62,9 @@ models:
       enable_segment_events_source:        true
       enable_google_ads_source:            true
       enable_facebook_ads_source:          true
-      enable_looker_usage_source:          true
       enable_intercom_messaging_source:    true
+      enable_custom_source_1:              false
+      enable_custom_source_2:              false
 # warehouse modules
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true

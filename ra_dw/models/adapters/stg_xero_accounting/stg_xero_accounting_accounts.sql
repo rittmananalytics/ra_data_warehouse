@@ -6,10 +6,12 @@
 }}
 {% endif %}
 
-with accounts as
+with source as
 (
   {{ filter_stitch_source('xero_accounting','s_accounts','accountid') }}
-  )
+),
+renamed as
+(
 select  accountid as            account_id,
         name as                 account_name,
         code as                 account_code,
@@ -26,4 +28,6 @@ select  accountid as            account_id,
         taxtype as              account_tax_type,
         showinexpenseclaims as  account_show_in_expense_claims,
         enablepaymentstoaccount as account_enable_payments_to_account
-from accounts
+from source
+)
+select * from renamed

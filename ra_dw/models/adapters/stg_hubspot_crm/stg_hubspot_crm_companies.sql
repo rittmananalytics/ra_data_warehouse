@@ -1,19 +1,31 @@
-{% if not var("enable_hubspot_crm_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
+{% if not var("enable_hubspot_crm_source") %}
+  {{ config(
+    enabled = false
+  ) }}
 {% endif %}
+
 {% if var("hubspot_crm_source_type") == 'fivetran' %}
-WITH source as (
-  select * from
-  {{ source('fivetran_hubspot_crm','s_company') }}
-),
-renamed as (
-    select
-      concat('hubspot-',id) AS company_id,
-      replace(replace(replace(property_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
+  WITH source AS (
+
+    SELECT
+      *
+    FROM
+      {{ source(
+        'fivetran_hubspot_crm',
+        's_company'
+      ) }}
+  ),
+  renamed AS (
+    SELECT
+      CONCAT(
+        'hubspot-',
+        id
+      ) AS company_id,
+      REPLACE(
+        REPLACE(REPLACE(property_name, 'Limited', ''), 'ltd', ''),
+        ', Inc.',
+        ''
+      ) AS company_name,
       property_address AS company_address,
       property_address_2 AS company_address2,
       property_city AS company_city,
@@ -27,19 +39,32 @@ renamed as (
       property_linkedinbio AS company_linkedin_bio,
       property_twitterhandle AS company_twitterhandle,
       property_description AS company_description,
-      cast (null as string) as company_finance_status,
+      CAST (
+        NULL AS STRING
+      ) AS company_finance_status,
       property_createdate AS company_created_date,
       property_hs_lastmodifieddate company_last_modified_date
-    from source
-)
-{% elif var("hubspot_crm_source_type") == 'stitch' %}
-WITH source as (
-  {{ filter_stitch_source('stitch_hubspot_crm','s_companies','companyid') }}
-),
-renamed as (
-    select
-      concat('hubspot-',companyid) AS company_id,
-      replace(replace(replace(properties.name.value,'Limited',''),'ltd',''),', Inc.','') AS company_name,
+    FROM
+      source
+  ) {% elif var("hubspot_crm_source_type") == 'stitch' %}
+  WITH source AS (
+    {{ filter_stitch_source(
+      'stitch_hubspot_crm',
+      's_companies',
+      'companyid'
+    ) }}
+  ),
+  renamed AS (
+    SELECT
+      CONCAT(
+        'hubspot-',
+        companyid
+      ) AS company_id,
+      REPLACE(
+        REPLACE(REPLACE(properties.name.value, 'Limited', ''), 'ltd', ''),
+        ', Inc.',
+        ''
+      ) AS company_name,
       properties.address.value AS company_address,
       properties.address2.value AS company_address2,
       properties.city.value AS company_city,
@@ -53,11 +78,14 @@ renamed as (
       properties.linkedinbio.value AS company_linkedin_bio,
       properties.twitterhandle.value AS company_twitterhandle,
       properties.description.value AS company_description,
-      cast (null as string) as company_finance_status,
+      CAST (
+        NULL AS STRING
+      ) AS company_finance_status,
       properties.createdate.value AS company_created_date,
       properties.hs_lastmodifieddate.value company_last_modified_date
-    from source
-)
+    FROM
+      source
+  )
 {% endif %}
 SELECT
   *
