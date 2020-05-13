@@ -1,15 +1,15 @@
 with t_invoices_merge_list as (
 
-      {% if var("enable_harvest_projects_source") is true %}
+      {% if var("enable_harvest_projects_source") %}
       SELECT *
       FROM   {{ ref('stg_harvest_projects_invoices') }}
       {% endif %}
 
-      {% if var("enable_xero_accounting_source") is true and var("enable_harvest_projects_source") is true %}
+      {% if var("enable_xero_accounting_source") and var("enable_harvest_projects_source")  %}
       UNION ALL
       {% endif %}
 
-      {% if var("enable_xero_accounting_source") is true %}
+      {% if var("enable_xero_accounting_source")  %}
       SELECT *
       FROM   {{ ref('stg_xero_accounting_invoices') }}
       {% endif %}
