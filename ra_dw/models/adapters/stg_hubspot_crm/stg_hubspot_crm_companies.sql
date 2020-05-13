@@ -46,7 +46,8 @@
       property_hs_lastmodifieddate company_last_modified_date
     FROM
       source
-  ) {% elif var("hubspot_crm_source_type") == 'stitch' %}
+  )
+  {% elif var("hubspot_crm_source_type") == 'stitch' %}
   WITH source AS (
     {{ filter_stitch_source(
       'stitch_hubspot_crm',
