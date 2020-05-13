@@ -44,16 +44,11 @@ with t_companies_pre_merged as (
       FROM   {{ ref('stg_stripe_payments_companies') }}
       {% endif %}
 
-      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source")) and var("enable_looker_usage_source") %}
-      UNION ALL
-      {% endif %}
 
-      {% if var("enable_looker_usage_source") is true %}
-      SELECT *
-      FROM   {{ ref('stg_looker_usage_companies') }}
-      {% endif %}
 
-      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") or var("enable_looker_usage_source")) and var("enable_asana_projects_source") %}
+
+
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") ) and var("enable_asana_projects_source") %}
       UNION ALL
       {% endif %}
 
@@ -62,7 +57,7 @@ with t_companies_pre_merged as (
       FROM   {{ ref('stg_asana_projects_companies') }}
       {% endif %}
 
-      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") or var("enable_looker_usage_source") or var("enable_asana_projects_source")) and var("enable_jira_projects_source") %}
+      {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") or var("enable_asana_projects_source")) and var("enable_jira_projects_source") %}
       UNION ALL
       {% endif %}
 

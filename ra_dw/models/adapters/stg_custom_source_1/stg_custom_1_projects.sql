@@ -1,4 +1,4 @@
-{% if not var("enable_harvest_projects_source") %}
+{% if not var("enable_custom_source_1") %}
 {{
     config(
         enabled=false
