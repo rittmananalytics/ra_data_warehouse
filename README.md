@@ -24,28 +24,20 @@ See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_war
 
 ## What SaaS Sources are Currently Supported?
 
-* Hubspot CRM
-* Harvest Timesheets
-* Xero Accounting
-* Stripe Payments 
-* Asana Projects
-* Jira Projects
-* Mailchimp Email Marketing
-* Segment Events 
+* Hubspot CRM (Stitch, Fivetran)
+* Harvest Timesheets (Stitch)
+* Xero Accounting (Stitch)
+* Stripe Payments (Stitch)
+* Asana Projects (Stitch)
+* Jira Projects (Stitch)
+* Mailchimp Email Marketing (Stitch)
+* Segment Events (Segment)
 * GCP Billing Exports 
-* Google Ads 
-* Facebook Ads
-* Intercom Messaging
-* Mixpanel Events
+* Google Ads (Stitch) 
+* Facebook Ads (Stitch)
+* Intercom Messaging (Stitch)
+* Mixpanel Events (Stitch, Fivetran)
 * Custom data sources
-
-data sources on roadmap for Q2 2020 include:
-
-* Salesforce CRM
-* Bamboo HRMS
-* Chargebee Payments
-
-* Google Analytics (Free & 360)
 
 ## What Warehouse modules are Currently Modelled?
 
