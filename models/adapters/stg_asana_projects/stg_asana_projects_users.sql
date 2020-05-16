@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_source('stitch_asana','s_users','gid') }}
+  {{ filter_stitch_table(users_table,'gid') }}
   ),
 
 renamed AS (
@@ -16,7 +16,7 @@ renamed AS (
   name                   as user_name  ,
   email                  as user_email ,
   cast(null as boolean)         as user_is_contractor,
-  case when email like '%@rittmananalytics.com%' or email like '%mjr-analytics.com%' then true else false end as user_is_staff,
+  case when email like '%@{{ var('staff_email_domain') }}%' then true else false end as user_is_staff,
   cast(null as int64)           as user_weekly_capacity,
   cast(null as string)          as user_phone,
   cast(null as int64)           as user_default_hourly_rate,

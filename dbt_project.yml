@@ -2,11 +2,11 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'ra_data_warehouse'
+name: 'ra_saas_warehouse'
 version: '0.0.1'
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'ra_data_warehouse'
+profile: 'ra_saas_warehouse'
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -40,6 +40,12 @@ models:
       adapters:
           materialized: view
           schema: staging
+          stg_asana_projects:
+              vars:
+                  workspaces_table: stitch_asana.workspace
+                  projects_table: stitch_asana.projects
+                  tasks_table: stitch_asana.tasks
+                  users_table: stitch_asana.users
       integration:
           materialized: view
           schema: staging
@@ -77,6 +83,7 @@ models:
 
       web_sessionization_trailing_window: 3
       web_inactivity_cutoff: 30 * 60
+      staff_email_domain: rittmananalytics.com
 
 seeds:
   ra_data_warehouse:
