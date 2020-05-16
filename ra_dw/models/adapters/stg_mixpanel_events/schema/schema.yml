@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: fivetran_mixpanel
+    database: ra-development
+    schema: fivetran_mixpanel
+    tables:
+      - name: s_event
+        identifier: event
+  - name: mixpanel_stitch
+    database: ra-development
+    schema: mixpanel_stitch
+    tables:
+      - name: s_export
+        identifier: export

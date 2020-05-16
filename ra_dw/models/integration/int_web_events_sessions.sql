@@ -1,4 +1,4 @@
-{% if not var("enable_segment_events_source") %}
+{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
 {{
     config(
         enabled=false
@@ -12,8 +12,8 @@
     select
         {{ dbt_utils.dateadd(
             'hour',
-            -var('segment_sessionization_trailing_window'),
-            'max(session_start_tstamp)'
+            -var('web_sessionization_trailing_window'),
+            'max(session_start_ts)'
         ) }}
     from {{this}}
 )
@@ -29,10 +29,10 @@ more complicated, the performance tradeoff is worth it.
 
 with sessions as (
 
-    select * from {{ref('stg_segment_events_web_sessions_stitched')}}
+    select * from {{ref('int_web_events_sessions_stitched')}}
 
     {% if is_incremental() %}
-    where cast(session_start_tstamp as datetime) > {{sessionization_cutoff}}
+    where cast(session_start_ts as datetime) > {{sessionization_cutoff}}
     {% endif %}
 
 ),
@@ -47,7 +47,7 @@ agg as (
     from {{this}}
 
     -- only include sessions that are not going to be resessionized in this run
-    where cast(session_start_tstamp as datetime) <= {{sessionization_cutoff}}
+    where cast(session_start_ts as datetime) <= {{sessionization_cutoff}}
 
     group by 1
 
@@ -63,7 +63,7 @@ windowed as (
 
         row_number() over (
             partition by blended_user_id
-            order by sessions.session_start_tstamp
+            order by sessions.session_start_ts
             )
             {% if is_incremental() %}+ coalesce(agg.starting_session_number, 0) {% endif %}
             as session_number

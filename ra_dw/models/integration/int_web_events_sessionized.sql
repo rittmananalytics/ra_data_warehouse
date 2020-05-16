@@ -1,4 +1,4 @@
-{% if not var("enable_segment_events_source") %}
+{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
 {{
     config(
         enabled=false
@@ -8,27 +8,26 @@
 
 {#
 the initial CTE in this model is unusually complicated; its function is to
-select all pageviews (for all time) for users who have pageviews since the
+select all events (for all time) for users who have pageviews since the
 model was most recently run. there are many window functions in this model so
 in order to appropriately calculate all of them we need each user's entire
-page view history, but we only want to grab that for users who have page view
-events we need to calculate.
+event history, but we only want to grab that for users who have events we need to calculate.
 #}
 
-with pageviews as (
+with events as (
 
-    select * from {{ref('stg_segment_events_web_page_views')}}
+    select * from {{ref('int_web_events')}}
 
     {% if is_incremental() %}
-    where anonymous_id in (
-        select distinct anonymous_id
-        from {{ref('stg_segment_events_web_page_views')}}
-        where cast(tstamp as datetime) >= (
+    where visitor_id in (
+        select distinct visitor_id
+        from {{ref('int_web_events')}}
+        where cast(event_ts as datetime) >= (
           select
             {{ dbt_utils.dateadd(
                 'hour',
-                -var('segment_sessionization_trailing_window'),
-                'max(tstamp)'
+                -var('web_sessionization_trailing_window'),
+                'max(event_ts)'
             ) }}
           from {{ this }})
         )
@@ -38,8 +37,8 @@ with pageviews as (
 
 numbered as (
 
-    --This CTE is responsible for assigning an all-time page view number for a
-    --given anonymous_id. We don't need to do this across devices because the
+    --This CTE is responsible for assigning an all-time event number for a
+    --given visitor_id. We don't need to do this across devices because the
     --whole point of this field is for sessionization, and sessions can't span
     --multiple devices.
 
@@ -48,17 +47,17 @@ numbered as (
         *,
 
         row_number() over (
-            partition by anonymous_id
-            order by tstamp
-            ) as page_view_number
+            partition by visitor_id
+            order by event_ts
+          ) as event_number
 
-    from pageviews
+    from events
 
 ),
 
 lagged as (
 
-    --This CTE is responsible for simply grabbing the last value of `tstamp`.
+    --This CTE is responsible for simply grabbing the last value of `event_ts`.
     --We'll use this downstream to do timestamp math--it's how we determine the
     --period of inactivity.
 
@@ -66,10 +65,10 @@ lagged as (
 
         *,
 
-        lag(tstamp) over (
-            partition by anonymous_id
-            order by page_view_number
-            ) as previous_tstamp
+        lag(event_ts) over (
+            partition by visitor_id
+            order by event_number
+          ) as previous_event_ts
 
     from numbered
 
@@ -81,7 +80,7 @@ diffed as (
 
     select
         *,
-        {{ dbt_utils.datediff('previous_tstamp', 'tstamp', 'second') }} as period_of_inactivity
+        {{ dbt_utils.datediff('previous_event_ts', 'event_ts', 'second') }} as period_of_inactivity
     from lagged
 
 ),
@@ -95,7 +94,7 @@ new_sessions as (
     select
         *,
         case
-            when period_of_inactivity <= {{var('segment_inactivity_cutoff')}} then 0
+            when period_of_inactivity <= {{var('web_inactivity_cutoff')}} then 0
             else 1
         end as new_session
     from diffed
@@ -113,8 +112,8 @@ session_numbers as (
         *,
 
         sum(new_session) over (
-            partition by anonymous_id
-            order by page_view_number
+            partition by visitor_id
+            order by event_number
             rows between unbounded preceding and current row
             ) as session_number
 
@@ -129,9 +128,9 @@ session_ids as (
 
     select
 
-        {{dbt_utils.star(ref('stg_segment_events_web_page_views'))}},
-        page_view_number,
-        {{dbt_utils.surrogate_key('anonymous_id', 'session_number')}} as session_id
+        {{dbt_utils.star(ref('int_web_events'))}},
+        event_number,
+        {{dbt_utils.surrogate_key('visitor_id', 'session_number')}} as session_id
 
     from session_numbers
 

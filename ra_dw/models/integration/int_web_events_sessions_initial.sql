@@ -1,4 +1,4 @@
-{% if not var("enable_segment_events_source") %}
+{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
 {{
     config(
         enabled=false
@@ -10,7 +10,7 @@
 
 {% set window_clause = "
     partition by session_id
-    order by page_view_number
+    order by event_number
     rows between unbounded preceding and unbounded following
     " %}
 
@@ -24,8 +24,6 @@
     'page_url' : 'first_page_url',
     'page_url_host' : 'first_page_url_host',
     'page_url_path' : 'first_page_url_path',
-    'page_url_query' : 'first_page_url_query',
-    'referrer' : 'referrer',
     'referrer_host' : 'referrer_host',
     'device' : 'device',
     'device_category' : 'device_category'
@@ -35,20 +33,19 @@
     'page_url' : 'last_page_url',
     'page_url_host' : 'last_page_url_host',
     'page_url_path' : 'last_page_url_path',
-    'page_url_query' : 'last_page_url_query'
     } %}
 
-with pageviews_sessionized as (
+with events_sessionized as (
 
-    select * from {{ref('stg_segment_events_web_page_views_sessionized')}}
+    select * from {{ref('int_web_events_sessionized')}}
 
     {% if is_incremental() %}
-        where cast(tstamp as datetime) > (
+        where cast(event_ts as datetime) > (
           select
             {{ dbt_utils.dateadd(
                 'hour',
-                -var('segment_sessionization_trailing_window'),
-                'max(session_start_tstamp)'
+                -var('web_sessionization_trailing_window'),
+                'max(session_start_ts)'
             ) }}
           from {{ this }})
     {% endif %}
@@ -66,10 +63,10 @@ agg as (
     select distinct
 
         session_id,
-        anonymous_id,
-        min(tstamp) over ( {{partition_by}} ) as session_start_tstamp,
-        max(tstamp) over ( {{partition_by}} ) as session_end_tstamp,
-        count(*) over ( {{partition_by}} ) as page_views,
+        visitor_id,
+        min(event_ts) over ( {{partition_by}} ) as session_start_ts,
+        max(event_ts) over ( {{partition_by}} ) as session_end_ts,
+        count(*) over ( {{partition_by}} ) as events,
 
         {% for (key, value) in first_values.items() %}
         first_value({{key}}) over ({{window_clause}}) as {{value}},
@@ -79,7 +76,7 @@ agg as (
         last_value({{key}}) over ({{window_clause}}) as {{value}}{% if not loop.last %},{% endif %}
         {% endfor %}
 
-    from pageviews_sessionized
+    from events_sessionized
 
 ),
 
@@ -89,7 +86,7 @@ diffs as (
 
         *,
 
-        {{ dbt_utils.datediff('session_start_tstamp', 'session_end_tstamp', 'second') }} as duration_in_s
+        {{ dbt_utils.datediff('session_start_ts', 'session_end_ts', 'second') }} as duration_in_s
 
     from agg
 

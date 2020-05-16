@@ -7,8 +7,19 @@
 {% endif %}
 
 WITH source AS (
-    select *
-    from
+    SELECT country_name, SUM(c) c
+    FROM (
+    SELECT ip, country_name, c
+  FROM (
+    SELECT *, NET.SAFE_IP_FROM_STRING(ip) & NET.IP_NET_MASK(4, mask) network_bin
+    FROM source_of_ip_addresses, UNNEST(GENERATE_ARRAY(9,32)) mask
+    WHERE BYTE_LENGTH(NET.SAFE_IP_FROM_STRING(ip)) = 4
+  )
+  JOIN ``
+  USING (network_bin, mask)
+)
+GROUP BY 1
+ORDER BY 2 DESC
     {{ source('custom_source_1','s_accounts' ) }}
 ),
 renamed as

@@ -15,35 +15,28 @@ renamed as (
 
     select
 
-        id as page_view_id,
-        anonymous_id,
-        user_id,
-
-        received_at as received_at_tstamp,
-        sent_at as sent_at_tstamp,
-        timestamp as tstamp,
-
-        url as page_url,
-        {{ dbt_utils.get_url_host('url') }} as page_url_host,
-        path as page_url_path,
-        title as page_title,
-        search as page_url_query,
-
-        referrer,
+        'Page View'                 as event_type,
+        received_at                 as event_ts,
+        context_page_title                  as event_details,
+        context_page_title                  as page_title,
+        path                        as page_url_path,
         replace(
-            {{ dbt_utils.get_url_host('referrer') }},
+            {{ dbt_utils.get_url_host('context_page_referrer') }},
             'www.',
             ''
-        ) as referrer_host,
-
-        context_campaign_source as utm_source,
-        context_campaign_medium as utm_medium,
-        context_campaign_name as utm_campaign,
-        context_campaign_term as utm_term,
-        context_campaign_content as utm_content,
+        )                           as referrer_host,
+        search                      as search,
+        url                         as page_url,
+        {{ dbt_utils.get_url_host('url') }} as page_url_host,
         {{ dbt_utils.get_url_parameter('url', 'gclid') }} as gclid,
-        context_ip as ip,
-        context_user_agent as user_agent,
+        context_campaign_term       as utm_term,
+        context_campaign_content    as utm_content,
+        context_campaign_medium     as utm_medium,
+        context_campaign_name       as utm_campaign,
+        context_campaign_source     as utm_source,
+        context_ip                  as ip,
+        anonymous_id                as visitor_id,
+        user_id                     as user_id,
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
