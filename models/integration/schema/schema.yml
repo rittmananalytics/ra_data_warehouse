@@ -7,13 +7,6 @@ models:
         tests:
           - unique
           - not_null
-  - name: int_communications
-    description: "Contacts Dimension Staging"
-    columns:
-      - name: communication_id
-        tests:
-          - unique
-          - not_null
   - name: int_companies
     description: "Contacts Dimension Staging"
     columns:

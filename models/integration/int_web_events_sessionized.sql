@@ -134,6 +134,25 @@ session_ids as (
 
     from session_numbers
 
+),
+id_stitching as (
+
+    select * from {{ref('int_web_events_user_stitching')}}
+
+),
+
+joined as (
+
+    select
+
+        session_ids.*,
+
+        coalesce(id_stitching.user_id, session_ids.visitor_id)
+            as blended_user_id
+
+    from session_ids
+    left join id_stitching using (visitor_id)
+
 )
 
-select * from session_ids
+select * from joined
