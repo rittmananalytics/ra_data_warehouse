@@ -18,7 +18,7 @@ This repository contains a set of pre-built dbt Load and Transform models for co
 
 ## What are the Layers in the Warehouse Data Model?
 
-![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/data_flow.png)
+![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
 
 See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach) for Implementation Details
 
