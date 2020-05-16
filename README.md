@@ -4,7 +4,7 @@ This repository contains a set of pre-built dbt Load and Transform models for co
 
 ### Current Dimensional Model
 
-![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/ra_dw/img/dimensional_model.png)
+![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
 
 ## Design Goals
 
