@@ -2,6 +2,13 @@
 
 The RA Data Warehouse is a framework for ingesting, combining and restructuring data from multiple source systems into a conformed, dimensional data warehouse. The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
 
+* [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
+* [Centralize and Connect your Data](https://rittmananalytics.com/data-centralisation) consulting packages
+* [Getting Started with dbt](https://rittmananalytics.com/getting-started-with-dbt) consulting packages
+* [Rittman Analytics blog](https://rittmananalytics.com/blog)
+* [Drill to Detail Podcast](https://drilltodetail.rittmananalytics.com)
+* [Contact Us](https://rittmananalytics.com/home-index/#about-us)
+
 dbt is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Development framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
 
 ## Design Goals
@@ -57,10 +64,6 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 * Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Web Page Views, Web Sessions)
 
-## How Do We Setup a New Environment for Testing, Client Deployment?
-
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up your own dev environment, or a new client environment
-
 ## What Features and Other Support are on the Product Roadmap?
 
 High-priority are:
@@ -76,3 +79,7 @@ Medium-priority are:
 * Enrichment plugins
 
 Issues and pull request from the community are welcomed!
+
+## How Do We Setup a New Environment for Testing, Client Deployment?
+
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up a new warehouse environment
