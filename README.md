@@ -32,8 +32,8 @@ See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_war
 * Jira Projects (Stitch)
 * Mailchimp Email Marketing (Stitch)
 * Segment Events (Segment)
-* GCP Billing Exports 
-* Google Ads (Stitch) 
+* GCP Billing Exports
+* Google Ads (Stitch)
 * Facebook Ads (Stitch)
 * Intercom Messaging (Stitch)
 * Mixpanel Events (Stitch, Fivetran)
@@ -48,4 +48,4 @@ See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_war
 
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Setting-up-a-New-Warehouse-Environment) for instructions on how to set-up your own dev environment, or a new client environment
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/setup.md) for instructions on how to set-up your own dev environment, or a new client environment
