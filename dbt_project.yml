@@ -1,16 +1,8 @@
-
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'ra_saas_warehouse'
+name: 'ra_data_warehouse'
 version: '0.0.1'
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'ra_saas_warehouse'
+profile: 'ra_data_warehouse'
 
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
 source-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -22,13 +14,6 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
 
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# In this example config, we tell dbt to build all models in the example/ directory
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
 on-run-start:
     - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 
@@ -37,26 +22,113 @@ on-run-end:
 
 models:
   ra_data_warehouse:
+# source adapter general settings
       adapters:
           materialized: view
           schema: staging
+# source adapter module settings
           stg_asana_projects:
               vars:
-                  workspaces_table: stitch_asana.workspace
+                  workspaces_table: stitch_asana.workspaces
                   projects_table: stitch_asana.projects
                   tasks_table: stitch_asana.tasks
                   users_table: stitch_asana.users
+          stg_facebook_ads:
+              vars:
+                  adcreative_table: stitch_facebook_ads.adcreative
+                  ads_table: stitch_facebook_ads.ads
+                  adsets_table: stitch_facebook_ads.adsets
+                  campaigns_table: stitch_facebook_ads.campaigns
+                  ads_insights_age_and_gender_table: stitch_facebook_ads.ads_insights_age_and_gender
+                  ads_insights_table: stitch_facebook_ads.ads_insights
+          stg_google_ads:
+              vars:
+                  accounts_table: stitch_google_ads.accounts
+                  campaigns_table: stitch_google_ads.campaigns
+          stg_harvest_projects:
+              vars:
+                  clients_table: rittman_analytics.clients
+                  contacts_table: rittman_analytics.contacts
+                  invoices_table: rittman_analytics.invoices
+                  invoice_line_items_table: rittman_analytics.invoice_line_items
+                  projects_table: rittman_analytics.projects
+                  tasks_table: rittman_analytics.tasks
+                  project_tasks_table: rittmananalytics.project_tasks
+                  time_entries_table: rittman_analytics.time_entries
+                  users_table: rittman_analytics.users
+                  user_projects_table: rittman_analytics.users
+                  expenses_table: rittman_analytics.expenses
+          stg_hubspot_crm:
+              vars:
+                  stitch_companies_table: stitch_hubspot.companies
+                  stitch_contacts_table: stitch_hubspot.contacts
+                  stitch_deals_table: stitch_hubspot.deals
+                  stitch_owners_table: stitch_hubspot.owners
+                  stitch_pipeline_stages_table: stitch_hubspot.pipeline_stages
+                  stitch_deal_pipelines_table: stitch_hubspot.deal_pipelines
+                  fivetran_company_table: fivetran_hubspot_euwest2.company
+                  fivetran_contact_table: fivetran_hubspot_euwest2.contact
+                  fivetran_deal_table: fivetran_hubspot_euwest2.deal
+                  fivetran_owner_table: fivetran_hubspot_euwest2.owner
+                  fivetran_pipeline_stage_table: fivetran_hubspot_euwest2.pipeline_stage
+                  fivetran_pipeline_table: fivetran_hubspot_euwest2.pipeline
+                  fivetran_property_history_table: fivetran_hubspot_euwest2.property_history
+                  fivetran_deal_company_table: fivetran_hubspot_euwest2.deal_company
+          stg_intercom_messaging:
+              vars:
+                  stitch_contacts_table: stitch_intercom.contacts
+                  stitch_conversations_table: stitch_intercom.conversations
+          stg_jira_projects:
+              vars:
+                  stitch_projects_table: stitch_jira.projects
+                  stitch_project_types_table: stitch_jira.project_types
+                  stitch_project_categories_table: stitch_jira.project_categories
+                  stitch_issues_table: stitch_jira.issues
+                  stitch_users_table: stitch_jira.users
+          stg_mailchimp_email:
+              vars:
+                  stitch_list_members_table: stitch_mailchimp.list_members
+                  stitch_reports_email_activity_table: stitch_mailchimp.reports_email_activity
+                  stitch_lists_table: stitch_mailchimp.lists
+                  stitch_campaigns_table: stitch_mailchimp.campaigns
+          stg_mixpanel_events:
+              vars:
+                  fivetran_event_table: fivetran_mixpanel.event
+                  stitch_export_table: mixpanel_stitch.export
+          stg_segment_events:
+              vars:
+                  tracks_table: company_website.tracks
+                  pages_table: company_website.pages
+          stg_stripe_payments:
+              vars:
+                  stitch_balance_transactions_table: stitch_stripe.balance_transactions
+                  stitch_charges_table: stitch_stripe.charges
+                  stitch_events_table: stitch_stripe.events
+                  stitch_payout_transactions_table: payout_transactions
+                  stitch_payouts_table: stitch_stripe.payouts
+          stg_xero_accounting:
+              vars:
+                  stitch_accounts_table: xero.accounts
+                  stitch_categories_table: xero.tracking_categories
+                  stitch_bank_transactions_table: xero.bank_transactions
+                  stitch_contacts_table: xero.contacts
+                  stitch_currencies_table: xero.currencies
+                  stitch_expense_claims_table: xero.expense_claims
+                  stitch_invoices_table: xero.invoices
+                  stitch_payments_table: xero.payments
+# integration layer settings
       integration:
           materialized: view
           schema: staging
+# warehouse layer settings
       warehouse:
           materialized: table
+# util module settings
       utils:
           materialized: view
           schema: logs
-
+# source adapter enable/disable settings
   vars:
-# data sources
       enable_harvest_projects_source:      true
       enable_hubspot_crm_source:           true
       hubspot_crm_source_type:             stitch
@@ -87,4 +159,4 @@ models:
 
 seeds:
   ra_data_warehouse:
-    schema: logs
+    schema: seeds

@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_source('harvest_projects','s_contacts','id') }}
+  {{ filter_stitch_table(var('contacts_table'),'id') }}
 ),
 renamed as (
   SELECT

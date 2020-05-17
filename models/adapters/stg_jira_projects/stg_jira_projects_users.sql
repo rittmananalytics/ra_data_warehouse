@@ -14,7 +14,7 @@ with source as (
       *,
       MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ source('jira', 's_users') }})
+      {{ target.database}}.{{ var('stitch_users_table') }})
   WHERE
     max_sdc_batched_at = _sdc_batched_at
 ),

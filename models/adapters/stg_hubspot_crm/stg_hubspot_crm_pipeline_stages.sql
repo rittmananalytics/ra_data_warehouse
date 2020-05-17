@@ -8,7 +8,7 @@
 {% if var("hubspot_crm_source_type") == 'fivetran' %}
 with source as (
   select * from
-  {{ source('fivetran_hubspot_crm','s_deal_pipeline_stages') }}
+  from {{ var('fivetran_pipeline_stages_table') }}
 
 ),
 renamed as (
@@ -23,7 +23,8 @@ renamed as (
 )
 {% elif var("hubspot_crm_source_type") == 'stitch' %}
 with source as (
-  {{ filter_stitch_source('stitch_hubspot_crm','s_deal_pipelines','pipelineid') }}
+  {{ filter_stitch_table(var('stitch_deal_pipelines_table'),'pipelineid') }}
+
 ),
 renamed as (
     select

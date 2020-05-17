@@ -7,7 +7,7 @@
 {% endif %}
 
 with t_harvest_time_entries as (
-  {{ filter_stitch_source('harvest_projects','s_time_entries','id') }}
+  {{ filter_stitch_table(var('time_entries_table'),'id') }}
 
 ),
 t_harvest_projects as (
@@ -18,7 +18,7 @@ t_harvest_projects as (
         *,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ source('harvest_projects', 's_projects') }})
+        {{ target.database}}.{{ var('projects_table') }})
     WHERE
       max_sdc_batched_at = _sdc_batched_at
   ),
@@ -30,7 +30,7 @@ t_harvest_users_project_tasks as (
             *,
              MAX(_sdc_batched_at) OVER (PARTITION BY project_task_id,user_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
-            {{ source('harvest_projects', 's_user_project_tasks') }}
+            {{ target.database}}.{{ var('user_projects_table') }}
         )
     WHERE
         _sdc_batched_at = max_sdc_batched_at
@@ -43,7 +43,7 @@ t_harvest_project_tasks as (
         *,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ source('harvest_projects', 's_project_tasks') }}
+        {{ target.database}}.{{ var('project_tasks_table') }}
       )
     WHERE
       _sdc_batched_at = max_sdc_batched_at
@@ -56,7 +56,7 @@ t_harvest_tasks as (
             *,
              MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
-            {{ source('harvest_projects', 's_tasks') }}
+            {{ target.database}}.{{ var('tasks_table') }}
         )
     WHERE
         _sdc_batched_at = max_sdc_batched_at
@@ -69,7 +69,7 @@ t_harvest_users as (
            *,
             MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
        FROM
-           {{ source('harvest_projects', 's_users') }}
+           {{ target.database}}.{{ var('users_table') }}
        )
    WHERE
        _sdc_batched_at = max_sdc_batched_at

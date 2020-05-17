@@ -8,7 +8,7 @@
 
 WITH
   source as (
-  {{ filter_stitch_source('xero_accounting','s_invoices','invoiceid') }}
+    {{ filter_stitch_table(var('stitch_invoices_table'),'invoiceid') }}
       ),
 renamed as (
   SELECT

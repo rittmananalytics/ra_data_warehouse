@@ -10,10 +10,7 @@
     SELECT
       *
     FROM
-      {{ source(
-        'fivetran_hubspot_crm',
-        's_company'
-      ) }}
+      {{ var('fivetran_company_table') }}
   ),
   renamed AS (
     SELECT
@@ -49,11 +46,7 @@
   )
   {% elif var("hubspot_crm_source_type") == 'stitch' %}
   WITH source AS (
-    {{ filter_stitch_source(
-      'stitch_hubspot_crm',
-      's_companies',
-      'companyid'
-    ) }}
+    {{ filter_stitch_table(var('stitch_companies_table'),'companyid') }}
   ),
   renamed AS (
     SELECT

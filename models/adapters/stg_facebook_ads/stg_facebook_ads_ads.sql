@@ -7,7 +7,8 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_source('stitch_facebook_ads','s_ads','id') }}
+  {{ filter_stitch_table(var('ads_table'),'id') }}
+
 ),
 
 renamed as (

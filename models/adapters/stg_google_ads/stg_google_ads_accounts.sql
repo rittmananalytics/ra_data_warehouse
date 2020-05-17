@@ -7,7 +7,8 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_source('stitch_google_ads','s_accounts','customerid') }}
+  {{ filter_stitch_table(var('accounts_table'),'customerid') }}
+
 ),
 
 renamed as (

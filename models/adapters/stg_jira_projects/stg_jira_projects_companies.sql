@@ -7,7 +7,7 @@
 {% endif %}
 
   WITH source AS (
-      {{ filter_stitch_source('jira','s_projects','id') }}
+      {{ filter_stitch_table(var('stitch_projects_table'),'id') }}
   ),
 renamed as (
 select * from (

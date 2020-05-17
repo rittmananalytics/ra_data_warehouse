@@ -23,7 +23,8 @@ with source as (SELECT
     _sdc_batched_at,
     MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
-    {{ source('jira', 's_projects') }})
+    {{ target.database}}.{{ var('stitch_projects_table') }}
+  )
 WHERE
   _sdc_batched_at = max_sdc_batched_at),
 types as (SELECT
@@ -35,7 +36,7 @@ types as (SELECT
         _sdc_batched_at,
       MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ source('jira', 's_project_types') }})
+      {{ target.database}}.{{ var('stitch_project_types_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
     categories as (SELECT
@@ -48,7 +49,7 @@ types as (SELECT
           _sdc_batched_at,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ source('jira', 's_project_categories') }})
+        {{ target.database}}.{{ var('stitch_project_categories_table') }})
     WHERE
       _sdc_batched_at = max_sdc_batched_at)
 select p.project_id,

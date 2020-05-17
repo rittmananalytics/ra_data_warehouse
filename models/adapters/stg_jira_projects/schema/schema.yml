@@ -1,32 +1,5 @@
 version: 2
 
-sources:
-  - name: jira
-    database: ra-development
-    schema: stitch_jira
-    tables:
-      - name: s_projects
-        identifier: projects
-        loaded_at_field: _sdc_batched_at
-      - name: s_issues
-        identifier: issues
-        loaded_at_field: _sdc_batched_at
-      - name: s_users
-        identifier: users
-        loaded_at_field: _sdc_batched_at
-      - name: s_roles
-        identifier: roles
-        loaded_at_field: _sdc_batched_at
-      - name: s_issue_comments
-        identifier: issue_comments
-        loaded_at_field: _sdc_batched_at
-      - name: s_project_categories
-        identifier: project_categories
-        loaded_at_field: _sdc_batched_at
-      - name: s_project_types
-        identifier: project_types
-        loaded_at_field: _sdc_batched_at
-
 models:
   - name: stg_jira_projects_projects
     description: "Jira Delivery Projects"

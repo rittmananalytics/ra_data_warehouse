@@ -7,7 +7,7 @@
 {% endif %}
 with source as (
 
-    select * from {{ source('segment_events', 's_pages') }}
+  select * from {{ target.database}}.{{ var('pages_table') }}
 
 ),
 

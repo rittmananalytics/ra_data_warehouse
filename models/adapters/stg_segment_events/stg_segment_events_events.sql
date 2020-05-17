@@ -8,7 +8,7 @@
 
 with source as (
 
-    select * from {{ source('segment_events', 's_tracks') }}
+    select * from {{ target.database}}.{{ var('tracks_table') }}
 
 ),
 

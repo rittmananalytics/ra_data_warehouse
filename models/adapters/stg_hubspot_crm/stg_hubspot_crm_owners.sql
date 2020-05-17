@@ -8,7 +8,7 @@
 {% if var("hubspot_crm_source_type") == 'fivetran' %}
 WITH source as (
   select * from
-  {{ source('fivetran_hubspot_crm','s_owner') }}
+  from {{ var('fivetran_owner_table') }}
 ),
 renamed as (
     select
@@ -21,7 +21,8 @@ renamed as (
 )
 {% elif var("hubspot_crm_source_type") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_source('stitch_hubspot_crm','s_owners','ownerid') }}
+  {{ filter_stitch_table(var('stitch_owners_table'),'ownerid') }}
+
 ),
 renamed as (
     select

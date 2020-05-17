@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-      {{ filter_stitch_source('stitch_intercom','s_conversations','id') }}
+      {{ filter_stitch_table(var('stitch_conversations_table'),'id') }}
   ),
 renamed as (
   SELECT

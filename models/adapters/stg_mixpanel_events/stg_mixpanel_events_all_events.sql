@@ -10,10 +10,7 @@
     SELECT
       *
     FROM
-      {{ source(
-        'fivetran_mixpanel',
-        's_event'
-      ) }}
+    {{ target.database}}.{{ var('fivetran_event_table') }}
   ),
 renamed as (
   SELECT
@@ -50,7 +47,8 @@ FROM
 )
 {% elif var("mixpanel_events_source_type") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_source('mixpanel_stitch','s_export','mp_reserved_insert_id') }}
+  {{ filter_stitch_table(var('stitch_export_table'),'mp_reserved_insert_id') }}
+
 ),
 renamed as (
   SELECT

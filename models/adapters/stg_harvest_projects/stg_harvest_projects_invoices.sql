@@ -7,7 +7,7 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_source('harvest_projects','s_invoices','id') }}
+  {{ filter_stitch_table(var('invoices_table'),'id') }}
 
     ),
 harvest_invoice_line_items as (
@@ -18,7 +18,7 @@ harvest_invoice_line_items as (
               *,
                MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
           FROM
-              {{ source('harvest_projects', 's_invoice_line_items') }}
+              {{ target.database}}.{{ var('invoice_line_items_table') }}
           )
       WHERE
           _sdc_batched_at = max_sdc_batched_at
@@ -31,7 +31,7 @@ harvest_expenses as (
           *,
            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-          {{ source('harvest_projects', 's_expenses') }}
+          {{ target.database}}.{{ var('expenses_table') }}
       )
   WHERE
       _sdc_batched_at = max_sdc_batched_at

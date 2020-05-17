@@ -7,7 +7,7 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_source('harvest_projects','s_users','id') }}
+  {{ filter_stitch_table(var('users_table'),'id') }}
 
 ),
 

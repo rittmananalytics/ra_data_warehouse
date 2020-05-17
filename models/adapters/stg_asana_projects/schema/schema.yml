@@ -1,24 +1,5 @@
 version: 2
 
-sources:
-  - name: stitch_asana
-    database: ra-development
-    schema: stitch_asana
-    tables:
-      - name: s_projects
-        identifier: projects
-        loaded_at_field: _sdc_batched_at
-      - name: s_tasks
-        identifier: tasks
-        loaded_at_field: _sdc_batched_at
-      - name: s_users
-        identifier: users
-        loaded_at_field: _sdc_batched_at
-      - name: s_workspaces
-        identifier: workspaces
-        loaded_at_field: _sdc_batched_at 
-
-
 models:
   - name: stg_asana_projects_projects
     description: "Asana Delivery Projects"
