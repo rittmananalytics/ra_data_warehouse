@@ -16,7 +16,7 @@ The RA Data Warehouse is a framework for ingesting, combining and restructuring 
 
 ## Design Goals
 
-1. To standardise how we source and model SaaS data sources in-general
+1. For Rittman Analytics' team, to provide some standards around how we model and transform various data sources
 2. To make it simpler to run data quality tests than to not, by defining these tests in-advance
 3. To enable merging of customer, product, contact and other shared entity data with no single authoratitive source
 4. To pre-create derived analytics measures for individual and combinations of sources
