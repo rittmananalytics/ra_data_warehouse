@@ -74,3 +74,5 @@ Medium-priority are:
 * Extending Segment support to cover all appropriate remaining data sources
 * Snowflake as an alternative to Google BigQuery as the warehouse platform
 * Enrichment plugins
+
+Issues and pull request from the community are welcomed!
