@@ -1,10 +1,8 @@
 ## Introduction
 
-This repository contains a set of pre-built dbt Load and Transform models for common SaaS applications to create an integrated ("conformed") data warehouse dimensional model. In its current incarnation it supports Google BigQuery as the target data warehouse and Stitch, Fivetran (and Segment warehouse destinations) as the data pipeline technology.
+The RA Data Warehouse is a framework for ingesting, combining and restructuring data from multiple source systems into a conformed, dimensional data warehouse. The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
 
-### Current Dimensional Model
-
-![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
+dbt is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Development framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
 
 ## Design Goals
 
@@ -16,13 +14,24 @@ This repository contains a set of pre-built dbt Load and Transform models for co
 6. To enable use of either Stitch, Fivetran or Segment as the pipeline technology based on client need
 7. To enable loading and integration of custom (customer app database) sources into the warehouse
 
+### Current Dimensional Model
+
+![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
+
 ## What are the Layers in the Warehouse Data Model?
 
 ![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
 
 See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach) for Implementation Details
 
-## What SaaS Sources are Currently Supported?
+## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
+
+* Google BigQuery (Standard SQL)
+* Stitch
+* Fivetran (limited support)
+* Segment (limited support)
+
+## What SaaS Sources are Supported?
 
 * Hubspot CRM (Stitch, Fivetran)
 * Harvest Timesheets (Stitch)
@@ -39,7 +48,7 @@ See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_war
 * Mixpanel Events (Stitch, Fivetran)
 * Custom data sources
 
-## What Warehouse modules are Currently Modelled?
+## What Warehouse modules are Modelled?
 
 * Finance (Invoices, Chart of Accounts, Currencies)
 * CRM (Deals, Contacts, Companies)
