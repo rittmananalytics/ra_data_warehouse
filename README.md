@@ -48,4 +48,4 @@ See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_war
 
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/setup.md) for instructions on how to set-up your own dev environment, or a new client environment
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/setup.md) for instructions on how to set-up your own dev environment, or a new client environment

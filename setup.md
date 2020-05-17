@@ -8,6 +8,8 @@ Using Github Desktop or the git CLI on Terminal, clone the git repo:
 git clone git@github.com:rittmananalytics/ra_data_warehouse.git
 ```
 
+### Configuring Data Sources
+
 2. Create or edit `profiles.yml` with the following content and place it under `~/.dbt/` on your machine. For safety, `dev` is a default target.
 
 ```yaml
@@ -145,6 +147,8 @@ stg_mixpanel_events:
 
 Note also that some data sources have variables specific to just those data sources, for example `staff_email_domain:` for the stg_asana_projects data source; also note the variables set with default values in the `integration:` section.
 
+### Configuring BigQuery Table and Dataset Settings
+
 6. You can also configure the dataset prefixes used for the sources, integration, utilities and warehouse database objects as well as whether they are created as SQL views, tables or ephemeral (sub-queries) in the `dbt_project.yml`, or leave them at their default values.
 
 ```yaml
@@ -174,9 +178,13 @@ seeds:
     schema: [schema prefix for utils models, default is `seeds`]
 ```
 
+### Other Setup Steps
+
 7. Configure and connect your Stitch, Fivetran, Segment and other data sources in-line with the configuration settings you have provided in steps 4,5 and 6 so that raw data from each of your SaaS data sources is now available within your data warehouse, ready for transformation.
 
 8. [Other information on setting up machine](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243)
+
+### CLI Steps
 
 9. In the command line, with current directory set to be in the root of the project (`~/dbt`), optionally set a schema prefix to be used in-front of each of the dataset names dbt will be creating for you, for example to create multiple RA Warehouse environments within the same GCP project.
 
