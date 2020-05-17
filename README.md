@@ -24,16 +24,14 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 
 ![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
 
-## What are the Layers in the Warehouse Data Model?
-
-![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
-
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
 * Google BigQuery (Standard SQL)
 * Stitch
 * Fivetran (limited support)
 * Segment (limited support)
+
+We plan to support Snowflake as an alternative data warehouse type, and extend Fivetran and Segment support to match support for Stitch in the future.
 
 ## What SaaS Sources are Supported?
 
