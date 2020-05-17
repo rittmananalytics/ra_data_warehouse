@@ -57,39 +57,6 @@ ra_data_warehouse:
 
 4. Enable or Disable Data Sources and Warehouse Modules
 
-dbt models inside this project are grouped together by logical and functional similarities of the following pattern:
-
-```
-├── analysis
-├── data                      <-- "seed" files used for matching/merging companies, projects etc
-├── macros
-├── models
-│   ├── integration           <-- "integration" models used to merge and dedupe models across multiple sources
-│   ├── sources
-│   │   ├── stg_asana_projects.        <-- "source" models with data-source specific transformations and
-│   │   ├── stg_custom_source_1            renaming of columns into common formats. Where more than one
-│   │   ├── stg_custom_source_2            pipeline technology (Stitch, Fivetran etc) is supported, these will
-│   │   ├── stg_facebook_ads               contain SQL and jinja code for each pipeline type within the one model
-│   │   ├── stg_gcp_billing_export         with the etl type configurable in the dbt_project.yml config file
-│   │   ├── stg_google_ads
-│   │   ├── stg_harvest_projects
-│   │   ├── stg_hubspot_crm
-│   │   ├── stg_intercom_messaging
-│   │   ├── stg_jira_projects
-│   │   ├── stg_mailchimp_email
-│   │   ├── stg_mixpanel_events
-│   │   ├── stg_segment_events
-│   │   ├── stg_stripe_payments
-│   │   ├── stg_unknown_values
-│   │   └── stg_xero_accounting
-│   ├── utils                           <-- "utils" models, for example for row count logging
-│   └── warehouse                       <-- "warehouse" models containing fact and dimension tables,
-│       ├── w_crm                           grouped by subject area
-│       ├── w_finance
-│       ├── w_marketing
-│       └── w_projects
-```
-
 Using a text editor, edit the `dbt_project.yml` config file to enable/disable individual data sources or warehouse modules
 
 ```yaml
