@@ -10,9 +10,9 @@ with source as (SELECT
   *
   FROM (
   SELECT
-    concat('jira-',id) as project_id,
-    concat('jira-',replace(name,' ','_')) AS company_id,
-    concat('jira-',lead.key) as lead_user_id,
+    concat('{{ var('id-prefix') }}',id) as project_id,
+    concat('{{ var('id-prefix') }}',replace(name,' ','_')) AS company_id,
+    concat('{{ var('id-prefix') }}',lead.key) as lead_user_id,
     name as project_name,
     projectkeys as jira_project_key,
     projecttypekey as project_type_id,

@@ -29,12 +29,15 @@ models:
 # source adapter module settings
           stg_asana_projects:
               vars:
+                  id-prefix: asana-
+                  staff_email_domain: rittmananalytics.com
                   workspaces_table: stitch_asana.workspaces
                   projects_table: stitch_asana.projects
                   tasks_table: stitch_asana.tasks
                   users_table: stitch_asana.users
           stg_facebook_ads:
               vars:
+                  id-prefix: fbads-
                   adcreative_table: stitch_facebook_ads.adcreative
                   ads_table: stitch_facebook_ads.ads
                   adsets_table: stitch_facebook_ads.adsets
@@ -43,23 +46,29 @@ models:
                   ads_insights_table: stitch_facebook_ads.ads_insights
           stg_google_ads:
               vars:
+                  id-prefix: gads-
                   accounts_table: stitch_google_ads.accounts
                   campaigns_table: stitch_google_ads.campaigns
           stg_harvest_projects:
               vars:
+                  id-prefix: harvest-
+                  staff_email_domain: rittmananalytics.com
                   clients_table: rittman_analytics.clients
                   contacts_table: rittman_analytics.contacts
                   invoices_table: rittman_analytics.invoices
                   invoice_line_items_table: rittman_analytics.invoice_line_items
                   projects_table: rittman_analytics.projects
                   tasks_table: rittman_analytics.tasks
-                  project_tasks_table: rittmananalytics.project_tasks
+                  project_tasks_table: rittman_analytics.project_tasks
                   time_entries_table: rittman_analytics.time_entries
                   users_table: rittman_analytics.users
-                  user_projects_table: rittman_analytics.users
+                  user_projects_table: rittman_analytics.user_projects
+                  user_project_tasks_table: rittman_analytics.user_project_tasks
                   expenses_table: rittman_analytics.expenses
           stg_hubspot_crm:
               vars:
+                  id-prefix: hubspot-
+                  etl: stitch
                   stitch_companies_table: stitch_hubspot.companies
                   stitch_contacts_table: stitch_hubspot.contacts
                   stitch_deals_table: stitch_hubspot.deals
@@ -76,10 +85,13 @@ models:
                   fivetran_deal_company_table: fivetran_hubspot_euwest2.deal_company
           stg_intercom_messaging:
               vars:
+                  id-prefix: intercom-
                   stitch_contacts_table: stitch_intercom.contacts
                   stitch_conversations_table: stitch_intercom.conversations
           stg_jira_projects:
               vars:
+                  id-prefix: jira-
+                  staff_email_domain: rittmananalytics.com
                   stitch_projects_table: stitch_jira.projects
                   stitch_project_types_table: stitch_jira.project_types
                   stitch_project_categories_table: stitch_jira.project_categories
@@ -87,20 +99,25 @@ models:
                   stitch_users_table: stitch_jira.users
           stg_mailchimp_email:
               vars:
+                  id-prefix: mailchimp-
                   stitch_list_members_table: stitch_mailchimp.list_members
                   stitch_reports_email_activity_table: stitch_mailchimp.reports_email_activity
                   stitch_lists_table: stitch_mailchimp.lists
                   stitch_campaigns_table: stitch_mailchimp.campaigns
           stg_mixpanel_events:
               vars:
+                  id-prefix: mixpanel-
+                  etl: fivetran
                   fivetran_event_table: fivetran_mixpanel.event
                   stitch_export_table: mixpanel_stitch.export
           stg_segment_events:
               vars:
+                  id-prefix: segment-
                   tracks_table: company_website.tracks
                   pages_table: company_website.pages
           stg_stripe_payments:
               vars:
+                  id-prefix: stripe-
                   stitch_balance_transactions_table: stitch_stripe.balance_transactions
                   stitch_charges_table: stitch_stripe.charges
                   stitch_events_table: stitch_stripe.events
@@ -108,6 +125,7 @@ models:
                   stitch_payouts_table: stitch_stripe.payouts
           stg_xero_accounting:
               vars:
+                  id-prefix: xero-
                   stitch_accounts_table: xero.accounts
                   stitch_categories_table: xero.tracking_categories
                   stitch_bank_transactions_table: xero.bank_transactions
@@ -120,6 +138,9 @@ models:
       integration:
           materialized: view
           schema: staging
+          vars:
+              web_sessionization_trailing_window: 3
+              web_inactivity_cutoff: 30 * 60
 # warehouse layer settings
       warehouse:
           materialized: table
@@ -153,9 +174,8 @@ models:
       enable_ads_warehouse:         true
       enable_product_warehouse:     true
 
-      web_sessionization_trailing_window: 3
-      web_inactivity_cutoff: 30 * 60
-      staff_email_domain: rittmananalytics.com
+
+
 
 seeds:
   ra_data_warehouse:

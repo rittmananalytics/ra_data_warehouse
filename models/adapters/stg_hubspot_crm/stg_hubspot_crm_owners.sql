@@ -5,10 +5,10 @@
     )
 }}
 {% endif %}
-{% if var("hubspot_crm_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
 WITH source as (
   select * from
-  from {{ var('fivetran_owner_table') }}
+  from {{ target.database}}.{{ var('fivetran_owner_table') }}
 ),
 renamed as (
     select
@@ -19,7 +19,7 @@ renamed as (
       email as owner_email
     from source
 )
-{% elif var("hubspot_crm_source_type") == 'stitch' %}
+{% elif var("etl") == 'stitch' %}
 WITH source as (
   {{ filter_stitch_table(var('stitch_owners_table'),'ownerid') }}
 

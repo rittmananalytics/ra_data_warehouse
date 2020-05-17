@@ -14,9 +14,9 @@ WITH source AS (
 renamed as (
 
     select
-        concat('facebook-ads-',id)      as campaign_id,
+        concat('{{ var('id-prefix') }}',id)      as campaign_id,
         name      as campaign_name,
-        concat('facebook-ads-',account_id) as account_id,
+        concat('{{ var('id-prefix') }}',account_id) as account_id,
         objective as campaign_objective,
         effective_status as campaign_effective_status,
         buying_type as campaign_buying_type,

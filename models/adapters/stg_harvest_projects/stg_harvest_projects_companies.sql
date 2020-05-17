@@ -11,7 +11,7 @@ WITH source AS (
 ),
 renamed as (
   SELECT
-    concat('harvest-',id) AS company_id,
+    concat('{{ var('id-prefix') }}',id) AS company_id,
     replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
     address as company_address,
     cast (null as string) AS company_address2,

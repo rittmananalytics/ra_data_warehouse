@@ -13,7 +13,7 @@ with source as (
 
 renamed as (
 select
-       concat('harvest-',id)              as user_id,
+       concat('{{ var('id-prefix') }}',id)              as user_id,
        concat(first_name,' ',last_name)   as user_name,
        email                              as user_email,
        is_contractor                      as user_is_contractor,

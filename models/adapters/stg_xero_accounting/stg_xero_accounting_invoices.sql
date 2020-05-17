@@ -13,8 +13,8 @@ WITH
 renamed as (
   SELECT
     invoicenumber as invoice_number,
-    concat('xero-',contact.contactid) as company_id,
-    concat('xero-',invoiceid) as invoice_id,
+    concat('{{ var('id-prefix') }}',contact.contactid) as company_id,
+    concat('{{ var('id-prefix') }}',invoiceid) as invoice_id,
     cast(null as string) as project_id,
     cast(null as string) as invoice_creator_users_id,
     cast(null as string) as invoice_subject,

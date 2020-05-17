@@ -13,8 +13,8 @@ WITH source AS (
 renamed as (
 
     select
-    concat('stripe-',id) as charge_id,
-    concat('stripe-',metadata.client_name) as customer_id,
+    concat('{{ var('id-prefix') }}',id) as charge_id,
+    concat('{{ var('id-prefix') }}',metadata.client_name) as customer_id,
     metadata.invoice_id as invoice_number,
     description as charge_description,
     created as payment_created_ts,

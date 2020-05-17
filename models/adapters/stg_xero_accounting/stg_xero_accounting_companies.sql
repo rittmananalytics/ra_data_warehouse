@@ -19,7 +19,7 @@ WITH source as (
 ),
 renamed as (
  select
-        concat('xero-',cast(contacts.contactid as string)) as company_id,
+        concat('{{ var('id-prefix') }}',cast(contacts.contactid as string)) as company_id,
         replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') as company_name,
         string_agg(distinct addresses.addressline1) as company_address,
         cast (null as string) AS company_address2,

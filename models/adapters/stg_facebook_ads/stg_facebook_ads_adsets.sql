@@ -14,10 +14,10 @@ WITH source AS (
 renamed as (
 
     select
-        concat('facebook-ads-',id) as adset_id,
+        concat('{{ var('id-prefix') }}',id) as adset_id,
         name as adset_name,
-        concat('facebook-ads-',account_id) as account_id,
-        concat('facebook-ads-',campaign_id) as campaign_id,
+        concat('{{ var('id-prefix') }}',account_id) as account_id,
+        concat('{{ var('id-prefix') }}',campaign_id) as campaign_id,
         budget_remaining as adset_budget_remaining,
         effective_status as adset_effective_status,
         targeting as adset_targeting,

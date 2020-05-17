@@ -5,10 +5,10 @@
     )
 }}
 {% endif %}
-{% if var("hubspot_crm_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
 WITH source as (
   select * from
-  {{ var('fivetran_contact_table') }}
+  {{ target.database}}.{{ var('fivetran_contact_table') }}
 ),
 renamed as (
     select
@@ -34,7 +34,7 @@ renamed as (
        property_lastmodifieddate as contact_last_modified_date,
     from source
 )
-{% elif var("hubspot_crm_source_type") == 'stitch' %}
+{% elif var("etl") == 'stitch' %}
 WITH source as (
   {{ filter_stitch_table(var('stitch_contacts_table'),'canonical_vid') }}
 

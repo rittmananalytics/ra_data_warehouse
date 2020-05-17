@@ -12,7 +12,7 @@
 renamed as (
 select * from (
 SELECT
-concat('jira-',replace(name,' ','_')) AS company_id,
+concat('{{ var('id-prefix') }}',replace(name,' ','_')) AS company_id,
     name AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,

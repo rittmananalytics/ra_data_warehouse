@@ -12,7 +12,7 @@ WITH source AS (
 
 renamed AS (
   SELECT
-  concat('asana-',gid)           as user_id,
+  concat('{{ var('id-prefix') }}',gid)           as user_id,
   name                   as user_name  ,
   email                  as user_email ,
   cast(null as boolean)         as user_is_contractor,

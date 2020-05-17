@@ -38,7 +38,7 @@ harvest_expenses as (
     ),
 joined as (
 select i.*,
-  concat('harvest-',client_id) as company_id,
+  concat('{{ var('id-prefix') }}',client_id) as company_id,
   id as invoice_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
@@ -76,9 +76,9 @@ on i.id = e.invoice_id
 renamed as (
 select  number as invoice_number,
         company_id,
-        concat('harvest-',invoice_id) as invoice_id,
-        concat('harvest-',project_id) as project_id,
-        concat('harvest-',creator_id) as invoice_creator_users_id,
+        concat('{{ var('id-prefix') }}',invoice_id) as invoice_id,
+        concat('{{ var('id-prefix') }}',project_id) as project_id,
+        concat('{{ var('id-prefix') }}',creator_id) as invoice_creator_users_id,
         subject as invoice_subject,
         created_at as invoice_created_at_ts,
         issue_date as invoice_issue_at_ts,

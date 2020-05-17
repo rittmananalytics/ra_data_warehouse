@@ -30,7 +30,7 @@ t_harvest_users_project_tasks as (
             *,
              MAX(_sdc_batched_at) OVER (PARTITION BY project_task_id,user_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
         FROM
-            {{ target.database}}.{{ var('user_projects_table') }}
+            {{ target.database}}.{{ var('user_project_tasks_table') }}
         )
     WHERE
         _sdc_batched_at = max_sdc_batched_at

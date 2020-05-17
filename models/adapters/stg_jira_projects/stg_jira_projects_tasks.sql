@@ -21,9 +21,9 @@ with source as (
     max_sdc_batched_at = _sdc_batched_at
 ),
 renamed as (
-select concat('jira-',id) as task_id,
-       concat('jira-',fields.project.id) as project_id,
-       concat('jira-',fields.reporter.key) as task_creator_user_id,
+select concat('{{ var('id-prefix') }}',id) as task_id,
+       concat('{{ var('id-prefix') }}',fields.project.id) as project_id,
+       concat('{{ var('id-prefix') }}',fields.reporter.key) as task_creator_user_id,
        fields.summary as task_name,
        fields.priority.name as task_priority,
        fields.issuetype.name as task_type,

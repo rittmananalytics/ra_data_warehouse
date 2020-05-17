@@ -4,18 +4,18 @@
   ) }}
 {% endif %}
 
-{% if var("hubspot_crm_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
   WITH source AS (
 
     SELECT
       *
     FROM
-      {{ var('fivetran_company_table') }}
+      {{ target.database}}.{{ var('fivetran_company_table') }}
   ),
   renamed AS (
     SELECT
       CONCAT(
-        'hubspot-',
+        '{{ var('id-prefix') }}',
         id
       ) AS company_id,
       REPLACE(
@@ -44,14 +44,14 @@
     FROM
       source
   )
-  {% elif var("hubspot_crm_source_type") == 'stitch' %}
+  {% elif var("etl") == 'stitch' %}
   WITH source AS (
     {{ filter_stitch_table(var('stitch_companies_table'),'companyid') }}
   ),
   renamed AS (
     SELECT
       CONCAT(
-        'hubspot-',
+        '{{ var('id-prefix') }}',
         companyid
       ) AS company_id,
       REPLACE(

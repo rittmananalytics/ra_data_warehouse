@@ -12,7 +12,7 @@ WITH source AS (
 renamed as (
 select * from (
 SELECT
-concat('stripe-',replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','')) AS company_id,
+concat('{{ var('id-prefix') }}',replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','')) AS company_id,
     replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,

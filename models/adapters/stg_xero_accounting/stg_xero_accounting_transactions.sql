@@ -13,7 +13,7 @@ WITH
   ),
 renamed as (
   SELECT
-      concat('xero-',banktransactionid) as transaction_id,
+      concat('{{ var('id-prefix') }}',banktransactionid) as transaction_id,
       lineitems.description as transaction_description,
       currencycode as transaction_currency,
       cast(null as numeric) as transaction_exchange_rate,

@@ -13,8 +13,8 @@ with source as (
 
 renamed as (
 select
-       concat('harvest-',p.id)                  as timesheet_project_id,
-       concat('harvest-',p.client_id)           as company_id,
+       concat('{{ var('id-prefix') }}',p.id)                  as timesheet_project_id,
+       concat('{{ var('id-prefix') }}',p.client_id)           as company_id,
        p.name                                   as project_name,
        p.code                                   as project_code,
        p.starts_on                              as project_delivery_start_ts,

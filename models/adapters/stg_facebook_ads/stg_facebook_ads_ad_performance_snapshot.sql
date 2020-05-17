@@ -12,11 +12,11 @@ WITH source AS (
 ),
 renamed as (
   SELECT
-  concat('facebook-ads-',ad_id) as ad_id,
+  concat('{{ var('id-prefix') }}',ad_id) as ad_id,
   current_timestamp as ad_snapshot_ts,
-  concat('facebook-ads-',adset_id) as adset_id,
-  concat('facebook-ads-',campaign_id) as campaign_id,
-  concat('facebook-ads-',account_id) as account_id,
+  concat('{{ var('id-prefix') }}',adset_id) as adset_id,
+  concat('{{ var('id-prefix') }}',campaign_id) as campaign_id,
+  concat('{{ var('id-prefix') }}',account_id) as account_id,
   unique_actions.action_type as ad_action_type,
   unique_actions._1d_click as ad_total_1d_clicks,
   unique_actions._7d_click as ad_total_7d_clicks,

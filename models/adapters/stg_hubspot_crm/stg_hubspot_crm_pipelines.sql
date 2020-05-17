@@ -5,10 +5,10 @@
     )
 }}
 {% endif %}
-{% if var("hubspot_crm_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
 with source as (
   select * from
-  from {{ var('fivetran_pipeline_stage_table') }}
+  from {{ target.database}}.{{ var('fivetran_pipeline_stage_table') }}
 ),
 renamed as (
     select
@@ -18,7 +18,7 @@ renamed as (
       active as pipeline_active
     from source
 )
-{% elif var("hubspot_crm_source_type") == 'stitch' %}
+{% elif var("etl") == 'stitch' %}
 with source as (
   {{ filter_stitch_table(var('stitch_deal_pipelines_table'),'pipelineid') }}
 

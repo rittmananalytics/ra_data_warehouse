@@ -10,7 +10,7 @@ WITH source AS (
   {{ filter_stitch_table(var('workspaces_table'),'gid') }}
 ),
 renamed as (
-select concat('asana-',gid) AS company_id,
+select concat('{{ var('id-prefix') }}',gid) AS company_id,
     name AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,

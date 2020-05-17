@@ -5,7 +5,7 @@
     )
 }}
 {% endif %}
-{% if var("hubspot_crm_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
 
 with source as (
   select *
@@ -55,7 +55,7 @@ renamed as (
 joined as (
     select
     d.deal_id,
-    concat('hubspot-',cast(a.company_id as string)) as company_id,
+    concat('{{ var('id-prefix') }}',cast(a.company_id as string)) as company_id,
     d.* except (deal_id),
     timestamp_millis(safe_cast(h.value as int64)) as deal_pipeline_stage_ts,
     p.pipeline_label,
@@ -74,7 +74,7 @@ joined as (
     left outer join hubspot_deal_owners u on safe_cast(d.deal_owner_id as int64) = u.owner_id
 )
 
-{% elif var("hubspot_crm_source_type") == 'stitch' %}
+{% elif var("etl") == 'stitch' %}
 
 with source as (
   {{ filter_stitch_table(var('stitch_deals_table'),'dealid') }}
@@ -97,7 +97,7 @@ hubspot_deal_owners as (
 renamed as (
   SELECT
       dealid as deal_id,
-      concat('hubspot-',cast(associations.associatedcompanyids[offset(off)] as string)) as company_id,
+      concat('{{ var('id-prefix') }}',cast(associations.associatedcompanyids[offset(off)] as string)) as company_id,
       properties.dealname.value     as deal_name,
       properties.dealtype.value     as deal_type,
       properties.description.value  as deal_description,

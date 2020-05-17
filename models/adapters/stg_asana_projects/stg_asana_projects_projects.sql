@@ -12,9 +12,9 @@ WITH source AS (
 
 renamed AS (
   SELECT
-  concat('asana-',gid) as project_id,
-  concat('asana-',owner.gid) as lead_user_id,
-  concat('asana-',workspace.gid) as company_id,
+  concat('{{ var('id-prefix') }}',gid) as project_id,
+  concat('{{ var('id-prefix') }}',owner.gid) as lead_user_id,
+  concat('{{ var('id-prefix') }}',workspace.gid) as company_id,
   name as project_name,
   current_status as project_status,
   notes as project_notes,
