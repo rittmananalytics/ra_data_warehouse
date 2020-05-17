@@ -32,13 +32,13 @@ The RA Data Warehouse is a framework for ingesting, combining and restructuring 
 * Replacing of all business keys with GUID primary keys
 * Automatic post-load logging of ETL step row counts and outcomes (complete, error etc)
 
-### dbt Transformation Graph
-
-![dbt DAG](img/dbt_graph.png)
-
 ### Current Dimensional Model
 
 ![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
+
+### dbt Transformation Graph
+
+![dbt DAG](img/dbt_graph.png)
 
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
