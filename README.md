@@ -4,12 +4,15 @@ The RA Data Warehouse is a framework for ingesting, combining and restructuring 
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
 * [Centralize and Connect your Data](https://rittmananalytics.com/data-centralisation) consulting packages
-* [Getting Started with dbt](https://rittmananalytics.com/getting-started-with-dbt) consulting packages
 * [Rittman Analytics blog](https://rittmananalytics.com/blog)
 * [Drill to Detail Podcast](https://drilltodetail.rittmananalytics.com)
 * [Contact Us](https://rittmananalytics.com/home-index/#about-us)
 
-dbt is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Development framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
+[dbt](getdbt.com) is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Data Warehouse framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
+
+* [Getting Started with dbt](https://rittmananalytics.com/getting-started-with-dbt) consulting packages
+* [dbt Viewpoint](https://docs.getdbt.com/docs/about/viewpoint/)
+* [dbtCloud](https://docs.getdbt.com/docs/dbt-cloud/cloud-overview) for scheduling and orchestrating dbt and the RA Data Warehouse
 
 ## Design Goals
 
