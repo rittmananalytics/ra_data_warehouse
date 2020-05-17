@@ -14,6 +14,12 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 6. To enable use of either Stitch, Fivetran or Segment as the pipeline technology based on client need
 7. To enable loading and integration of custom (customer app database) sources into the warehouse
 
+## Warehouse Design patterns
+
+* [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
+* [Selectable Data Sources and ETL Technologies](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/selectable_data_sources_pattern.md)
+* [Separation of Source, Integration and Warehouse Layers] (https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/separation_of_source_integration_and_wh_layers_pattern.md)
+
 ### Current Dimensional Model
 
 ![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
@@ -56,8 +62,3 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
 See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up your own dev environment, or a new client environment
-
-## Warehouse Design patterns
-
-* [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
-* [Selectable Data Sources and ETL Technologies](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/selectable_data_sources_pattern.md)
