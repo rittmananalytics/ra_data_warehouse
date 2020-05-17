@@ -33,8 +33,6 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 * Fivetran (limited support)
 * Segment (limited support)
 
-We plan to support Snowflake as an alternative data warehouse type, and extend Fivetran and Segment support to match support for Stitch in the future.
-
 ## What SaaS Sources are Supported?
 
 * Hubspot CRM (Stitch, Fivetran)
@@ -62,3 +60,17 @@ We plan to support Snowflake as an alternative data warehouse type, and extend F
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
 See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up your own dev environment, or a new client environment
+
+## What Features and Other Support are on the Product Roadmap?
+
+High-priority are:
+
+* Extending Fivetran support to cover all remaining data source types
+* Add support for incremental loading of warehouse tables
+* Complete test coverage of warehouse and integration layer models
+
+Medium-priority are:
+
+* Extending Segment support to cover all appropriate remaining data sources
+* Snowflake as an alternative to Google BigQuery as the warehouse platform
+* Enrichment plugins
