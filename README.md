@@ -22,8 +22,6 @@ dbt is a toolkit that solves the problem of testing, repeatability and modularit
 
 ![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
 
-See [Design and Coding Approach](https://github.com/rittmananalytics/ra_data_warehouse/wiki/Design-and-Coding-Approach) for Implementation Details
-
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
 * Google BigQuery (Standard SQL)
@@ -61,4 +59,5 @@ See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics
 
 ## Warehouse Design patterns
 
-* [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/merge_and_dedupe_pattern.md)
+* [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
+* [Selectable Data Sources and ETL Technologies](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/selectable_data_sources_pattern.md)
