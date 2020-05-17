@@ -23,7 +23,7 @@ on-run-end:
 models:
   ra_data_warehouse:
 # source adapter general settings
-      adapters:
+      sources:
           materialized: view
           schema: staging
 # source adapter module settings
@@ -179,4 +179,4 @@ models:
 
 seeds:
   ra_data_warehouse:
-    schema: seeds
+    schema: seed
