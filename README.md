@@ -4,8 +4,7 @@ The RA Data Warehouse is a framework for ingesting, combining and restructuring 
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
 * [Centralize and Connect your Data](https://rittmananalytics.com/data-centralisation) consulting packages
-* [Rittman Analytics blog](https://rittmananalytics.com/blog)
-* [Drill to Detail Podcast](https://drilltodetail.rittmananalytics.com)
+* [Rittman Analytics Blog dbt Posts](https://rittmananalytics.com/blog/tag/dbt)
 * [Contact Us](https://rittmananalytics.com/home-index/#about-us)
 
 [dbt](getdbt.com) is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Data Warehouse framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
