@@ -152,7 +152,6 @@ models:
   vars:
       enable_harvest_projects_source:      false
       enable_hubspot_crm_source:           false
-      hubspot_crm_source_type:             stitch
       enable_asana_projects_source:        false
       enable_jira_projects_source:         false
       enable_stripe_payments_source:       false
@@ -165,7 +164,6 @@ models:
       enable_custom_source_1:              false
       enable_custom_source_2:              false
       enable_mixpanel_events_source:       false
-      mixpanel_events_source_type:         fivetran
 # warehouse modules
       enable_crm_warehouse:         false
       enable_finance_warehouse:     false
