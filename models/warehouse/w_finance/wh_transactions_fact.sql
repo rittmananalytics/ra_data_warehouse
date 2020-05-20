@@ -7,8 +7,10 @@
 {% else %}
 {{
     config(
-        unique_key='transaction_pk',
-        alias='transactions_fact'
+        alias='transactions_fact',
+        unique_key='transaction_id',
+        incremental_strategy='merge',
+        materialized='incremental'
     )
 }}
 {% endif %}
@@ -24,3 +26,9 @@ SELECT
    *
 FROM
    transactions
+
+   {% if is_incremental() %}
+        -- this filter will only be applied on an incremental run
+        where transaction_created_ts > (select max(transaction_created_ts) from {{ this }})
+        or    transaction_last_modified_date > (select max(transaction_last_modified_date) from {{ this }})
+   {% endif %}
