@@ -24,7 +24,7 @@ renamed as (
       case when isreconciled then 'Reconciled' else 'Unreconciled' end as transaction_status,
       type as transaction_type,
       date as transaction_created_ts,
-      cast(null as timestamp) as transaction_updated_ts
+      cast(null as timestamp) as transaction_last_modified_ts
   FROM
     source i,
          UNNEST(i.lineitems) AS lineitems)

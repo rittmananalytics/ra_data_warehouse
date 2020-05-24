@@ -30,5 +30,5 @@ FROM
    {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
         where transaction_created_ts > (select max(transaction_created_ts) from {{ this }})
-        or    transaction_last_modified_date > (select max(transaction_last_modified_date) from {{ this }})
+        or    transaction_last_modified_ts > (select max(transaction_last_modified_ts) from {{ this }})
    {% endif %}
