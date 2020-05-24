@@ -23,7 +23,7 @@ renamed AS (
       status as transaction_status,
       type as transaction_type,
       created as transaction_created_ts,
-      updated as transaction_updated_ts,
+      updated as transaction_last_modified_ts,
   FROM
     source
 )
