@@ -84,7 +84,12 @@ Medium-priority are:
 * Snowflake as an alternative to Google BigQuery as the warehouse platform
 * Enrichment plugins
 
-Issues and pull request from the community are welcomed!
+Contributing
+Contributions are welcome. To contribute:
+
+1. fork this repo,
+2. make and test changes, and
+3. submit a PR. All contributions must be widely relevant to users of each SaaS data source and not contain logic specific to a given business.
 
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
