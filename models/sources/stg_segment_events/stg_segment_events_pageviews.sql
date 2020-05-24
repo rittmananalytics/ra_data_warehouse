@@ -21,14 +21,14 @@ renamed as (
         context_page_title                  as page_title,
         path                        as page_url_path,
         replace(
-            {{ dbt_utils.get_url_host('context_page_referrer') }},
+            {{ get_url_host('context_page_referrer') }},
             'www.',
             ''
         )                           as referrer_host,
         search                      as search,
         url                         as page_url,
-        {{ dbt_utils.get_url_host('url') }} as page_url_host,
-        {{ dbt_utils.get_url_parameter('url', 'gclid') }} as gclid,
+        {{ get_url_host('url') }} as page_url_host,
+        {{ get_url_parameter('url', 'gclid') }} as gclid,
         context_campaign_term       as utm_term,
         context_campaign_content    as utm_content,
         context_campaign_medium     as utm_medium,

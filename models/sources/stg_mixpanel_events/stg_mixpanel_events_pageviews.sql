@@ -11,14 +11,14 @@ coalesce(event_property_episode,event_property_product,event_property_target,con
 event_property_title        as page_title,
 event_property_path         as page_url_path,
 replace(
-    {{ dbt_utils.get_url_host('referrer') }},
+    {{ get_url_host('referrer') }},
     'www.',
     ''
 )                           as referrer_host,
 search_engine               as search,
 event_current_url           as page_url,
-{{ dbt_utils.get_url_host('event_current_url') }} as page_url_host,
-{{ dbt_utils.get_url_parameter('event_current_url', 'gclid') }} as gclid,
+{{ get_url_host('event_current_url') }} as page_url_host,
+{{ get_url_parameter('event_current_url', 'gclid') }} as gclid,
 cast(null as string)        as utm_term,
 cast(null as string)        as utm_content,
 cast(null as string)        as utm_medium,
