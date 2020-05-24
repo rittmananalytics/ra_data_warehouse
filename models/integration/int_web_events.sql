@@ -5,6 +5,7 @@
     )
 }}
 {% endif %}
+
 with events_merge_list as
   (
     {% if var("enable_segment_events_source") %}

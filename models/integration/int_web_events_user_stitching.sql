@@ -5,6 +5,7 @@
     )
 }}
 {% endif %}
+
 with events as (
 
     select * from {{ ref('int_web_events') }}
@@ -15,7 +16,7 @@ mapping as (
 
     select distinct
 
-        visitor_id,
+        visitor_id as visitor_id,
 
         last_value(user_id ignore nulls) over (
             partition by visitor_id

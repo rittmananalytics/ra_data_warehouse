@@ -80,7 +80,8 @@ diffed as (
 
     select
         *,
-        {{ dbt_utils.datediff('previous_event_ts', 'event_ts', 'second') }} as period_of_inactivity
+        timestamp_diff(event_ts,previous_event_ts,second) as period_of_inactivity
+
     from lagged
 
 ),
@@ -121,20 +122,36 @@ session_numbers as (
 
 ),
 
-session_ids as (
-
+session_ids AS (
     --This CTE assigns a globally unique session id based on the combination of
     --`anonymous_id` and `session_number`.
-
-    select
-
-        {{dbt_utils.star(ref('int_web_events'))}},
-        event_number,
-        {{dbt_utils.surrogate_key('visitor_id', 'session_number')}} as session_id
-
-    from session_numbers
-
-),
+  SELECT
+    event_type,
+    event_ts,
+    event_details,
+    page_title,
+    page_url_path,
+    referrer_host,
+    search,
+    page_url,
+    page_url_host,
+    gclid,
+    utm_term,
+    utm_content,
+    utm_medium,
+    utm_campaign,
+    utm_source,
+    ip,
+    visitor_id,
+    user_id,
+    device,
+    device_category,
+    event_number,
+    to_hex(md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
+              ''), '-', coalesce(CAST(session_number AS string ),
+              '')) AS string ))) AS session_id
+  FROM
+    session_numbers ),
 id_stitching as (
 
     select * from {{ref('int_web_events_user_stitching')}}
@@ -151,7 +168,7 @@ joined as (
             as blended_user_id
 
     from session_ids
-    left join id_stitching using (visitor_id)
+    left join id_stitching on id_stitching.visitor_id = session_ids.visitor_id
 
 )
 

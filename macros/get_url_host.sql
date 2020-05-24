@@ -1,8 +1,8 @@
 {% macro get_url_host(field) -%}
 
 {%- set parsed = 
-    dbt_utils.split_part(
-        dbt_utils.split_part(
+    split_part(
+        split_part(
             dbt_utils.replace(
                 dbt_utils.replace(field, "'http://'", "''"
                 ), "'https://'", "''"
