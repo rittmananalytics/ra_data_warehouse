@@ -1,12 +1,23 @@
 {%- macro profile_schema(table_schema) -%}
 
 {% set tables = dbt_utils.get_relations_by_prefix(table_schema, '') %}
-SELECT column_metadata.*,
+SELECT column_stats.table_catalog,
+       column_stats.table_schema,
+       column_stats.table_name,
+       column_stats.column_name,
+       case when column_stats.pct_null < 10 then 'NULL' else 'NOT NULL' end as recommended_nullable,
+       case when column_stats.pct_null > 0 and column_stats.pct_null < 10 then false else true end as is_recommended_nullable_compliant,
+       case when column_stats.pct_unique >= 90 then 'UNIQUE' else 'NOT UNIQUE' end as recommended_unique_key,
+       case when column_stats.pct_unique >= 90 and column_stats.pct_unique < 100 then false else true end as is_recommended_unique_key_compliant,
+       column_metadata.* EXCEPT (table_catalog,
+                       table_schema,
+                       table_name,
+                       column_name),
        column_stats.* EXCEPT (table_catalog,
                               table_schema,
                               table_name,
                               column_name)
- FROM
+FROM
 (
 {% for table in tables %}
   SELECT *
@@ -19,9 +30,9 @@ SELECT column_metadata.*,
               FROM table_as_json,UNNEST(SPLIT(ROW, ',"')) AS z,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(0)]]) AS column_name,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(1)]]) AS column_value ),
     profile AS (
     SELECT
-      replace(split('{{ table }}','`.`')[safe_offset(0)],'`','') as table_catalog,
-      split('{{ table }}','`.`')[safe_offset(1)] as table_schema,
-      replace(split('{{ table }}','`.`')[safe_offset(2)],'`','') as table_name,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(0)] as table_catalog,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(1)] as table_schema,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(2)] as table_name,
       column_name,
       COUNT(*) AS table_rows,
       COUNT(DISTINCT column_value) AS _distinct_values,
@@ -55,7 +66,7 @@ SELECT column_metadata.*,
 {%- endif %}
 {% endfor %}
 ) column_stats
-LEFT JOIN
+LEFT OUTER JOIN
 (
   SELECT
     * EXCEPT
@@ -64,7 +75,7 @@ LEFT JOIN
        is_stored,
        is_updatable)
   FROM
-    {{ target.schema }}.INFORMATION_SCHEMA.COLUMNS
+    {{ table_schema }}.INFORMATION_SCHEMA.COLUMNS
 ) column_metadata
 ON  column_stats.table_catalog = column_metadata.table_catalog
 AND column_stats.table_schema = column_metadata.table_schema
