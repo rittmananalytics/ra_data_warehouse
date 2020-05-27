@@ -1,6 +1,8 @@
 ## Introduction
 
-The RA Data Warehouse is a framework for ingesting, combining and restructuring data from multiple source systems into a conformed, dimensional data warehouse. The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehouse dimensional models we use for ingesting, combining and restructuring data from multiple source systems into a conformed, Kimball-style data warehouse. 
+
+The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
 * [Centralize and Connect your Data](https://rittmananalytics.com/data-centralisation) consulting packages
