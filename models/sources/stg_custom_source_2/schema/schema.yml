@@ -1,0 +1,34 @@
+version: 2
+
+sources:
+  - name: custom_source_2
+    database: ra-development
+    schema: custom_schema_2
+    tables:
+      - name: s_customers
+        identifier: customers
+        loaded_at_field: _loaded_at
+      - name: s_contacts
+        identifier: contacts
+        loaded_at_field: _loaded_at
+      - name: s_accounts
+        identifier: accounts
+        loaded_at_field: _loaded_at
+      - name: s_transactions
+        identifier: transactions
+        loaded_at_field: _loaded_at
+      - name: s_products
+        identifier: products
+        loaded_at_field: _loaded_at
+      - name: s_staff
+        identifier: staff
+        loaded_at_field: _loaded_at
+      - name: s_events
+        identifier: events
+        loaded_at_field: _loaded_at
+      - name: s_projects
+        identifier: projects
+        loaded_at_field: _loaded_at
+      - name: s_usage
+        identifier: usage
+        loaded_at_field: _loaded_at

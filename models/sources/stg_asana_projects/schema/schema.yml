@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: stg_asana_projects_projects
+    description: "Asana Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: lead_user_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_asana_projects_users')
+              field: user_id
+      - name: project_name
+        tests:
+          - unique
+          - not_null:
+              severity: warn
+      - name: project_status
+        tests:
+          - not_null:
+              severity: warn
+  - name: stg_asana_projects_tasks
+    description: "Asana Delivery Tasks"
+    columns:
+      - name: task_id
+        tests:
+          - unique
+          - not_null
+      - name: project_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_asana_projects_projects')
+              field: project_id
+      - name: task_name
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+      - name: task_creator_user_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_asana_projects_users')
+              field: user_id
+  - name: stg_asana_projects_users
+    description: "Asana Delivery Tasks"
+    columns:
+        - name: user_id
+          tests:
+            - unique
+            - not_null
+        - name: user_email
+          tests:
+            - unique:
+                severity: warn
+            - not_null:
+                severity: warn
+        - name: user_default_hourly_rate
+          tests:
+            - not_null:
+                severity: warn
+        - name: user_cost_rate
+          tests:
+            - not_null:
+                severity: warn
+        - name: user_weekly_capacity
+          tests:
+            - not_null:
+                severity: warn

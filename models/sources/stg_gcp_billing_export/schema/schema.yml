@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: gcp_billing
+    database: ra-development
+    schema: gcp_billing_export
+    tables:
+      - name: s_gcp_billing_export
+        identifier: gcp_billing_export_v1_01002B_781DA7_8295B1
+
+
+models:
+  - name: stg_gcp_billing_companies
+    columns:
+      - name: company_id
+        tests:
+          - unique
+          - not_null
+      - name: company_name
+        tests:
+          - unique
+          - not_null
+  - name: stg_gcp_billing_billing_fact
+    columns:
+      - name: company_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_gcp_billing_companies')
+              field: company_id
+      - name: billing_account_id
+        tests:
+          - not_null:
+              severity: warn
+      - name: billing_month
+        tests:
+          - not_null:
+              severity: warn
+      - name: service_id
+        tests:
+          - not_null:
+              severity: warn
