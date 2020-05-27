@@ -1,12 +1,16 @@
-{% set tables = dbt_utils.get_relations_by_prefix('stitch_hubspot', '') %}
+{%- macro profile_schema(table_schema) -%}
+
+{% set tables = dbt_utils.get_relations_by_prefix(table_schema, '') %}
+SELECT column_metadata.*,
+       column_stats.* EXCEPT (table_catalog,
+                              table_schema,
+                              table_name,
+                              column_name)
+ FROM
+(
 {% for table in tables %}
-select column_stats.*,
-       column_metadata.* except (table_catalog,
-                                 table_schema,
-                                 table_name,
-                                 column_name)
- from (
-  select * from
+  SELECT *
+  FROM
 (
   WITH
     `table` AS (SELECT * FROM {{ table }} ),
@@ -15,7 +19,7 @@ select column_stats.*,
               FROM table_as_json,UNNEST(SPLIT(ROW, ',"')) AS z,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(0)]]) AS column_name,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(1)]]) AS column_value ),
     profile AS (
     SELECT
-      split('{{ table }}','`.`')[safe_offset(1)] as table_catalog,
+      replace(split('{{ table }}','`.`')[safe_offset(0)],'`','') as table_catalog,
       split('{{ table }}','`.`')[safe_offset(1)] as table_schema,
       replace(split('{{ table }}','`.`')[safe_offset(2)],'`','') as table_name,
       column_name,
@@ -42,20 +46,29 @@ select column_stats.*,
       column_name
     ORDER BY
       column_name)
-  select * from profile)
+  SELECT
+    *
+  FROM
+    profile)
 {%- if not loop.last %}
     UNION ALL
 {%- endif %}
 {% endfor %}
 ) column_stats
-left join
+LEFT JOIN
 (
   SELECT
- * EXCEPT(is_generated, generation_expression, is_stored, is_updatable)
-FROM
- analytics.INFORMATION_SCHEMA.COLUMNS
+    * EXCEPT
+      (is_generated,
+       generation_expression,
+       is_stored,
+       is_updatable)
+  FROM
+    {{ target.schema }}.INFORMATION_SCHEMA.COLUMNS
 ) column_metadata
-on  column_stats.table_catalog = column_metadata.table_catalog
-and column_stats.table_schema = column_metadata.table_schema
-and column_stats.table_name = column_metadata.table_name
-and column_stats.column_name = column_metadata.column_name
+ON  column_stats.table_catalog = column_metadata.table_catalog
+AND column_stats.table_schema = column_metadata.table_schema
+AND column_stats.table_name = column_metadata.table_name
+AND column_stats.column_name = column_metadata.column_name
+
+{%- endmacro -%}
