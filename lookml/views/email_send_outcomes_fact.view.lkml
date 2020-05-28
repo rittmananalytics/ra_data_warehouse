@@ -1,5 +1,5 @@
 view: email_send_outcomes_fact {
-  sql_table_name: `mark_bi_apps_dev.email_send_outcomes_fact`
+  sql_table_name: `email_send_outcomes_fact`
     ;;
 
   dimension: action {

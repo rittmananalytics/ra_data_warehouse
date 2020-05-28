@@ -1,5 +1,5 @@
 view: ads_dim {
-  sql_table_name: `mark_bi_apps_dev.ads_dim`
+  sql_table_name: `ads_dim`
     ;;
 
   dimension: account_id {

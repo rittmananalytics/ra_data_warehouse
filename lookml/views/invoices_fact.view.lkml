@@ -1,5 +1,5 @@
 view: invoices_fact {
-  sql_table_name: `mark_bi_apps_dev.invoices_fact`
+  sql_table_name: invoices_fact
     ;;
 
   dimension: all_invoice_ids {

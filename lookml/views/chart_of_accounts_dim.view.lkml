@@ -1,5 +1,5 @@
 view: chart_of_accounts_dim {
-  sql_table_name: `mark_bi_apps_dev.chart_of_accounts_dim`
+  sql_table_name: `chart_of_accounts_dim`
     ;;
 
   dimension: account_bank_account_number {

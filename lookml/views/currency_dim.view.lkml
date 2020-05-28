@@ -1,5 +1,5 @@
 view: currency_dim {
-  sql_table_name: `mark_bi_apps_dev.currency_dim`
+  sql_table_name: `currency_dim`
     ;;
 
   dimension: currency_code {

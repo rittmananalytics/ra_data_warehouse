@@ -1,5 +1,5 @@
 view: web_sessions_fact {
-  sql_table_name: `mark_bi_apps_dev.web_sessions_fact`
+  sql_table_name: `web_sessions_fact`
     ;;
 
   dimension: anonymous_id {

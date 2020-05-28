@@ -1,5 +1,5 @@
 view: timesheets_fact {
-  sql_table_name: `mark_bi_apps_dev.timesheets_fact`
+  sql_table_name: `timesheets_fact`
     ;;
 
   dimension: company_pk {
@@ -104,6 +104,11 @@ view: timesheets_fact {
 
   dimension: user_pk {
     type: string
+    sql: ${TABLE}.user_pk ;;
+  }
+
+  measure: total_consultants {
+    type: count_distinct
     sql: ${TABLE}.user_pk ;;
   }
 

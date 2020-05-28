@@ -1,5 +1,5 @@
 view: looker_usage_fact {
-  sql_table_name: `mark_bi_apps_dev.looker_usage_fact`
+  sql_table_name: `looker_usage_fact`
     ;;
 
   dimension: company_pk {

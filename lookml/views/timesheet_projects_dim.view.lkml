@@ -1,5 +1,5 @@
 view: timesheet_projects_dim {
-  sql_table_name: `mark_bi_apps_dev.timesheet_projects_dim`
+  sql_table_name: `timesheet_projects_dim`
     ;;
 
   dimension: company_pk {

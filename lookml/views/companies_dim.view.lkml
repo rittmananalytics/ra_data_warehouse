@@ -1,5 +1,5 @@
 view: companies_dim {
-  sql_table_name: `mark_bi_apps_dev.companies_dim`
+  sql_table_name: `companies_dim`
     ;;
 
   dimension: all_company_addresses {

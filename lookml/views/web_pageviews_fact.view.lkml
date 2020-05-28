@@ -1,5 +1,5 @@
 view: web_pageviews_fact {
-  sql_table_name: `mark_bi_apps_dev.web_pageviews_fact`
+  sql_table_name: `web_pageviews_fact`
     ;;
 
   dimension: anonymous_id {

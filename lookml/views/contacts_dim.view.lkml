@@ -1,5 +1,5 @@
 view: contacts_dim {
-  sql_table_name: `mark_bi_apps_dev.contacts_dim`
+  sql_table_name: `contacts_dim`
     ;;
 
   dimension: all_contact_addresses {

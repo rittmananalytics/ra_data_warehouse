@@ -1,5 +1,5 @@
 view: email_lists_dim {
-  sql_table_name: `mark_bi_apps_dev.email_lists_dim`
+  sql_table_name: `email_lists_dim`
     ;;
 
   dimension: audience_name {

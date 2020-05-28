@@ -1,5 +1,5 @@
 view: delivery_tasks_dim {
-  sql_table_name: `mark_bi_apps_dev.delivery_tasks_dim`
+  sql_table_name: `delivery_tasks_dim`
     ;;
 
   dimension: project_id {

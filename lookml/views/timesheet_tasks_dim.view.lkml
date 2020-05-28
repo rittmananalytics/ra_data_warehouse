@@ -1,5 +1,5 @@
 view: timesheet_tasks_dim {
-  sql_table_name: `mark_bi_apps_dev.timesheet_tasks_dim`
+  sql_table_name: `timesheet_tasks_dim`
     ;;
 
   dimension: task_billable_by_default {

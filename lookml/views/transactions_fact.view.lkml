@@ -1,5 +1,5 @@
 view: transactions_fact {
-  sql_table_name: `mark_bi_apps_dev.transactions_fact`
+  sql_table_name: `transactions_fact`
     ;;
 
   dimension_group: transaction_created_ts {

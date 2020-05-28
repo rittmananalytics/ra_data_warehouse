@@ -1,5 +1,5 @@
 view: email_sends_dim {
-  sql_table_name: `mark_bi_apps_dev.email_sends_dim`
+  sql_table_name: `email_sends_dim`
     ;;
 
   dimension: campaign_archive_url {

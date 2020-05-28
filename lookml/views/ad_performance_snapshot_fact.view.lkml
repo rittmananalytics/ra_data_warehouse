@@ -1,5 +1,5 @@
 view: ad_performance_snapshot_fact {
-  sql_table_name: `mark_bi_apps_dev.ad_performance_snapshot_fact`
+  sql_table_name: `ad_performance_snapshot_fact`
     ;;
 
   dimension: account_id {

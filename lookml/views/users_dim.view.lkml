@@ -1,5 +1,5 @@
 view: users_dim {
-  sql_table_name: `mark_bi_apps_dev.users_dim`
+  sql_table_name: `users_dim`
     ;;
 
   dimension: all_user_emails {

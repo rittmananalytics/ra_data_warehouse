@@ -1,5 +1,5 @@
 view: deals_fact {
-  sql_table_name: `mark_bi_apps_dev.deals_fact`
+  sql_table_name: `deals_fact`
     ;;
 
   dimension: company_pk {
