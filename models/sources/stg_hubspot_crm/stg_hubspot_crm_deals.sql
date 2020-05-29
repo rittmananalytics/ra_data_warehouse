@@ -9,20 +9,20 @@
 
 with source as (
   select *
-  from {{ var('fivetran_deal_table') }}
+  from {{ var('fivetran_schema') }}.{{ var('fivetran_deal_table') }}
 ),
 hubspot_deal_company as (
   select *
-  from {{ var('fivetran_company_table') }}
+  from {{ var('fivetran_schema') }}.{{ var('fivetran_company_table') }}
 ),
 hubspot_deal_pipelines_source as (
   select *
-  from  {{ var('fivetran_deal_pipeline_table') }}
+  from  {{ var('fivetran_schema') }}.{{ var('fivetran_deal_pipeline_table') }}
 )
 ,
 hubspot_deal_property_history as (
   select *
-  from  {{ var('fivetran_property_history_table') }}
+  from  {{ var('fivetran_schema') }}.{{ var('fivetran_property_history_table') }}
 )
 ,
 hubspot_deal_stages as (
@@ -77,7 +77,7 @@ joined as (
 {% elif var("etl") == 'stitch' %}
 
 with source as (
-  {{ filter_stitch_table(var('stitch_deals_table'),'dealid') }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_deals_table'),'dealid') }}
 
 ),
 hubspot_deal_pipelines_source as (

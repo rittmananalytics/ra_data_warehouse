@@ -12,7 +12,7 @@
 }}
 with source as (
 
-  select * from {{ target.database}}.{{ var('pages_table') }}
+  select * from {{ target.database}}.{{ var('segment_schema') }}.{{ var('segment_pages_table') }}
 
 ),
 

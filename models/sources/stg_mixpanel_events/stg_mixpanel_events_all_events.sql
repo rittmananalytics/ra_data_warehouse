@@ -4,13 +4,13 @@
   ) }}
 {% endif %}
 
-{% if var("mixpanel_events_source_type") == 'fivetran' %}
+{% if var("etl") == 'fivetran' %}
   WITH source AS (
 
     SELECT
       *
     FROM
-    {{ target.database}}.{{ var('fivetran_event_table') }}
+    {{ target.database}}.{{ var('fivetran_schema') }}.{{ var('fivetran_event_table') }}
   ),
 renamed as (
   SELECT
@@ -45,9 +45,9 @@ renamed as (
 FROM
   source
 )
-{% elif var("mixpanel_events_source_type") == 'stitch' %}
+{% elif var("etl") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_table(var('stitch_export_table'),'mp_reserved_insert_id') }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_export_table'),'mp_reserved_insert_id') }}
 
 ),
 renamed as (

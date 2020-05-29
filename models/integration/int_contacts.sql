@@ -42,7 +42,7 @@ with t_contacts_merge_list as
     FROM   {{ ref('stg_mailchimp_email_contacts') }}
     {% endif %}
   ),
-  contact_emails as (
+   contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
          FROM t_contacts_merge_list
          group by 1),
@@ -58,7 +58,7 @@ with t_contacts_merge_list as
          select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
          FROM t_contacts_merge_list
          group by 1)
-  select all_contact_ids,
+   select all_contact_ids,
           c.contact_name,
           job_title,
           contact_phone,

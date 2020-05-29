@@ -18,7 +18,7 @@ WITH source AS (SELECT
             AND unbounded following
         ) AS max_sdc_batched_at
       FROM
-        {{ target.database}}.{{ var('stitch_list_members_table') }})
+        {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_list_members_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
 renamed AS

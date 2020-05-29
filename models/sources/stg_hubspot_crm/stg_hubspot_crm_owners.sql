@@ -8,7 +8,7 @@
 {% if var("etl") == 'fivetran' %}
 WITH source as (
   select * from
-  from {{ target.database}}.{{ var('fivetran_owner_table') }}
+  from {{ target.database}}.{{ var('fivetran_schema') }}.{{ var('fivetran_owner_table') }}
 ),
 renamed as (
     select
@@ -21,7 +21,7 @@ renamed as (
 )
 {% elif var("etl") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_table(var('stitch_owners_table'),'ownerid') }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_owners_table'),'ownerid') }}
 
 ),
 renamed as (

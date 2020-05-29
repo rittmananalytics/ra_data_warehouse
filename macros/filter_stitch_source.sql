@@ -1,4 +1,4 @@
-{%- macro filter_stitch_source(source_name, table_name, unique_column) -%}
+{%- macro filter_stitch_source(schema_name, source_name, table_name, unique_column) -%}
 
 SELECT
   * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
