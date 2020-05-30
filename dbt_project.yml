@@ -30,6 +30,7 @@ models:
           stg_asana_projects:
               vars:
                   id-prefix: asana-
+                  etl: stitch
                   stitch_schema: stitch_asana
                   staff_email_domain: rittmananalytics.com
                   stitch_workspaces_table: workspaces
@@ -40,6 +41,7 @@ models:
           stg_facebook_ads:
               vars:
                   id-prefix: fbads-
+                  etl: stitch
                   stitch_schema: stitch_facebook_ads
                   stitch_adcreative_table: adcreative
                   stitch_ads_table: ads
@@ -51,6 +53,7 @@ models:
           stg_google_ads:
               vars:
                   id-prefix: gads-
+                  etl: stitch
                   stitch_schema: stitch_google_ads
                   stitch_accounts_table: accounts
                   stitch_campaigns_table: campaigns
@@ -58,6 +61,7 @@ models:
           stg_harvest_projects:
               vars:
                   id-prefix: harvest-
+                  etl: stitch
                   stitch_schema: rittman_analytics
                   staff_email_domain: rittmananalytics.com
                   stitch_clients_table: clients
@@ -97,6 +101,7 @@ models:
           stg_intercom_messaging:
               vars:
                   id-prefix: intercom-
+                  etl: stitch
                   stitch_schema: stitch_intercom
                   stitch_contacts_table: contacts
                   stitch_conversations_table: conversations
@@ -104,6 +109,7 @@ models:
           stg_jira_projects:
               vars:
                   id-prefix: jira-
+                  etl: stitch
                   stitch_schema: stitch_jira
                   staff_email_domain: rittmananalytics.com
                   stitch_projects_table: projects
@@ -115,6 +121,7 @@ models:
           stg_mailchimp_email:
               vars:
                   id-prefix: mailchimp-
+                  etl: stitch
                   stitch_schema: stitch_mailchimp
                   stitch_list_members_table: list_members
                   stitch_reports_email_activity_table: reports_email_activity
@@ -141,6 +148,7 @@ models:
           stg_stripe_payments:
               vars:
                   id-prefix: stripe-
+                  etl: stitch
                   stitch_schema: stitch_stripe
                   stitch_balance_transactions_table: balance_transactions
                   stitch_charges_table: charges
@@ -151,6 +159,7 @@ models:
           stg_xero_accounting:
               vars:
                   id-prefix: xero-
+                  etl: stitch
                   stitch_schema: xero
                   stitch_accounts_table: accounts
                   stitch_categories_table: tracking_categories
@@ -173,7 +182,7 @@ models:
           materialized: table
 # util module settings
       utils:
-          materialized: view
+          materialized: table
           schema: logs
 # source adapter enable/disable settings
   vars:
