@@ -95,4 +95,4 @@ Contributions are welcome. To contribute:
 
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up a new warehouse environment
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/setup.md) for instructions on how to set-up a new warehouse environment

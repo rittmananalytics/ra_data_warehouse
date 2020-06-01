@@ -1,12 +1,14 @@
 ## Setting Up a New Warehouse Environment
 
-1. Clone the Warehouse Git Repo
+1. Clone or Fork the Warehouse Git Repo
 
 Using Github Desktop or the git CLI on Terminal, clone the git repo:
 
 ```
 git clone git@github.com:rittmananalytics/ra_data_warehouse.git
 ```
+
+or fork using Github Desktop [using these steps](https://help.github.com/en/desktop/contributing-to-projects/cloning-and-forking-repositories-from-github-desktop#forking-repositories) 
 
 ### Configuring Data Sources
 
