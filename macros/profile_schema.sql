@@ -1,12 +1,18 @@
 {%- macro profile_schema(table_schema) -%}
+
 {{ config(schema='profiles') }}
+
+{% set not_null_profile_threshold_pct = ".9" %}
+{% set unique_profile_threshold_pct = ".9" %}
+
 {% set tables = dbt_utils.get_relations_by_prefix(table_schema, '') %}
+
 SELECT column_stats.table_catalog,
        column_stats.table_schema,
        column_stats.table_name,
        column_stats.column_name,
        case when column_metadata.is_nullable = 'YES' then false else true end as is_not_nullable_column,
-       case when column_stats.pct_not_null > .9 then true else false end as is_recommended_not_nullable_column,
+       case when column_stats.pct_not_null > {{ not_null_profile_threshold_pct }} then true else false end as is_recommended_not_nullable_column,
 
        column_stats._nulls as count_nulls,
        column_stats._non_nulls as count_not_nulls,
@@ -14,7 +20,7 @@ SELECT column_stats.table_catalog,
        column_stats.table_rows,
        column_stats.count_distinct_values,
        column_stats.pct_unique,
-       case when column_stats.pct_unique >=.9 then true else false end as is_recommended_unique_column,
+       case when column_stats.pct_unique >= {{ unique_profile_threshold_pct }} then true else false end as is_recommended_unique_column,
 
        column_metadata.* EXCEPT (table_catalog,
                        table_schema,
