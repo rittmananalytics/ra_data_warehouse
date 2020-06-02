@@ -89,9 +89,9 @@ vars:
 If you have enriched either your contacts or companies records with enrichment data e.g. from Clearbit, this feature can be enabled in this part of the config file too;
 
 ```yaml
-      enable_clearbit_enrichment_source:   true
-      contacts_enrichment: true
-      companies_enrichment: true
+      enable_clearbit_enrichment_source:   [true|false]
+      contacts_enrichment:                 [true|false]
+      companies_enrichment:                [true|false]
 ```
 
 5. Then, within the same `dbt_project.yml` config file and for each data source enabled, provide the schema and table name for each table within the data source for each ETL pipeline technology, and the choice of which pipeline you want to use.
