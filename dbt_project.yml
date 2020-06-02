@@ -170,6 +170,12 @@ models:
                   stitch_invoices_table: invoices
                   stitch_payments_table: payments
                   tags: ["xero", "accounting","finance"]
+          stg_looker_usage:
+              vars:
+                  id-prefix: looker-
+                  etl: fivetran
+                  fivetran_schema: usage_stats
+                  fivetran_usage_table: usage_stats
 # integration layer settings
       integration:
           materialized: view
@@ -200,6 +206,7 @@ models:
       enable_custom_source_1:              false
       enable_custom_source_2:              false
       enable_mixpanel_events_source:       true
+      enable_looker_usage_source:          true
 
 # warehouse modules
       enable_crm_warehouse:         true

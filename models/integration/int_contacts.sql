@@ -58,6 +58,7 @@ with t_contacts_merge_list as
          select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
          FROM t_contacts_merge_list
          group by 1)
+   contacts as (
    select all_contact_ids,
           c.contact_name,
           job_title,
@@ -80,4 +81,30 @@ with t_contacts_merge_list as
   join contact_emails e on c.contact_name = e.contact_name
   join contact_ids i on c.contact_name = i.contact_name
   join contact_company_addresses a on c.contact_name = a.contact_name
-  join contact_company_ids cc on c.contact_name = cc.contact_name
+  join contact_company_ids cc on c.contact_name = cc.contact_name)
+
+  enriched_contacts as
+( WITH int_contacts as
+  (SELECT contact_name,
+          email
+   FROM `ra-development.analytics_staging.int_contacts`,
+   UNNEST (all_contact_emails) email),
+enr_contacts as
+  (SELECT * from `ra-development.analytics_staging.stg_clearbit_enrichment_contacts`
+   WHERE contact_enrichment_full_name is not null),
+joined as
+  (SELECT i.*,
+       e.*
+   FROM int_contacts i
+   LEFT OUTER JOIN enr_contacts e
+   ON i.email = e.contact_enrichment_email),
+filtered as (
+   SELECT *
+   EXCEPT (email, contact_enrichment_id, contact_enrichment_email),
+   MAX(contact_enrichment_last_updated_at) over (partition by contact_name order by contact_enrichment_last_updated_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_contact_enrichment_last_updated_at
+   FROM joined
+   WHERE contact_enrichment_full_name is not null)
+SELECT *
+FROM filtered
+WHERE contact_enrichment_last_updated_at = max_contact_enrichment_last_updated_at
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41)
