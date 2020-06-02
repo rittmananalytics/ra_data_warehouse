@@ -1,7 +1,12 @@
+## Company and Contact Record Enrichment
 
 A typical way to set-up enrichment is to use a service such as [Clearbit Enrichment](https://clearbit.com/enrichment) in-combination with a service such as [Zapier](https://zapier.com/apps/clearbit/integrations).
 
 For example, the Zapier Zap below listens for new contact records being created in HubSpot, and uses details of those new contacts to call Clearbit's Enrichment REST API using the new contact's email address. The results of the API call are then sent to Google BigQuery as a new row in a pre-defined landing table, and that table is the used as the input into the RA Warehouse load process.
+
+![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/clearbit.png)
+
+### Design Pattern
 
 To enable enrichment, set the following settings to "true" in the dbt_project.yml config file. Note that contact records, company records or both types of record can be enabled for enrichment.
 
@@ -32,3 +37,6 @@ Within the source adapter section of the project, there is an adapter for Clearb
    ├── stg_clearbit_enrichment_companies.sql
    └── stg_clearbit_enrichment_contacts.sql
 ```
+
+![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/enrich.png)
+
