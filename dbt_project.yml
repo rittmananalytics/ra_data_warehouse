@@ -170,6 +170,13 @@ models:
                   stitch_invoices_table: invoices
                   stitch_payments_table: payments
                   tags: ["xero", "accounting","finance"]
+          stg_clearbit_enrichment:
+              vars:
+                  id-prefix: clearbit-
+                  clearbit_schema: enrichment
+                  clearbit_contacts_table: contacts_companies
+                  clearbit_companies_table: contacts_companies
+                  tags: ["clearbit", "crm","enrichment"]
 # integration layer settings
       integration:
           materialized: view
@@ -200,6 +207,9 @@ models:
       enable_custom_source_1:              false
       enable_custom_source_2:              false
       enable_mixpanel_events_source:       true
+      enable_clearbit_enrichment_source:   false
+      contacts_enrichment: true
+      companies_enrichment: true
 # warehouse modules
       enable_crm_warehouse:         true
       enable_finance_warehouse:     true

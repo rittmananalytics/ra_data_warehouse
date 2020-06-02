@@ -17,7 +17,8 @@ companies_pre_merged as (
 select
       *
     from {{ ref('int_companies_pre_merged') }}
-)
+),
+merged as (
 select c.company_name,
        case when m.company_name is not null then m.all_company_ids else c.all_company_ids end as all_company_ids,
        c.company_phone,
@@ -65,4 +66,21 @@ select c.company_name,
            c2.company_name
            from   {{ ref('companies_merge_list') }} m
            join companies_pre_merged c2 on m.old_company_id in UNNEST(c2.all_company_ids)
-         )
+         ))
+{% if var("enable_clearbit_enrichment_source") and var("companies_enrichment") %}
+,
+enriched_companies as (
+  select *
+  from {{ ref ('stg_clearbit_enrichment_companies') }}
+),
+joined as (
+      SELECT c.*,
+             e.*
+      FROM merged c
+      LEFT OUTER JOIN enriched_companies e
+      ON c.company_website = e.company_enrichment_website_domain
+)
+select * from joined
+{% else %}
+select * from merged
+{% endif %}
