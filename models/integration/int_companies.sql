@@ -81,6 +81,9 @@ joined as (
       ON c.company_website = e.company_enrichment_website_domain
 )
 select * from joined
+
 {% else %}
+
 select * from merged
+
 {% endif %}
