@@ -2,9 +2,10 @@
 
 A typical way to set-up enrichment is to use a service such as [Clearbit Enrichment](https://clearbit.com/enrichment) in-combination with a service such as [Zapier](https://zapier.com/apps/clearbit/integrations).
 
-For example, the Zapier Zap below listens for new contact records being created in HubSpot, and uses details of those new contacts to call Clearbit's Enrichment REST API using the new contact's email address. The results of the API call are then sent to Google BigQuery as a new row in a pre-defined landing table, and that table is the used as the input into the RA Warehouse load process.
+For example, a Zapier Zap listens for new contact records being created in HubSpot, and uses details of those new contacts to call Clearbit's Enrichment REST API using the new contact's email address. The results of the API call are then sent to Google BigQuery as a new row in a pre-defined landing table, and that table is the used as the input into the RA Warehouse load process.
 
-![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/clearbit.png)
+![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/enrichment.png)
+
 
 ### Design Pattern
 
@@ -40,3 +41,29 @@ Within the source adapter section of the project, there is an adapter for Clearb
 
 ![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/enrich.png)
 
+When you enable contact or company record enrichment the stg_clearbit_enrichment source adapter becomes enabled and dbt creates two views, one for companies and one for contacts, containing your enrichment data. Then these two views are joined to the normal results of merging together companies and contacts in the int_companies and int_contacts views (only when this data source, and either company or contact enrichment is enabled) through conditional logic such as this example from the int_contacts view.
+
+```
+{% if var("enable_clearbit_enrichment_source") and var("companies_enrichment") %}
+,
+enriched_companies as (
+  select *
+  from {{ ref ('stg_clearbit_enrichment_companies') }}
+),
+joined as (
+      SELECT c.*,
+             e.*
+      FROM merged c
+      LEFT OUTER JOIN enriched_companies e
+      ON c.company_website = e.company_enrichment_website_domain
+)
+select * from joined
+
+{% else %}
+
+select * from merged
+
+{% endif %}
+```
+
+Results of this enrichment are then used to populate the downstream companies_dim warehouse table. If company enrichment is disabled them just the regular set of (merged) company records are returned by this view and used to populate the companies_dim table.
