@@ -207,7 +207,7 @@ models:
       enable_custom_source_1:              false
       enable_custom_source_2:              false
       enable_mixpanel_events_source:       true
-      enable_clearbit_enrichment_source:   false
+      enable_clearbit_enrichment_source:   true
       contacts_enrichment: true
       companies_enrichment: true
 # warehouse modules

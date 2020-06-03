@@ -86,20 +86,31 @@ vars:
       enable_product_warehouse:     [true|false]
 ```
 
-5. Then, within the same `dbt_project.yml` config file and for each data source enabled, provide the schema and table name for each table within the data source and if multiple ETL pipeline options are available, the pipeline technology.
+If you have enriched either your contacts or companies records with enrichment data e.g. from Clearbit, this feature can be enabled in this part of the config file too;
+
+```yaml
+      enable_clearbit_enrichment_source:   [true|false]
+      contacts_enrichment:                 [true|false]
+      companies_enrichment:                [true|false]
+```
+
+5. Then, within the same `dbt_project.yml` config file and for each data source enabled, provide the schema and table name for each table within the data source for each ETL pipeline technology, and the choice of which pipeline you want to use.
 
 For example, for Facebook Ads where only Stitch is supported as the ETL pipeline
 
 ```yaml
 stg_facebook_ads:
               vars:
-                  id-prefix: [Your datasource prefix, unique for each source, e.g. fbads-]
-                  stitch_adcreative_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.adcreative]
-                  stitch_ads_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.ads]
-                  stitch_adsets_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.adsets]
-                  stitch_campaigns_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.campaigns]
-                  stitch_ads_insights_age_and_gender_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.ads_insights_age_and_gender]
-                  stitch_ads_insights_table: [Your Stitch dataset and table name, e.g. stitch_facebook_ads.ads_insights]
+                  id-prefix: fbads-
+                  etl: stitch
+                  stitch_schema: stitch_facebook_ads
+                  stitch_adcreative_table: adcreative
+                  stitch_ads_table: ads
+                  stitch_adsets_table: adsets
+                  stitch_campaigns_table: campaigns
+                  stitch_ads_insights_age_and_gender_table: ads_insights_age_and_gender
+                  stitch_ads_insights_table: ads_insights
+                  tags: ["facebook", "ads", "marketing"]
 ```
 
 For Mixpanel where both Stitch and Fivetran are supported as ETL pipelines, provide a value for the `etl` variable to indicate whether Stitch or Fivetran is the pipeline technology for this data source (note that you can use Stitch for some data sources and Fivetran for others, and you can create copies of data source adapters if you have one source using one and one using the other as long as the id-prefix value is unique for each data source)
@@ -107,10 +118,13 @@ For Mixpanel where both Stitch and Fivetran are supported as ETL pipelines, prov
 ```yaml
 stg_mixpanel_events:
               vars:
-                  id-prefix: [Your datasource prefix, unique for each source, e.g. mixpanel-]
-                  etl: [fivetran|stitch]
-                  fivetran_event_table: [Your Fivetran dataset and table name,fivetran_mixpanel.event]
-                  stitch_export_table: [Your Stitch dataset and table name, e.g. mixpanel_stitch.export]
+                  id-prefix: mixpanel-
+                  stitch_schema: mixpanel_stitch
+                  fivetran_schema: fivetran_mixpanel
+                  etl: fivetran
+                  fivetran_event_table: event
+                  stitch_export_table: export
+                  tags: ["mixpanel", "events","marketing"]
 
 ```
 
