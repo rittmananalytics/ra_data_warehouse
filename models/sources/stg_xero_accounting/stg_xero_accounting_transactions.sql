@@ -9,7 +9,7 @@
 WITH
   source AS
   (
-    {{ filter_stitch_table(var('stitch_bank_transactions_table'),'banktransactionid') }}
+    {{ filter_stitch_table(var('stitch_schema'),var('stitch_bank_transactions_table'),'banktransactionid') }}
   ),
 renamed as (
   SELECT

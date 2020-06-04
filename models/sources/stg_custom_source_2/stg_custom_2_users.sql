@@ -12,20 +12,19 @@ WITH source AS (
     {{ source('custom_source_2','s_transactions' ) }}
 ),
 renamed as (
-  SELECT
-      concat('custom_2-',id)  as transaction_id,
-      cast(null as string)  as transaction_description,
-      cast(null as string)  as transaction_currency,
-      cast(null as numeric) as transaction_exchange_rate,
-      cast(null as numeric) as transaction_gross_amount,
-      cast(null as numeric) as transaction_fee_amount,
-      cast(null as numeric) as transaction_tax_amount,
-      cast(null as numeric) as transaction_net_amount,
-      cast(null as string)  as transaction_status,
-      cast(null as string)  as transaction_type,
-      cast(null as timestamp) as transaction_created_ts,
-      cast(null as timestamp) as transaction_updated_ts
-  FROM
-    source
+  select
+         concat('custom_1-',id)                     as user_id,
+         cast(null as string)                     as user_name,
+         cast(null as string)                     as user_email,
+         cast(null as boolean)                    as user_is_contractor,
+         cast(null as boolean)                    as user_is_staff,
+         cast(null as numeric)                    as user_weekly_capacity,
+         cast(null as string)                     as user_phone,
+         cast(null as numeric)                    as user_default_hourly_rate,
+         cast(null as numeric)                    as user_cost_rate,
+         cast(null as boolean)                    as user_is_active,
+         cast(null as timestamp)                  as user_created_ts,
+         cast(null as timestamp)                  as user_last_modified_ts
+  from source)
 )
 select * from renamed

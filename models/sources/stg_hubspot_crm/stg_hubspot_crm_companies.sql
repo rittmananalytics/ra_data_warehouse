@@ -10,7 +10,7 @@
     SELECT
       *
     FROM
-      {{ target.database}}.{{ var('fivetran_company_table') }}
+      {{ target.database}}.{{ var('fivetran_schema') }}.{{ var('fivetran_company_table') }}
   ),
   renamed AS (
     SELECT
@@ -46,7 +46,7 @@
   )
   {% elif var("etl") == 'stitch' %}
   WITH source AS (
-    {{ filter_stitch_table(var('stitch_companies_table'),'companyid') }}
+    {{ filter_stitch_table(var('stitch_schema'),var('stitch_companies_table'),'companyid') }}
   ),
   renamed AS (
     SELECT

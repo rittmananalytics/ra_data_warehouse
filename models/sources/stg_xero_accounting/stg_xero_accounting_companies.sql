@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source as (
-  {{ filter_stitch_table(var('stitch_contacts_table'),'contactid') }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_contacts_table'),'contactid') }}
 ),
   phones as (SELECT companies.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM source companies,

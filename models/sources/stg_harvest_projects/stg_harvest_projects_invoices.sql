@@ -7,34 +7,16 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('invoices_table'),'id') }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoices_table'),'id') }}
 
     ),
 harvest_invoice_line_items as (
-      SELECT
-          *
-      FROM (
-          SELECT
-              *,
-               MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-          FROM
-              {{ target.database}}.{{ var('invoice_line_items_table') }}
-          )
-      WHERE
-          _sdc_batched_at = max_sdc_batched_at
+
+    {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoice_line_items_table'),'id') }}
     ),
 harvest_expenses as (
-  SELECT
-      *
-  FROM (
-      SELECT
-          *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-          {{ target.database}}.{{ var('expenses_table') }}
-      )
-  WHERE
-      _sdc_batched_at = max_sdc_batched_at
+  
+    {{ filter_stitch_table(var('stitch_schema'),var('stitch_expenses_table'),'id') }}
     ),
 joined as (
 select i.*,

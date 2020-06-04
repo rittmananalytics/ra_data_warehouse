@@ -8,7 +8,7 @@
 
 WITH
   source as (
-    {{ filter_stitch_table(var('stitch_invoices_table'),'invoiceid') }}
+    {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoices_table'),'invoiceid') }}
       ),
 renamed as (
   SELECT

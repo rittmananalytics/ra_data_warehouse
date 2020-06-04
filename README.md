@@ -25,11 +25,15 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 6. To enable use of either Stitch, Fivetran or Segment as the pipeline technology based on client need
 7. To enable loading and integration of custom (customer app database) sources into the warehouse
 
+[Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
+
 ## Warehouse Design patterns
 
 * [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
 * [Selectable Data Sources and ETL Technologies](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/selectable_data_sources_pattern.md)
 * [Separation of Source, Integration and Warehouse Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/separation_of_source_integration_and_wh_layers_pattern.md)
+* [Company and Contact Record Enrichment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/enrichment.md)
+* [Feature Branch Development Process using Git and GitHub Desktop](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/git_branch_development.md)
 * Replacing of all business keys with GUID primary keys
 * Automatic post-load logging of ETL step row counts and outcomes (complete, error etc)
 
@@ -95,4 +99,4 @@ Contributions are welcome. To contribute:
 
 ## How Do We Setup a New Environment for Testing, Client Deployment?
 
-See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/docs/blob/master/setup.md) for instructions on how to set-up a new warehouse environment
+See [Setting up a new Warehouse Environment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/setup.md) for instructions on how to set-up a new warehouse environment
