@@ -112,6 +112,7 @@ ON u.user_name = i.user_name
 
 5. The wh_ warehouse dimension table then adds a unique GUID for each dimension member as a surrogate key.
 
+```
 WITH users AS
   (
   SELECT * from {{ ref('int_users') }}
@@ -119,6 +120,7 @@ WITH users AS
 select GENERATE_UUID() as user_pk,
        u.*
 from users u
+```
 
 6. The i_ integration view for the associated fact table contains rows referencing these deduplicated dimension members using the source system IDs e.g. 'harvest-2122', 'asana-22122'
 
