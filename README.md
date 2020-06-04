@@ -25,6 +25,8 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 6. To enable use of either Stitch, Fivetran or Segment as the pipeline technology based on client need
 7. To enable loading and integration of custom (customer app database) sources into the warehouse
 
+[Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
+
 ## Warehouse Design patterns
 
 * [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
