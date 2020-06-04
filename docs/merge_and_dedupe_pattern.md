@@ -124,8 +124,6 @@ from users u
 
 6. The i_ integration view for the associated fact table contains rows referencing these deduplicated dimension members using the source system IDs e.g. 'harvest-2122', 'asana-22122'
 
-![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/fact_source_integration.png)
-
 7. When loading the associated wh_ fact table, the lookup to the wh_ dimension table uses UNNEST() to query the array of source system IDs, returning the wh_ dimension GUID as the dimension surrogate key
 
 ```
