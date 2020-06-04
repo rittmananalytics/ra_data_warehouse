@@ -6,7 +6,7 @@ Customers, contacts, projects and other shared dimensions are automatically crea
 
 1. Each set of source adapter dbt dimension table models provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream. These fields are then initially merged (UNION ALL) together in the i_* integration view.
 
-![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/sta_dimension_sources_to_int_merge.png)
+![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/merge.png)
 
 2. An CTE containing an array of source dimension IDs is then created within the int_ integration view, grouped by the deduplication column (in this example, user name)
 
