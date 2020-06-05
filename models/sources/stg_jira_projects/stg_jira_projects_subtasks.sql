@@ -38,4 +38,4 @@ SELECT
  *
 FROM
  renamed
-where task_type != 'Subtask'
+where task_type = 'Subtask'

@@ -7,22 +7,13 @@
 {% endif %}
 
 with source as (
-  SELECT
-    * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM (
-    SELECT
-      *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM
-      {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_users_table') }})
-  WHERE
-    max_sdc_batched_at = _sdc_batched_at
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_users_table'),'accountid') }}
 ),
 
 renamed as
  (
   SELECT
-    concat('{{ var('id-prefix') }}',key)           as user_id,
+    concat('{{ var('id-prefix') }}',accountid)           as user_id,
     displayname                   as user_name  ,
     emailaddress                  as user_email,
     cast(null as boolean)         as user_is_contractor,
@@ -35,7 +26,7 @@ renamed as
     cast(null as timestamp)       as user_created_ts,
     cast(null as timestamp)       as user_last_modified_ts,
   FROM source
-  WHERE concat('{{ var('id-prefix') }}',key)  NOT LIKE '%addon%')
+  WHERE concat('{{ var('id-prefix') }}',accountid)  NOT LIKE '%addon%')
 SELECT
  *
 FROM
