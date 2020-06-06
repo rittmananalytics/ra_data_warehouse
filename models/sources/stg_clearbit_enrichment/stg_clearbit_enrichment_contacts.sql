@@ -53,8 +53,8 @@ renamed as (
   person__twitter__location as contact_enrichment_twitter_location,
   person__twitter__site as contact_enrichment_twitter_website_url,
   person__linkedin__handle as contact_enrichment_linkedin_user_name,
-  person__indexedAt as contact_enrichment_created_at,
-  person__indexedAt as contact_enrichment_last_updated_at
+  coalesce(person__indexedAt,current_timestamp()) as contact_enrichment_created_at,
+  coalesce(person__indexedAt,current_timestamp()) as contact_enrichment_last_modified_at
 FROM
   source
 WHERE

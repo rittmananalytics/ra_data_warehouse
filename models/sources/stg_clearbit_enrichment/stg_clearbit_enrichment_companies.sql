@@ -71,7 +71,7 @@ WITH source AS (
  company__ultimateParent__domain
   FROM
    {{ target.database}}.{{ var('clearbit_schema') }}.{{ var('clearbit_companies_table') }}
- where company__id is not null 
+ where company__id is not null
    {{ dbt_utils.group_by(62) }}
 ),
 renamed as (
@@ -136,7 +136,7 @@ renamed as (
   SPLIT(company__techCategories) as company_enrichment_all_technology_categories,
   company__parent__domain as company_enrichment_parent_website_domain,
   company__ultimateParent__domain as company_enrichment_ultimate_parent_website_domain,
-  company__indexedAt as company_enrichment_last_modified_at
+  coalesce(company__indexedAt,current_timestamp()) as company_enrichment_last_modified_at
 FROM
   source)
 SELECT *
