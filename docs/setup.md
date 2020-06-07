@@ -22,7 +22,7 @@ or use the "Use this Template" Github feature we've enabled for this repo, as pe
 
 ### 2. Forking the master repo
 
-Ideally though you should [fork the repo instead of cloning it](https://github.community/t/the-difference-between-forking-and-cloning-a-repository/10189); by doing this you preserve the link between the client-specific repo and the master repo making it possible to pull updates and bug fixes from the master repo, and push reusable code back up to the master repo in the form of a pull request (PR). 
+Ideally though you should [fork the repo instead of cloning it](https://github.community/t/the-difference-between-forking-and-cloning-a-repository/10189); by doing this you preserve the link between the client-specific repo and the master repo making it possible to pull updates and bug fixes from the master repo, and push reusable code back up to the master repo in the form of a pull request (PR).
 
 These additional abilities enabled by forking are key to the value of the framework, in that they:
 
@@ -33,38 +33,38 @@ However clients will normally want their Github repos to be private, and you can
 
 #### Create a private copy of the ra-data-warehouse repository
 
-1.  Create a bare clone of the ra-data-warehouse repository   
+1.  Create a bare clone of the ra-data-warehouse repository
 ```
-git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git  
+git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git
 ```
-2.  Create a new private repository in client account    
-3.  Mirror-push your bare clone to the new client repository    
+2.  Create a new private repository in client account
+3.  Mirror-push your bare clone to the new client repository
 ```
-cd ra_data_warehouse.git        
-git push --mirror https://github.com/clientaccount/repository.git        
+cd ra_data_warehouse.git
+git push --mirror https://github.com/clientaccount/repository.git
 ```
-4.  Remove the temporary ra-data-warehouse local repository    
+4.  Remove the temporary ra-data-warehouse local repository
 ```
-rm -rf ra_data_warehouse.git       
+rm -rf ra_data_warehouse.git
 ```
 #### Add upstream remotes
 
-1.  Clone the client’s repository    
-2.  Add the ra-data-warehouse repository as the a remote to fetch future changes    
+1.  Clone the client’s repository
+2.  Add the ra-data-warehouse repository as the a remote to fetch future changes
 ```
-git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git        
+git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git
 ```
-3.  List remotes    
+3.  List remotes
 ```
 git remote -v
-```        
+```
 #### STILL NEEDS TO BE EXPERIMENTED WITH - To update client’s repository with upstream changes
 
-1.  Fetch and merge changes    
+1.  Fetch and merge changes
 ```
 git pull upstream master
 ```
-## Configuring Data Sources
+## Configuring Standard Data Sources
 
 2. Create or edit `profiles.yml` with the following content and place it under `~/.dbt/` on your machine. For safety, `dev` is a default target.
 
