@@ -31,7 +31,7 @@ renamed AS (
   case when task_priority = 'Medium' then 1 end as total_delivery_priority_medium,
   case when task_priority = 'High' then 1 end as total_delivery_tasks_high,
   case when task_type = 'Task' then 1 end as total_delivery_tasks,
-  case when task_type = 'Subtask' then 1 end as total_delivery_subtasks
+  case when task_type = 'Subtask' then 1 end as total_delivery_subtasks,
   created_at    as task_created_ts,
   modified_at as task_last_modified_ts
   FROM
