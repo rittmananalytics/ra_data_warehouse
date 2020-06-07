@@ -55,3 +55,13 @@ stg_bidlogix_auctions:
                   stitch_currencies_table: ref_currency
                   stitch_users_table: usr_user
 ```
+
+3. Then, within the repo under the /models/sources directory, locate the stg_custom_source_1 subdirectory and rename it to match the name you gave your adapter in the dbt_project.yml file. Then, for each of the model (.sql) files within this directory that will be relevant to your data source, rename the files from `stg_custom_source_contacts.sql`, for example, to `stg_<your_source_name>_contacts.sql` and delete any model files that aren't relevant so that your adapter directory looks like this:
+```
+├── schema
+│   ├── schema.yml
+├── stg_bidlogix_auctions_companies.sql
+├── stg_bidlogix_auctions_contacts.sql
+├── stg_bidlogix_auctions_currencies.sql
+└── stg_bidlogix_auctions_invoices.sql
+```
