@@ -33,28 +33,37 @@ However clients will normally want their Github repos to be private, and you can
 
 #### Create a private copy of the ra-data-warehouse repository
 
-1.  Create a bare clone of the ra-data-warehouse repository    
-    -   git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git        
+1.  Create a bare clone of the ra-data-warehouse repository   
+```
+git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git  
+```
 2.  Create a new private repository in client account    
 3.  Mirror-push your bare clone to the new client repository    
-    -   cd ra_data_warehouse.git        
-    -   git push --mirror https://github.com/clientaccount/repository.git        
+```
+cd ra_data_warehouse.git        
+git push --mirror https://github.com/clientaccount/repository.git        
+```
 4.  Remove the temporary ra-data-warehouse local repository    
-    -   rm -rf ra_data_warehouse.git       
-
+```
+rm -rf ra_data_warehouse.git       
+```
 #### Add upstream remotes
 
 1.  Clone the client’s repository    
 2.  Add the ra-data-warehouse repository as the a remote to fetch future changes    
-    -   git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git        
+```
+git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git        
+```
 3.  List remotes    
-    -   git remote -v
-        
+```
+git remote -v
+```        
 #### STILL NEEDS TO BE EXPERIMENTED WITH - To update client’s repository with upstream changes
 
 1.  Fetch and merge changes    
-    -   git pull upstream master
-
+```
+git pull upstream master
+```
 ## Configuring Data Sources
 
 2. Create or edit `profiles.yml` with the following content and place it under `~/.dbt/` on your machine. For safety, `dev` is a default target.
