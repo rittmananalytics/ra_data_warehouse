@@ -9,7 +9,7 @@ Cloning the repo creates a copy based on the current state of the master repo, a
 - No changes we introduce to the master can potentially break the client-specific copy, or vice-versa, but
 - No additions, fixes or enhancements we add to the master can automatically be slipstreamed into the client-specific repo (again, or vice-versa)
 
-###1. Cloning the master repo
+### 1. Cloning the master repo
 
 Using Github Desktop or the git CLI on Terminal, clone the git repo:
 
@@ -20,7 +20,7 @@ or use the "Use this Template" Github feature we've enabled for this repo, as pe
 
 ![enter image description here](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/template.png)
 
-###2. Forking the master repo
+### 2. Forking the master repo
 
 Ideally though you should [fork the repo instead of cloning it](https://github.community/t/the-difference-between-forking-and-cloning-a-repository/10189); by doing this you preserve the link between the client-specific repo and the master repo making it possible to pull updates and bug fixes from the master repo, and push reusable code back up to the master repo in the form of a pull request (PR). 
 
