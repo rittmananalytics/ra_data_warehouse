@@ -1,16 +1,70 @@
 ## Setting Up a New Warehouse Environment
 
-1. Clone or Fork the Warehouse Git Repo
+## Creating a New Client Environment
+
+Each client implementation of the RA Warehouse Framework requires you to either clone, or ideally fork, the master repo to create a client-specific environment you can then customise and extend.
+
+Cloning the repo creates a copy based on the current state of the master repo, and that copy is then completely separate and disconnected from the master; meaning that:
+
+- No changes we introduce to the master can potentially break the client-specific copy, or vice-versa, but
+- No additions, fixes or enhancements we add to the master can automatically be slipstreamed into the client-specific repo (again, or vice-versa)
+
+### 1. Cloning the master repo
 
 Using Github Desktop or the git CLI on Terminal, clone the git repo:
 
 ```
 git clone git@github.com:rittmananalytics/ra_data_warehouse.git
 ```
+or use the "Use this Template" Github feature we've enabled for this repo, as per the screenshot below.
 
-or fork using Github Desktop [using these steps](https://help.github.com/en/desktop/contributing-to-projects/cloning-and-forking-repositories-from-github-desktop#forking-repositories) 
+![enter image description here](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/template.png)
 
-### Configuring Data Sources
+### 2. Forking the master repo
+
+Ideally though you should [fork the repo instead of cloning it](https://github.community/t/the-difference-between-forking-and-cloning-a-repository/10189); by doing this you preserve the link between the client-specific repo and the master repo making it possible to pull updates and bug fixes from the master repo, and push reusable code back up to the master repo in the form of a pull request (PR). 
+
+These additional abilities enabled by forking are key to the value of the framework, in that they:
+
+ - Allow us to fix issues in the core code we use for all client projects, fix the issue in one place (the master repo) and push those fixes out to all of our client projects in an efficient manner, and
+ - Provide a way for our learnings on one client engagement to be efficiently shared with our colleagues, and other clients, rather than being buried in one specific implementation never to be seen again
+
+However clients will normally want their Github repos to be private, and you can't normally fork a repo and make it private using that git service, so to do so you'll need to follow these steps:
+
+#### Create a private copy of the ra-data-warehouse repository
+
+1.  Create a bare clone of the ra-data-warehouse repository   
+```
+git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git  
+```
+2.  Create a new private repository in client account    
+3.  Mirror-push your bare clone to the new client repository    
+```
+cd ra_data_warehouse.git        
+git push --mirror https://github.com/clientaccount/repository.git        
+```
+4.  Remove the temporary ra-data-warehouse local repository    
+```
+rm -rf ra_data_warehouse.git       
+```
+#### Add upstream remotes
+
+1.  Clone the client’s repository    
+2.  Add the ra-data-warehouse repository as the a remote to fetch future changes    
+```
+git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git        
+```
+3.  List remotes    
+```
+git remote -v
+```        
+#### STILL NEEDS TO BE EXPERIMENTED WITH - To update client’s repository with upstream changes
+
+1.  Fetch and merge changes    
+```
+git pull upstream master
+```
+## Configuring Data Sources
 
 2. Create or edit `profiles.yml` with the following content and place it under `~/.dbt/` on your machine. For safety, `dev` is a default target.
 
