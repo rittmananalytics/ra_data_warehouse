@@ -184,6 +184,7 @@ models:
           vars:
               web_sessionization_trailing_window: 3
               web_inactivity_cutoff: 30 * 60
+              enable_companies_merge_file: true
 # warehouse layer settings
       warehouse:
           materialized: table

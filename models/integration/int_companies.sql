@@ -33,6 +33,9 @@ select c.company_name,
        c.company_last_modified_date,
        c.all_company_addresses
        from companies_pre_merged c
+
+       {{ if var("enable_companies_merge_file") }}
+
        left outer join (
             select company_name,
             ARRAY(SELECT DISTINCT x
@@ -66,7 +69,11 @@ select c.company_name,
            c2.company_name
            from   {{ ref('companies_merge_list') }} m
            join companies_pre_merged c2 on m.old_company_id in UNNEST(c2.all_company_ids)
-         ))
+         )
+
+       {% endif %}
+
+       )
 {% if var("enable_clearbit_enrichment_source") and var("companies_enrichment") %}
 ,
 enriched_companies as (
