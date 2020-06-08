@@ -185,4 +185,4 @@ FROM
 )
 ```
 
-Note that you do not need to implement all of the templated columns, at a minumum you should always implement the `id` column but anything else can be left blank with the exception of `contact_name` for the contacts table. 
+Note that you do not need to implement all of the templated columns, at a minumum you should always implement the `id` column but anything else can be left blank with the exceptions of `contact_name` and `company_name` within the contacts and companies models that are used for deduplicating contacts and companies with the same name.
