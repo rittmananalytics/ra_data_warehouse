@@ -70,7 +70,9 @@ WITH source AS (
  company__parent__domain,
  company__ultimateParent__domain
   FROM
+   (SELECT * FROM
    {{ target.database}}.{{ var('clearbit_schema') }}.{{ var('clearbit_companies_table') }}
+   {{ dbt_utils.group_by(113) }})
  where company__id is not null
    {{ dbt_utils.group_by(62) }}
 ),

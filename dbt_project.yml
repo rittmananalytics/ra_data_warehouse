@@ -170,12 +170,13 @@ models:
                   stitch_invoices_table: invoices
                   stitch_payments_table: payments
                   tags: ["xero", "accounting","finance"]
-          stg_clearbit_enrichment:
+          stg_enrichment:
               vars:
                   id-prefix: clearbit-
                   clearbit_schema: enrichment
                   clearbit_contacts_table: contacts_companies
                   clearbit_companies_table: contacts_companies
+                  geolite_city_table: company_website.geolite_city_bq_b2b
                   tags: ["clearbit", "crm","enrichment"]
 # integration layer settings
       integration:
@@ -185,6 +186,7 @@ models:
               web_sessionization_trailing_window: 3
               web_inactivity_cutoff: 30 * 60
               enable_companies_merge_file: true
+              enable_ip_geo_enrichment: true
 # warehouse layer settings
       warehouse:
           materialized: table

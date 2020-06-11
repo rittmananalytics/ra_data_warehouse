@@ -34,7 +34,7 @@ select c.company_name,
        c.all_company_addresses
        from companies_pre_merged c
 
-       {{ if var("enable_companies_merge_file") }}
+       {% if var("enable_companies_merge_file") %}
 
        left outer join (
             select company_name,

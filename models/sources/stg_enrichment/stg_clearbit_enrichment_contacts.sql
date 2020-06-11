@@ -7,10 +7,13 @@
 {% endif %}
 
 WITH source AS (
+  SELECT * FROM (
   SELECT
    *
   FROM
    {{ target.database}}.{{ var('clearbit_schema') }}.{{ var('clearbit_contacts_table') }}
+ )
+ {{ dbt_utils.group_by(113) }}
 ),
 renamed as (
   SELECT
