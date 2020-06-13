@@ -27,6 +27,7 @@ renamed as (
     cast (null as string) AS company_twitterhandle,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
+    currency              as company_currency_code,
     created_at as company_created_date,
     updated_at as company_last_modified_date
 FROM

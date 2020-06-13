@@ -29,6 +29,7 @@ select c.company_name,
        c.company_twitterhandle,
        c.company_description,
        c.company_finance_status,
+       c.company_currency_code,
        c.company_created_date,
        c.company_last_modified_date,
        c.all_company_addresses

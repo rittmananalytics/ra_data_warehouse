@@ -26,6 +26,7 @@ select concat('{{ var('id-prefix') }}',gid) AS company_id,
     cast (null as string) AS company_twitterhandle,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
+    cast (null as string) as company_currency_code,
     cast (null as timestamp) as company_created_date,
     cast (null as timestamp) as company_last_modified_date
     from source

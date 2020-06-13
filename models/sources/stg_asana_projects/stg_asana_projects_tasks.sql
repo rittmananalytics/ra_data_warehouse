@@ -32,12 +32,13 @@ renamed AS (
   case when cast(null as string) = 'High' then 1 end as total_delivery_tasks_high,
   case when case when parent is null then 'Task' else 'Subtask' end = 'Task' then 1 end as total_delivery_tasks,
   case when case when parent is null then 'Task' else 'Subtask' end = 'Subtask' then 1 end as total_delivery_subtasks,
+  1 as total_issues,
   created_at    as task_created_ts,
   modified_at as task_last_modified_ts
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(23) }}
+  {{ dbt_utils.group_by(24) }}
 )
 SELECT
   *

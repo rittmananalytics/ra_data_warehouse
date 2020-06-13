@@ -35,11 +35,12 @@ renamed as (
         cast (null as string) AS company_twitterhandle,
         cast (null as string) AS company_description,
         contacts.contactstatus as company_finance_status,
+        cast (null as string)     as company_currency_code,
         cast(null as timestamp) as company_created_date,
         contacts.updateddateutc as company_last_modified_date
  from source contacts left outer join addresses as addresses on contacts.contactid = addresses.contactid and addresses.addresstype = 'STREET'
  left outer join phones as mobilephone on contacts.contactid = mobilephone.contactid and mobilephone.phonetype = 'MOBILE'
  left outer join phones as defaultphone on contacts.contactid = defaultphone.contactid and mobilephone.phonetype = 'DEFAULT'
  where contacts.lastname is null
- group by 1,2,4,9,10,11,12,13,14,15,16,17,18)
+ group by 1,2,4,9,10,11,12,13,14,15,16,17,18,19)
 select * from renamed

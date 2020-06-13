@@ -31,6 +31,7 @@ select concat('{{ var('id-prefix') }}',id) as task_id,
        case when fields.priority.name = 'High' then 1 end as total_delivery_tasks_high,
        case when fields.issuetype.name = 'Task' then 1 end as total_delivery_tasks,
        case when fields.issuetype.name = 'Subtask' then 1 end as total_delivery_subtasks,
+       1 as total_issues,
        fields.created  as task_created_ts,
        fields.updated as task_last_modified_ts,
  from source)
