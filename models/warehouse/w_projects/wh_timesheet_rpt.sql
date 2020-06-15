@@ -40,8 +40,8 @@ array_agg(struct(timesheet_billing_week,user_name,task_name,user_is_contractor,c
           round(safe_divide(((total_revenue*consultant_share_hours_billed_pct)-consultant_cost) , (total_revenue*consultant_share_hours_billed_pct)),2) as consultant_margin_pct ) ) consultant
 from (
 SELECT *,
-  case when company_currency_code = 'USD' then 1.0
-       when company_currency_code = 'EUR' then 1.0
+  case when company_currency_code = 'USD' then 0.8
+       when company_currency_code = 'EUR' then 0.9
        else 1 end as exchange_rate,
        COUNT(timesheet_billing_week) over (PARTITION BY timesheet_project_pk) as project_duration_weeks,
        ROUND(SUM(total_hours_billed) OVER (PARTITION BY timesheet_project_pk,timesheet_billing_week)) AS total_project_hours_billed,
