@@ -11,3 +11,5 @@ with t_tasks_merge_list as
     FROM   {{ ref('stg_harvest_projects_tasks') }}
   )
 select * from t_tasks_merge_list
+union all
+select * from {{ ref('stg_unknown_projects_tasks') }}

@@ -19,4 +19,6 @@ with t_tasks_merge_list as
     FROM   {{ ref('stg_asana_projects_tasks') }}
     {% endif %}
   )
-select * from t_tasks_merge_list
+select *,
+
+ from t_tasks_merge_list

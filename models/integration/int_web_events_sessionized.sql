@@ -170,6 +170,34 @@ joined as (
     from session_ids
     left join id_stitching on id_stitching.visitor_id = session_ids.visitor_id
 
-)
+),
+ordered as (
+  select *,
+         row_number() over (partition by blended_user_id order by event_ts) as event_seq,
+         row_number() over (partition by blended_user_id, session_id order by event_ts) as event_in_session_seq,
 
-select * from joined
+         case when event_type = 'Page View' then timestamp_diff(lead(event_ts) over (partition by visitor_id order by event_number),event_ts,SECOND) end time_on_page_secs
+  from joined
+
+),
+geo_located as (
+  SELECT
+  a.* except(clientIpNum,classB),
+  IFNULL(city, 'Other') AS city,
+  IFNULL(countryLabel, 'Other') AS countryLabel,
+  latitude,
+  longitude
+FROM (
+  SELECT
+    *,
+    CASE WHEN BYTE_LENGTH(ip) < 16 THEN SAFE_CAST(NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(ip)) AS INT64) ELSE NULL END AS clientIpNum,
+    CASE WHEN BYTE_LENGTH(ip) < 16 THEN SAFE_CAST(NET.IPV4_TO_INT64(NET.SAFE_IP_FROM_STRING(ip)) / (256*256) AS INT64) ELSE NULL END AS classB
+  FROM
+    ordered ) AS a
+LEFT OUTER JOIN
+  `ra-development.company_website.geolite_city` AS b
+ON
+  a.classB = b.classB
+  AND a.clientIpNum BETWEEN b.startIpNum AND b.endIpNum
+)
+select * from geo_located

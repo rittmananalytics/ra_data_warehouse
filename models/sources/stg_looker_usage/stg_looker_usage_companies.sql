@@ -29,6 +29,7 @@ SELECT
     cast (null as string)     as company_twitterhandle,
     cast (null as string)     as company_description,
     cast (null as string)     as company_finance_status,
+    cast (null as string)     as company_currency_code,
     min(created) over (partition by metadata.client_name) as company_created_date,
     max(created) over (partition by metadata.client_name) as company_last_modified_date
 FROM source

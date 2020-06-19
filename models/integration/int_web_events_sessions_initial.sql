@@ -15,11 +15,12 @@
     " %}
 
 {% set first_values = {
-    'utm_source' : 'utm_source',
-    'utm_content' : 'utm_content',
-    'utm_medium' : 'utm_medium',
-    'utm_campaign' : 'utm_campaign',
-    'utm_term' : 'utm_term',
+    'utm_source' : 'source',
+    'utm_content' : 'cta_link',
+    'utm_medium' : 'channel',
+    'utm_campaign' : 'marketing_campaign',
+    'utm_term' : 'keyword',
+    'search' : 'search',
     'gclid' : 'gclid',
     'page_url' : 'first_page_url',
     'page_url_host' : 'first_page_url_host',

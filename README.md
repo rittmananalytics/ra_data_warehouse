@@ -34,6 +34,7 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 * [Separation of Source, Integration and Warehouse Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/separation_of_source_integration_and_wh_layers_pattern.md)
 * [Company and Contact Record Enrichment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/enrichment.md)
 * [Feature Branch Development Process using Git and GitHub Desktop](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/git_branch_development.md)
+* [Creating a Custom Data Source Adapter](docs/creating_a_custom_data_source.md)
 * Replacing of all business keys with GUID primary keys
 * Automatic post-load logging of ETL step row counts and outcomes (complete, error etc)
 
