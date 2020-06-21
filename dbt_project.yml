@@ -148,13 +148,28 @@ models:
           stg_stripe_payments:
               vars:
                   id-prefix: stripe-
-                  etl: stitch
+                  etl: segment
                   stitch_schema: stitch_stripe
                   stitch_balance_transactions_table: balance_transactions
                   stitch_charges_table: charges
                   stitch_events_table: events
                   stitch_payout_transactions_table: payout_transactions
                   stitch_payouts_table: payouts
+                  segment_schema: stripe
+                  segment_customers_table: customers
+                  segment_accounts_table: accounts
+                  segment_cards_table: cards
+                  segment_coupons_table: coupons
+                  segment_discounts_table: discounts
+                  segment_invoices_table: invoices
+                  segment_plans_table: plans
+                  segment_products_table: products
+                  segment_subscriptions_table: subscriptions
+                  segment_balance_transactions_table: balance_transactions
+                  segment_charges_table: charges
+                  segment_events_table: events
+                  segment_payout_transactions_table: payout_transactions
+                  segment_payouts_table: payouts
                   tags: ["stripe", "payments","finance"]
           stg_xero_accounting:
               vars:
