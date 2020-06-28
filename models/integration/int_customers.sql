@@ -1,4 +1,4 @@
-{% if (not var("enable_segment_dashboard_events_source") and not var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
+{% if not var("enable_stripe_subscriptions_source") %}
 {{
     config(
         enabled=false

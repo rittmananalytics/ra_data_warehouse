@@ -241,6 +241,7 @@ models:
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
       enable_product_warehouse:     true
+      enable_subscriptions_warehouse:     false
 
 
 

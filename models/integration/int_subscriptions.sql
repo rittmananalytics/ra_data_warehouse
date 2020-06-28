@@ -1,4 +1,4 @@
-{% if not var("enable_stripe_payments_source") %}
+{% if not var("enable_stripe_subscriptions_source") %}
 {{
     config(
         enabled=false
