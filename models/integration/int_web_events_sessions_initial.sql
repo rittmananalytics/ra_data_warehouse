@@ -120,7 +120,7 @@ mapped as (
 
     select
         tiers.*,
-        referrer_mapping.medium as referrer_medium,
+        coalesce(referrer_mapping.medium,'Direct') as referrer_medium,
         referrer_mapping.source as referrer_source
 
     from tiers
