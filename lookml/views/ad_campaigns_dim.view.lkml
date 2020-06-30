@@ -1,5 +1,6 @@
 view: ad_campaigns_dim {
   sql_table_name: `ad_campaigns_dim`
+  label: "Ad Campaigns"
     ;;
 
   dimension: account_id {

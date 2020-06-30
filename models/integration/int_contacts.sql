@@ -92,7 +92,7 @@ contacts_enriched_filtered as (
          SELECT
             *
             EXCEPT (email, contact_enrichment_id, contact_enrichment_email),
-            MAX(contact_enrichment_last_updated_at) over (partition by contact_name order by contact_enrichment_last_updated_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_contact_enrichment_last_updated_at
+            MAX(contact_enrichment_last_modified_at) over (partition by contact_name order by contact_enrichment_last_modified_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_contact_enrichment_last_modified_at
          FROM
             (SELECT i.*,
                     e.*
@@ -107,7 +107,7 @@ contacts_enriched_filtered as (
                 WHERE contact_enrichment_full_name is not null) e
                 ON i.email = e.contact_enrichment_email)
              WHERE contact_enrichment_full_name is not null) c
-         WHERE contact_enrichment_last_updated_at = max_contact_enrichment_last_updated_at
+         WHERE contact_enrichment_last_modified_at = max_contact_enrichment_last_modified_at
          GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41)
 
 select c.*,

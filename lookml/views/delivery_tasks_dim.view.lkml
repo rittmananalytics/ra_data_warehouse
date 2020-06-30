@@ -76,6 +76,7 @@ view: delivery_tasks_dim {
 
   dimension: task_pk {
     type: string
+    primary_key: yes
     sql: ${TABLE}.task_pk ;;
   }
 
@@ -94,8 +95,43 @@ view: delivery_tasks_dim {
     sql: ${TABLE}.task_type ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [task_name]
+  measure: total_delivery_tasks_completed {
+    type: sum
+    sql: ${TABLE}.total_delivery_tasks_completed ;;
+  }
+
+  measure: total_delivery_tasks_in_progress {
+    type: sum
+    sql: ${TABLE}.total_delivery_tasks_in_progress ;;
+  }
+
+  measure: total_delivery_tasks_to_do {
+    type: sum
+    sql: ${TABLE}.total_delivery_tasks_to_do ;;
+  }
+
+  measure: total_delivery_priority_low {
+    type: sum
+    sql: ${TABLE}.total_delivery_priority_low ;;
+  }
+
+  measure: total_delivery_priority_medium {
+    type: sum
+    sql: ${TABLE}.total_delivery_priority_medium ;;
+  }
+
+  measure: total_delivery_tasks_high {
+    type: sum
+    sql: ${TABLE}.total_delivery_tasks_high ;;
+  }
+
+  measure: total_delivery_tasks {
+    type: sum
+    sql: ${TABLE}.total_delivery_tasks ;;
+  }
+
+  measure: total_delivery_subtasks {
+    type: sum
+    sql: ${TABLE}.total_delivery_subtasks ;;
   }
 }

@@ -21,6 +21,13 @@ explore: companies_dim {
     sql_on: ${companies_dim.company_pk} = ${delivery_projects_dim.company_pk}  ;;
     relationship: many_to_one
   }
+  join: delivery_tasks_dim {
+    view_label: "Delivery Tasks"
+    type: left_outer
+    sql_on: ${delivery_projects_dim.project_id} = ${delivery_tasks_dim.project_id} ;;
+    relationship: many_to_one
+
+  }
   join: timesheet_projects_dim {
     view_label: "Timesheet Projects"
     type: left_outer

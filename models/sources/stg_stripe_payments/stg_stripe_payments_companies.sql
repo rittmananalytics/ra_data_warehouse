@@ -28,8 +28,9 @@ concat('{{ var('id-prefix') }}',replace(replace(replace(metadata.client_name,'Li
     cast (null as string) AS company_twitterhandle,
     cast (null as string) AS company_description,
     cast (null as string) as company_finance_status,
+    cast (null as string)     as company_currency_code,
     min(created) over (partition by metadata.client_name) as company_created_date,
     max(created) over (partition by metadata.client_name) as company_last_modified_date
     FROM source )
-    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
 select * from renamed

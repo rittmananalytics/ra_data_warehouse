@@ -7,9 +7,8 @@
 {% endif %}
 
 WITH source AS (
-    select *
-    from
-    {{ source('custom_source_1','s_accounts' ) }}
+  {{ filter_stitch_table(var('stitch_schema'),var('stitch_clients_table'),'id') }}
+
 ),
 renamed as (
   SELECT

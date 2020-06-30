@@ -94,6 +94,7 @@ grouped as (
       max(company_twitterhandle) as company_twitterhandle,
       max(company_description) as company_description,
       max(company_finance_status) as company_finance_status,
+      max(company_currency_code) as company_currency_code,
       min(company_created_date) as company_created_date,
       max(company_last_modified_date) as company_last_modified_date
     from t_companies_pre_merged

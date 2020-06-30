@@ -7,14 +7,14 @@
 {% endif %}
 
 with source as (SELECT
-  *
+  * except (projectkeys)
   FROM (
   SELECT
-    concat('{{ var('id-prefix') }}',id) as project_id,
-    concat('{{ var('id-prefix') }}',replace(name,' ','_')) AS company_id,
-    concat('{{ var('id-prefix') }}',lead.key) as lead_user_id,
+    concat('jira-',id) as project_id,
+    concat('jira-',replace(name,' ','_')) AS company_id,
+    concat('jira-',lead.accountid) as lead_user_id,
     name as project_name,
-    projectkeys as jira_project_key,
+    projectkeys ,
     projecttypekey as project_type_id,
     cast (null as string) as project_status,
     cast (null as string) as project_notes,
@@ -24,7 +24,8 @@ with source as (SELECT
     MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
     {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_projects_table') }}
-  )
+  ),
+    unnest(projectkeys) jira_project_key
 WHERE
   _sdc_batched_at = max_sdc_batched_at),
 types as (SELECT
@@ -39,7 +40,7 @@ types as (SELECT
       {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_project_types_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
-    categories as (SELECT
+categories as (SELECT
       *
       FROM (
       SELECT
@@ -65,5 +66,5 @@ select p.project_id,
        cast (null as timestamp) as project_modified_at_ts
 
 from source p
-join types t on p.project_type_id = t.project_type_id
-join categories c on p.project_category_id = c.project_category_id
+left outer join types t on p.project_type_id = t.project_type_id
+left outer join categories c on p.project_category_id = c.project_category_id

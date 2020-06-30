@@ -110,7 +110,7 @@ models:
               vars:
                   id-prefix: jira-
                   etl: stitch
-                  stitch_schema: stitch_jira
+                  stitch_schema: stitch_jira2
                   staff_email_domain: rittmananalytics.com
                   stitch_projects_table: projects
                   stitch_project_types_table: project_types
@@ -170,13 +170,34 @@ models:
                   stitch_invoices_table: invoices
                   stitch_payments_table: payments
                   tags: ["xero", "accounting","finance"]
-          stg_clearbit_enrichment:
+          stg_enrichment:
               vars:
                   id-prefix: clearbit-
                   clearbit_schema: enrichment
                   clearbit_contacts_table: contacts_companies
                   clearbit_companies_table: contacts_companies
+                  geolite_city_table: company_website.geolite_city_bq_b2b
                   tags: ["clearbit", "crm","enrichment"]
+          stg_stripe_subscriptions:
+              vars:
+                  id-prefix: stripe-
+                  etl: segment
+                  segment_schema: stripe
+                  segment_customers_table: customers
+                  segment_accounts_table: accounts
+                  segment_cards_table: cards
+                  segment_coupons_table: coupons
+                  segment_discounts_table: discounts
+                  segment_invoices_table: invoices
+                  segment_plans_table: plans
+                  segment_products_table: products
+                  segment_subscriptions_table: subscriptions
+                  segment_balance_transactions_table: balance_transactions
+                  segment_charges_table: charges
+                  segment_events_table: events
+                  segment_payout_transactions_table: payout_transactions
+                  segment_payouts_table: payouts
+                  tags: ["stripe", "payments","finance"]
 # integration layer settings
       integration:
           materialized: view
@@ -184,6 +205,8 @@ models:
           vars:
               web_sessionization_trailing_window: 3
               web_inactivity_cutoff: 30 * 60
+              enable_companies_merge_file: true
+              enable_ip_geo_enrichment: true
 # warehouse layer settings
       warehouse:
           materialized: table
@@ -198,6 +221,7 @@ models:
       enable_asana_projects_source:        true
       enable_jira_projects_source:         true
       enable_stripe_payments_source:       true
+      enable_stripe_subscriptions_source:  false
       enable_xero_accounting_source:       true
       enable_mailchimp_email_source:       true
       enable_segment_events_source:        true
@@ -217,6 +241,7 @@ models:
       enable_marketing_warehouse:   true
       enable_ads_warehouse:         true
       enable_product_warehouse:     true
+      enable_subscriptions_warehouse:     false
 
 
 

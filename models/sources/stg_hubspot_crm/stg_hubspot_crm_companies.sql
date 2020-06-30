@@ -39,6 +39,7 @@
       CAST (
         NULL AS STRING
       ) AS company_finance_status,
+      cast (null as string)     as company_currency_code,
       property_createdate AS company_created_date,
       property_hs_lastmodifieddate company_last_modified_date
     FROM
@@ -75,6 +76,7 @@
       CAST (
         NULL AS STRING
       ) AS company_finance_status,
+      cast (null as string)      as company_currency_code,
       properties.createdate.value AS company_created_date,
       properties.hs_lastmodifieddate.value company_last_modified_date
     FROM
