@@ -1,5 +1,5 @@
 view: charges {
-  sql_table_name: stripe.charges ;;
+  sql_table_name: switcher-studio-233517.stripe.charges ;;
   ## Dimensions
   dimension: id {
     primary_key: yes

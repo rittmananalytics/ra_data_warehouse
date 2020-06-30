@@ -1,5 +1,5 @@
 view: plans {
-  sql_table_name: stripe.plans ;;
+  sql_table_name: switcher-studio-233517.stripe.plans ;;
 
   dimension: id {
     primary_key: yes

@@ -1,4 +1,4 @@
-connection: "segment_sources"
+connection: "ra_dw_prod"
 
 # include all the views
 include: "*.view"

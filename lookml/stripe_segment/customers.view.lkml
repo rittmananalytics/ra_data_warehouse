@@ -1,5 +1,5 @@
 view: customers {
-  sql_table_name: stripe.customers ;;
+  sql_table_name: switcher-studio-233517.stripe.customers ;;
 
   dimension: id {
     primary_key: yes

@@ -1,5 +1,5 @@
 view: subscriptions {
-  sql_table_name: stripe.subscriptions ;;
+  sql_table_name: switcher-studio-233517.stripe.subscriptions ;;
 
   dimension: id {
     primary_key: yes

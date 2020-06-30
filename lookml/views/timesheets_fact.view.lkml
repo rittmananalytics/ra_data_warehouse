@@ -61,6 +61,18 @@ view: timesheets_fact {
     sql: ${TABLE}.timesheet_hours_billed ;;
   }
 
+  measure: total_billable_timesheet_hours_billed {
+    type: sum_distinct
+    sql: ${TABLE}.timesheet_hours_billed ;;
+    filters: [timesheet_is_billable: "Yes"]
+  }
+
+  measure: total_nonbillable_timesheet_hours_billed {
+    type: sum_distinct
+    sql: ${TABLE}.timesheet_hours_billed ;;
+    filters: [timesheet_is_billable: "No"]
+  }
+
   dimension: timesheet_invoice_id {
     type: number
     sql: ${TABLE}.timesheet_invoice_id ;;
