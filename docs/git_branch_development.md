@@ -51,19 +51,19 @@ This SOP documents the standard approach adopted by Rittman Analytics to work co
 
         ```yaml
         clientA:
-        	target: dev
-        	outputs:
-        		dev:
-        			type: bigquery
-        			method: service-account
-        			project: clientA-data-project
-        			dataset: analytics_olivier
-        			location: EU
-        			threads: 1
-        			keyfile: /Path/to/json/keyfile.json
-        			timeout_seconds: 300
-        			priority: interactive
-        			retries: 1
+            target: dev
+            outputs:
+                dev:
+                    type: bigquery
+                    method: service-account
+                    project: clientA-data-project
+                    dataset: analytics_olivier
+                    location: EU
+                    threads: 1
+                    keyfile: /Path/to/json/keyfile.json
+                    timeout_seconds: 300
+                    priority: interactive
+                    retries: 1
         ```
 
     - To set up schema / datasets that are to be dedicated to your development work
