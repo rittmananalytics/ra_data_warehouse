@@ -1,33 +1,139 @@
-## Branch Development Process for dbt using Github Desktop and Atom
+# Rittman Analytics Collaborative Development, Deployment and QA Process
 
-Note that these are the standard steps and tools used by the team at Rittman Analytics to develop new client feature branches for the RA Data Warehouse dbt package. Your own choice of tools, laptop OS and git development strategy may vary.
+This SOP documents the standard approach adopted by Rittman Analytics to work collaboratively on dbt projects in a clean and structured way.
 
-1. Install Github Desktop for Mac [https://central.github.com/deployments/desktop/desktop/latest/darwin](https://central.github.com/deployments/desktop/desktop/latest/darwin)
-    1. If you do not already have a github account, create a free one
-    2. If you do already have an account, ask Mark for access to the "rittmananalytics" account
-        1. You will also need a login, via github, for dbtCloud. If you are setup on Github and your account is associated with rittmananalytics, you should be able to login to dbtCloud without the need for any further credentials
-    3. Sign-in, and if you've just installed Github Desktop then type in your full name when prompted so that commits to our repo are properly labelled
-    4. Select **Github** > **Install Command-Line Tool** to install the git command-line utilities, if you've not installed git before
-2. Install Atom [https://atom.io/download/mac](https://atom.io/download/mac)
-    1. Install Atom by dragging and dropping the Atom executable to your Applications folder
-    2. Start Atom, and then press **Install a Package** > **Open Installer**, then search for the package atom-dbt by Fishtown Analytics, then press **Install**. Then search for and install the language-sql-bigquery 
-    3. Then go back to Github Desktop, select **Preferences** > **Advanced** and select Atom as your **External Editor**.
-3. Clone the RA Warehouse repo (or your forked client-specific copy) locally
-    1. Using Github Desktop, select rittmananalytics/ra_data_warehouse (or your client-specific forked repo) and press **Clone rittmananalytics/ra_data_warehouse** 
-    2. Press the **Fetch Origin** button to fetch the latest set of branches and commits.
-    3. Click **Show In Finder** to see where Github Desktop has cloned your files to
-4. Create a new development branch
-    1. Click on the **Branches** drop-down within Github Desktop and press **Create New Branch**
-    2. Name the branch and press the **Create Branch** button
-    3. Click on **Publish Branch** to push this new branch to the remote Github repo
-    4. Select **Repository** > **View in External Editor** to open the repo files in Atom
-    5. Do your dbt development work in Atom, and at the end, save your work. 
-5. Commit your changes
-    1. Within Github Desktop, click on the Changes tab and then type in a summary describing the changes you have made, then press **Commit to <your branch name>**
-    2. Now press the **Push Origin** button to push this commit to the remote origin repo
-6. Create a Pull Request to incorporate branch into main master branch
-    1. When you are ready to request your branch be incorporate into the master branch, press the **Create Pull Request** button in Github Desktop
-    2. Within the **Open a Pull Request** page on the Github website that was automatically opened for you, type in a summary of what the pull request will change or implement and press the **Open Pull Request** button
-    3. Github will then, via dbt, run an automatic build test of branch which will need to pass before the pull request can be merged into the master branch of the dbt repo 
-    4. If the automated build test reveals errors in the models or other dbt code you are looking to merge with this branch, click on the **Details** link to go into dbtCloud to review and then fix these errors.
-    5. When all tests are completed successfully, press the **Squash Merge** button within Github to merge your branch into the master dbt branch, so that your model code will then compile and execute next time a scheduled dbt run happens.
+# Setting Up Your Development Environment
+
+## Install Github
+
+1. For Mac: [https://central.github.com/deployments/desktop/desktop/latest/darwin](https://central.github.com/deployments/desktop/desktop/latest/darwin)
+2. If you do not already have a github account, create a free one
+3. If you do already have an account, ask Mark for access to the "rittmananalytics" account
+    - You will also need a login, via github, for dbtCloud. If you are setup on Github and your account is associated with rittmananalytics, you should be able to login to dbtCloud without the need for any further credentials
+4. Sign-in, and if you've just installed Github Desktop then type in your full name when prompted so that commits to our repo are properly labelled
+5. Select **Github** > **Install Command-Line Tool** to install the git command-line utilities, if you've not installed git before
+
+## Install Atom
+
+1. For Mac: [https://atom.io/download/mac](https://atom.io/download/mac)
+2. Install Atom by dragging and dropping the Atom executable to your Applications folder
+3. Then go back to Github Desktop, select **Preferences** > **Advanced** and select Atom as your **External Editor**.
+4. Start Atom, and then press **Install a Package** > **Open Installer**, then search for the package atom-dbt by Fishtown Analytics, then press **Install**. Then search for and install the language-sql-bigquery 
+
+## Set Up A Project
+
+- If you're creating a new project
+    1. Create a private copy of the [Rittman Analytics Data Warehouse framework](https://github.com/rittmananalytics/ra_data_warehouse)
+        1. Create a bare clone of the `ra-data-warehouse` repository
+            - `git clone --bare https://github.com/rittmananalytics/ra_data_warehouse.git`
+        2. Create a new private repository in the client's account
+        3. Mirror-push your bare clone to the new client repository
+            - `cd ra_data_warehouse.git`
+            - `git push --mirror https://github.com/clientaccount/repository.git`
+        4. Remove the temporary ra-data-warehouse local repository
+            - `rm -rf ra_data_warehouse.git`
+    2. Add upstream remotes
+        1. Clone the client’s repository
+        2. Add the ra-data-warehouse repository as the a remote to fetch future changes
+            - `git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git`
+        3. List remotes
+            - `git remote -v`
+    3. To update client’s repository with upstream changes (**Still needs to be validated)**
+        1. Fetch and merge changes
+            - `git pull upstream master`
+- If you're added as a collaborator to an existing project
+    1. Clone the repository to your local environment
+    2. Ask the project's technical lead for instructions to specific configurations required for that project
+- Ask your project's technical lead for the following:
+    - Account and permissions to data warehouse
+    - dbt profile to be added to your local `~/.dbt/profiles.yml` file
+        - It should looking something like...
+
+        ```yaml
+        clientA:
+        	target: dev
+        	outputs:
+        		dev:
+        			type: bigquery
+        			method: service-account
+        			project: clientA-data-project
+        			dataset: analytics_olivier
+        			location: EU
+        			threads: 1
+        			keyfile: /Path/to/json/keyfile.json
+        			timeout_seconds: 300
+        			priority: interactive
+        			retries: 1
+        ```
+
+    - To set up schema / datasets that are to be dedicated to your development work
+
+## Install dbt and its virtual environment
+
+Each project has its own version of dbt and packages that it depends on. To not run into dependancy issues, virtual environments are used to development under the same environment as the one in production. Talk to your project's technical lead to learn about this project's dbt version and packages used.
+
+1. Setup your virtual environment: pyenv virtualenvs
+    - If you require a new python environment
+        - `pyenv versions`
+        - `pyenv install 3.7.5`
+    - If you require a new virtual environment
+        - `cd ~`
+        - `pyenv virtualenv venv_clientA`
+- Use appropriate virtual environment within git project
+    - `cd ~/git_project`
+    - `nano .python-version`
+    - Write name of virtual environment to use: `venv_clientA`
+    - Save and exit
+    - Exclude `.python-version` from `.gitignore`
+
+# Development Process
+
+- What's the scope of a development branch
+    - Usually associated to a story (either a feature, bug, technical debt, etc.) that is assigned to you
+    - **Resist the urge to add more than what's scoped by the story and push back on anyone asking to integrate more than is required**
+- Development steps
+    - Create a development branch: `git checkout -b my_development_branch`
+    - dbt development, testing and documentation
+    - Regularly compile your under-development models: `dbt run --model my_cool_model` (implicitly, this will run against the `dev` profile as we have made it the default)
+    - View results of your changes using your favorite SQL IDE. For example:
+
+    ```sql
+    select * from analytics_olivier.transactions_fact
+    ```
+
+    - Compile the whole dbt project: `dbt run`
+    - Test the whole project: `dbt test`
+    - Commit your changes
+        - `git add -A`
+        - `git commit -m "Those are the changes I'm making with this commit"`
+        - `git push origin my_development_branch`
+
+# Deployment Process
+
+- Only when the following conditions are met should you submit a PR
+    - [ ]  The proposed changes accomplish the story's requirements
+    - [ ]  The branch compiles and the tests run successfully
+    - [ ]  You ran `dbt docs generate & serve` and all proposed changes are reflected in the new documentations
+- Steps
+    - [ ]  Commit your latest revision of the branch to the repository
+    - [ ]  Press the **Create Pull Request** button in Github
+    - [ ]  Fill out the PR's submission template that is documented below
+    - [ ]  Github will then, via dbt, run an automatic build test of branch which will need to pass before the pull request can be merged into the master branch of the dbt repo (talk to the project's technical lead if not automated build tests are being ran)
+    - [ ]  Add reviewers (at least including the technical lead) once you've created your PR, so that other team members get familiarized with your work and validate that the proposed changes will indeed accomplish the story's requirements, follow coding standards, be fully tested and documented
+    - [ ]  Inform the project team that a PR has been submitted for the story you'r working on and that anyone is welcomed to review and submit questions/changes if they so desire
+    - [ ]  Once the review process is completed, it is the responsibility of the technical lead to merge the PR with `master`
+    - [ ]  It is also the technical lead's responsibility to announce to the project team that a new version of `master` has been created and that everyone should refresh their local `master` branch.
+- PR's submission template
+    - Description & motivation
+    - Changes to existing models
+    - Screenshots of DAG's changes
+    - Feature Release Checklist
+    - Checklist
+        - [ ]  My pull request represents one logical piece of work.
+        - [ ]  My commits are related to the pull request and look clean.
+        - [ ]  My SQL follows the Fishtown Analytics style guide ([https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md](https://github.com/fishtown-analytics/corp/blob/master/dbt_coding_conventions.md))
+        - [ ]  I have materialized my models appropriately.
+        - [ ]  I have added appropriate tests and documentation to any new models.
+        - [ ]  I ran the dbt package in my development environment without error
+        - [ ]  My dbt package has no residual models that are no longer used
+        - [ ]  Any data issues remaining are client's responsibility
