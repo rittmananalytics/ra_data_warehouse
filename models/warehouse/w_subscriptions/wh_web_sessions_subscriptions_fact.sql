@@ -1,4 +1,4 @@
-{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
+{% if not var("enable_subscriptions_warehouse")  %}
 {{
     config(
         enabled=false
@@ -17,6 +17,18 @@ with sessions as
     SELECT *
     FROM   {{ ref('int_web_events_sessions_stitched') }}
   ),
+    customers as (
+   SELECT *
+    FROM   {{ ref('wh_customers_dim') }}
+     ),
+joined as (
+SELECT
+    s.* except (site),
+    c.customer_pk
+FROM
+   sessions s
+LEFT OUTER JOIN customers c
+   ON s.user_id = c.customer_id),
 unique_sessions as (
 SELECT
     session_id,
@@ -48,8 +60,9 @@ SELECT
     MAX(referrer_source) as referrer_source,
     MAX(blended_user_id) as blended_user_id,
     MAX(mins_between_sessions) as mins_between_sessions,
-    MAX(is_bounced_session) as is_bounced_session
-from unique_sessions
+    MAX(is_bounced_session) as is_bounced_session,
+    MAX(customer_pk) as customer_pk
+from joined
 group by 1),
 ordered as (
 select GENERATE_UUID() as web_sessions_pk,
