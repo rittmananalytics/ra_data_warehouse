@@ -33,7 +33,7 @@ renamed as (
         search                      as search,
         url                         as page_url,
         {{ get_url_host('url') }} as page_url_host,
-        {{ get_url_parameter('url', 'gcl  id') }} as gclid,
+        {{ get_url_parameter('url', 'gclid') }} as gclid,
         context_campaign_term       as utm_term,
         context_campaign_content    as utm_content,
         context_campaign_medium     as utm_medium,

@@ -53,13 +53,10 @@ models:
           stg_google_ads:
               vars:
                   id-prefix: gads-
-                  etl: segment
+                  etl: stitch
                   stitch_schema: stitch_google_ads
                   stitch_accounts_table: accounts
                   stitch_campaigns_table: campaigns
-                  segment_schema: segment_google_ads
-                  segment_campaign_performance_table: campaign_performance_reports
-                  segment_campaigns_table: campaigns
                   tags: ["google_ads", "ads", "marketing"]
           stg_harvest_projects:
               vars:
