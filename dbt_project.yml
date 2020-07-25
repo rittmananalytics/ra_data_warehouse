@@ -41,22 +41,31 @@ models:
           stg_facebook_ads:
               vars:
                   id-prefix: fbads-
-                  etl: stitch
+                  etl: segment
                   stitch_schema: stitch_facebook_ads
-                  stitch_adcreative_table: adcreative
+                  stitch_ad_performance_table: insights
+                  stitch_ad_groups_table: ad_adsets
                   stitch_ads_table: ads
-                  stitch_adsets_table: adsets
                   stitch_campaigns_table: campaigns
-                  stitch_ads_insights_age_and_gender_table: ads_insights_age_and_gender
-                  stitch_ads_insights_table: ads_insights
+                  segment_schema: segment_facebook_ads
+                  segment_ad_performance_table: insights
+                  segment_ad_groups_table: ad_sets
+                  segment_ads_table: ads
+                  segment_campaigns_table: campaigns
                   tags: ["facebook", "ads", "marketing"]
           stg_google_ads:
               vars:
                   id-prefix: gads-
-                  etl: stitch
+                  etl: segment
                   stitch_schema: stitch_google_ads
                   stitch_accounts_table: accounts
                   stitch_campaigns_table: campaigns
+                  segment_schema: segment_google_ads
+                  segment_campaign_performance_table: campaign_performance_reports
+                  segment_ad_performance_table: ad_performance_reports
+                  segment_ad_groups_table: ad_groups
+                  segment_ads_table: ads
+                  segment_campaigns_table: campaigns
                   tags: ["google_ads", "ads", "marketing"]
           stg_harvest_projects:
               vars:
