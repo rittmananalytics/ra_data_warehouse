@@ -14,7 +14,7 @@ renamed as (
     select
         concat('{{ var('id-prefix') }}',id)      as ad_campaign_id,
         name      as ad_campaign_name,
-        effective_status as ad_campaign_status,
+        effective_status as ad_campaign_status
         effective_status as ad_campaign_serving_status,
         start_time as ad_campaign_start_date,
         cast(null as timestamp) as ad_campaign_end_date

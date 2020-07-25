@@ -5,8 +5,8 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'segment' %}
-  {{  profile_schema(var('segment_schema')) }}
+{% if var("etl") == 'fivetran' %}
+  {{  profile_schema(var('fivetran_schema')) }}
 {% elif var("etl") == 'stitch' %}
   {{  profile_schema(var('stitch_schema')) }}
 {% endif %}
