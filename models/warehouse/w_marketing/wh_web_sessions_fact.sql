@@ -49,7 +49,7 @@ SELECT
     MAX(blended_user_id) as blended_user_id,
     MAX(mins_between_sessions) as mins_between_sessions,
     MAX(is_bounced_session) as is_bounced_session
-from unique_sessions
+from sessions
 group by 1),
 ordered as (
 select GENERATE_UUID() as web_sessions_pk,
