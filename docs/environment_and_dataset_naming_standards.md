@@ -20,7 +20,7 @@ Note that these test/staging CI/CD temporary datasets are always created in the 
 
 Our dbt DW framework expanded the number of datasets used for an environment from one (“analytics”) to four, to separate out database objects used for data transformation and process logging from the tables end-users were going to query:
 
-- ```analytics```, the dataset used by end-users and Looker - think of this as the “base” dataset for their dbt environment
+- ``analytics``, the dataset used by end-users and Looker - think of this as the “base” dataset for their dbt environment
 
 - ```analytics_staging```, a dataset containing SQL views and tables used in the data transformation process
 
@@ -32,13 +32,15 @@ Note that all of these datasets are automatically created in BigQuery on first r
 
 For an individual dbt developer, their “base” dataset is determined by the dataset configuration setting in their profiles.yml file
 
-```ra_data_warehouse:
+```
+ra_data_warehouse:
   outputs:
     dev:
       type: bigquery
       method: service-account-json
       project: ra-development
-      dataset: analytics_dev```
+      dataset: analytics_dev
+```
 
 ## Development Environment(s) Naming
 
