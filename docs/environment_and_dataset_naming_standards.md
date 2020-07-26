@@ -41,18 +41,17 @@ For an individual dbt developer, their “base” dataset is determined by the d
       dataset: analytics_dev
       ```
 
-
 ## Development Environment(s) Naming
 
 As a developer (as opposed to being dbtCloud), our team should use analytics_dev as their dataset value in the profiles.yml configuration file, which would lead to the following dataset names being created on first run of their dbt project:
 
-analytics_dev
+- ```analytics_dev```
 
-analytics_staging_dev
+- ```analytics_staging_dev```
 
-analytics_seed_dev
+- ```analytics_seed_dev```
 
-analytics_logs_dev
+- ```analytics_logs_dev```
 
 This, combined with developing in git feature branches, works out fine for single-developer projects. 
 
