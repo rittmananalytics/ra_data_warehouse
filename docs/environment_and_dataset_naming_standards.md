@@ -22,11 +22,11 @@ Our dbt DW framework expanded the number of datasets used for an environment fro
 
 - ``analytics``, the dataset used by end-users and Looker - think of this as the “base” dataset for their dbt environment
 
-- ```analytics_staging```, a dataset containing SQL views and tables used in the data transformation process
+- ``analytics_staging``, a dataset containing SQL views and tables used in the data transformation process
 
-- ```analytics_seed```, a dataset containing tables of reference and lookup data populated from files within the dbt project
+- ``analytics_seed``, a dataset containing tables of reference and lookup data populated from files within the dbt project
 
-- ```analytics_logs```, a dataset that contains audit, profile and logging tables created during data loads
+- ``analytics_logs``, a dataset that contains audit, profile and logging tables created during data loads
 
 Note that all of these datasets are automatically created in BigQuery on first run of the dbt DW framework, as long as the GCP service account used by the developer or dbtCloud has the BigQuery Admin role granted.
 
@@ -46,13 +46,13 @@ ra_data_warehouse:
 
 As a developer (as opposed to being dbtCloud), our team should use analytics_dev as their dataset value in the profiles.yml configuration file, which would lead to the following dataset names being created on first run of their dbt project:
 
-- ```analytics_dev```
+- ``analytics_dev``
 
-- ```analytics_staging_dev```
+- ``analytics_staging_dev``
 
-- ```analytics_seed_dev```
+- ``analytics_seed_dev``
 
-- ```analytics_logs_dev```
+- ``analytics_logs_dev``
 
 This, combined with developing in git feature branches, works out fine for single-developer projects. 
 
