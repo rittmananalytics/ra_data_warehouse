@@ -8,11 +8,11 @@ Historically, RA analytics engineers followed these standards when developing db
 
 Production. development and test BQ datasets were all in the same GCP project
 
-The production dataset was named `analytics` and the only user that could write to it was the dbt GCP service account, via dbtCloud (e.g.  dbt-5-74@ra-development.iam.gserviceaccount.com)
+The production dataset was named ```analytics``` and the only user that could write to it was the dbt GCP service account, via dbtCloud (e.g.  dbt-5-74@ra-development.iam.gserviceaccount.com)
 
-Development took place in a shared dev dataset called `analytics_dev` that all developers/users could write to
+Development took place in a shared dev dataset called ```analytics_dev``` that all developers/users could write to
 
-Test/Staging was done through dbtCloud’s CI/CD test pipeline, that created temporary (as in, deleted automatically by dbtCloud) BQ datasets named “sinter_pr_xxx” with xxx being a sequence or date number.
+Test/Staging was done through dbtCloud’s CI/CD test pipeline, that created temporary (as in, deleted automatically by dbtCloud) BQ datasets named in the format ```sinter_pr_xxxx_xx``` with ```xxxx_xx``` reflecting the pull request (PR) number that triggered the test pipeline build.
 
 Note that these test/staging CI/CD temporary datasets are always created in the same GCP project that dbtCloud deploys the analytics dataset to, so consider this as pre-production final deployment testing.
 
@@ -22,23 +22,24 @@ Our dbt DW framework expanded the number of datasets used for an environment fro
 
 - ```analytics```, the dataset used by end-users and Looker - think of this as the “base” dataset for their dbt environment
 
-- analytics_staging, a dataset containing SQL views and tables used in the data transformation process
+- ```analytics_staging```, a dataset containing SQL views and tables used in the data transformation process
 
-analytics_seed, a dataset containing tables of reference and lookup data populated from files within the dbt project
+- ```analytics_seed```, a dataset containing tables of reference and lookup data populated from files within the dbt project
 
-analytics_logs, a dataset that contains audit, profile and logging tables created during data loads
+- ```analytics_logs```, a dataset that contains audit, profile and logging tables created during data loads
 
 Note that all of these datasets are automatically created in BigQuery on first run of the dbt DW framework, as long as the GCP service account used by the developer or dbtCloud has the BigQuery Admin role granted.
 
 For an individual dbt developer, their “base” dataset is determined by the dataset configuration setting in their profiles.yml file
 
-ra_data_warehouse:
+```ra_data_warehouse:
   outputs:
     dev:
       type: bigquery
       method: service-account-json
       project: ra-development
       dataset: analytics_dev
+      ```
 
 
 ## Development Environment(s) Naming
