@@ -1,4 +1,4 @@
-# Naming Standards and Separation of Dev, Test, Prod and Training dbt Environments
+# Naming Standards for Dev, Test, Prod and Training dbt Environments
 
 ## Historical Naming Approach for Dev and Prod dbt Datasets 
 
