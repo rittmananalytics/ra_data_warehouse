@@ -2,7 +2,7 @@ Some input and context over naming of datasets, use of GCP projects and standard
 
 For RA team members, the Rittman Analytics Analytics Workflow & Release Checklists page on Notion has been updated to include these naming standards.
 
-# Historical Naming Approach for Dev and Prod dbt Datasets #
+# Historical Naming Approach for Dev and Prod dbt Datasets 
 
 Historically, RA analytics engineers followed these standards when developing dbt projects:
 
@@ -16,7 +16,7 @@ Test/Staging was done through dbtCloud’s CI/CD test pipeline, that created tem
 
 Note that these test/staging CI/CD temporary datasets are always created in the same GCP project that dbtCloud deploys the analytics dataset to, so consider this as pre-production final deployment testing.
 
-## Dataset Names used by the RA DW dbt Framework ##
+# Dataset Names used by the RA DW dbt Framework 
 
 Our dbt DW framework expanded the number of datasets used for an environment from one (“analytics”) to four, to separate out database objects used for data transformation and process logging from the tables end-users were going to query:
 
@@ -41,7 +41,8 @@ ra_data_warehouse:
       dataset: analytics_dev
 
 
-Development Environment(s) Naming
+## Development Environment(s) Naming
+
 As a developer (as opposed to being dbtCloud), our team should use analytics_dev as their dataset value in the profiles.yml configuration file, which would lead to the following dataset names being created on first run of their dbt project:
 
 analytics_dev
