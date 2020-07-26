@@ -58,65 +58,33 @@ This, combined with developing in git feature branches, works out fine for singl
 
 However if there are multiple developers working on the project (note - not doing training exercises), dbt can be configured to use a schema prefix (e.g. “mark”, “lewis”, the developer’s first name) by setting an environment variable before running any of the dbt CLI tools, see the doc notes on how this works.
 
+```
 export schema_prefix=mark
+```
 
 This will thereafter instruct dbt to create dataset names, for individual developer environments, named like this:
 
-mark_analytics_dev
+- ``mark_analytics_dev``
 
-mark_analytics_staging_dev
+- ``mark_analytics_staging_dev``
 
-mark_analytics_seed_dev
+- ``mark_analytics_seed_dev``
 
-mark_analytics_logs_dev
+- ``mark_analytics_logs_dev``
 
-This approach of having a separate dev environment for each developer aligns with the development environment naming approach used by the dbtCloud IDE.
+This approach of having a separate dev environment for each developer aligns with the development environment naming approach used by the [dbtCloud IDE](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-dbt-ide/#setting-up-developer-credentials).
 
+## Training Environment(s) Naming
 
-Training Environment(s) Naming
 For training environments (defined as dbt development not directly related to the development or maintenance of project feature branches), the developer should create an additional project (environment) definition in their profiles.yml configuration file, separate to the analytics_dev project definition, and use analytics_trn as the base dataset name. Combined with setting a schema_prefix environment variable set to their first name, this should lead to datasets being created like this for training purposes:
 
-mark_analytics_trn
+- ``mark_analytics_trn``
 
-mark_analytics_staging_trn
+- ``mark_analytics_staging_trn``
 
-mark_analytics_seed_trn
+- ``mark_analytics_seed_trn``
 
-mark_analytics_logs_trn
-
+- ``mark_analytics_logs_trn``
 
 Separation of Production, Development and Training Datasets
-Optionally, these production, pre-prod testing/staging, dev and training datasets can be created in their own GCP projects, e.g.
-
-GCP Project
-
-Datasets
-
- 
-
-Production 
-and pre-production CI/CD deployment testing
-
-analytics, analytics_staging, analytics_seed, analytics_logs
-
-sinter_pr_xxxx_xx
-
- 
-
-Development
-
-analytics_dev, analytics_staging_dev, analytics_seed_dev, analytics_logs_dev
-
-or for multi-developer projects
-
-firstname_analytics_dev, firstname_analytics_staging_dev, firstname_analytics_seed_dev, firstname_analytics_logs_dev
-
- 
-
-Training
-
-firstname_analytics_trn, firstname_analytics_staging_trn, firstname_analytics_seed_trn, firstname_analytics_logs_trn
-
- 
-
- 
+Optionally, these production, pre-prod testing/staging, dev and training datasets can be created in their own GCP projects with developer write access restricted to the development and training GCP projects.
