@@ -38,8 +38,7 @@ For an individual dbt developer, their “base” dataset is determined by the d
       type: bigquery
       method: service-account-json
       project: ra-development
-      dataset: analytics_dev
-      ```
+      dataset: analytics_dev```
 
 ## Development Environment(s) Naming
 
