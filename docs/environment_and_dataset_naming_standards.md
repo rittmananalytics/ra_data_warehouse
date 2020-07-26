@@ -54,9 +54,9 @@ As a developer (as opposed to being dbtCloud), our team should use analytics_dev
 
 - ``analytics_logs_dev``
 
-This, combined with developing in git feature branches, works out fine for single-developer projects. 
+This, combined with developing in [git feature branches](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/git_branch_development.md), works out fine for single-developer projects. 
 
-However if there are multiple developers working on the project (note - not doing training exercises), dbt can be configured to use a schema prefix (e.g. “mark”, “lewis”, the developer’s first name) by setting an environment variable before running any of the dbt CLI tools, see the doc notes on how this works.
+However if there are multiple developers working on the project (note - not doing training exercises), dbt can be configured to use a schema prefix (e.g. “mark”, “lewis”, the developer’s first name) by setting an environment variable before running any of the dbt CLI tools, see the [doc notes on how this works](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/setup.md#cli-steps).
 
 ```
 export schema_prefix=mark
