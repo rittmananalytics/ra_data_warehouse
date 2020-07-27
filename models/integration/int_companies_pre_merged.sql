@@ -21,7 +21,7 @@ with t_companies_pre_merged as (
       UNION ALL
       {% endif %}
 
-      {% if var("enable_harvest_projects_source") is true %}
+      {% if var("enable_harvest_projects_source")  %}
       SELECT *
       FROM   {{ ref('stg_harvest_projects_companies') }}
       {% endif %}
@@ -30,7 +30,7 @@ with t_companies_pre_merged as (
       UNION ALL
       {% endif %}
 
-      {% if var("enable_xero_accounting_source") is true %}
+      {% if var("enable_xero_accounting_source")  %}
       SELECT *
       FROM   {{ ref('stg_xero_accounting_companies') }}
       {% endif %}
@@ -39,7 +39,7 @@ with t_companies_pre_merged as (
       UNION ALL
       {% endif %}
 
-      {% if var("enable_stripe_payments_source") is true %}
+      {% if var("enable_stripe_payments_source")  %}
       SELECT *
       FROM   {{ ref('stg_stripe_payments_companies') }}
       {% endif %}
@@ -52,7 +52,7 @@ with t_companies_pre_merged as (
       UNION ALL
       {% endif %}
 
-      {% if var("enable_asana_projects_source") is true %}
+      {% if var("enable_asana_projects_source")  %}
       SELECT *
       FROM   {{ ref('stg_asana_projects_companies') }}
       {% endif %}
@@ -61,7 +61,7 @@ with t_companies_pre_merged as (
       UNION ALL
       {% endif %}
 
-      {% if var("enable_jira_projects_source") is true %}
+      {% if var("enable_jira_projects_source")  %}
       SELECT *
       FROM   {{ ref('stg_jira_projects_companies') }}
       {% endif %}
