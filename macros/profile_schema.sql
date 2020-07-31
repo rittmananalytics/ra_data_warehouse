@@ -7,7 +7,8 @@
 
 {% set tables = dbt_utils.get_relations_by_prefix(table_schema, '') %}
 
-SELECT column_stats.table_catalog,
+SELECT
+       column_stats.table_catalog,
        column_stats.table_schema,
        column_stats.table_name,
        column_stats.column_name,
@@ -50,6 +51,7 @@ FROM
               FROM table_as_json,UNNEST(SPLIT(ROW, ',"')) AS z,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(0)]]) AS column_name,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(1)]]) AS column_value ),
     profile AS (
     SELECT
+      --'{{ table.unique_id }}' as model_name,
       split(replace('{{ table }}','`',''),'.' )[safe_offset(0)] as table_catalog,
       split(replace('{{ table }}','`',''),'.' )[safe_offset(1)] as table_schema,
       split(replace('{{ table }}','`',''),'.' )[safe_offset(2)] as table_name,

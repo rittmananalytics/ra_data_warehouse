@@ -15,10 +15,11 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
 
 on-run-start:
-    - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
+    - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results_test (node string, object string, status string, row_count numeric, execution_time numeric, load_ts timestamp, guid string)"
 
 on-run-end:
-    - "insert into {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object, status, row_count, execution_time, load_ts) values {{ results_values(results) }}"
+    - "insert into {{ generate_prefixed_target_name() }}_logs.audit_dbt_results_test (node, object, status, row_count, execution_time, load_ts, guid) values {{ results_values(results) }}"
+
 
 models:
   ra_data_warehouse:
