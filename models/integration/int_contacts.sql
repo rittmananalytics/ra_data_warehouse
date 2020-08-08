@@ -14,10 +14,10 @@ with t_contacts_merge_list as
            concat('hubspot-',contact_company_id) as contact_company_id
     FROM   {{ ref('stg_hubspot_crm_contacts') }}
     {% endif %}
-    {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source") is true %}
+    {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
     UNION ALL
     {% endif %}
-    {% if var("enable_harvest_projects_source") is true %}
+    {% if var("enable_harvest_projects_source")  %}
     SELECT * except (contact_id, contact_company_id),
            concat('harvest-',contact_id) as contact_id,
            concat('harvest-',contact_company_id) as contact_company_id
@@ -26,7 +26,7 @@ with t_contacts_merge_list as
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
     UNION ALL
     {% endif %}
-    {% if var("enable_xero_accounting_source") is true %}
+    {% if var("enable_xero_accounting_source")  %}
     SELECT * except (contact_id, contact_company_id),
            concat('xero-',contact_id) as contact_id,
            concat('xero-',contact_company_id) as contact_company_id
@@ -35,7 +35,7 @@ with t_contacts_merge_list as
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
     UNION ALL
     {% endif %}
-    {% if var("enable_mailchimp_email_source") is true %}
+    {% if var("enable_mailchimp_email_source")  %}
     SELECT * except (contact_id, contact_company_id),
            concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
            concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id

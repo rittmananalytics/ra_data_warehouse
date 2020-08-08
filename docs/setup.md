@@ -110,6 +110,7 @@ ra_data_warehouse:
         auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
         client_x509_cert_url: [your GCP pclient_x509_cert_url]
 ```
+See also [Naming Standards for Dev, Test, Prod and Training dbt Environments](https://github.com/rittmananalytics/ra_data_warehouse/blob/docs/environment_and_dataset_naming_standards.md)
 
 4. Enable or Disable Data Sources and Warehouse Modules
 

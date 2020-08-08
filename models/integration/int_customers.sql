@@ -14,10 +14,10 @@ with customers_merge_list as
     FROM   {{ ref('stg_segment_dashboard_events_customers') }}
 
     {% endif %}
-    {% if var("enable_segment_dashboard_events_source") and var("enable_stripe_payments_source") is true %}
+    {% if var("enable_segment_dashboard_events_source") and var("enable_stripe_payments_source")  %}
     UNION ALL
     {% endif %}
-    {% if var("enable_stripe_payments_source") is true %}
+    {% if var("enable_stripe_payments_source")  %}
 
     SELECT *
     FROM   {{ ref('stg_stripe_subscriptions_customers') }}
