@@ -165,7 +165,7 @@ vars:
   stg_mixpanel_events_stitch_schema: mixpanel_stitch
   stg_mixpanel_events_fivetran_schema: fivetran_mixpanel
   stg_mixpanel_events_etl: fivetran
-  fivetran_event_table: event
+  stg_mixpanel_events_fivetran_event_table: event
   stg_mixpanel_events_stitch_export_table: export
   stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
