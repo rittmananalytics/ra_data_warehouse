@@ -12,7 +12,7 @@ WITH source AS (
 renamed AS (
   SELECT
   concat('{{ var('stg_asana_projects_id-prefix') }}',source.gid) as task_id,
-  case when replace(JSON_EXTRACT(parent,'$.gid'),'"','') is not null then concat('{{ var('id-prefix') }}',replace(JSON_EXTRACT(parent,'$.gid'),'"','')) end as parent_task_id,
+  case when replace(JSON_EXTRACT(parent,'$.gid'),'"','') is not null then concat('{{ var('stg_asana_projects_id-prefix') }}',replace(JSON_EXTRACT(parent,'$.gid'),'"','')) end as parent_task_id,
   concat('{{ var('stg_asana_projects_id-prefix') }}',projects.gid) AS project_id,
   concat('{{ var('stg_asana_projects_id-prefix') }}',assignee.gid)  as task_creator_user_id,
   cast (null as string) as task_assignee_user_id,

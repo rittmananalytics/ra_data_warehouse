@@ -6,7 +6,7 @@
 }}
 {% endif %}
 
-{% if var("etl") == 'stitch' %}
+{% if var("stg_facebook_ads_etl") == 'stitch' %}
 WITH source AS (
   {{ filter_stitch_table(var('stg_facebook_ads_stitch_schema'),var('stg_facebook_ads_stitch_ad_groups_table'),'id') }}
 ),

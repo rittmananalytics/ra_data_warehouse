@@ -17,7 +17,7 @@ renamed as
     displayname                   as user_name  ,
     emailaddress                  as user_email,
     cast(null as boolean)         as user_is_contractor,
-    case when emailaddress like '%@{{ var('staff_email_domain') }}%' then true else false end as user_is_staff,
+    case when emailaddress like '%@{{ var('stg_jira_projects_staff_email_domain') }}%' then true else false end as user_is_staff,
     cast(null as int64)           as user_weekly_capacity,
     cast(null as string)          as user_phone,
     cast(null as int64)           as user_default_hourly_rate,

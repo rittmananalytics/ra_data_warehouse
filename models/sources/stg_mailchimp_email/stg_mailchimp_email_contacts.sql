@@ -24,7 +24,7 @@ WITH source AS (SELECT
 renamed AS
 (
 SELECT
-    concat('{{ var('stg_mailchimp_email-prefix') }}',id) AS contact_id,
+    concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS contact_id,
     merge_fields.fname AS contact_first_name,
     merge_fields.lname AS contact_last_name,
     CASE WHEN CONCAT(merge_fields.fname,' ',merge_fields.lname) = ' ' THEN email_address ELSE CONCAT(merge_fields.fname,' ',merge_fields.lname) END AS contact_name,
