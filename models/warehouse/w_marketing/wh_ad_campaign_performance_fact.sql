@@ -52,7 +52,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
       web_events
     WHERE
       utm_source IN ('adwords',
-        'facebook','instagra')
+        'facebook','instagram')
     GROUP BY
       1,2,3,4,5)
   GROUP BY
@@ -110,4 +110,4 @@ ON
 )
 select * from joined
 where utm_source is not null
-and utm_campaign is not null 
+and utm_campaign is not null

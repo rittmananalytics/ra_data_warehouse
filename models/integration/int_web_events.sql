@@ -8,24 +8,30 @@
 
 with events_merge_list as
   (
-    {% if var("enable_segment_events_source") %}
-    SELECT *
-    FROM   {{ ref('stg_segment_events_events') }}
-    UNION ALL
+    {% if var("enable_segment_events_source")  %}
+
     SELECT *
     FROM   {{ ref('stg_segment_events_pageviews') }}
+
     {% endif %}
 
-    {% if var("enable_segment_events_source") and var("enable_mixpanel_events_source") %}
+    {% if var("enable_segment_events_source") and var("enable_segment_dashboard_events_source") %}
     UNION ALL
     {% endif %}
 
-    {% if var("enable_mixpanel_events_source") %}
+    {% if var("enable_segment_dashboard_events_source") and var("enable_segment_dashboard_tracks") %}
     SELECT *
-    FROM   {{ ref('stg_mixpanel_events_events') }}
+    FROM   {{ ref('stg_segment_dashboard_events_events') }}
+
+    {% endif %}
+
+    {% if (var("enable_segment_events_source") or var("enable_segment_dashboard_events_source")) and var("enable_segment_switcherapi_events_source") %}
     UNION ALL
+    {% endif %}
+
+    {% if var("enable_segment_switcherapi_events_source") %}
     SELECT *
-    FROM   {{ ref('stg_mixpanel_events_pageviews') }}
+    FROM   {{ ref('stg_segment_switcherapi_events_events') }}
     {% endif %}
   )
 select * from events_merge_list

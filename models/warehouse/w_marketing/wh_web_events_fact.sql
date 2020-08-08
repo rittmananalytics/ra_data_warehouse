@@ -17,18 +17,29 @@ with events as
     SELECT *
     FROM   {{ ref('int_web_events_sessionized') }}
   ),
-pages AS
-    (
-    SELECT * from {{ ref('wh_web_pages_dim') }}
-  )
+    customers as (
+   SELECT *
+    FROM   {{ ref('wh_customers_dim') }}
+  ),
+events_with_prev_ts_event_type as
+(
 SELECT
 
     GENERATE_UUID() as web_event_pk,
-    p.web_page_pk,
-    e.* except (page_url_host,page_title,page_url_path )
+    e.*,
+    lag(e.event_ts,1) over (partition by e.blended_user_id order by event_seq) as prev_event_ts,
+    lag(e.event_type,1)  over (partition by e.blended_user_id order by event_seq) as prev_event_type
 FROM
    events e
-left outer join pages p
-on e.page_url_host = p.page_url_host
-and e.page_title = p.page_title
-and e.page_url_path = p.page_url_path
+),
+joined as
+(
+  SELECT
+      e.*,
+      c.customer_pk
+  FROM
+     events_with_prev_ts_event_type e
+  LEFT OUTER JOIN customers c
+     ON e.user_id = c.customer_id
+)
+select * from joined
