@@ -7,7 +7,6 @@
 {% else %}
 {{
     config(
-        unique_key='company_pk',
         alias='companies_dim'
     )
 }}
@@ -15,7 +14,7 @@
 
 WITH companies_dim as (
   SELECT
-    GENERATE_UUID() as company_pk,
+    {{dbt_utils.surrogate_key(['company_id'])}} as company_pk,
     *
   FROM
     {{ ref('int_companies') }} c
