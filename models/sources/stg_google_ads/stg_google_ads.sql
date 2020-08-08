@@ -6,18 +6,18 @@
 }}
 {% endif %}
 
-{% if var("etl") == 'stitch' %}
+{% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_ads_table'),'id') }}
+  {{ filter_stitch_table(var('stg_google_ads_stitch_schema'),var('stg_google_ads_stitch_ads_table'),'id') }}
 ),
 renamed as (
 
     select
-    concat('{{ var('id-prefix') }}',id)              as ad_id,
+    concat('{{ var('stg_google_ads_id-prefix') }}',id)              as ad_id,
     status      as ad_status,
     type        as ad_type,
     finalurls  as ad_final_urls,
-    concat('{{ var('id-prefix') }}',adgroupid) as ad_group_id,
+    concat('{{ var('stg_google_ads_id-prefix') }}',adgroupid) as ad_group_id,
     cast(null as string) as ad_bid_type,
     cast(null as string)  as ad_utm_parameters,
     cast(null as string)  as ad_utm_campaign,
@@ -28,17 +28,17 @@ renamed as (
 
     from source
 )
-{% elif var("etl") == 'segment' %}
+{% elif var("stg_google_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_ads_table')) }}
+  {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_ads_table')) }}
 ),
 renamed as (
 SELECT
-      concat('{{ var('id-prefix') }}',id)          as ad_id,
+      concat('{{ var('stg_google_ads_id-prefix') }}',id)          as ad_id,
       status      as ad_status,
       type        as ad_type,
       final_urls  as ad_final_urls,
-      concat('{{ var('id-prefix') }}',ad_group_id) as ad_group_id,
+      concat('{{ var('stg_google_ads_id-prefix') }}',ad_group_id) as ad_group_id,
       cast(null as string) as ad_bid_type,
       cast(null as string)  as ad_utm_parameters,
       cast(null as string)  as ad_utm_campaign,

@@ -5,14 +5,14 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'stitch' %}
+{% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_campaign_performance_table'),'id') }}
+  {{ filter_stitch_table(var('stg_google_ads_stitch_schema'),var('stg_google_ads_stitch_campaign_performance_table'),'id') }}
 ),
 renamed as (
 SELECT
   day                           as ad_campaign_serve_ts,
-  concat('{{ var('id-prefix') }}',campaignid)                    as ad_campaign_id,
+  concat('{{ var('stg_google_ads_id-prefix') }}',campaignid)                    as ad_campaign_id,
   amount/1000000                AS ad_campaign_budget,
   averagecost/1000000           AS ad_campaign_avg_cost,
   averagesessiondurationseconds as ad_campaign_avg_time_on_site,
@@ -29,14 +29,14 @@ SELECT
   'Google Ads' as ad_network
 FROM
   source)
-{% elif var("etl") == 'segment' %}
+{% elif var("stg_google_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_campaign_performance_table')) }}
+  {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_campaign_performance_table')) }}
 ),
 renamed as (
 SELECT
   date_start                    as ad_campaign_serve_ts,
-  concat('{{ var('id-prefix') }}',campaign_id)                   as ad_campaign_id,
+  concat('{{ var('stg_google_ads_id-prefix') }}',campaign_id)                   as ad_campaign_id,
   amount/1000000                AS ad_campaign_budget,
   average_cost/1000000          AS ad_campaign_avg_cost,
   average_time_on_site          as ad_campaign_avg_time_on_site,

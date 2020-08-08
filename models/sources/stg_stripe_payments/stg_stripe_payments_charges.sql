@@ -7,14 +7,14 @@
 {% endif %}
 
 WITH source AS (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_charges_table'),'id') }}
+    {{ filter_stitch_table(var('stg_stripe_payments_stitch_schema'),var('stitch_charges_table'),'id') }}
 ),
 
 renamed as (
 
     select
-    concat('{{ var('id-prefix') }}',id) as charge_id,
-    concat('{{ var('id-prefix') }}',metadata.client_name) as customer_id,
+    concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as charge_id,
+    concat('{{ var('stg_stripe_payments_id-prefix') }}',metadata.client_name) as customer_id,
     metadata.invoice_id as invoice_number,
     description as charge_description,
     created as payment_created_ts,

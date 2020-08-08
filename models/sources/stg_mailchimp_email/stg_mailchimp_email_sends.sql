@@ -10,12 +10,12 @@ WITH campaigns AS (
   SELECT * except (_sdc_batched_at, max_sdc_batched_at)
   FROM (
 SELECT
-  id AS send_id,
+  concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS send_id,
   content_type AS campaign_content_type,
   create_time AS campaign_created_at_ts,
   emails_sent AS total_campaign_emails_sent,
   long_archive_url AS campaign_archive_url,
-  recipients.list_id AS list_id,
+  concat('{{ var('stg_mailchimp_email_id-prefix') }}',recipients.list_id) AS list_id,
   recipients.list_is_active AS campaign_list_is_active,
   recipients.list_name AS list_name,
   recipients.recipient_count AS total_recipient_count,
@@ -36,7 +36,7 @@ SELECT
   _sdc_batched_at,
   MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
-  {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_campaigns_table') }})
+  {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_campaigns_table') }})
 
   WHERE
   _sdc_batched_at = max_sdc_batched_at)

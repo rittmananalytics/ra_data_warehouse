@@ -7,20 +7,20 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoices_table'),'id') }}
+  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_invoices_table'),'id') }}
 
     ),
 harvest_invoice_line_items as (
 
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoice_line_items_table'),'id') }}
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_invoice_line_items_table'),'id') }}
     ),
 harvest_expenses as (
-  
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_expenses_table'),'id') }}
+
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_expenses_table'),'id') }}
     ),
 joined as (
 select i.*,
-  concat('{{ var('id-prefix') }}',client_id) as company_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',client_id) as company_id,
   id as invoice_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
@@ -58,9 +58,9 @@ on i.id = e.invoice_id
 renamed as (
 select  number as invoice_number,
         company_id,
-        concat('{{ var('id-prefix') }}',invoice_id) as invoice_id,
-        concat('{{ var('id-prefix') }}',project_id) as project_id,
-        concat('{{ var('id-prefix') }}',creator_id) as invoice_creator_users_id,
+        concat('{{ var('stg_harvest_projects_id-prefix') }}',invoice_id) as invoice_id,
+        concat('{{ var('stg_harvest_projects_id-prefix') }}',project_id) as project_id,
+        concat('{{ var('stg_harvest_projects_id-prefix') }}',creator_id) as invoice_creator_users_id,
         subject as invoice_subject,
         created_at as invoice_created_at_ts,
         issue_date as invoice_issue_at_ts,

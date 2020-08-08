@@ -7,12 +7,12 @@
 {% endif %}
 
 WITH source AS (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_balance_transactions_table'),'id') }}
+    {{ filter_stitch_table(var('stg_stripe_payments_stitch_schema'),var('stg_stripe_payments_stitch_balance_transactions_table'),'id') }}
 
 ),
 renamed AS (
   SELECT
-      concat('{{ var('id-prefix') }}',id) as transaction_id,
+      concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as transaction_id,
       description as transaction_description,
       currency as transaction_currency,
       exchange_rate as transaction_exchange_rate,

@@ -7,14 +7,14 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_projects_table'),'gid') }}
+  {{ filter_stitch_table(var('stg_asana_projects_stitch_schema'),var('stg_asana_projects_stitch_projects_table'),'gid') }}
 ),
 
 renamed AS (
   SELECT
-  concat('{{ var('id-prefix') }}',gid) as project_id,
-  concat('{{ var('id-prefix') }}',owner.gid) as lead_user_id,
-  concat('{{ var('id-prefix') }}',workspace.gid) as company_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',gid) as project_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',owner.gid) as lead_user_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',workspace.gid) as company_id,
   name as project_name,
   current_status as project_status,
   notes as project_notes,

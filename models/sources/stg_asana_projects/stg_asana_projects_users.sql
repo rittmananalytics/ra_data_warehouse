@@ -7,12 +7,12 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_users_table'),'gid') }}
+  {{ filter_stitch_table(var('stg_asana_projects_stitch_schema'),var('stg_asana_projects_stitch_users_table'),'gid') }}
   ),
 
 renamed AS (
   SELECT
-  concat('{{ var('id-prefix') }}',gid)           as user_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',gid)           as user_id,
   name                   as user_name  ,
   email                  as user_email ,
   cast(null as boolean)         as user_is_contractor,

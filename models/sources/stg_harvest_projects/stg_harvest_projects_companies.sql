@@ -7,11 +7,11 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_clients_table'),'id') }}
+  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_clients_table'),'id') }}
 ),
 renamed as (
   SELECT
-    concat('{{ var('id-prefix') }}',id) AS company_id,
+    concat('{{ var('stg_harvest_projects_id-prefix') }}',id) AS company_id,
     replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
     address as company_address,
     cast (null as string) AS company_address2,

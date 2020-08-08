@@ -11,13 +11,13 @@ WITH source AS (
   SELECT
    *
   FROM
-   {{ target.database}}.{{ var('clearbit_schema') }}.{{ var('clearbit_contacts_table') }}
+   {{ target.database}}.{{ var('stg_enrichment_clearbit_schema') }}.{{ var('stg_enrichment_clearbit_contacts_table') }}
  )
  {{ dbt_utils.group_by(113) }}
 ),
 renamed as (
   SELECT
-  concat('{{ var('id-prefix') }}',person__email) as contact_enrichment_id,
+  concat('{{ var('stg_enrichment_id-prefix') }}',person__email) as contact_enrichment_id,
   person__email as contact_enrichment_email,
   person__name__fullName as contact_enrichment_full_name,
   person__name__givenName as contact_enrichment_given_name,

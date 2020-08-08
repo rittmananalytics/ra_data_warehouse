@@ -7,18 +7,18 @@
 {% endif %}
 
 WITH source AS (
-      {{ filter_stitch_table(var('stitch_schema'),var('stitch_conversations_table'),'id') }}
+      {{ filter_stitch_table(var('stg_intercom_messaging_stitch_schema'),var('stg_intercom_messaging_stitch_conversations_table'),'id') }}
   ),
 renamed as (
   SELECT
-    id as conversation_id,
-    user.id AS conversation_user_id,
-    conversation_message.author.id AS conversation_author_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',id) as conversation_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',user.id) AS conversation_user_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.author.id) AS conversation_author_id,
     conversation_message.author.type AS conversation_author_type,
     user.type AS  conversation_user_type,
-    assignee.id AS conversation_assignee_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',assignee.id) AS conversation_assignee_id,
     assignee.type  AS conversation_assignee_state,
-    conversation_message.id AS conversation_message_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.id) AS conversation_message_id,
     conversation_message.type AS  conversation_message_type,
     conversation_message.body AS conversation_body,
     conversation_message.subject as  conversation_subject,

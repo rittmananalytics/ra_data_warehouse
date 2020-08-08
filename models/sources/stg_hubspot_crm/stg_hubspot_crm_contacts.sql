@@ -5,14 +5,15 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'fivetran' %}
+{% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 WITH source as (
   select * from
-  {{ target.database}}.{{ var('fivetran_schema') }}.{{ var('fivetran_contact_table') }}
+  {{ target.database}}.{{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_contact_table') }}
 ),
 renamed as (
     select
-       cast(canonical_vid as string) as contact_id,
+    CONCAT(
+      concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(canonical_vid as string)) as contact_id,
        property_firstname as contact_first_name,
        property_lastname as contact_last_name,
        coalesce(concat(property_firstname,' ',property_lastname),property_email) as contact_name,
@@ -34,14 +35,14 @@ renamed as (
        property_lastmodifieddate as contact_last_modified_date,
     from source
 )
-{% elif var("etl") == 'stitch' %}
+{% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_contacts_table'),'canonical_vid') }}
+  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_contacts_table'),'canonical_vid') }}
 
 ),
 renamed as (
     select
-       cast(canonical_vid as string) as contact_id,
+       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(canonical_vid as string)) as contact_id,
        properties.firstname.value as contact_first_name,
        properties.lastname.value as contact_last_name,
        coalesce(concat(properties.firstname.value,' ',properties.lastname.value),properties.email.value) as contact_name,
@@ -56,8 +57,8 @@ renamed as (
        properties.zip.value contact_postcode_zip,
        properties.company.value contact_company,
        properties.website.value contact_website,
-       cast(properties.associatedcompanyid.value as string) as contact_company_id,
-       cast(properties.hubspot_owner_id.value as string) as contact_owner_id,
+       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.associatedcompanyid.value as string)) as contact_company_id,
+       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.hubspot_owner_id.value as string)) as contact_owner_id,
        properties.lifecyclestage.value as contact_lifecycle_stage,
        properties.createdate.value as contact_created_date,
        properties.lastmodifieddate.value as contact_last_modified_date,

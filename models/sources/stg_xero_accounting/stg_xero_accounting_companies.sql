@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_contacts_table'),'contactid') }}
+  {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_contacts_table'),'contactid') }}
 ),
   phones as (SELECT companies.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM source companies,
@@ -19,7 +19,7 @@ WITH source as (
 ),
 renamed as (
  select
-        concat('{{ var('id-prefix') }}',cast(contacts.contactid as string)) as company_id,
+        concat('{{ var('stg_xero_accounting_id-prefix') }}',cast(contacts.contactid as string)) as company_id,
         replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') as company_name,
         string_agg(distinct addresses.addressline1) as company_address,
         cast (null as string) AS company_address2,

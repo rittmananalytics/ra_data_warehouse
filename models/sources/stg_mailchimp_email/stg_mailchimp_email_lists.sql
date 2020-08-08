@@ -13,14 +13,14 @@ WITH audiences as (
   (
     SELECT *,
            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM         {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_lists_table') }}
+    FROM         {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_lists_table') }}
 
   )
   WHERE _sdc_batched_at = max_sdc_batched_at
 
 )
 select
-    id as list_id,
+    concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) as list_id,
     name as audience_name,
     stats.avg_sub_rate AS avg_sub_rate_pct,
     stats.avg_unsub_rate AS avg_unsub_rate_pct,

@@ -18,13 +18,13 @@ WITH source AS (SELECT
             AND unbounded following
         ) AS max_sdc_batched_at
       FROM
-        {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_list_members_table') }})
+        {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_list_members_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
 renamed AS
 (
 SELECT
-    id AS contact_id,
+    concat('{{ var('stg_mailchimp_email-prefix') }}',id) AS contact_id,
     merge_fields.fname AS contact_first_name,
     merge_fields.lname AS contact_last_name,
     CASE WHEN CONCAT(merge_fields.fname,' ',merge_fields.lname) = ' ' THEN email_address ELSE CONCAT(merge_fields.fname,' ',merge_fields.lname) END AS contact_name,
