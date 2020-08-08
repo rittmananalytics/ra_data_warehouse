@@ -34,10 +34,7 @@ models:
           materialized: view
           schema: staging
           vars:
-              web_sessionization_trailing_window: 3
-              web_inactivity_cutoff: 30 * 60
-              enable_companies_merge_file: true
-              enable_ip_geo_enrichment: true
+              
 # warehouse layer settings
       warehouse:
           materialized: table
@@ -261,6 +258,12 @@ vars:
   stg_stripe_subscriptions_segment_payout_transactions_table: payout_transactions
   stg_stripe_subscriptions_segment_payouts_table: payouts
   stg_stripe_subscriptions_tags: ["stripe", "payments","finance"]
+
+# integration
+  web_sessionization_trailing_window: 3
+  web_inactivity_cutoff: 30 * 60
+  enable_companies_merge_file: true
+  enable_ip_geo_enrichment: true
 
 
 
