@@ -65,14 +65,9 @@ referrer_mapping as (
 
 ),
 
-switcher_referrer_mapping as (
+channel_mapping as (
 
-    select * from {{ ref('switcher_referrer_mapping') }}
-
-),
-switcher_utm_medium_mapping as (
-
-    select * from {{ ref('switcher_utm_medium_mapping') }}
+    select * from {{ ref('marketing_channel_mapping') }}
 
 ),
 agg as (
@@ -146,16 +141,18 @@ mapped as (
 
 ),
 
-switched_referrer_mapped as (
+channel_mapped as (
 
     select
       mapped.*,
-      case when coalesce(switcher_utm_medium_mapping.channel,switcher_referrer_mapping.channel) is not null then coalesce(switcher_utm_medium_mapping.channel,switcher_referrer_mapping.channel)
-           when coalesce(switcher_utm_medium_mapping.channel,switcher_referrer_mapping.channel) is null and mapped.referrer_host is not null then 'Referral'
+      case when coalesce(marketing_channel_mapping.channel,referrer_mapping.channel) is not null then coalesce(marketing_channel_mapping.channel,referrer_mapping.channel)
+           when coalesce(marketing_channel_mapping.channel,referrer_mapping.channel) is null and mapped.referrer_host is not null then 'Referral'
            else 'Direct' end as channel
       from mapped
-      left join switcher_referrer_mapping on mapped.referrer_host = switcher_referrer_mapping.domain
-      left join switcher_utm_medium_mapping on mapped.utm_medium = switcher_utm_medium_mapping.medium
+      left join switcher_referrer_mapping 
+      on mapped.referrer_host = referrer_mapping.domain
+      left join switcher_utm_medium_mapping 
+      on mapped.utm_medium = marketing_channel_mapping.medium
 
 )
 
