@@ -48,18 +48,27 @@ FROM
   )
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
   ),
+{% if var("enable_subscriptions_warehouse")  %}
     customers as (
    SELECT *
     FROM   {{ ref('wh_customers_dim') }}
      ),
 joined as (
 SELECT
-    s.* ,
-    c.customer_pk
+    c.customer_pk,
+    s.* 
 FROM
    sessions s
 LEFT OUTER JOIN customers c
    ON s.blended_user_id = c.customer_id),
+{% else %}    
+joined as (
+SELECT
+   s.* 
+FROM
+   sessions s
+),
+{% endif %}
 ordered as (
 select GENERATE_UUID() as web_sessions_pk,
         * ,

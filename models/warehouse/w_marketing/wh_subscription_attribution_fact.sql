@@ -1,4 +1,4 @@
-{% if not var("enable_marketing_warehouse") %}
+{% if (not var("enable_baremetrics_analytics_source")) and (not var("enable_stripe_subscriptions_source"))  %}
 {{
     config(
         enabled=false

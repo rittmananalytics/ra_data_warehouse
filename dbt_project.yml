@@ -64,6 +64,7 @@ vars:
   enable_custom_source_2:              false
   enable_mixpanel_events_source:       true
   enable_clearbit_enrichment_source:   true
+  enable_baremetrics_analytics_source: false
   contacts_enrichment:                 true
   companies_enrichment:                true
 
@@ -238,6 +239,7 @@ vars:
   attribution_create_account_event_type: account_opened
   attribution_conversion_event_type: subscribed
   attribution_topup_event_type: account_credited
+  attribution_converter_ltv: 200
 
   enable_companies_merge_file: true
   enable_ip_geo_enrichment: true
