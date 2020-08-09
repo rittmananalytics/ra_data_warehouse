@@ -1,4 +1,4 @@
-{% if not var("enable_subscriptions_warehouse")  %}
+{% if not var("enable_stripe_subscriptions_source")  %}
 {{
     config(
         enabled=false
