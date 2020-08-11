@@ -11,28 +11,19 @@
     )
 }}
 {% endif %}
-WITH subscription_details AS
-    (
-      select
-        *
-      from
-        {{ref ('int_converter_subscription_revenue') }} ),
+WITH 
 converting_events as
     (
       SELECT
         e.blended_user_id,
         first_value(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN session_id END) over (PARTITION BY e.blended_user_id order by e.event_ts ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as session_id,
-        s.* EXCEPT (event_id,user_id),
+        1 as count_conversions,
         event_type,
         MIN(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS converted_ts,
         MIN(CASE WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS created_account_ts
       FROM
-        {{ref ('wh_web_events_fact') }} e
-      LEFT OUTER JOIN
-        subscription_details s
-      ON
-        e.event_id = s.event_id
-      WHERE
+        {{ref ('wh_web_events_fact') }} 
+      WHERE 
         event_type = '{{ var('attribution_conversion_event_type') }}'
         OR event_type = '{{ var('attribution_create_account_event_type') }}'),
 converting_sessions as (
@@ -40,17 +31,13 @@ converting_sessions as (
       *
     FROM
       converting_events
-    {{ dbt_utils.group_by(12) }}
+    {{ dbt_utils.group_by(6) }}
   ),
 converting_sessions_deduped as (
     SELECT
       blended_user_id AS blended_user_id,
       MAX(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN session_id END ) AS session_id,
-      MAX(plan_id) AS plan_id,
-      MIN(plan_name) AS plan_name,
-      MIN(plan_interval_count) AS plan_interval_count,
-      MIN(plan_amount) AS plan_amount,
-      MAX(baremetrics_predicted_ltv) AS baremetrics_predicted_ltv,
+      max(count_conversions) as count_conversions,
       MIN(converted_ts) AS converted_ts,
       MIN(created_account_ts) AS created_account_ts
     FROM
@@ -62,8 +49,6 @@ converting_sessions_deduped_labelled as
     (
       SELECT
         c.blended_user_id,
-        MAX(c.plan_amount) OVER (PARTITION BY c.blended_user_id) AS plan_amount,
-        MAX(c.baremetrics_predicted_ltv) OVER (PARTITION BY c.blended_user_id) AS baremetrics_predicted_ltv,
         s.session_start_ts,
         s.session_end_ts,
         c.converted_ts,
@@ -128,17 +113,13 @@ session_attrib_pct_with_time_decay AS (
 final as (
     SELECT
       *,
-      round(MAX(plan_amount * first_click_attrib_pct),2) AS first_click_attrib_first_plan,
-      round(MAX(plan_amount * last_click_attrib_pct),2) AS last_click_attrib_first_plan,
-      round(MAX(plan_amount * even_click_attrib_pct),2) AS even_click_attrib_first_plan,
-      round(MAX(plan_amount * time_decay_attrib_pct),2) AS time_decay_attrib_first_plan,
-      round(MAX(baremetrics_predicted_ltv * first_click_attrib_pct),2) AS first_click_attrib_baremetrics_predicted_ltv,
-      round(MAX(baremetrics_predicted_ltv * last_click_attrib_pct),2) AS last_click_attrib_baremetrics_predicted_ltv,
-      round(MAX(baremetrics_predicted_ltv * even_click_attrib_pct),2) AS even_click_attrib_baremetrics_predicted_ltv,
-      round(MAX(baremetrics_predicted_ltv * time_decay_attrib_pct),2) AS time_decay_attrib_baremetrics_predicted_ltv
+      round(MAX(count_conversions * first_click_attrib_pct),2) AS first_click_attrib_conversions,
+      round(MAX(count_conversions * last_click_attrib_pct),2) AS last_click_attrib_conversions,
+      round(MAX(count_conversions * even_click_attrib_pct),2) AS even_click_attrib_conversions,
+      round(MAX(count_conversions * time_decay_attrib_pct),2) AS time_decay_attrib_conversions
     FROM
       session_attrib_pct_with_time_decay
-    {{ dbt_utils.group_by(25) }} )
+    {{ dbt_utils.group_by(21) }} )
 select
   *
 from

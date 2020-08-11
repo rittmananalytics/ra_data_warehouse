@@ -183,6 +183,7 @@ ordered as (
   from joined
 
 )
+{% if var("enable_ip_geo_enrichment") %}
 ,
 geo_located as (
   SELECT * except(network_bin, mask,geoname_id,registered_country_geoname_id,represented_country_geoname_id,is_anonymous_proxy)
@@ -194,16 +195,30 @@ geo_located as (
   JOIN `fh-bigquery.geocode.201806_geolite2_city_ipv4_locs`
   USING (network_bin, mask)
 ),
-ordered_geolocated as (
+ordered_conversion_tagged as (
   SELECT o.*,
          postal_code, latitude, longitude, continent_code, continent_name, country_iso_code, country_name, city_name, metro_code,
-       case when o.event_type in ('account_created','subscribed') then lag(o.page_url,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_url,
-       case when o.event_type in ('account_created','subscribed') then lag(o.page_title,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_title,
-       case when o.event_type in ('account_created','subscribed') then lag(o.page_url,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_url,
-       case when o.event_type in ('account_created','subscribed') then lag(o.page_title,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_title,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_url,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_url,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_title,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_title,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_url,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_url,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_title,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_title,
   FROM ordered o
   LEFT OUTER JOIN geo_located g
   ON o.event_id = g.event_id
 )
-select * from ordered_geolocated
+select *
+from ordered_conversion_tagged
+{% else %}
+,
+ordered_conversion_tagged as (
+  SELECT o.*,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_url,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_url,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_title,1) over (partition by o.blended_user_id order by o.event_seq) end as converting_page_title,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_url,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_url,
+       case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_title,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_title,
+  FROM ordered o)
+{% endif %}
+select * 
+from ordered_conversion_tagged
+
 
