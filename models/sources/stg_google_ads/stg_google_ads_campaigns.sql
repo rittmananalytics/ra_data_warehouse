@@ -1,4 +1,4 @@
-{% if not var("enable_google_ads_source") %}
+{% if not var("enable_google_ads_source")  %}
 {{
     config(
         enabled=false

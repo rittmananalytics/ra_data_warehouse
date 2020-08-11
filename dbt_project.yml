@@ -92,7 +92,7 @@ vars:
   stg_facebook_ads_stitch_ad_groups_table: ad_adsets
   stg_facebook_ads_stitch_ads_table: ads
   stg_facebook_ads_stitch_campaigns_table: campaigns
-  stg_facebook_ads_segment_schema: segment_facebook_ads
+  stg_facebook_ads_segment_schema: facebook_ads
   stg_facebook_ads_segment_ad_performance_table: insights
   stg_facebook_ads_segment_ad_groups_table: ad_sets
   stg_facebook_ads_segment_ads_table: ads
@@ -108,6 +108,8 @@ vars:
   stg_google_ads_segment_ad_groups_table: ad_groups
   stg_google_ads_segment_ads_table: ads
   stg_google_ads_segment_campaigns_table: campaigns
+  ads_campaigns_only: true
+  
 
   stg_baremetrics_analytics_id-prefix: baremetrics-
   stg_baremetrics_analytics_etl: segment

@@ -13,7 +13,7 @@ with campaigns as
     FROM   {{ ref('stg_facebook_ads_campaigns') }}
     {% endif %}
 
-    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
+    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source") and not var("stg_google_ads_campaigns_only") %}
     UNION All
     {% endif %}
 

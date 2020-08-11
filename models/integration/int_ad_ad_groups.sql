@@ -1,4 +1,4 @@
-{% if not var("enable_facebook_ads_source") and (not var("enable_marketing_warehouse")) %}
+{% if (not var("enable_facebook_ads_source") and not var("enable_google_ads_source")) or not var("ad_campaigns_only") %}   
 {{
     config(
         enabled=false
@@ -13,11 +13,11 @@ with campaigns as
     FROM   {{ ref('stg_facebook_ads_ad_groups') }}
     {% endif %}
 
-    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
+    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source") and var("stg_google_ads_enable_google_ads_ad_groups")  %}
     UNION All
     {% endif %}
 
-    {% if var("enable_google_ads_source")  %}
+    {% if var("enable_google_ads_source") and var("stg_google_ads_enable_google_ads_ad_groups") %}
     SELECT *
     FROM   {{ ref('stg_google_ads_ad_groups') }}
     {% endif %}

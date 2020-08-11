@@ -10,7 +10,7 @@ with source as (SELECT
   * except (projectkeys)
   FROM (
   SELECT
-    concat(''{{ var('stg_jira_projects_id-prefix') }}',id) as project_id,
+    concat('{{ var('stg_jira_projects_id-prefix') }}',id) as project_id,
     concat('{{ var('stg_jira_projects_id-prefix') }}',replace(name,' ','_')) AS company_id,
     concat('{{ var('stg_jira_projects_id-prefix') }}',lead.accountid) as lead_user_id,
     name as project_name,
