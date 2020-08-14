@@ -102,7 +102,7 @@ vars:
   stg_google_ads_etl: segment
   stg_google_ads_stitch_schema: stitch_google_ads
   stg_google_ads_stitch_campaigns_table: campaigns
-  stg_google_ads_segment_schema: segment_google_ads
+  stg_google_ads_segment_schema: google_ads
   stg_google_ads_segment_campaign_performance_table: campaign_performance_reports
   stg_google_ads_segment_ad_performance_table: ad_performance_reports
   stg_google_ads_segment_ad_groups_table: ad_groups
@@ -183,14 +183,17 @@ vars:
   stg_mixpanel_events_etl: fivetran
   stg_mixpanel_events_fivetran_event_table: event
   stg_mixpanel_events_stitch_export_table: export
+  stg_mixpanel_events_site: rittmananalytics.com
+
 
   stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
   stg_segment_events_segment_schema: company_website
   stg_segment_events_segment_tracks_table: tracks
   stg_segment_events_segment_pages_table: pages
+  stg_segment_events_site: rittmananalytics.com
+  
   stg_stripe_payments_id-prefix: stripe-
-
   stg_stripe_payments_etl: stitch
   stg_stripe_payments_stitch_schema: stitch_stripe
   stg_stripe_payments_stitch_balance_transactions_table: balance_transactions
@@ -244,4 +247,4 @@ vars:
   attribution_converter_ltv: 200
 
   enable_companies_merge_file: true
-  enable_ip_geo_enrichment: true
+  enable_ip_geo_enrichment: false

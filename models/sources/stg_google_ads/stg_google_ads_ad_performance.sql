@@ -1,4 +1,4 @@
-{% if not var("enable_google_ads_source") and not var("ad_campaigns_only") %}
+{% if not var("enable_google_ads_source") or not var("ad_campaigns_only") %}
 {{
     config(
         enabled=false

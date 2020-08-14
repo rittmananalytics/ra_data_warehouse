@@ -19,6 +19,7 @@ with source as (
 renamed as (
 
     select
+        id                          as event_id,
         event                       as event_type,
         received_at                 as event_ts,
         event_text                  as event_details,
@@ -46,7 +47,8 @@ renamed as (
             else replace(
               split(context_user_agent,'(')[safe_offset(1)],
                 ';', '')
-        end as device
+        end as device,
+        '{{ var('stg_segment_events_site') }}'  as site
     from source
 
 )
