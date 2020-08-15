@@ -5,14 +5,14 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'stitch' %}
+{% if var("stg_facebook_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_ad_performance_table'),'id') }}
+  {{ filter_stitch_table(var('stg_facebook_ads_stitch_schema'),var('stg_facebook_ads_stitch_ad_performance_table'),'id') }}
 ),
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    concat('{{ var('id-prefix') }}',ad_id)                   as ad_id,
+    concat('{{ var('stg_facebook_ads_id-prefix') }}',ad_id)                   as ad_id,
     safe_divide(spend,clicks)    AS ad_avg_cost,
     cast(null as timestamp)      as ad_avg_time_on_site,
     cast(null as float64)        as ad_bounce_rate,
@@ -27,14 +27,14 @@ SELECT
     'Facebook Ads' as ad_network
 FROM
   source)
-{% elif var("etl") == 'segment' %}
+{% elif var("stg_facebook_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_ad_performance_table')) }}
+  {{ filter_segment_table(var('stg_facebook_ads_segment_schema'),var('stg_facebook_ads_segment_ad_performance_table')) }}
 ),
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    concat('{{ var('id-prefix') }}',ad_id)                   as ad_id,
+    concat('{{ var('stg_facebook_ads_id-prefix') }}',ad_id)                   as ad_id,
     safe_divide(spend,clicks)    AS ad_avg_cost,
     cast(null as float64)      as ad_avg_time_on_site,
     cast(null as float64)        as ad_bounce_rate,

@@ -7,13 +7,13 @@
 {% endif %}
 {% if var("etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_subscriptions_table')) }}
+  {{ filter_segment_table(var('stg_stripe_payments_segment_schema'),var('stg_stripe_payments_segment_subscriptions_table')) }}
 ),
 renamed as (
 SELECT
-  concat('{{ var('id-prefix') }}',id) as subscription_id,
-  concat('{{ var('id-prefix') }}',customer_id) as customer_id,
-  concat('{{ var('id-prefix') }}',plan_id) as plan_id,
+  concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as subscription_id,
+  concat('{{ var('stg_stripe_payments_id-prefix') }}',customer_id) as customer_id,
+  concat('{{ var('stg_stripe_payments_id-prefix') }}',plan_id) as plan_id,
   discount_id,
   quantity as subscription_quantity,
   status as subscription_status,

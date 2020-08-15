@@ -8,12 +8,14 @@
 
 with events_merge_list as
   (
-    {% if var("enable_segment_events_source") %}
-    SELECT *
-    FROM   {{ ref('stg_segment_events_events') }}
-    UNION ALL
+    {% if var("enable_segment_events_source")  %}
+
     SELECT *
     FROM   {{ ref('stg_segment_events_pageviews') }}
+    UNION ALL
+    SELECT *
+    FROM   {{ ref('stg_segment_events_events') }}
+
     {% endif %}
 
     {% if var("enable_segment_events_source") and var("enable_mixpanel_events_source") %}
@@ -23,9 +25,7 @@ with events_merge_list as
     {% if var("enable_mixpanel_events_source") %}
     SELECT *
     FROM   {{ ref('stg_mixpanel_events_events') }}
-    UNION ALL
-    SELECT *
-    FROM   {{ ref('stg_mixpanel_events_pageviews') }}
+
     {% endif %}
   )
 select * from events_merge_list

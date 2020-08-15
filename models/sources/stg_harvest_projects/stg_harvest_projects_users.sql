@@ -7,13 +7,13 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_users_table'),'id') }}
+  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_users_table'),'id') }}
 
 ),
 
 renamed as (
 select
-       concat('{{ var('id-prefix') }}',id)              as user_id,
+       concat('{{ var('stg_harvest_projects_id-prefix') }}',id)              as user_id,
        concat(first_name,' ',last_name)   as user_name,
        email                              as user_email,
        is_contractor                      as user_is_contractor,

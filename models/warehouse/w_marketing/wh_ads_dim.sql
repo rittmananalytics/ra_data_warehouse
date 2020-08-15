@@ -1,4 +1,4 @@
-{% if not var("enable_marketing_warehouse") %}
+{% if not var("enable_marketing_warehouse") or not var("ad_campaigns_only") %}
 {{
     config(
         enabled=false

@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source AS (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_payouts_table'),'id') }}
+    {{ filter_stitch_table(var('stg_stripe_payments_stitch_schema'),var('stg_stripe_payments_stitch_payouts_table'),'id') }}
 
 ),
 

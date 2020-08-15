@@ -8,7 +8,7 @@
 
 with source as
 (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_accounts_table'),'accountid') }}
+  {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_accounts_table'),'accountid') }}
 
 ),
 renamed as

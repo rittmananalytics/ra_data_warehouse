@@ -10,9 +10,9 @@ with source as (SELECT
   * except (projectkeys)
   FROM (
   SELECT
-    concat('jira-',id) as project_id,
-    concat('jira-',replace(name,' ','_')) AS company_id,
-    concat('jira-',lead.accountid) as lead_user_id,
+    concat('{{ var('stg_jira_projects_id-prefix') }}',id) as project_id,
+    concat('{{ var('stg_jira_projects_id-prefix') }}',replace(name,' ','_')) AS company_id,
+    concat('{{ var('stg_jira_projects_id-prefix') }}',lead.accountid) as lead_user_id,
     name as project_name,
     projectkeys ,
     projecttypekey as project_type_id,
@@ -23,7 +23,7 @@ with source as (SELECT
     _sdc_batched_at,
     MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
-    {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_projects_table') }}
+    {{ target.database}}.{{ var('stg_jira_projects_stitch_schema') }}.{{ var('stg_jira_projects_stitch_projects_table') }}
   ),
     unnest(projectkeys) jira_project_key
 WHERE
@@ -37,7 +37,7 @@ types as (SELECT
         _sdc_batched_at,
       MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_project_types_table') }})
+      {{ target.database}}.{{ var('stg_jira_projects_stitch_schema') }}.{{ var('stg_jira_projects_stitch_project_types_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
 categories as (SELECT
@@ -50,7 +50,7 @@ categories as (SELECT
           _sdc_batched_at,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ target.database}}.{{ var('stitch_schema') }}.{{ var('stitch_project_categories_table') }})
+        {{ target.database}}.{{ var('stg_jira_projects_stitch_schema') }}.{{ var('stg_jira_projects_stitch_project_categories_table') }})
     WHERE
       _sdc_batched_at = max_sdc_batched_at)
 select p.project_id,

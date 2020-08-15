@@ -7,11 +7,11 @@
 {% endif %}
 
 WITH source AS (
-      {{ filter_stitch_table(var('stitch_schema'),var('stitch_contacts_table'),'id') }}
+      {{ filter_stitch_table(var('stg_intercom_messaging_stitch_schema'),var('stg_intercom_messaging_stitch_contacts_table'),'id') }}
   ),
 renamed as (
   SELECT
-    id as contact_id,
+    concat('{{ var('stg_intercom_messaging_id-prefix') }}',id) as contact_id,
     cast(null as string) as contact_first_name,
     cast(null as string) as contact_last_name,
     custom_attributes.job_title as job_title,

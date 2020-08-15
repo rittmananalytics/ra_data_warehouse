@@ -7,11 +7,11 @@
 {% endif %}
 {% if var("etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_plans_table')) }}
+  {{ filter_segment_table(var('stg_stripe_payments_segment_schema'),var('stg_stripe_payments_segment_plans_table')) }}
 ),
 renamed as (
 SELECT
-    concat('{{ var('id-prefix') }}',id) as plan_id,
+    concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as plan_id,
     name as plan_name,
     `interval` as plan_interval,
     interval_count as plan_interval_count,

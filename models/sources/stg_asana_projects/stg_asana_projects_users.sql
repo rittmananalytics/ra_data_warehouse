@@ -7,16 +7,16 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_users_table'),'gid') }}
+  {{ filter_stitch_table(var('stg_asana_projects_stitch_schema'),var('stg_asana_projects_stitch_users_table'),'gid') }}
   ),
 
 renamed AS (
   SELECT
-  concat('{{ var('id-prefix') }}',gid)           as user_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',gid)           as user_id,
   name                   as user_name  ,
   email                  as user_email ,
   cast(null as boolean)         as user_is_contractor,
-  case when email like '%@{{ var('staff_email_domain') }}%' then true else false end as user_is_staff,
+  case when email like '%@{{ var('stg_asana_projects_staff_email_domain') }}%' then true else false end as user_is_staff,
   cast(null as int64)           as user_weekly_capacity,
   cast(null as string)          as user_phone,
   cast(null as int64)           as user_default_hourly_rate,

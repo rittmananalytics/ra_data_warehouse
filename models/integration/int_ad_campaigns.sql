@@ -1,4 +1,4 @@
-{% if not var("enable_facebook_ads_source") and (not var("enable_marketing_warehouse")) %}
+{% if (not var("enable_facebook_ads_source") and not var("enable_marketing_warehouse"))  %}
 {{
     config(
         enabled=false

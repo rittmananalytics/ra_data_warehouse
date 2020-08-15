@@ -7,14 +7,14 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_tasks_table'),'gid') }}
+  {{ filter_stitch_table(var('stg_asana_projects_stitch_schema'),var('stg_asana_projects_stitch_tasks_table'),'gid') }}
 ),
 renamed AS (
   SELECT
-  concat('{{ var('id-prefix') }}',source.gid) as task_id,
-  case when replace(JSON_EXTRACT(parent,'$.gid'),'"','') is not null then concat('{{ var('id-prefix') }}',replace(JSON_EXTRACT(parent,'$.gid'),'"','')) end as parent_task_id,
-  concat('{{ var('id-prefix') }}',projects.gid) AS project_id,
-  concat('{{ var('id-prefix') }}',assignee.gid)  as task_creator_user_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',source.gid) as task_id,
+  case when replace(JSON_EXTRACT(parent,'$.gid'),'"','') is not null then concat('{{ var('stg_asana_projects_id-prefix') }}',replace(JSON_EXTRACT(parent,'$.gid'),'"','')) end as parent_task_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',projects.gid) AS project_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',assignee.gid)  as task_creator_user_id,
   cast (null as string) as task_assignee_user_id,
   name  as task_name,
   cast(null as string) as task_priority,
