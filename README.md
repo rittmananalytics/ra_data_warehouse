@@ -60,23 +60,26 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 * Harvest Timesheets (Stitch)
 * Xero Accounting (Stitch)
 * Stripe Payments (Stitch)
+* Stripe Subscriptions (Segment)
 * Asana Projects (Stitch)
 * Jira Projects (Stitch)
 * Mailchimp Email Marketing (Stitch)
-* Segment Events (Segment)
+* Segment Events and Pageviews (Segment)
 * GCP Billing Exports
-* Google Ads (Stitch)
-* Facebook Ads (Stitch)
+* Google Ads (Segment, Stitch)
+* Facebook Ads (Segment, Stitch)
 * Intercom Messaging (Stitch)
 * Mixpanel Events (Stitch, Fivetran)
+* Baremetrics Analytics (Segment)
 * Custom data sources
 
 ## What Warehouse modules are Modelled?
 
 * Finance (Invoices, Chart of Accounts, Currencies)
 * CRM (Deals, Contacts, Companies)
+* Subscriptions (Plans, Subscribers, Subscriptions)
 * Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
-* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Web Page Views, Web Sessions)
+* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 
 ## What Features and Other Support are on the Product Roadmap?
 
