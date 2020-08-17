@@ -1,4 +1,4 @@
-{% if not var("enable_baremetrics_analytics_source") or not var("enable_stripe_subscriptions_source")  %}
+{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
 {{
     config(
         enabled=false
@@ -11,7 +11,7 @@
     )
 }}
 {% endif %}
-WITH 
+WITH
 converting_events as
     (
       SELECT
@@ -22,8 +22,8 @@ converting_events as
         MIN(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS converted_ts,
         MIN(CASE WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS created_account_ts
       FROM
-        {{ref ('wh_web_events_fact') }} 
-      WHERE 
+        {{ref ('wh_web_events_fact') }}
+      WHERE
         event_type = '{{ var('attribution_conversion_event_type') }}'
         OR event_type = '{{ var('attribution_create_account_event_type') }}'),
 converting_sessions as (
