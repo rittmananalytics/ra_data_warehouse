@@ -7,7 +7,6 @@
 {% else %}
 {{
     config(
-        unique_key='company_pk',
         alias='companies_dim'
     )
 }}

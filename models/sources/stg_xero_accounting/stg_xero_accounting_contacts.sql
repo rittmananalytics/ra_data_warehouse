@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH xero_contacts as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_contacts_table'),'contactid') }}
+  {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_contacts_table'),'contactid') }}
 ),
 
 contacts as (
@@ -21,7 +21,7 @@ contacts as (
  unnest(addresses) as addresses
  )
  select
-        cast(contacts.contactid as string) as contact_id,
+        concat('{{ var('stg_xero_accounting_id-prefix') }}',contacts.contactid) as contact_id,
         contacts.firstname as contact_first_name,
         contacts.lastname as contact_last_name,
         cast(null as string) as contact_job_title,

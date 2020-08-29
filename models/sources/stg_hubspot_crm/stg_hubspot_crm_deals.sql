@@ -5,24 +5,24 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'fivetran' %}
+{% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 
 with source as (
   select *
-  from {{ var('fivetran_schema') }}.{{ var('fivetran_deal_table') }}
+  from {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_deal_table') }}
 ),
 hubspot_deal_company as (
   select *
-  from {{ var('fivetran_schema') }}.{{ var('fivetran_company_table') }}
+  from {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_company_table') }}
 ),
 hubspot_deal_pipelines_source as (
   select *
-  from  {{ var('fivetran_schema') }}.{{ var('fivetran_deal_pipeline_table') }}
+  from  {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_deal_pipeline_table') }}
 )
 ,
 hubspot_deal_property_history as (
   select *
-  from  {{ var('fivetran_schema') }}.{{ var('fivetran_property_history_table') }}
+  from  {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_property_history_table') }}
 )
 ,
 hubspot_deal_stages as (
@@ -55,7 +55,7 @@ renamed as (
 joined as (
     select
     d.deal_id,
-    concat('{{ var('id-prefix') }}',cast(a.company_id as string)) as company_id,
+    concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(a.company_id as string)) as company_id,
     d.* except (deal_id),
     timestamp_millis(safe_cast(h.value as int64)) as deal_pipeline_stage_ts,
     p.pipeline_label,
@@ -74,10 +74,10 @@ joined as (
     left outer join hubspot_deal_owners u on safe_cast(d.deal_owner_id as int64) = u.owner_id
 )
 
-{% elif var("etl") == 'stitch' %}
+{% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 
 with source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_deals_table'),'dealid') }}
+  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_deals_table'),'dealid') }}
 
 ),
 hubspot_deal_pipelines_source as (
@@ -97,7 +97,7 @@ hubspot_deal_owners as (
 renamed as (
   SELECT
       dealid as deal_id,
-      concat('{{ var('id-prefix') }}',cast(associations.associatedcompanyids[offset(off)] as string)) as company_id,
+      concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(associations.associatedcompanyids[offset(off)] as string)) as company_id,
       properties.dealname.value     as deal_name,
       properties.dealtype.value     as deal_type,
       properties.description.value  as deal_description,

@@ -5,10 +5,10 @@
     )
 }}
 {% endif %}
-{% if var("etl") == 'fivetran' %}
+{% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 with source as (
   select * from
-  from {{ target.database}}.{{ var('fivetran_schema') }}.{{ var('fivetran_pipeline_stage_table') }}
+  from {{ target.database}}.{{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_pipeline_stage_table') }}
 ),
 renamed as (
     select
@@ -18,9 +18,9 @@ renamed as (
       active as pipeline_active
     from source
 )
-{% elif var("etl") == 'stitch' %}
+{% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 with source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_deal_pipelines_table'),'pipelineid') }}
+  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_deal_pipelines_table'),'pipelineid') }}
 
 
 ),

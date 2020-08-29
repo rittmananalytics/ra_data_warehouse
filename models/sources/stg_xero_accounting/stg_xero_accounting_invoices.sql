@@ -8,13 +8,13 @@
 
 WITH
   source as (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_invoices_table'),'invoiceid') }}
+    {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_invoices_table'),'invoiceid') }}
       ),
 renamed as (
   SELECT
     invoicenumber as invoice_number,
-    concat('{{ var('id-prefix') }}',contact.contactid) as company_id,
-    concat('{{ var('id-prefix') }}',invoiceid) as invoice_id,
+    concat('{{ var('stg_xero_accounting_id-prefix') }}',contact.contactid) as company_id,
+    concat('{{ var('stg_xero_accounting_id-prefix') }}',invoiceid) as invoice_id,
     cast(null as string) as project_id,
     cast(null as string) as invoice_creator_users_id,
     cast(null as string) as invoice_subject,

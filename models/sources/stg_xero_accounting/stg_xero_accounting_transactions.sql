@@ -9,11 +9,11 @@
 WITH
   source AS
   (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_bank_transactions_table'),'banktransactionid') }}
+    {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_bank_transactions_table'),'banktransactionid') }}
   ),
 renamed as (
   SELECT
-      concat('{{ var('id-prefix') }}',banktransactionid) as transaction_id,
+      concat('{{ var('stg_xero_accounting_id-prefix') }}',banktransactionid) as transaction_id,
       lineitems.description as transaction_description,
       currencycode as transaction_currency,
       cast(null as numeric) as transaction_exchange_rate,

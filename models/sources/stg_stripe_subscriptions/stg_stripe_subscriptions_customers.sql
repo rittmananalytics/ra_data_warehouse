@@ -6,13 +6,13 @@
 }}
 {% endif %}
 with source as (
-  {{ filter_segment_table(var('segment_schema'),var('segment_customers_table')) }}
+  {{ filter_segment_table(var('stg_stripe_payments_segment_schema'),var('stg_stripe_payments_segment_customers_table')) }}
 ),
 renamed as (
-  select concat('segment-',metadata_CLIENTREPLACEME_user_id) as customer_id,
+  select concat('stg_stripe_payments_segment-',metadata_CLIENTREPLACEME_user_id) as customer_id,
   email as customer_email,
   description as customer_description,
-  concat('{{ var('id-prefix') }}',id) as customer_alternative_id,
+  concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as customer_alternative_id,
   cast(null as string) as customer_plan,
   metadata_source as customer_source,
   cast(null as string) as customer_type,

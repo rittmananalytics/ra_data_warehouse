@@ -10,10 +10,10 @@ with source as (SELECT * FROM (
   *,
   max(received_at) over (partition by id order by received_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_received_at
 FROM
-  {{ target.database}}.{{ var('segment_schema') }}.{{ var('segment_users_table') }} )
+  {{ target.database}}.{{ var('stg_segment_events_segment_schema') }}.{{ var('stg_segment_events_segment_users_table') }} )
 WHERE received_at = max_received_at),
 renamed as (
-   select concat('segment-',id) as customer_id,
+   select concat('stg_segment_events_id-prefix',id) as customer_id,
    email as customer_email,
    cast(null as string) as customer_description,
    username as customer_alternative_id,

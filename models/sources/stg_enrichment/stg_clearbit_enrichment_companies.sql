@@ -71,14 +71,14 @@ WITH source AS (
  company__ultimateParent__domain
   FROM
    (SELECT * FROM
-   {{ target.database}}.{{ var('clearbit_schema') }}.{{ var('clearbit_companies_table') }}
+   {{ target.database}}.{{ var('stg_enrichment_clearbit_schema') }}.{{ var('stg_enrichment_clearbit_companies_table') }}
    {{ dbt_utils.group_by(113) }})
  where company__id is not null
    {{ dbt_utils.group_by(62) }}
 ),
 renamed as (
   SELECT
-  concat('{{ var('id-prefix') }}',company__id) as company_enrichment_id,
+  concat('{{ var('stg_enrichment_id-prefix') }}',company__id) as company_enrichment_id,
   company__name as company_enrichment_name,
   company__legalName as company_enrichment_legalName,
   company__domain as company_enrichment_website_domain,

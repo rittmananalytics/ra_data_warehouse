@@ -1,4 +1,4 @@
-{% if not var("enable_google_ads_source") %}
+{% if not var("enable_google_ads_source")  %}
 {{
     config(
         enabled=false
@@ -6,27 +6,41 @@
 }}
 {% endif %}
 
+{% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_campaigns_table'),'id') }}
+  {{ filter_stitch_table(var('stg_google_ads_stitch_schema'),var('stg_google_ads_stitch_campaigns_table'),'id') }}
 ),
 renamed as (
 
     select
-        settings              as campaign_settings,
-        startdate             as campaign_start_date,
-        id,
-        name,
-        campaigntrialtype,
-        status,
-        servingstatus,
-        basecampaignid,
-        adservingoptimizationstatus,
-        advertisingchanneltype,
-        _sdc_customer_id,
-        enddate
+    concat('{{ var('stg_google_ads_id-prefix') }}',id)              as ad_campaign_id,
+    name            as ad_campaign_name,
+    status          as ad_campaign_status,
+    cast(null as string) as campaign_buying_type,
+    cast(null as timestamp)      as ad_campaign_start_date,
+    cast(null as timestamp)        as ad_campaign_end_date,
+    'Google Ads' as ad_network
 
     from source
 
 )
-
-select * from renamed
+{% elif var("stg_google_ads_etl") == 'segment' %}
+with source as (
+  {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_campaigns_table')) }}
+),
+renamed as (
+SELECT
+  concat('{{ var('stg_google_ads_id-prefix') }}',id)              as ad_campaign_id,
+  name            as ad_campaign_name,
+  status          as ad_campaign_status,
+  cast(null as string) as campaign_buying_type,
+  cast(null as timestamp)      as ad_campaign_start_date,
+  cast(null as timestamp)        as ad_campaign_end_date,
+  'Google Ads' as ad_network
+FROM
+  source)
+{% endif %}
+select
+ *
+from
+ renamed

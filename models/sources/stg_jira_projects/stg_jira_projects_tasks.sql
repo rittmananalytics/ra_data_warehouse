@@ -7,14 +7,14 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stitch_schema'),var('stitch_issues_table'),'key') }}
+  {{ filter_stitch_table(var('stg_jira_projects_stitch_schema'),var('stg_jira_projects_stitch_issues_table'),'key') }}
 ),
 renamed as (
-select concat('{{ var('id-prefix') }}',id) as task_id,
+select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        fields.parent.id as parent_task_id,
-       concat('{{ var('id-prefix') }}',fields.project.id) as project_id,
-       concat('{{ var('id-prefix') }}',fields.reporter.accountid) as task_creator_user_id,
-       concat('{{ var('id-prefix') }}',fields.assignee.accountid) as task_assignee_user_id,
+       concat('{{ var('stg_jira_projects_id-prefix') }}',fields.project.id) as project_id,
+       concat('{{ var('stg_jira_projects_id-prefix') }}',fields.reporter.accountid) as task_creator_user_id,
+       concat('{{ var('stg_jira_projects_id-prefix') }}',fields.assignee.accountid) as task_assignee_user_id,
        fields.summary as task_name,
        fields.priority.name as task_priority,
        fields.issuetype.name as task_type,

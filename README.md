@@ -29,18 +29,19 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 
 ## Warehouse Design patterns
 
-* [Dimension Merge and Deduplication Across Multiple Data Sources](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/merge_and_dedupe_pattern.md)
-* [Selectable Data Sources and ETL Technologies](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/selectable_data_sources_pattern.md)
-* [Separation of Source, Integration and Warehouse Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/separation_of_source_integration_and_wh_layers_pattern.md)
-* [Company and Contact Record Enrichment](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/enrichment.md)
-* [Feature Branch Development Process using Git and GitHub Desktop](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/docs/git_branch_development.md)
+* [Setting up a New Warehouse Environment](docs/setup.md)
+* [Dimension Merge and Deduplication Across Multiple Data Sources](docs/merge_and_dedupe_pattern.md)
+* [Selectable Data Sources and ETL Technologies](docs/selectable_data_sources_pattern.md)
+* [Separation of Source, Integration and Warehouse Layers](docs/separation_of_source_integration_and_wh_layers_pattern.md)
+* [Company and Contact Record Enrichment](docs/enrichment.md)
+* [Feature Branch Development Process using Git and GitHub Desktop](docs/git_branch_development.md)
 * [Creating a Custom Data Source Adapter](docs/creating_a_custom_data_source.md)
-* Replacing of all business keys with GUID primary keys
+* [Naming Standards for Dev, Test, Prod and Training dbt Environments](docs/environment_and_dataset_naming_standards.md)
 * Automatic post-load logging of ETL step row counts and outcomes (complete, error etc)
 
 ### Current Dimensional Model
 
-![Dimensional Model](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/dimensional_model.png)
+![Dimensional Model](img/dimensional_model.png)
 
 ### dbt Transformation Graph
 
@@ -59,23 +60,26 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 * Harvest Timesheets (Stitch)
 * Xero Accounting (Stitch)
 * Stripe Payments (Stitch)
+* Stripe Subscriptions (Segment)
 * Asana Projects (Stitch)
 * Jira Projects (Stitch)
 * Mailchimp Email Marketing (Stitch)
-* Segment Events (Segment)
+* Segment Events and Pageviews (Segment)
 * GCP Billing Exports
-* Google Ads (Stitch)
-* Facebook Ads (Stitch)
+* Google Ads (Segment, Stitch)
+* Facebook Ads (Segment, Stitch)
 * Intercom Messaging (Stitch)
 * Mixpanel Events (Stitch, Fivetran)
+* Baremetrics Analytics (Segment)
 * Custom data sources
 
 ## What Warehouse modules are Modelled?
 
 * Finance (Invoices, Chart of Accounts, Currencies)
 * CRM (Deals, Contacts, Companies)
+* Subscriptions (Plans, Subscribers, Subscriptions)
 * Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
-* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Web Page Views, Web Sessions)
+* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 
 ## What Features and Other Support are on the Product Roadmap?
 

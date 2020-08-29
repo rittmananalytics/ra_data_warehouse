@@ -6,13 +6,13 @@
 }}
 {% endif %}
 WITH source AS (
-    {{ filter_stitch_table(var('stitch_schema'),var('stitch_charges_table'),'id') }}
+    {{ filter_stitch_table(var('stg_stripe_payments_stitch_schema'),var('stg_stripe_payments_stitch_charges_table'),'id') }}
 
 ),
 renamed as (
 select * from (
 SELECT
-concat('{{ var('id-prefix') }}',replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','')) AS company_id,
+concat('{{ var('stg_stripe_payments_id-prefix') }}',replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','')) AS company_id,
     replace(replace(replace(metadata.client_name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
     cast (null as string) as company_address,
     cast (null as string) AS company_address2,

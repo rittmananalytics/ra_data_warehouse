@@ -45,9 +45,8 @@ joined as (
 
 select *,
        timestamp_diff (lead(session_start_ts, 1) OVER (PARTITION BY blended_user_id ORDER BY session_start_ts DESC),session_start_ts,MINUTE) AS mins_between_sessions,
-       case when events = 1 then true else false end as is_bounced_session,
-       row_number() over (ORDER BY session_start_ts) as global_session_seq_num,
-       row_number() over (partition by blended_user_id ORDER BY session_start_ts) as session_seq_num,
+       case when events = 1 then true else false end as is_bounced_session
 
+       
 
         from joined

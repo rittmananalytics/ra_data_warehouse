@@ -1,4 +1,4 @@
-{% if not var("enable_facebook_ads_source") or (not var("enable_marketing_warehouse")) %}
+{% if not var("enable_marketing_warehouse")  %}
 {{
     config(
         enabled=false
@@ -17,6 +17,6 @@ WITH campaigns AS
   (
   SELECT * from {{ ref('int_ad_campaigns') }}
 )
-select GENERATE_UUID() as campaign_pk,
+select GENERATE_UUID() as ad_campaign_pk,
        c.*
 from campaigns c
