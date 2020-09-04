@@ -109,7 +109,7 @@ vars:
   stg_google_ads_segment_ads_table: ads
   stg_google_ads_segment_campaigns_table: campaigns
   ads_campaigns_only: true
-  
+
 
   stg_baremetrics_analytics_id-prefix: baremetrics-
   stg_baremetrics_analytics_etl: segment
@@ -192,7 +192,8 @@ vars:
   stg_segment_events_segment_tracks_table: tracks
   stg_segment_events_segment_pages_table: pages
   stg_segment_events_site: rittmananalytics.com
-  
+  enable_event_type_mapping: true
+
   stg_stripe_payments_id-prefix: stripe-
   stg_stripe_payments_etl: stitch
   stg_stripe_payments_stitch_schema: stitch_stripe
@@ -245,6 +246,7 @@ vars:
   attribution_conversion_event_type: subscribed
   attribution_topup_event_type: account_credited
   attribution_converter_ltv: 200
+
 
   enable_companies_merge_file: true
   enable_ip_geo_enrichment: false
