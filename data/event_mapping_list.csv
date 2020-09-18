@@ -1,0 +1,32 @@
+event_type_original,event_type_mapped
+Page View,Page View
+clicked_a_link,Clicked Link
+Clicked A Link,Clicked Link
+Clicked a Link,Clicked Link
+enrichment_provider,Contact Enriched
+podcast_episode_played,Episode Played
+pressed_a_button,Pressed Button
+clicked_link,Clicked Link
+pricing_link_clicked,Pricing View
+clicked_email,Email Link Clicked
+Pricing Link Clicked,Pricing View
+Podcast Episode Played,Episode Played
+Pressed A Button,Pressed Button
+subscribed_to_mailing_list,Subscriber Added
+about_us_clicked,About View
+contact_us_pressed,Contact Button Pressed
+About Us Clicked,About Button Pressed
+Pressed a Button,Pressed Button
+Clicked Email,Email Link Clicked
+Contact Us Pressed,Contact Button Pressed
+viewed_home_page,Homepage View
+audit,Audit Event
+Audit,Audit Event
+Subscribed to Mailing List,Subscriber Added
+clicked_email_link,Email Link Clicked
+viewed_login_page,Login View
+pressed_button,Pressed Button
+login_clicked,Login Clicked
+viewed_page,Page View
+booked_a_meeting,Meeting Booked
+signed_up,Signed Up

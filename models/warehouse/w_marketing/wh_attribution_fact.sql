@@ -1,4 +1,4 @@
-{% if not var("enable_baremetrics_analytics_source") or not var("enable_stripe_subscriptions_source")  %}
+{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
 {{
     config(
         enabled=false
@@ -11,7 +11,7 @@
     )
 }}
 {% endif %}
-WITH 
+WITH
 converting_events as
     (
       SELECT
@@ -22,8 +22,8 @@ converting_events as
         MIN(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS converted_ts,
         MIN(CASE WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_ts END ) OVER (PARTITION BY e.blended_user_id) AS created_account_ts
       FROM
-        {{ref ('wh_web_events_fact') }} 
-      WHERE 
+        {{ref ('wh_web_events_fact') }} e
+      WHERE
         event_type = '{{ var('attribution_conversion_event_type') }}'
         OR event_type = '{{ var('attribution_create_account_event_type') }}'),
 converting_sessions as (
@@ -55,6 +55,7 @@ converting_sessions_deduped_labelled as
         c.created_account_ts,
         s.session_id AS session_id,
         ROW_NUMBER() OVER (PARTITION BY c.blended_user_id ORDER BY s.session_start_ts) AS session_seq,
+        count_conversions,
         CASE WHEN c.created_account_ts BETWEEN s.session_start_ts AND s.session_end_ts THEN TRUE ELSE FALSE END AS account_opening_session,
         CASE WHEN (c.converted_ts BETWEEN s.session_start_ts AND s.session_end_ts)  THEN TRUE ELSE FALSE END AS conversion_session,
         CASE WHEN (c.converted_ts BETWEEN s.session_start_ts AND s.session_end_ts)  THEN 1 ELSE 0 END AS event,
@@ -119,7 +120,7 @@ final as (
       round(MAX(count_conversions * time_decay_attrib_pct),2) AS time_decay_attrib_conversions
     FROM
       session_attrib_pct_with_time_decay
-    {{ dbt_utils.group_by(21) }} )
+    {{ dbt_utils.group_by(24) }} )
 select
   *
 from
