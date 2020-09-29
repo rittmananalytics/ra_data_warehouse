@@ -8,9 +8,7 @@
 {{
     config(
         alias='deals_fact',
-        unique_key='deal_id',
-        incremental_strategy='merge',
-        materialized='incremental'
+        unique_key='deal_id'
     )
 }}
 {% endif %}
@@ -28,8 +26,4 @@ FROM
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
 
-{% if is_incremental() %}
-     -- this filter will only be applied on an incremental run
-     where deal_created_date > (select max(deal_created_date) from {{ this }})
-     or    deal_last_modified_date > (select max(deal_last_modified_date) from {{ this }})
-{% endif %}
+
