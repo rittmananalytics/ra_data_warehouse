@@ -14,6 +14,7 @@ renamed AS (
   SELECT
       concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as transaction_id,
       description as transaction_description,
+      cast(null as string) as account_code,
       currency as transaction_currency,
       exchange_rate as transaction_exchange_rate,
       amount/100 as transaction_gross_amount,

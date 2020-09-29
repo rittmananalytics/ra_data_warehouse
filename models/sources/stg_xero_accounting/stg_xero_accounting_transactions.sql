@@ -15,6 +15,7 @@ renamed as (
   SELECT
       concat('{{ var('stg_xero_accounting_id-prefix') }}',banktransactionid) as transaction_id,
       lineitems.description as transaction_description,
+      split(lineitems.accountcode,' ')[SAFE_OFFSET(0)] as account_code,
       currencycode as transaction_currency,
       cast(null as numeric) as transaction_exchange_rate,
       lineitems.lineamount as transaction_gross_amount,
