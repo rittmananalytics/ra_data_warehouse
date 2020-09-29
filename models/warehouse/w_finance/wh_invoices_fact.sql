@@ -41,7 +41,7 @@ SELECT
    date_diff(date(invoice_sent_at_ts),min(date(invoice_sent_at_ts)) over (partition by c.company_pk),QUARTER) as quarters_since_first_invoice,
    timestamp(date_trunc(min(date(invoice_sent_at_ts)) over (partition by c.company_pk),QUARTER)) first_invoice_quarter,
 {% if var("enable_harvest_projects_source") %}
-   s.user_pk as creator_users_pk,
+ /*  s.user_pk as creator_users_pk, */
    p.timesheet_project_pk,
 {% endif %}
    i.*
@@ -50,8 +50,8 @@ FROM
 JOIN companies_dim c
       ON i.company_id IN UNNEST(c.all_company_ids)
 {% if var("enable_harvest_projects_source") %}
-JOIN user_dim s
-   ON cast(i.invoice_creator_users_id as string) IN UNNEST(s.all_user_ids)
-JOIN projects_dim p
+/*JOIN user_dim s
+   ON cast(i.invoice_creator_users_id as string) IN UNNEST(s.all_user_ids)*/
+LEFT OUTER JOIN projects_dim p
    ON cast(i.project_id as string) = p.timesheet_project_id
 {% endif %}
