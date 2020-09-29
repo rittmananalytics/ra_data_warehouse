@@ -7,7 +7,7 @@ enrichment_provider,Contact Enriched
 podcast_episode_played,Episode Played
 pressed_a_button,Pressed Button
 clicked_link,Clicked Link
-pricing_link_clicked,Pricing Viewed
+pricing_link_clicked,Pricing View
 clicked_email,Email Link Clicked
 Pricing Link Clicked,Pricing View
 Podcast Episode Played,Episode Played
