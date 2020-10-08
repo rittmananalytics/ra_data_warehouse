@@ -11,7 +11,7 @@ WITH source AS (
 ),
 renamed as (
   SELECT
-  cast(id as string) AS contact_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(id as string)) AS contact_id,
   first_name AS contact_first_name,
   last_name AS contact_last_name,
   case when concat(first_name,' ',last_name) = ' ' then email else concat(first_name,' ',last_name) end AS contact_name,

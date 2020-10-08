@@ -20,7 +20,7 @@ harvest_expenses as (
     ),
 joined as (
 select i.*,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',client_id) as company_id,
+  client_id as company_id,
   id as invoice_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
@@ -56,8 +56,8 @@ left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expens
 on i.id = e.invoice_id
 ),
 renamed as (
-select  number as invoice_number,
-        company_id,
+select  concat('{{ var('stg_harvest_projects_id-prefix') }}',number) as invoice_number,
+        concat('{{ var('stg_harvest_projects_id-prefix') }}',company_id) as company_id,
         concat('{{ var('stg_harvest_projects_id-prefix') }}',invoice_id) as invoice_id,
         concat('{{ var('stg_harvest_projects_id-prefix') }}',project_id) as project_id,
         concat('{{ var('stg_harvest_projects_id-prefix') }}',creator_id) as invoice_creator_users_id,
@@ -85,7 +85,7 @@ select  number as invoice_number,
              when state = 'paid' then 'Paid'
              when state = 'draft' then 'Draft'
              else 'Other' end as invoice_status,
-        'Sales' as invoice_type,
+        'Harvest - Client Billing' as invoice_type,
 
 from joined)
 SELECT

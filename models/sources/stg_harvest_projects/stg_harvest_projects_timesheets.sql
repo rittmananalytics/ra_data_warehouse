@@ -8,81 +8,31 @@
 
 with t_harvest_time_entries as (
   {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_time_entries_table'),'id') }}
-
 ),
 t_harvest_projects as (
-    SELECT
-      *
-    FROM (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ target.database}}.{{ var('stg_harvest_projects_stitch_schema') }}.{{ var('stg_harvest_projects_stitch_projects_table') }})
-    WHERE
-      max_sdc_batched_at = _sdc_batched_at
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_projects_table'),'id') }}
   ),
 t_harvest_users_project_tasks as (
-    SELECT
-        *
-    FROM (
-        SELECT
-            *,
-             MAX(_sdc_batched_at) OVER (PARTITION BY project_task_id,user_id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-        FROM
-            {{ target.database}}.{{ var('stg_harvest_projects_stitch_schema') }}.{{ var('stg_harvest_projects_stitch_user_project_tasks_table') }}
-        )
-    WHERE
-        _sdc_batched_at = max_sdc_batched_at
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_user_project_tasks_table'),'project_task_id') }}
   ),
 t_harvest_project_tasks as (
-    SELECT
-      *
-    FROM (
-      SELECT
-        *,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-      FROM
-        {{ target.database}}.{{ var('stg_harvest_projects_stitch_schema') }}.{{ var('stg_harvest_projects_stitch_project_tasks_table') }}
-      )
-    WHERE
-      _sdc_batched_at = max_sdc_batched_at
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_project_tasks_table'),'id') }}
   ),
 t_harvest_tasks as (
-    SELECT
-        *
-    FROM (
-        SELECT
-            *,
-             MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-        FROM
-            {{ target.database}}.{{ var('stg_harvest_projects_stitch_schema') }}.{{ var('stg_harvest_projects_stitch_tasks_table') }}
-        )
-    WHERE
-        _sdc_batched_at = max_sdc_batched_at
+    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_tasks_table'),'id') }}
   ),
 t_harvest_users as (
-   SELECT
-       *
-   FROM (
-       SELECT
-           *,
-            MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-       FROM
-           {{ target.database}}.{{ var('stg_harvest_projects_stitch_schema') }}.{{ var('stg_harvest_projects_stitch_users_table') }}
-       )
-   WHERE
-       _sdc_batched_at = max_sdc_batched_at
+   {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_users_table'),'id') }}
  ),
 renamed as (
 SELECT
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',t.client_id)               as company_id,
-  cast(t.id as string)      as timesheet_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',t.user_id)  as timesheet_users_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',t.project_id)             as timesheet_project_id,
-  t.task_assignment_id      as timesheet_task_assignment_id,
-  coalesce(ht.id,-999)      as timesheet_task_id,
-  t.invoice_id              as timesheet_invoice_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.client_id as string))               as company_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.id as string))      as timesheet_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.user_id as string))  as timesheet_users_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.project_id as string))             as timesheet_project_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.task_assignment_id as string))   as timesheet_task_assignment_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(coalesce(ht.id,-999) as string)) as timesheet_task_id,
+  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.invoice_id as string)) as timesheet_invoice_id,
   t.spent_date              as timesheet_billing_date,
   t.hours                   as timesheet_hours_billed,
   case when t.is_billed then t.billable_rate * t.hours else 0 end as timesheet_total_amount_billed,

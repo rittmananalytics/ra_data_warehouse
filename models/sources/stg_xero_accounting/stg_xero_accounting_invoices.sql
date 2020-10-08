@@ -12,7 +12,7 @@ WITH
       ),
 renamed as (
   SELECT
-    invoicenumber as invoice_number,
+    concat('{{ var('stg_xero_accounting_id-prefix') }}',invoicenumber) as invoice_number,
     concat('{{ var('stg_xero_accounting_id-prefix') }}',contact.contactid) as company_id,
     concat('{{ var('stg_xero_accounting_id-prefix') }}',invoiceid) as invoice_id,
     cast(null as string) as project_id,
@@ -41,9 +41,9 @@ renamed as (
          when status = 'PAID' then 'Paid'
          when status = 'VOIDED' then 'Voided'
          else status end as invoice_status,
-         case when type = 'ACCREC' then 'Sales'
-              when type = 'ACCPAY' then 'Purchases'
-              else type end as invoice_type
+         case when type = 'ACCREC' then 'Xero - Sales'
+              when type = 'ACCPAY' then 'Xero - Purchases'
+              else concat('Xero - ',type) end as invoice_type
  FROM source)
  SELECT
    *

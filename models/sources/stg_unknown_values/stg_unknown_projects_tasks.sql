@@ -1,5 +1,5 @@
 select
-       -999                  as task_id,
+       concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(-999 as string))                 as task_id,
        'Unassigned'                          as task_name,
        true as task_billable_by_default,
        100 as task_default_hourly_rate,
