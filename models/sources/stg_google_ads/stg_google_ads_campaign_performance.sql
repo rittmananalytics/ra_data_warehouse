@@ -7,15 +7,17 @@
 {% endif %}
 {% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stg_google_ads_stitch_schema'),var('stg_google_ads_stitch_campaign_performance_table'),'id') }}
+  select * from (SELECT *, max(_sdc_report_datetime) over (partition by campaignid, day) as max_sdc_report_datetime FROM `ra-development.stitch_google_ads.CAMPAIGN_PERFORMANCE_REPORT`)
+where _sdc_report_datetime = max_sdc_report_datetime
+order by campaignid, day
 ),
 renamed as (
 SELECT
   day                           as ad_campaign_serve_ts,
-  concat('{{ var('stg_google_ads_id-prefix') }}',campaignid)                    as ad_campaign_id,
-  amount/1000000                AS ad_campaign_budget,
-  averagecost/1000000           AS ad_campaign_avg_cost,
-  averagesessiondurationseconds as ad_campaign_avg_time_on_site,
+  cast(campaignid  as string)                  as ad_campaign_id,
+  budget/1000000                AS ad_campaign_budget,
+  avgcost/1000000           AS ad_campaign_avg_cost,
+  avgsessiondurationseconds as ad_campaign_avg_time_on_site,
   bouncerate                    as ad_campaign_bounce_rate,
   cast(null as string)          as ad_campaign_status,
   clickassistedconv             as ad_campaign_total_assisted_conversions,
@@ -36,7 +38,7 @@ with source as (
 renamed as (
 SELECT
   date_start                    as ad_campaign_serve_ts,
-  concat('{{ var('stg_google_ads_id-prefix') }}',campaign_id)                   as ad_campaign_id,
+  cast(campaign_id as string)                  as ad_campaign_id,
   amount/1000000                AS ad_campaign_budget,
   average_cost/1000000          AS ad_campaign_avg_cost,
   average_time_on_site          as ad_campaign_avg_time_on_site,

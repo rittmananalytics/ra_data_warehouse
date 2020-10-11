@@ -99,8 +99,9 @@ vars:
   stg_facebook_ads_segment_campaigns_table: campaigns
 
   stg_google_ads_id-prefix: gads-
-  stg_google_ads_etl: segment
+  stg_google_ads_etl: stitch
   stg_google_ads_stitch_schema: stitch_google_ads
+  stg_google_ads_stitch_campaign_performance_table: CAMPAIGN_PERFORMANCE_REPORT
   stg_google_ads_stitch_campaigns_table: campaigns
   stg_google_ads_segment_schema: google_ads
   stg_google_ads_segment_campaign_performance_table: campaign_performance_reports

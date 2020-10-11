@@ -27,9 +27,9 @@ select GENERATE_UUID() as ad_campaign_performance_pk,
        s.ad_campaign_pk,
        s.utm_source,
        s.utm_campaign,
-       c.* except (ad_campaign_id),
+       c.*
 from campaign_performance c
-join campaigns s
+left join campaigns s
 on c.ad_campaign_id = s.ad_campaign_id)
 ,
   segment_clicks AS (
@@ -51,8 +51,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
     FROM
       web_events
     WHERE
-      utm_source IN ('adwords',
-        'facebook','instagram')
+      utm_campaign is not null
     GROUP BY
       1,2,3,4,5)
   GROUP BY
@@ -61,6 +60,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
   SELECT
     utm_source,
     utm_campaign,
+    ad_campaign_id,
     campaign_date,
     SUM(total_reported_cost) AS total_reported_cost,
     AVG(avg_reported_time_on_site) AS avg_reported_time_on_site,
@@ -73,6 +73,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
       TIMESTAMP_TRUNC(ad_campaign_serve_ts,DAY) AS campaign_date,
       utm_source,
       utm_campaign,
+      ad_campaign_id,
       ad_campaign_total_cost AS total_reported_cost,
       ad_campaign_avg_time_on_site AS avg_reported_time_on_site,
       ad_campaign_bounce_rate AS avg_reported_bounce_rate,
@@ -82,7 +83,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
     FROM
       campaign_performance_joined)
   GROUP BY
-    1,2,3),
+    1,2,3,4),
  joined as (
 SELECT
   a.*,
@@ -104,10 +105,9 @@ FROM
 LEFT JOIN
   segment_clicks s
 ON
-  s.utm_source = a.utm_source
-  AND s.utm_campaign = a.utm_campaign
+  s.utm_campaign = a.ad_campaign_id
   AND s.campaign_date = a.campaign_date
 )
 select * from joined
-where utm_source is not null
-and utm_campaign is not null
+--where utm_source is not null
+--and utm_campaign is not null

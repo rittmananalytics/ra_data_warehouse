@@ -13,7 +13,7 @@ WITH source AS (
 renamed as (
 
     select
-    concat('{{ var('stg_facebook_ads_id-prefix') }}',id)      as campaign_id,
+    cast(id as string)      as campaign_id,
     name      as campaign_name,
     status          as ad_campaign_status,
     effective_status as campaign_effective_status,
@@ -30,7 +30,7 @@ with source as (
 ),
 renamed as (
 SELECT
-  concat('{{ var('stg_facebook_ads_id-prefix') }}',id)              as ad_campaign_id,
+  cast(id as string)              as ad_campaign_id,
   name            as ad_campaign_name,
   effective_status          as ad_campaign_status,
   buying_type as campaign_buying_type,

@@ -12,7 +12,7 @@ WITH source AS (
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    concat('{{ var('stg_facebook_ads_id-prefix') }}',ad_id)                   as ad_id,
+    cast(ad_id as string)         as ad_id,
     safe_divide(spend,clicks)    AS ad_avg_cost,
     cast(null as timestamp)      as ad_avg_time_on_site,
     cast(null as float64)        as ad_bounce_rate,
@@ -34,7 +34,7 @@ with source as (
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    concat('{{ var('stg_facebook_ads_id-prefix') }}',ad_id)                   as ad_id,
+    cast(ad_id as string)                   as ad_id,
     safe_divide(spend,clicks)    AS ad_avg_cost,
     cast(null as float64)      as ad_avg_time_on_site,
     cast(null as float64)        as ad_bounce_rate,

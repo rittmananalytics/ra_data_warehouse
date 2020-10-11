@@ -13,11 +13,11 @@ WITH source AS (
 renamed as (
 
     select
-    concat('{{ var('stg_facebook_ads_id-prefix') }}',id)              as ad_id,
+    cast(id as string)              as ad_id,
     status      as ad_status,
       cast(null as string)        as ad_type,
       cast(null as string)   as ad_final_urls,
-      concat('{{ var('stg_facebook_ads_id-prefix') }}',adset_id) as ad_group_id,
+      cast(adset_id as string) as ad_group_id,
       bid_type as ad_bid_type,
       url_parameters as ad_utm_parameters,
       utm_campaign as ad_utm_campaign,
@@ -34,11 +34,11 @@ with source as (
 ),
 renamed as (
 SELECT
-      concat('{{ var('stg_facebook_ads_id-prefix') }}',id)          as ad_id,
+      cast(id as string)           as ad_id,
       status      as ad_status,
       cast(null as string)        as ad_type,
       cast(null as string)   as ad_final_urls,
-      concat('{{ var('stg_facebook_ads_id-prefix') }}',adset_id) as ad_group_id,
+      cast(adset_id as string) as ad_group_id,
       bid_type as ad_bid_type,
       url_parameters as ad_utm_parameters,
       utm_campaign as ad_utm_campaign,

@@ -13,7 +13,7 @@ WITH source AS (
 renamed as (
 
     select
-    concat('{{ var('stg_google_ads_id-prefix') }}',id)              as ad_campaign_id,
+    cast(id as string)              as ad_campaign_id,
     name            as ad_campaign_name,
     status          as ad_campaign_status,
     cast(null as string) as campaign_buying_type,
@@ -30,7 +30,7 @@ with source as (
 ),
 renamed as (
 SELECT
-  concat('{{ var('stg_google_ads_id-prefix') }}',id)              as ad_campaign_id,
+  cast(id as string)             as ad_campaign_id,
   name            as ad_campaign_name,
   status          as ad_campaign_status,
   cast(null as string) as campaign_buying_type,

@@ -12,7 +12,7 @@ WITH source AS (
 renamed as (
 SELECT
     day                    as ad_serve_ts,
-    concat('{{ var('stg_google_ads_id-prefix') }}',ad_id)                   as ad_id,
+    cast(ad_id as string)                  as ad_id,
     averagecost/1000000          AS ad_avg_cost,
     averagesessiondurationseconds          as ad_avg_time_on_site,
     bouncerate                   as ad_bounce_rate,
@@ -34,7 +34,7 @@ with source as (
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    concat('{{ var('stg_google_ads_id-prefix') }}',ad_id)                   as ad_id,
+    cast(ad_id as string)                      as ad_id,
     average_cost/1000000          AS ad_avg_cost,
     average_time_on_site          as ad_avg_time_on_site,
     bounce_rate                   as ad_bounce_rate,

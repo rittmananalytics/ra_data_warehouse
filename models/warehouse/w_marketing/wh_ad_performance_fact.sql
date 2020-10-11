@@ -25,6 +25,7 @@ select GENERATE_UUID() as ad_performance_pk,
        s.ad_utm_source as utm_source,
        s.ad_utm_campaign as utm_campaign,
        s.ad_utm_content as utm_content,
+       s.campaign_id as campaign_id
        c.* ,
 from ad_performance c
 left outer join ads s
@@ -103,10 +104,8 @@ FROM
 LEFT JOIN
   segment_clicks s
 ON
-  s.utm_source = a.utm_source
-  AND s.utm_campaign = a.utm_campaign
+  s.utm_source = a.campaign_id
   AND s.campaign_date = a.campaign_date
 )
 select * from joined
-where utm_source is not null
-and utm_campaign is not null
+where utm_campaign is not null

@@ -12,11 +12,11 @@ WITH source AS (
 ),
 renamed as (
 
-  SELECT concat('{{ var('stg_google_ads_id-prefix') }}',id) as ad_group_id,
+  SELECT cast(id as string) as ad_group_id,
          name as ad_group_name,
          status as ad_group_status,
-         concat('{{ var('stg_google_ads_id-prefix') }}',campaign_id) ad_campaign_id,
-         'Adwords' as ad_network
+         cast(campaign_id as string) ad_campaign_id,
+         'Google Ads' as ad_network
   FROM source
 
 )
@@ -25,11 +25,11 @@ with source as (
   {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_ad_groups_table')) }}
 ),
 renamed as (
-  SELECT concat('{{ var('stg_google_ads_id-prefix') }}',id) as ad_group_id,
+  SELECT cast(id as string) as ad_group_id,
          name as ad_group_name,
          status as ad_group_status,
-         concat('{{ var('stg_google_ads_id-prefix') }}',campaign_id) ad_campaign_id,
-         'Adwords' as ad_network
+         cast(campaign_id as string) ad_campaign_id,
+         'Google Ads' as ad_network
   FROM source )
 {% endif %}
 select
