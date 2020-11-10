@@ -58,7 +58,6 @@ hubspot-2934578658,jira-KLICK
 hubspot-2488812204,jira-Lithko
 hubspot-2530950084,jira-LiveBetterWith
 xero-a5f1c827-a20d-49e6-ba1f-e24c1c31fa54,xero-18246fd7-204f-44a9-9ac6-743d4dcb8dae
-hubspot-838049999,jira-Rittman_Analytics_Client_Support
 hubspot-1700738872,xero-14169aa5-8f2d-4e02-bbd7-ba9cf87b5858
 hubspot-2854034299,hubspot-2735898796
 hubspot-863101867,looker-florence
@@ -89,6 +88,8 @@ hubspot-2488812204,jira-Lithko
 hubspot-2530950084,jira-LiveBetterWith
 xero-a5f1c827-a20d-49e6-ba1f-e24c1c31fa54,xero-18246fd7-204f-44a9-9ac6-743d4dcb8dae
 hubspot-838049999,jira-Rittman_Analytics_Client_Support
+hubspot-838049999,Product Ecosystem
+hubspot-838049999,RA Data Warehouse
 hubspot-1700738872,xero-14169aa5-8f2d-4e02-bbd7-ba9cf87b5858
 hubspot-2854034299,hubspot-2735898796
 hubspot-863101867,looker-florence
@@ -108,3 +109,5 @@ harvest-9069605,jira-Bidlogix
 harvest-9069605,hubspot-2656017945
 hubspot-1782669464,xero-f0c961c3-640c-440d-bc5a-934b7af95488
 jira-FluentU,jira-Fluent_U
+hubspot-2179132501,harvest-10017120
+hubspot-2179132501,jira-Rixo Help Desk
