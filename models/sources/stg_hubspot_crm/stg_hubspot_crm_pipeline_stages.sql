@@ -29,11 +29,11 @@ with source as (
 renamed as (
     select
       pipelineid as pipeline_id,
-      stageid as pipeline_stage_id,
-      stages.label as pipeline_stage_label,
-      stages.displayorder as pipeline_stage_display_order,
-      probability as pipeline_stage_close_probability_pct,
-      closedwon as pipeline_stage_closed_won
+      stages.value.stageid as pipeline_stage_id,
+      stages.value.label as pipeline_stage_label,
+      stages.value.displayorder as pipeline_stage_display_order,
+      stages.value.probability as pipeline_stage_close_probability_pct,
+      stages.value.closedwon as pipeline_stage_closed_won
     from source,
     unnest (stages) stages
 )

@@ -13,7 +13,7 @@ with source as
 ),
 renamed as
 (
-select  accountid as            account_id,
+select  concat('{{ var('stg_xero_accounting_id-prefix') }}',accountid) as            account_id,
         name as                 account_name,
         code as                 account_code,
         type as                 account_type,
