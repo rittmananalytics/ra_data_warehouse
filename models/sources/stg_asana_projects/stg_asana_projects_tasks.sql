@@ -13,12 +13,12 @@ renamed AS (
   SELECT
   concat('{{ var('stg_asana_projects_id-prefix') }}',source.gid) as task_id,
   parent.gid as parent_task_id,
-  concat('{{ var('stg_asana_projects_id-prefix') }}',project.value.gid) AS project_id,
+  concat('{{ var('stg_asana_projects_id-prefix') }}',projects.value.gid) AS project_id,
   concat('{{ var('stg_asana_projects_id-prefix') }}',assignee.gid)  as task_creator_user_id,
   cast (null as string) as task_assignee_user_id,
   name  as task_name,
   cast(null as string) as task_priority,
-  case when parent.resource_type is null then 'Task' else 'Subtask' end as task_type,
+  case when parent.gid is null then 'Task' else 'Subtask' end as task_type,
   notes as task_description,
   cast(null as string) task_status,
   completed   as task_is_completed,
@@ -30,14 +30,14 @@ renamed AS (
   case when cast(null as string) = 'Low' then 1 end as total_delivery_priority_low,
   case when cast(null as string) = 'Medium' then 1 end as total_delivery_priority_medium,
   case when cast(null as string) = 'High' then 1 end as total_delivery_tasks_high,
-  case when case when parent.resource_type is null then 'Task' else 'Subtask' end = 'Task' then 1 end as total_delivery_tasks,
-  case when case when parent.resource_type is null then 'Task' else 'Subtask' end = 'Subtask' then 1 end as total_delivery_subtasks,
+  case when case when parent.gid is null then 'Task' else 'Subtask' end = 'Task' then 1 end as total_delivery_tasks,
+  case when case when parent.gid is null then 'Task' else 'Subtask' end = 'Subtask' then 1 end as total_delivery_subtasks,
   1 as total_issues,
   created_at    as task_created_ts,
   modified_at as task_last_modified_ts
   FROM
     source,
-    unnest(projects) project
+    unnest(projects) projects
   {{ dbt_utils.group_by(24) }}
 )
 SELECT
