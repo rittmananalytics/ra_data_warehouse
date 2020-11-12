@@ -16,7 +16,7 @@ SELECT
   c.company_pk,
   c.company_name,
   'New Deal Created' as event_type,
-  d.deal_created_date as event_ts,
+  d.deal_created_ts as event_ts,
   d.deal_name as event_details,
   d.deal_amount as event_value
 FROM
@@ -30,7 +30,7 @@ SELECT
   c.company_pk,
   c.company_name,
   'Deal Closed Won' as event_type,
-  d.deal_closed_date as event_ts,
+  d.deal_closed_ts as event_ts,
   d.deal_name as event_details,
   d.deal_amount as event_value
 FROM
