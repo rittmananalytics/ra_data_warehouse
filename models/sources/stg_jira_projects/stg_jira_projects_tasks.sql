@@ -28,10 +28,10 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        or timestamp(fields.resolutiondate) is not null then coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)) end  as task_completed_ts,
        timestamp(fields.statuscategorychangedate) as task_status_change_ts,
        case when fields.status.statuscategory.name = 'Done' or timestamp(fields.resolutiondate) is not null
-        then timestamp_diff(coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)),fields.created,,HOUR)
+        then timestamp_diff(coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)),fields.created,HOUR)
         end as total_task_hours_to_complete,
       case when fields.status.statuscategory.name <> 'Done' and timestamp(fields.resolutiondate) is null
-         then timestamp_diff(current_timestamp,fields.created,,HOUR)
+         then timestamp_diff(current_timestamp,fields.created,HOUR)
          end as total_task_hours_incomplete,
        case when fields.status.statuscategory.name = 'Done' then 1 end as total_delivery_tasks_completed,
        case when fields.status.statuscategory.name = 'In Progress' then 1 end as total_delivery_tasks_in_progress,

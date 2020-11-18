@@ -23,6 +23,11 @@ WITH tasks AS
     SELECT *
     FROM   {{ ref('wh_delivery_projects_dim') }}
 
+  ),
+  users as
+  (
+    SELECT *
+    FROM  {{ ref('wh_users_dim') }}
   )
 SELECT
    GENERATE_UUID() as delivery_task_pk,
