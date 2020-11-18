@@ -28,7 +28,7 @@ renamed AS (
   completed_at  as task_completed_ts,
   modified_at as task_status_change_ts,
   timestamp_diff(completed_at,created_at,HOUR) total_task_hours_to_complete,
-  cast(null as timestamp) as total_task_hours_incomplete,
+  null as total_task_hours_incomplete,
   case when cast(null as string) = 'Done' then 1 end as total_delivery_tasks_completed,
   case when cast(null as string) = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
   case when cast(null as string) = 'To Do' then 1 end as total_delivery_tasks_to_do,
