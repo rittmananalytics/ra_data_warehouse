@@ -20,9 +20,19 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        fields.issuetype.name as task_type,
        cast(null as string) as task_description,
        fields.status.statuscategory.name as task_status,
-       cast(null as boolean) as task_is_completed,
-       cast(null as timestamp)  as task_completed_ts,
-       cast(null as int64) as total_task_hours_to_complete,
+       timestamp(fields.resolutiondate) as task_resolution_ts,
+       fields.resolution.name as task_resolution_type,
+       fields.status.statuscategory.colorname	as task_status_colour,
+       case when fields.status.statuscategory.name = 'Done' then true else false end as task_is_completed,
+       case when fields.status.statuscategory.name = 'Done'
+       or timestamp(fields.resolutiondate) is not null then coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)) end  as task_completed_ts,
+       timestamp(fields.statuscategorychangedate) as task_status_change_ts,
+       case when fields.status.statuscategory.name = 'Done' or timestamp(fields.resolutiondate) is not null
+        then timestamp_diff(coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)),fields.created,,HOUR)
+        end as total_task_hours_to_complete,
+      case when fields.status.statuscategory.name <> 'Done' and timestamp(fields.resolutiondate) is null
+         then timestamp_diff(current_timestamp,fields.created,,HOUR)
+         end as total_task_hours_incomplete,
        case when fields.status.statuscategory.name = 'Done' then 1 end as total_delivery_tasks_completed,
        case when fields.status.statuscategory.name = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
        case when fields.status.statuscategory.name = 'To Do' then 1 end as total_delivery_tasks_to_do,

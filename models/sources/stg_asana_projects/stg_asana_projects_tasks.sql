@@ -21,9 +21,14 @@ renamed AS (
   case when parent.gid is null then 'Task' else 'Subtask' end as task_type,
   notes as task_description,
   cast(null as string) task_status,
+  completed_at as task_resolution_ts,
+  cast(null as string) as task_resolution_type,
+  cast(null as string) as task_status_colour,
   completed   as task_is_completed,
   completed_at  as task_completed_ts,
+  modified_at as task_status_change_ts,
   timestamp_diff(completed_at,created_at,HOUR) total_task_hours_to_complete,
+  cast(null as timestamp) as total_task_hours_incomplete,
   case when cast(null as string) = 'Done' then 1 end as total_delivery_tasks_completed,
   case when cast(null as string) = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
   case when cast(null as string) = 'To Do' then 1 end as total_delivery_tasks_to_do,
@@ -38,7 +43,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(24) }}
+  {{ dbt_utils.group_by(28) }}
 )
 SELECT
   *
