@@ -9,36 +9,28 @@
 with t_contacts_merge_list as
   (
     {% if var("enable_hubspot_crm_source") %}
-    SELECT * except (contact_id, contact_company_id),
-           concat('hubspot-',contact_id) as contact_id,
-           concat('hubspot-',contact_company_id) as contact_company_id
+    SELECT *
     FROM   {{ ref('stg_hubspot_crm_contacts') }}
     {% endif %}
     {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
     UNION ALL
     {% endif %}
     {% if var("enable_harvest_projects_source")  %}
-    SELECT * except (contact_id, contact_company_id),
-           concat('harvest-',contact_id) as contact_id,
-           concat('harvest-',contact_company_id) as contact_company_id
+    SELECT *
     FROM   {{ ref('stg_harvest_projects_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
     UNION ALL
     {% endif %}
     {% if var("enable_xero_accounting_source")  %}
-    SELECT * except (contact_id, contact_company_id),
-           concat('xero-',contact_id) as contact_id,
-           concat('xero-',contact_company_id) as contact_company_id
+    SELECT *
     FROM   {{ ref('stg_xero_accounting_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
     UNION ALL
     {% endif %}
     {% if var("enable_mailchimp_email_source")  %}
-    SELECT * except (contact_id, contact_company_id),
-           concat('mailchimp-',coalesce(contact_id,'')) as contact_id,
-           concat('mailchimp-',coalesce(contact_company_id,'')) as contact_company_id
+    SELECT *
     FROM   {{ ref('stg_mailchimp_email_contacts') }}
     {% endif %}
   ),
@@ -60,7 +52,11 @@ contact_company_addresses as (
          group by 1),
 contacts as (
    select all_contact_ids,
-          c.contact_name,
+          case when c.contact_name like '%@%' then initcap(concat(split(c.contact_name,'@')[safe_offset(0)],' ',
+              case when split(split(c.contact_name,'@')[safe_offset(1)],'.')[safe_offset(1)] not in ('com','co','net','gov','nl','edu','org','dk','gr')
+              then split(c.contact_name,'@')[safe_offset(1)] else '' end
+              ))
+              else c.contact_name end as contact_name,
           job_title,
           contact_phone,
           contact_mobile_phone,
@@ -82,42 +78,4 @@ contacts as (
   join contact_ids i on c.contact_name = i.contact_name
   join contact_company_addresses a on c.contact_name = a.contact_name
   join contact_company_ids cc on c.contact_name = cc.contact_name)
-
-{% if var("contacts_enrichment") %}
-,
-contacts_enriched_filtered as (
-      SELECT
-        c.*
-      FROM (
-         SELECT
-            *
-            EXCEPT (email, contact_enrichment_id, contact_enrichment_email),
-            MAX(contact_enrichment_last_modified_at) over (partition by contact_name order by contact_enrichment_last_modified_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_contact_enrichment_last_modified_at
-         FROM
-            (SELECT i.*,
-                    e.*
-             FROM
-              (SELECT contact_name,
-                      email
-               FROM contacts,
-               UNNEST (all_contact_emails) email) i
-               LEFT OUTER JOIN
-               (SELECT *
-                FROM {{ ref('stg_clearbit_enrichment_contacts') }}
-                WHERE contact_enrichment_full_name is not null) e
-                ON i.email = e.contact_enrichment_email)
-             WHERE contact_enrichment_full_name is not null) c
-         WHERE contact_enrichment_last_modified_at = max_contact_enrichment_last_modified_at
-         GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41)
-
-select c.*,
-       e.* except (contact_name)
-from   contacts c
-left outer join contacts_enriched_filtered e
-on c.contact_name = e.contact_name
-
-{% else %}
-
 select * from contacts
-
-{% endif %}

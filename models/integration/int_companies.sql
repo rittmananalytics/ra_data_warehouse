@@ -75,23 +75,4 @@ select c.company_name,
        {% endif %}
 
        )
-{% if var("enable_clearbit_enrichment_source") and var("companies_enrichment") %}
-,
-enriched_companies as (
-  select *
-  from {{ ref ('stg_clearbit_enrichment_companies') }}
-),
-joined as (
-      SELECT c.*,
-             e.*
-      FROM merged c
-      LEFT OUTER JOIN enriched_companies e
-      ON c.company_website = e.company_enrichment_website_domain
-)
-select * from joined
-
-{% else %}
-
 select * from merged
-
-{% endif %}
