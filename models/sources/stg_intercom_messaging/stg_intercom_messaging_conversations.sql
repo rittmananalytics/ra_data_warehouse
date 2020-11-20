@@ -14,6 +14,7 @@ renamed as (
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',id) as conversation_id,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',user.id) AS conversation_user_id,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.author.id) AS conversation_author_id,
+    cast (null as string) as company_id,
     conversation_message.author.type AS conversation_author_type,
     user.type AS  conversation_user_type,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',assignee.id) AS conversation_assignee_id,
@@ -25,7 +26,8 @@ renamed as (
     created_at as contact_created_date,
     updated_at as contact_last_modified_date,
     read AS is_conversation_read,
-    open AS is_conversation_open
+    open AS is_conversation_open,
+    null as deal_id
   FROM
     source)
 select * from renamed
