@@ -27,7 +27,7 @@ SELECT
   metadata.title                    as message_title,
   metadata.subject                  as message_subject,
   metadata_to.value.email           as message_to_email,
-  metadata.text                     as message_text, 
+  metadata.text                     as message_text,
   engagement.lastupdated            as message_lastupdated,
 FROM
   source,
@@ -39,9 +39,10 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 )
 {% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 with source as (
-  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_engagements_table'),'id') }}
+  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_engagements_table'),'engagement_id') }}
 
 ),
+renamed as (
 SELECT
   concat('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id)                    as conversation_id,
   concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)                  as conversation_user_id,
@@ -49,17 +50,17 @@ SELECT
   concat('{{ var('stg_hubspot_crm_id-prefix') }}',companyids.value)                  as company_id,
   cast (null as string) 		AS conversation_author_type,
   cast (null as string)  AS  conversation_user_type,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)  AS conversation_assignee_id, 
+  concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)  AS conversation_assignee_id,
   cast (null as string)    AS conversation_assignee_state,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',,engagement_id )  AS conversation_message_id,
-  engagement.type   AS  conversation_message_type,
-  metadata.text    AS conversation_body,
-  metadata.subject    as  conversation_subject,
+  concat('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id )  AS conversation_message_id,
+  coalesce(engagement.type,cast(null as string))   AS  conversation_message_type,
+  coalesce(metadata.text,cast(null as string))    AS conversation_body,
+  coalesce(metadata.subject,cast(null as string))    as  conversation_subject,
   engagement.createdat as conversation_created_date,
   engagement.lastupdated as contact_last_modified_date,
   cast(null as boolean) AS is_conversation_read,
-  cast(null as boolean) AS AS is_conversation_open,
-  dealids.value                     as deal_id
+  cast(null as boolean) AS is_conversation_open,
+  coalesce(dealids.value,cast(null as string))                     as deal_id
 FROM
   source,
   unnest(associations.contactids) as contactids,
@@ -68,4 +69,5 @@ FROM
   unnest(metadata.to) as metadata_to
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 {% endif %}
+)
 select * from renamed
