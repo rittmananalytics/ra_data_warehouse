@@ -25,7 +25,8 @@ renamed as (
     created_at as contact_created_date,
     updated_at as contact_last_modified_date,
     read AS is_conversation_read,
-    open AS is_conversation_open
+    open AS is_conversation_open,
+    cast (null as string) as deal_id
   FROM
     source)
 select * from renamed

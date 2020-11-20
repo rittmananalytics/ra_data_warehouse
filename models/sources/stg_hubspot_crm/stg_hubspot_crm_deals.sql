@@ -35,7 +35,7 @@ hubspot_deal_owners as (
 ),
 renamed as (
   SELECT
-      deal_id,
+      deal_id as deal_id,
       property_dealname     as deal_name,
       property_dealtype     as deal_type,
       property_description  as deal_description,
