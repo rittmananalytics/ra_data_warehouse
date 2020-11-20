@@ -144,6 +144,7 @@ vars:
   stg_hubspot_crm_stitch_owners_table: owners
   stg_hubspot_crm_stitch_pipeline_stages_table: pipeline_stages
   stg_hubspot_crm_stitch_deal_pipelines_table: deal_pipelines
+  stg_hubspot_crm_stitch_engagements_table: engagements
   stg_hubspot_crm_fivetran_company_table: company
   stg_hubspot_crm_fivetran_contact_table: contact
   stg_hubspot_crm_fivetran_deal_table: deal
@@ -152,6 +153,7 @@ vars:
   stg_hubspot_crm_fivetran_pipeline_table: pipeline
   stg_hubspot_crm_fivetran_property_history_table: property_history
   stg_hubspot_crm_fivetran_deal_company_table: deal_company
+  stg_hubspot_crm_fivetran_engagements_table: engagements
 
   stg_intercom_messaging_id-prefix: intercom-
   stg_intercom_messaging_etl: stitch
