@@ -60,7 +60,7 @@ SELECT
   engagement.lastupdated as contact_last_modified_date,
   cast(null as boolean) AS is_conversation_read,
   cast(null as boolean) AS is_conversation_open,
-  coalesce(dealids.value,cast(null as string))                     as deal_id
+  dealids.value                    as deal_id
 FROM
   source,
   unnest(associations.contactids) as contactids,

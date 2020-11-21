@@ -65,8 +65,10 @@ vars:
   enable_mixpanel_events_source:       true
   enable_clearbit_enrichment_source:   true
   enable_baremetrics_analytics_source: false
+  enable_looker_usage_source:           true
   contacts_enrichment:                 true
   companies_enrichment:                true
+
 
   enable_crm_warehouse:                true
   enable_finance_warehouse:            true
@@ -84,6 +86,10 @@ vars:
   stg_asana_projects_stitch_projects_table: projects
   stg_asana_projects_stitch_tasks_table: tasks
   stg_asana_projects_stitch_users_table: users
+
+  stg_looker_usage_stats_id-prefix: looker-
+  stg_looker_usage_schema: fivetran_email
+  stg_looker_usage_stats_table: usage_stats
 
   stg_facebook_ads_id-prefix: fbads-
   stg_facebook_ads_etl: segment
