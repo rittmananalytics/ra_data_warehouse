@@ -17,9 +17,6 @@ END
   CAST (NULL AS string) AS campaign_buying_type,
   campaign_sent_ts AS ad_campaign_start_date,
   CAST (NULL AS timestamp) AS ad_campaign_end_date,
-  'Mailchimp' AS ad_network,
-  'newsletter' AS utm_source,
-  'email' AS utm_medium,
-  CAST(NULL AS string) AS utm_campaign
+  'Mailchimp' AS ad_network
 FROM
   {{ ref('stg_mailchimp_email_sends') }}

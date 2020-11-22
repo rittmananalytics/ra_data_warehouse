@@ -102,10 +102,10 @@ SELECT
       a.total_reported_impressions) as reported_cpm
 FROM
   ad_network_clicks a
-LEFT JOIN
+LEFT OUTER JOIN
   segment_clicks s
 ON
-  s.utm_campaign = a.ad_campaign_id
+  s.utm_campaign = a.utm_campaign
   AND s.campaign_date = a.campaign_date
 )
 select * from joined

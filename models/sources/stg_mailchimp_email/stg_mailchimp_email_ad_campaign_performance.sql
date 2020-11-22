@@ -26,7 +26,7 @@ with source as (
    FROM
   (
   SELECT
-    TIMESTAMP(DATE(`timestamp`)) AS ad_campaign_serve_ts,
+    TIMESTAMP(DATE(event_ts)) AS ad_campaign_serve_ts,
     send_id AS ad_campaign_id,
     NULL AS ad_campaign_budget,
     NULL AS ad_campaign_avg_cost,
@@ -43,10 +43,10 @@ with source as (
     case when action = 'bounce' then 1 else 0 end as ad_campaign_total_invalid_clicks,
    'Mailchimp' AS ad_network
     FROM
-      {{ ref('stg_mailchimp_email_events') }}
+      {{ ref('stg_mailchimp_email_events') }})
     GROUP BY
       1,2,3,4,5,6,7,8,10,11,16)
 select
   *
 from
-  source 
+  source
