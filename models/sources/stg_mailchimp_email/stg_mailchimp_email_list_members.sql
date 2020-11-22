@@ -13,11 +13,11 @@ WITH source as (
 ),
 renamed as (
 select
-  id              as list_member_id,
+  concat('{{ var('stg_mailchimp_email_id-prefix') }}',id)              as list_member_id,
   email_address   as contact_email,
   status          as list_member_status,
   source          as list_member_source,
-  list_id         as list_id,
+  concat('{{ var('stg_mailchimp_email_id-prefix') }}',list_id)         as list_id,
   unsubscribe_reason as unsubscribe_reason_type,
   timestamp_opt   as list_member_ts
 FROM
