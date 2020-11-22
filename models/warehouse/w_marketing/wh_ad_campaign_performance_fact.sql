@@ -58,6 +58,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
     1,2,3),
   ad_network_clicks AS (
   SELECT
+    ad_campaign_pk,
     utm_source,
     utm_campaign,
     ad_campaign_id,
@@ -71,10 +72,13 @@ on c.ad_campaign_id = s.ad_campaign_id)
   FROM (
     SELECT
       TIMESTAMP_TRUNC(ad_campaign_serve_ts,DAY) AS campaign_date,
+      ad_campaign_pk,
       utm_source,
       utm_campaign,
       ad_campaign_id,
-      ad_campaign_total_cost AS total_reported_cost,
+      case when utm_source = 'newsletter' then ad_campaign_total_cost
+           when utm_source = 'adwords' then (ad_campaign_total_cost*.75)
+           else ad_campaign_total_cost end AS total_reported_cost,
       ad_campaign_avg_time_on_site AS avg_reported_time_on_site,
       ad_campaign_bounce_rate AS avg_reported_bounce_rate,
       ad_campaign_total_clicks AS total_reported_clicks,
@@ -83,7 +87,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
     FROM
       campaign_performance_joined)
   GROUP BY
-    1,2,3,4),
+    1,2,3,4,5),
  joined as (
 SELECT
   a.*,
