@@ -33,6 +33,12 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
       case when fields.status.statuscategory.name <> 'Done' and timestamp(fields.resolutiondate) is null
          then timestamp_diff(current_timestamp,fields.created,HOUR)
          end as total_task_hours_incomplete,
+       fields.customfield_10135	as deliverable_id,
+       fields.customfield_10136.value as deliverable_type,
+       fields.customfield_10137.value as deliverable_category,
+       customfield_10018.value.name	as sprint_name,
+       timestamp(customfield_10018.value.enddate) as sprint_end_ts,
+       customfield_10018.value.goal as sprint_goal,
        case when fields.status.statuscategory.name = 'Done' then 1 end as total_delivery_tasks_completed,
        case when fields.status.statuscategory.name = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
        case when fields.status.statuscategory.name = 'To Do' then 1 end as total_delivery_tasks_to_do,
@@ -44,7 +50,8 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        1 as total_issues,
        fields.created  as task_created_ts,
        fields.updated as task_last_modified_ts,
- from source)
+ from source,
+  unnest(fields.customfield_10018) as customfield_10018)
 SELECT
  *
 FROM

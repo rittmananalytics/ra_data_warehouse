@@ -29,6 +29,12 @@ renamed AS (
   modified_at as task_status_change_ts,
   timestamp_diff(completed_at,created_at,HOUR) total_task_hours_to_complete,
   null as total_task_hours_incomplete,
+  cast(null as string) 	as deliverable_id,
+  cast(null as string)  as deliverable_type,
+  cast(null as string)  as deliverable_category,
+  cast(null as string) 	as sprint_name,
+  cast(null as timestamp)  as sprint_end_ts,
+  cast(null as string)  as sprint_goal,
   case when cast(null as string) = 'Done' then 1 end as total_delivery_tasks_completed,
   case when cast(null as string) = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
   case when cast(null as string) = 'To Do' then 1 end as total_delivery_tasks_to_do,
@@ -43,7 +49,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(28) }}
+  {{ dbt_utils.group_by(35) }}
 )
 SELECT
   *
