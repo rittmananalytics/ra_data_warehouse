@@ -33,7 +33,8 @@ renamed AS (
   cast(null as string)  as deliverable_type,
   cast(null as string)  as deliverable_category,
   cast(null as string) 	as sprint_name,
-  cast(null as timestamp)  as sprint_end_ts,
+  cast(null as timestamp)  as task_end_ts,
+  cast(null as timestamp) as task_start_ts,
   cast(null as string)  as sprint_goal,
   case when cast(null as string) = 'Done' then 1 end as total_delivery_tasks_completed,
   case when cast(null as string) = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
@@ -49,7 +50,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(35) }}
+  {{ dbt_utils.group_by(36) }}
 )
 SELECT
   *
