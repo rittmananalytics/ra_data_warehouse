@@ -41,7 +41,7 @@ renamed AS (
   case when cast(null as string) = 'To Do' then 1 end as total_delivery_tasks_to_do,
   case when cast(null as string)	 = 'Blocked' then 1 end as total_delivery_tasks_blocked,
   case when cast(null as string)	 = 'In Client QA' then 1 end as total_delivery_tasks_in_client_qa,
-  case when cast(null as string)e	 = 'In QA' then 1 end as total_delivery_tasks_in_qa,
+  case when cast(null as string)	 = 'In QA' then 1 end as total_delivery_tasks_in_qa,
   case when cast(null as string)	 = 'Design & Validation' then 1 end as total_delivery_tasks_in_design,
   case when cast(null as string)	 = 'Add to Looker' then 1 end as total_delivery_tasks_in_add_to_looker,
   case when cast(null as string) = 'Low' then 1 end as total_delivery_priority_low,
