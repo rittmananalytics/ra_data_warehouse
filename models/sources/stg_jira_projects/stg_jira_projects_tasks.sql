@@ -19,18 +19,18 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        fields.priority.name as task_priority,
        fields.issuetype.name as task_type,
        cast(null as string) as task_description,
-       fields.status.statuscategory.name as task_status,
+       fields.status.name	 as task_status,
        timestamp(fields.resolutiondate) as task_resolution_ts,
        fields.resolution.name as task_resolution_type,
        fields.status.statuscategory.colorname	as task_status_colour,
-       case when fields.status.statuscategory.name = 'Done' then true else false end as task_is_completed,
-       case when fields.status.statuscategory.name = 'Done'
+       case when fields.status.name	 = 'Done' then true else false end as task_is_completed,
+       case when fields.status.name	 = 'Done'
        or timestamp(fields.resolutiondate) is not null then coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)) end  as task_completed_ts,
        timestamp(fields.statuscategorychangedate) as task_status_change_ts,
-       case when fields.status.statuscategory.name = 'Done' or timestamp(fields.resolutiondate) is not null
+       case when fields.status.name	 = 'Done' or timestamp(fields.resolutiondate) is not null
         then timestamp_diff(coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)),fields.created,HOUR)
         end as total_task_hours_to_complete,
-      case when fields.status.statuscategory.name <> 'Done' and timestamp(fields.resolutiondate) is null
+      case when fields.status.name	 <> 'Done' and timestamp(fields.resolutiondate) is null
          then timestamp_diff(current_timestamp,fields.created,HOUR)
          end as total_task_hours_incomplete,
        fields.customfield_10135	as deliverable_id,
@@ -40,9 +40,14 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        timestamp(customfield_10018.value.enddate) as task_end_ts,
        timestamp(customfield_10018.value.startdate) as task_start_ts,
        customfield_10018.value.goal as sprint_goal,
-       case when fields.status.statuscategory.name = 'Done' then 1 end as total_delivery_tasks_completed,
-       case when fields.status.statuscategory.name = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
-       case when fields.status.statuscategory.name = 'To Do' then 1 end as total_delivery_tasks_to_do,
+       case when fields.status.name	 = 'Done' then 1 end as total_delivery_tasks_completed,
+       case when fields.status.name	 = 'In Progress' then 1 end as total_delivery_tasks_in_progress,
+       case when fields.status.name	 = 'To Do' then 1 end as total_delivery_tasks_to_do,
+       case when fields.status.name	 = 'Blocked' then 1 end as total_delivery_tasks_blocked,
+       case when fields.status.name	 = 'In Client QA' then 1 end as total_delivery_tasks_in_client_qa,
+       case when fields.status.name	 = 'In QA' then 1 end as total_delivery_tasks_in_qa,
+       case when fields.status.name	 = 'Design & Validation' then 1 end as total_delivery_tasks_in_design,
+       case when fields.status.name	 = 'Add to Looker' then 1 end as total_delivery_tasks_in_add_to_looker,
        case when fields.priority.name = 'Low' then 1 end as total_delivery_priority_low,
        case when fields.priority.name = 'Medium' then 1 end as total_delivery_priority_medium,
        case when fields.priority.name = 'High' then 1 end as total_delivery_tasks_high,
