@@ -32,8 +32,11 @@ WITH tasks AS
 SELECT
    GENERATE_UUID() as delivery_task_pk,
    p.delivery_project_pk,
+   u.user_pk,
    t.* except (project_id),
 FROM
    tasks t
+JOIN users u
+      ON t.task_assignee_user_id IN UNNEST(u.all_user_ids)
 LEFT OUTER JOIN projects p
    on t.project_id = p.project_id
