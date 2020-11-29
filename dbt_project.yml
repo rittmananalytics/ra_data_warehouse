@@ -170,7 +170,7 @@ vars:
 
   stg_jira_projects_id-prefix: jira-
   stg_jira_projects_etl: stitch
-  stg_jira_projects_stitch_schema: stitch_jira2
+  stg_jira_projects_stitch_schema: stitch_jira
   stg_jira_projects_staff_email_domain: rittmananalytics.com
   stg_jira_projects_stitch_projects_table: projects
   stg_jira_projects_stitch_project_types_table: project_types
