@@ -16,22 +16,16 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        coalesce(concat('{{ var('stg_jira_projects_id-prefix') }}',fields.reporter.accountid),'-999') as task_creator_user_id,
        coalesce(concat('{{ var('stg_jira_projects_id-prefix') }}',fields.assignee.accountid),'-999') as task_assignee_user_id,
        fields.summary as task_name,
-       fields.priority.name as task_priority,
        fields.issuetype.name as task_type,
        cast(null as string) as task_description,
        fields.status.name	 as task_status,
-       timestamp(fields.resolutiondate) as task_resolution_ts,
-       fields.resolution.name as task_resolution_type,
        fields.status.statuscategory.colorname	as task_status_colour,
        case when fields.status.name	 = 'Done' then true else false end as task_is_completed,
-       case when fields.status.name	 = 'Done'
-       or timestamp(fields.resolutiondate) is not null then coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)) end  as task_completed_ts,
+       case when fields.status.name	 = 'Done' then timestamp(fields.statuscategorychangedate) end  as task_completed_ts,
        timestamp(fields.statuscategorychangedate) as task_status_change_ts,
-       case when fields.status.name	 = 'Done' or timestamp(fields.resolutiondate) is not null
-        then timestamp_diff(coalesce(timestamp(fields.resolutiondate),timestamp(fields.statuscategorychangedate)),fields.created,HOUR)
+       case when fields.status.name	 = 'Done' then timestamp_diff(timestamp(fields.statuscategorychangedate),fields.created,HOUR)
         end as total_task_hours_to_complete,
-      case when fields.status.name	 <> 'Done' and timestamp(fields.resolutiondate) is null
-         then timestamp_diff(current_timestamp,fields.created,HOUR)
+      case when fields.status.name	 <> 'Done' then timestamp_diff(current_timestamp,fields.created,HOUR)
          end as total_task_hours_incomplete,
        fields.customfield_10135	as deliverable_id,
        fields.customfield_10136.value as deliverable_type,
@@ -48,9 +42,6 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        case when fields.status.name	 = 'In QA' then 1 end as total_in_qa,
        case when fields.status.name	 = 'Design & Validation' then 1 end as total_in_design,
        case when fields.status.name	 = 'Add to Looker' then 1 end as total_in_add_to_looker,
-       case when fields.priority.name = 'Low' then 1 end as total_priority_low,
-       case when fields.priority.name = 'Medium' then 1 end as total_priority_medium,
-       case when fields.priority.name = 'High' then 1 end as total_priority__high,
        case when fields.issuetype.name = 'Task' then 1 end as total_delivery_tasks,
        case when fields.issuetype.name = 'Subtask' then 1 end as total_delivery_subtasks,
        1 as total_issues,

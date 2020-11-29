@@ -17,12 +17,9 @@ renamed AS (
   coalesce(concat('{{ var('stg_asana_projects_id-prefix') }}',assignee.gid),'-999')  as task_creator_user_id,
   coalesce(concat('{{ var('stg_asana_projects_id-prefix') }}',assignee.gid),'-999') as task_assignee_user_id,
   name  as task_name,
-  cast(null as string) as task_priority,
   case when parent.gid is null then 'Task' else 'Subtask' end as task_type,
   notes as task_description,
   cast(null as string) task_status,
-  completed_at as task_resolution_ts,
-  cast(null as string) as task_resolution_type,
   cast(null as string) as task_status_colour,
   completed   as task_is_completed,
   completed_at  as task_completed_ts,
@@ -44,9 +41,6 @@ renamed AS (
   case when cast(null as string)	 = 'In QA' then 1 end as total_in_qa,
   case when cast(null as string)	 = 'Design & Validation' then 1 end as total_in_design,
   case when cast(null as string)	 = 'Add to Looker' then 1 end as total_in_add_to_looker,
-  case when cast(null as string) = 'Low' then 1 end as total_priority_low,
-  case when cast(null as string) = 'Medium' then 1 end as total_priority_medium,
-  case when cast(null as string) = 'High' then 1 end as total_priority_high,
   case when case when parent.gid is null then 'Task' else 'Subtask' end = 'Task' then 1 end as total_delivery_tasks,
   case when case when parent.gid is null then 'Task' else 'Subtask' end = 'Subtask' then 1 end as total_delivery_subtasks,
   1 as total_issues,
@@ -55,7 +49,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(41) }}
+  {{ dbt_utils.group_by(35) }}
 )
 SELECT
   *
