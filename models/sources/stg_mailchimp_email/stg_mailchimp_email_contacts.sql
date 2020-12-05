@@ -42,6 +42,12 @@ SELECT
     CAST(NULL AS STRING) AS contact_company_id,
     CAST(NULL AS STRING) AS contact_owner_id,
     status AS contact_lifecycle_stage,
+    cast(null as boolean)         as user_is_contractor,
+    cast(null as boolean) as user_is_staff,
+    cast(null as int64)           as user_weekly_capacity,
+    cast(null as int64)           as user_default_hourly_rate,
+    cast(null as int64)           as user_cost_rate,
+    false                          as user_is_active,
     timestamp_opt AS contact_created_date,
     last_changed AS contact_last_modified_date
   FROM

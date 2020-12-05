@@ -33,6 +33,16 @@ with t_contacts_merge_list as
     SELECT *
     FROM   {{ ref('stg_mailchimp_email_contacts') }}
     {% endif %}
+    {% if var("enable_jira_projects_source")  %}
+    UNION ALL
+    SELECT *
+    FROM   {{ ref('stg_jira_projects_contacts') }}
+    {% endif %}
+    {% if var("enable_asana_projects_source")  %}
+    UNION ALL
+    SELECT *
+    FROM   {{ ref('stg_asana_projects_contacts') }}
+    {% endif %}
   ),
 contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
@@ -60,6 +70,12 @@ contacts as (
           job_title,
           contact_phone,
           contact_mobile_phone,
+          contact_is_contractor,
+          contact_is_staff,
+          contact_weekly_capacity,
+          contact_default_hourly_rate,
+          contact_cost_rate,
+          contact_is_active,
           contact_created_date,
           contact_last_modified_date,
           e.all_contact_emails,
@@ -71,7 +87,13 @@ contacts as (
                 max(contact_phone) as contact_phone,
                 max(contact_mobile_phone) as contact_mobile_phone ,
                 min(contact_created_date) as contact_created_date,
-                max(contact_last_modified_date) as contact_last_modified_date
+                max(contact_last_modified_date) as contact_last_modified_date,
+                max(user_is_contractor)         as contact_is_contractor,
+                max(user_is_staff) as contact_is_staff,
+                max(user_weekly_capacity)          as contact_weekly_capacity,
+                max(user_default_hourly_rate)          as contact_default_hourly_rate,
+                max(user_cost_rate)           as contact_cost_rate,
+                max(user_is_active)                          as contact_is_active
             FROM t_contacts_merge_list
          group by 1) c
   join contact_emails e on c.contact_name = e.contact_name

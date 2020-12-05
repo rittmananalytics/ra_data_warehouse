@@ -39,6 +39,12 @@ contacts as (
         cast(null as string) as contact_company_id,
         cast(null as string) as contact_owner_id,
         contacts.contactstatus as contact_lifecycle_stage,
+        cast(null as boolean)         as user_is_contractor,
+        cast(null as boolean) as user_is_staff,
+        cast(null as int64)           as user_weekly_capacity,
+        cast(null as int64)           as user_default_hourly_rate,
+        cast(null as int64)           as user_cost_rate,
+        false                          as user_is_active,
         cast(null as timestamp) as contact_created_date,
         contacts.updateddateutc as contact_last_modified_date
  from xero_contacts contacts
@@ -52,7 +58,7 @@ contacts as (
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
  where concat(contacts.firstname,' ',contacts.lastname) is not null
- group by 1,2,3,4,5,6,7,8,14,15,16,17,18,19,20
+ group by 1,2,3,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26
 )
 
 select * from contacts

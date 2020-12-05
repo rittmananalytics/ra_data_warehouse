@@ -28,6 +28,12 @@ renamed as (
     cast(null as string) as contact_company_id,
     cast(null as string) as contact_owner_id,
     cast(null as string) as contact_lifecycle_stage,
+    cast(null as boolean)         as user_is_contractor,
+    cast(null as boolean) as user_is_staff,
+    cast(null as int64)           as user_weekly_capacity,
+    cast(null as int64)           as user_default_hourly_rate,
+    cast(null as int64)           as user_cost_rate,
+    false                          as user_is_active,
     created_at as contact_created_date,
     updated_at as contact_last_modified_date
   FROM
