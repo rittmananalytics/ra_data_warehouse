@@ -25,7 +25,7 @@ renamed as (
     history_status status,
     look_title title,
     query_explore explore,
-    user_name name,
+    concat('looker-',user_name) as contact_id,
     history_approximate_web_usage_in_minutes approximate_web_usage_in_minutes,
     history_average_runtime_in_seconds average_runtime_in_seconds,
     dashboard_title
@@ -44,7 +44,7 @@ renamed as (
     status,
     title,
     explore,
-    name,
+    concat('looker-',name) as contact_id,
     approximate_web_usage_in_minutes,
     safe_cast(average_runtime_in_seconds as float64) as average_runtime_in_seconds,
     null as dashboard_title

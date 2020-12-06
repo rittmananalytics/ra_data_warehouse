@@ -18,9 +18,9 @@ with companies_dim as (
     from {{ ref('wh_companies_dim') }}
 ),
 
-user_dim as (
+contacts_dim as (
     select *
-    from {{ ref('wh_users_dim') }}
+    from {{ ref('wh_contacts_dim') }}
 ),
   tasks_dim as (
       select *
@@ -40,7 +40,7 @@ SELECT
 
     GENERATE_UUID() as timesheet_pk,
     c.company_pk,
-    s.user_pk,
+    u.contact_pk,
     p.timesheet_project_pk,
     ta.timesheet_task_pk,
     timesheet_invoice_id,
@@ -61,5 +61,5 @@ LEFT OUTER JOIN projects_dim p
    ON t.timesheet_project_id = p.timesheet_project_id
 LEFT OUTER JOIN tasks_dim ta
    ON t.timesheet_task_id = ta.task_id
-JOIN user_dim s
-   ON cast(t.timesheet_users_id as string) IN UNNEST(s.all_user_ids)
+JOIN contacts_dim u
+   ON cast(t.timesheet_users_id as string) IN UNNEST(u.all_contact_ids)

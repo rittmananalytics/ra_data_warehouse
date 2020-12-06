@@ -24,19 +24,19 @@ WITH tasks AS
     FROM   {{ ref('wh_delivery_projects_dim') }}
 
   ),
-  users as
+  contacts as
   (
     SELECT *
-    FROM  {{ ref('wh_users_dim') }}
+    FROM  {{ ref('wh_contacts_dim') }}
   )
 SELECT
    GENERATE_UUID() as delivery_task_pk,
    p.delivery_project_pk,
-   u.user_pk,
+   c.contact_pk,
    t.* except (project_id),
 FROM
    tasks t
-JOIN users u
-      ON t.task_assignee_user_id IN UNNEST(u.all_user_ids)
+JOIN contacts c
+      ON t.task_assignee_user_id IN UNNEST(c.all_contact_ids)
 LEFT OUTER JOIN projects p
    on t.project_id = p.project_id

@@ -7,6 +7,12 @@
 {% endif %}
 
 with t_contacts_merge_list as
+  (SELECT * except (contact_name),
+  case when contact_name in ('Rob','Rob Bramwell') then 'Robert Bramwell'
+       when contact_name = 'Lewis' then 'Lewis Baker'
+       when contact_name = 'Mark' then 'Mark Rittman'
+       else contact_name end as contact_name
+  FROM
   (
     {% if var("enable_hubspot_crm_source") %}
     SELECT *
@@ -43,7 +49,13 @@ with t_contacts_merge_list as
     SELECT *
     FROM   {{ ref('stg_asana_projects_contacts') }}
     {% endif %}
-  ),
+    {% if var("enable_looker_usage_source")  %}
+    UNION ALL
+    SELECT *
+    FROM   {{ ref('stg_looker_usage_contacts') }}
+    {% endif %}
+  )
+),
 contact_emails as (
          SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
          FROM t_contacts_merge_list
