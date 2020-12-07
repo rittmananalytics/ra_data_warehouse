@@ -19,6 +19,7 @@ renamed AS (
   name  as task_name,
   case when parent.gid is null then 'Task' else 'Subtask' end as task_type,
   notes as task_description,
+  cast(null as string) as task_url,
   cast(null as string) task_status,
   cast(null as string) as task_status_colour,
   completed   as task_is_completed,

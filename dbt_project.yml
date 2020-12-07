@@ -177,6 +177,7 @@ vars:
   stg_jira_projects_stitch_project_categories_table: project_categories
   stg_jira_projects_stitch_issues_table: issues
   stg_jira_projects_stitch_users_table: users
+  stg_jira_projects_jira_url: rittmananalytics.atlassian.net/jira
 
   stg_mailchimp_email_id-prefix: mailchimp-
   stg_mailchimp_email_etl: stitch
