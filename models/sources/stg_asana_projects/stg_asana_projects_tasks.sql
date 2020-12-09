@@ -54,7 +54,7 @@ renamed AS (
   FROM
     source,
     unnest(projects) projects
-  {{ dbt_utils.group_by(38) }}
+  {{ dbt_utils.group_by(40) }}
 )
 SELECT
   *

@@ -32,10 +32,10 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
             when fields.status.name	 in ('Done','Done/Passed Client QA') then 10
             else null end as task_status_workflow_stage_number,
        fields.status.statuscategory.colorname	as task_status_colour,
-       case when fields.status.name	 = in ('Done','Done/Passed Client QA') then true else false end as task_is_completed,
-       case when fields.status.name	 = in ('Done','Done/Passed Client QA') then timestamp(fields.statuscategorychangedate) end  as task_completed_ts,
+       case when fields.status.name	 in ('Done','Done/Passed Client QA') then true else false end as task_is_completed,
+       case when fields.status.name	 in ('Done','Done/Passed Client QA') then timestamp(fields.statuscategorychangedate) end  as task_completed_ts,
        timestamp(fields.statuscategorychangedate) as task_status_change_ts,
-       case when fields.status.name	 = in ('Done','Done/Passed Client QA') then timestamp_diff(timestamp(fields.statuscategorychangedate),fields.created,HOUR)
+       case when fields.status.name	 in ('Done','Done/Passed Client QA') then timestamp_diff(timestamp(fields.statuscategorychangedate),fields.created,HOUR)
         end as total_task_hours_to_complete,
       case when fields.status.name	 <> in ('Done','Done/Passed Client QA') then timestamp_diff(current_timestamp,fields.created,HOUR)
          end as total_task_hours_incomplete,
