@@ -48,7 +48,7 @@ select *,
             when ad_network = 'Hubspot Email' then 'hs_email'
             end as utm_source,
        case when ad_network in ('Google Ads','Facebook Ads') then 'paid'
-            when ad_network in ('Mailchimp','Hubspot Email' then 'email'
+            when ad_network in ('Mailchimp','Hubspot Email') then 'email'
             else null end as utm_medium)
        case when ad_campaign_name like '%Winter 2019%' then 'winter_2019'
             when ad_campaign_name like '%Summer 2020%' then 'summer_2020'
