@@ -32,6 +32,10 @@ from campaign_performance c
 left join campaigns s
 on c.ad_campaign_id = s.ad_campaign_id)
 ,
+utm_campaign_mapping as (
+  select *
+  from {{ ref('utm_campaign_mapping') }}
+),
   segment_clicks AS (
   SELECT
     utm_source,

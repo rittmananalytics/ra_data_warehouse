@@ -52,6 +52,10 @@ utm_campaign_mapping as
 ( SELECT *
   FROM {{ ref('utm_campaign_mapping')}}
 ),
+ad_campaigns as (
+  SELECT *
+    FROM {{ ref('wh_ad_campaigns_dim')}}
+),
 {% if var("enable_subscriptions_warehouse")  %}
     customers as (
    SELECT *
@@ -61,23 +65,27 @@ joined as (
 SELECT
     c.customer_pk,
     s.*,
-    m.ad_campaign_id
+    a.ad_campaign_pk
 FROM
    sessions s
 LEFT OUTER JOIN customers c
    ON s.blended_user_id = c.customer_id
 LEFT OUTER JOIN utm_campaign_mapping m
    ON s.utm_campaign = m.utm_campaign
+LEFT OUTER JOIN ad_campaigns a
+         ON m.ad_campaign_id = a.ad_campaign_id
  ),
 {% else %}
 joined as (
 SELECT
-   s.*,
-   m.ad_campaign_id
+   s.*,a.ad_campaign_pk
 FROM
    sessions s
 LEFT OUTER JOIN utm_campaign_mapping m
       ON s.utm_campaign = m.utm_campaign
+      AND s.utm_source = m.utm_source
+LEFT OUTER JOIN ad_campaigns a
+      ON m.ad_campaign_id = a.ad_campaign_id
 ),
 {% endif %}
 ordered as (
