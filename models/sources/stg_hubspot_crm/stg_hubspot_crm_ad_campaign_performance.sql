@@ -8,7 +8,7 @@
 with source as (
   SELECT
     ad_campaign_serve_ts,
-    concat('{{ var('stg_hubspot_crm_id-prefix') }}',ad_campaign_id),
+    concat('{{ var('stg_hubspot_crm_id-prefix') }}',ad_campaign_id) as ad_campaign_id,
     NULL AS ad_campaign_budget,
     NULL AS ad_campaign_avg_cost,
     NULL AS ad_campaign_avg_time_on_site,

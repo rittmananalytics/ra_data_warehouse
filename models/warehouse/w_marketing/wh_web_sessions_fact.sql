@@ -48,6 +48,10 @@ FROM
   )
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
   ),
+utm_campaign_mapping as
+( SELECT *
+  FROM {{ ref('utm_campaign_mapping')}}
+),
 {% if var("enable_subscriptions_warehouse")  %}
     customers as (
    SELECT *
@@ -56,17 +60,24 @@ group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
 joined as (
 SELECT
     c.customer_pk,
-    s.* 
+    s.*,
+    m.ad_campaign_id
 FROM
    sessions s
 LEFT OUTER JOIN customers c
-   ON s.blended_user_id = c.customer_id),
-{% else %}    
+   ON s.blended_user_id = c.customer_id
+LEFT OUTER JOIN utm_campaign_mapping m
+   ON s.utm_campaign = m.utm_campaign
+ ),
+{% else %}
 joined as (
 SELECT
-   s.* 
+   s.*,
+   m.ad_campaign_id
 FROM
    sessions s
+LEFT OUTER JOIN utm_campaign_mapping m
+      ON s.utm_campaign = m.utm_campaign
 ),
 {% endif %}
 ordered as (
@@ -74,8 +85,4 @@ select GENERATE_UUID() as web_sessions_pk,
         * ,
         row_number() over (partition by blended_user_id order by session_start_ts) as user_session_number
 from joined)
-select *,
-       lag(channel,1) over (partition by blended_user_id order by session_start_ts) as prev_session_channel,
-       lag(utm_medium) over (partition by blended_user_id order by session_start_ts) as prev_utm_medium,
-       lag(utm_source) over (partition by blended_user_id order by session_start_ts) as prev_utm_source,
-from ordered
+select * from ordered
