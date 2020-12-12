@@ -16,57 +16,42 @@ WITH
   (
   SELECT * from {{ ref('int_ad_campaign_performance') }}
 ),
- campaigns as (
-   SELECT * from {{ ref('wh_ad_campaigns_dim') }}
-),
+  campaigns as (
+  SELECT * from {{ ref('wh_ad_campaigns_dim') }}
+  )
+,
  web_events as (
    SELECT * from {{ ref('wh_web_events_fact') }}
  ),
 campaign_performance_joined as (
-select GENERATE_UUID() as ad_campaign_performance_pk,
+  SELECT
        s.ad_campaign_pk,
        s.utm_source,
        s.utm_campaign,
+       s.utm_medium,
        c.*
 from campaign_performance c
 left join campaigns s
 on c.ad_campaign_id = s.ad_campaign_id)
 ,
-utm_campaign_mapping as (
-  select *
-  from {{ ref('utm_campaign_mapping') }}
-),
   segment_clicks AS (
-  SELECT
-    utm_source,
-    utm_campaign,
-    campaign_date,
-    SUM(total_clicks) AS total_clicks
-  FROM (
     SELECT
-      utm_source,
-      LOWER(utm_campaign) AS utm_campaign,
-      utm_term,
+      ad_campaign_pk,
       TIMESTAMP_TRUNC(event_ts,DAY) AS campaign_date,
-
-      blended_user_id,
-
       COUNT(web_event_pk) AS total_clicks
     FROM
       web_events
     WHERE
-      utm_campaign is not null
+      ad_campaign_pk is not null
     GROUP BY
-      1,2,3,4,5)
-  GROUP BY
-    1,2,3),
+      1,2),
   ad_network_clicks AS (
   SELECT
     ad_campaign_pk,
+    campaign_date,
     utm_source,
     utm_campaign,
-    ad_campaign_id,
-    campaign_date,
+    utm_medium,
     SUM(total_reported_cost) AS total_reported_cost,
     AVG(avg_reported_time_on_site) AS avg_reported_time_on_site,
     AVG(avg_reported_bounce_rate) AS avg_reported_bounce_rate,
@@ -79,7 +64,7 @@ utm_campaign_mapping as (
       ad_campaign_pk,
       utm_source,
       utm_campaign,
-      ad_campaign_id,
+      utm_medium,
       case when utm_source = 'newsletter' then ad_campaign_total_cost
            when utm_source = 'adwords' then (ad_campaign_total_cost*.75)
            else ad_campaign_total_cost end AS total_reported_cost,
@@ -113,7 +98,7 @@ FROM
 LEFT OUTER JOIN
   segment_clicks s
 ON
-  s.utm_campaign = a.utm_campaign
+  s.ad_campaign_pk = a.ad_campaign_pk
   AND s.campaign_date = a.campaign_date
 )
 select * from joined

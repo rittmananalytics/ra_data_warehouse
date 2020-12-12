@@ -63,7 +63,9 @@ joined as
 )
 select * from joined
 {% else %}
-select * from events_with_prev_ts_event_type e
+select e.*,
+       a.ad_campaign_pk
+from events_with_prev_ts_event_type e
 LEFT OUTER JOIN utm_campaign_mapping m
    ON e.utm_campaign = m.utm_campaign
    AND e.utm_source = m.utm_source
