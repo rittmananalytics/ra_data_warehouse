@@ -20,8 +20,8 @@ WITH
   SELECT * from {{ ref('wh_ad_campaigns_dim') }}
   )
 ,
- web_events as (
-   SELECT * from {{ ref('wh_web_events_fact') }}
+ web_sessions as (
+   SELECT * from {{ ref('wh_web_sessions_fact') }}
  ),
 campaign_performance_joined as (
   SELECT
@@ -37,10 +37,10 @@ on c.ad_campaign_id = s.ad_campaign_id)
   segment_clicks AS (
     SELECT
       ad_campaign_pk,
-      TIMESTAMP_TRUNC(event_ts,DAY) AS campaign_date,
-      COUNT(web_event_pk) AS total_clicks
+      TIMESTAMP_TRUNC(session_start_ts,DAY) AS campaign_date,
+      COUNT(web_sessions_pk) AS total_clicks
     FROM
-      web_events
+      web_sessions
     WHERE
       ad_campaign_pk is not null
     GROUP BY
@@ -101,6 +101,20 @@ ON
   s.ad_campaign_pk = a.ad_campaign_pk
   AND s.campaign_date = a.campaign_date
 )
-select * from joined
+select
+      GENERATE_UUID() as ad_campaign_performance_pk,
+      campaign_date,
+      ad_campaign_pk,
+      total_clicks,
+      total_reported_clicks,
+      actual_vs_reported_clicks_pct,
+      total_reported_cost,
+      reported_cpc,
+      reported_ctr,
+      actual_ctr,
+      total_reported_impressions,
+      reported_cpm
+      from joined
+where trim(utm_campaign) is not null
 --where utm_source is not null
 --and utm_campaign is not null
