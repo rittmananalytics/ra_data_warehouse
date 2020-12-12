@@ -13,7 +13,7 @@ with source as (
 ),
 renamed as (
     select
-      cast(content_id as string)              as ad_campaign_id,
+      concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(content_id as string))              as ad_campaign_id,
       name                                   as ad_campaign_name,
       cast(null as string)           as ad_campaign_status,
       type as campaign_buying_type,
@@ -30,7 +30,7 @@ with source as (
 renamed as (
   select * from (
     SELECT
-      cast(contentid as string)              as ad_campaign_id,
+      concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(contentid as string))              as ad_campaign_id,
       name                                   as ad_campaign_name,
       case when max(_sdc_received_at) over (partition by contentid) < current_timestamp then 'PAUSED' else 'ACTIVE' end           as ad_campaign_status,
       type as campaign_buying_type,
