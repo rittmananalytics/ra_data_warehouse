@@ -47,7 +47,7 @@ select *,
             when ad_network = 'Mailchimp' then 'newsletter'
             when ad_network = 'Hubspot Email' then 'hs_email'
             end as utm_source,
-       case when ad_network = 'Google Ads' then 'ppc',
+       case when ad_network = 'Google Ads' then 'ppc'
             when ad_network = 'Facebook Ads' then 'paid_social'
             when ad_network in ('Mailchimp','Hubspot Email') then 'email'
             else null end as utm_medium,
