@@ -152,6 +152,7 @@ vars:
   stg_hubspot_crm_stitch_deal_pipelines_table: deal_pipelines
   stg_hubspot_crm_stitch_engagements_table: engagements
   stg_hubspot_crm_stitch_campaigns_table: campaigns
+  stg_hubspot_crm_stitch_email_events_table: email_events
   stg_hubspot_crm_fivetran_company_table: company
   stg_hubspot_crm_fivetran_contact_table: contact
   stg_hubspot_crm_fivetran_deal_table: deal

@@ -19,7 +19,7 @@ SELECT
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) as send_id,
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',email_id) as contact_id,
   timestamp as event_ts,
-  action,
+  case when action = 'send' then 'sent' else action end as action,
   type,
   email_address,
   replace(url,'[UNIQID]',email_id) as url

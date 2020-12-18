@@ -42,8 +42,8 @@ SELECT
 FROM
    email_send_outcomes o
 JOIN contacts_dim c
-   ON concat('mailchimp-',o.contact_id) IN UNNEST(c.all_contact_ids)
-JOIN email_lists_dim l
+   ON o.contact_id IN UNNEST(c.all_contact_ids)
+LEFT JOIN email_lists_dim l
    ON o.list_id = l.list_id
-JOIN email_sends_dim s
+LEFT JOIN email_sends_dim s
    ON o.send_id = s.send_id
