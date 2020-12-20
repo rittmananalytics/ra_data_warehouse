@@ -155,7 +155,41 @@ renamed as (
       property_license_referral_harvest_project_code.value        as deal_license_referral_harvest_project_code,
       property_jira_project_code.value                            as deal_jira_project_code,
       property_assigned_consultant.value                          as deal_assigned_consultant,
-      property_products_in_solution.value                         as deal_products_in_solution
+      property_products_in_solution.value                         as deal_products_in_solution,
+      property_hs_date_entered_appointmentscheduled.value         as date_entered_deal_stage_0,
+      property_hs_date_exited_appointmentscheduled.value          as date_exited_deal_stage_0,
+      round(cast(property_hs_time_in_appointmentscheduled.value   as int64)/3600000/24,0) as days_in_deal_stage_0,
+      property_hs_date_entered_1164152.value                      as date_entered_deal_stage_1,
+      property_hs_date_exited_1164152.value                       as date_exited_deal_stage_1,
+      round(cast(property_hs_time_in_1164152.value                as int64)/3600000/24,0) as days_in_deal_stage_1,
+      property_hs_date_entered_qualifiedtobuy.value               as date_entered_deal_stage_2,
+      property_hs_date_exited_qualifiedtobuy.value                as date_exited_deal_stage_2,
+      round(cast(property_hs_time_in_qualifiedtobuy.value         as int64)/3600000/24,0) as days_in_deal_stage_2,
+      property_hs_date_entered_1357010.value                      as date_entered_deal_stage_3,
+      property_hs_date_exited_1357010.value                       as date_exited_deal_stage_3,
+      round(cast(property_hs_time_in_1357010.value                as int64)/3600000/24,0) as days_in_deal_stage_3,
+      property_hs_date_entered_presentationscheduled.value        as date_entered_deal_stage_4,
+      property_hs_date_exited_presentationscheduled.value         as date_exited_deal_stage_4,
+      round(cast(property_hs_time_in_presentationscheduled.value  as int64)/3600000/24,0) as days_in_deal_stage_4,
+      property_hs_date_entered_1164140.value                      as date_entered_deal_stage_5,
+      property_hs_date_exited_1164140.value                       as date_exited_deal_stage_5,
+      round(cast(property_hs_time_in_1164140.value                as int64)/3600000/24,0) as days_in_deal_stage_5,
+      property_hs_date_entered_553a886b_24bc_4ec4_bca3_b1b7fcd9e1c7_1321074272.value as date_entered_deal_stage_6,
+      property_hs_date_exited_553a886b_24bc_4ec4_bca3_b1b7fcd9e1c7_1321074272.value as date_exited_deal_stage_6,
+      round(cast(property_hs_time_in_553a886b_24bc_4ec4_bca3_b1b7fcd9e1c7_1321074272.value as int64)/3600000/24,0) as days_in_deal_stage_6,
+      property_hs_date_entered_7c41062e_06c6_4a4a_87eb_de503061b23c_975176047.value as date_entered_deal_stage_7,
+      property_hs_date_exited_7c41062e_06c6_4a4a_87eb_de503061b23c_975176047.value as date_exited_deal_stage_7,
+      round(cast(property_hs_time_in_7c41062e_06c6_4a4a_87eb_de503061b23c_975176047.value as int64)/3600000/24,0) as days_in_deal_stage_7,
+      property_hs_date_entered_1031924.value as date_entered_deal_stage_8,
+      round(cast(property_hs_time_in_1031924.value as int64)/3600000/24,0) as days_in_deal_stage_8,
+      property_hs_date_entered_1031923.value as date_entered_deal_stage_9,
+      round(cast(property_hs_time_in_1031923.value as int64)/3600000/24,0) as days_in_deal_stage_9,
+      property_hs_date_entered_closedlost.value as date_entered_deal_stage_10,
+      round(cast(property_hs_time_in_closedlost.value as int64)/3600000/24,0) as days_in_deal_stage_10,
+      property_hs_manual_forecast_category.value as manual_forecast_category,
+      property_hs_forecast_probability.value as forecast_probability,
+      property_hs_merged_object_ids.value as merged_object_ids,
+      property_hs_predicted_amount.value as predicted_amount
       FROM
       source,
                 unnest(associations.associatedcompanyids) associatedcompanyids
@@ -163,6 +197,14 @@ renamed as (
 joined as (
     select
     d.*,
+    d.days_in_deal_stage_0 +
+      coalesce(d.days_in_deal_stage_1,0) +
+      coalesce(d.days_in_deal_stage_2,0) +
+      coalesce(d.days_in_deal_stage_3,0) +
+      coalesce(d.days_in_deal_stage_4,0) +
+      coalesce(d.days_in_deal_stage_5,0) +
+      coalesce(d.days_in_deal_stage_6,0) +
+      coalesce(d.days_in_deal_stage_7,0) as days_in_pipeline,
     p.pipeline_label,
     p.pipeline_display_order,
     s.pipeline_stage_label,

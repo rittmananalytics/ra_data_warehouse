@@ -12,8 +12,8 @@ with source as (
 ),
 renamed as (
   SELECT
+  cast(null as string) as send_id,
   concat('{{ var('stg_hubspot_email_id-prefix') }}',cast(emailcampaignid as string)) as ad_campaign_id,
-  cast(emailcampaigngroupid as string) as send_id,
   cast(contact_id as string) as contact_id,
   created as event_ts,
   cast(lower(type) as string) as action,
@@ -25,7 +25,6 @@ FROM
 LEFT JOIN
   {{ ref('stg_hubspot_crm_contacts') }} c
 on e.recipient = c.contact_email
-where type not in ('STATUSCHANGE','DELIVERED','PROCESSED')
 group by 1,2,3,4,5,6,7,8
 )
 {% endif %}

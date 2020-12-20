@@ -38,7 +38,6 @@ SELECT
     l.list_pk,
     k.ad_campaign_pk,
     o.* except (list_id,
-               ad_campaign_id,
                contact_id)
 FROM
    email_events o

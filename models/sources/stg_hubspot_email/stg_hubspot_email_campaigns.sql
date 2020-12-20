@@ -38,7 +38,7 @@ renamed as (
       max(_sdc_received_at) over (partition by id)  as ad_campaign_end_date,
       'Hubspot Email' as ad_network
     FROM source
-    WHERE appname = 'Batch')
+    )
   group by 1,2,3,4,5,6,7
 )
 {% endif %}
