@@ -7,43 +7,44 @@
 {% else %}
 {{
     config(
-        alias='email_send_outcomes_fact'
+        alias='email_events_fact'
     )
 }}
 {% endif %}
 
-with email_sends_dim as (
+with ad_campaigns_dim as (
       select *
-      from {{ ref('wh_email_sends_dim') }}
+      from {{ ref('wh_ad_campaigns_dim') }}
 ),
 email_lists_dim as (
-      select *
-      from {{ ref('wh_email_lists_dim') }}
-),
+  select *
+  from {{ ref('wh_email_lists_dim') }}
+)
+,
 contacts_dim AS
   (
   SELECT *
   FROM   {{ ref('wh_contacts_dim') }}
 ),
-email_send_outcomes AS
+email_events AS
   (
     SELECT *
-    FROM   {{ ref('int_email_send_outcomes') }}
+    FROM   {{ ref('int_email_events') }}
   )
 SELECT
 
     GENERATE_UUID() as send_outcome_pk,
     c.contact_pk,
     l.list_pk,
-    s.send_pk,
+    k.ad_campaign_pk,
     o.* except (list_id,
-               send_id,
+               ad_campaign_id,
                contact_id)
 FROM
-   email_send_outcomes o
+   email_events o
 JOIN contacts_dim c
    ON o.contact_id IN UNNEST(c.all_contact_ids)
+LEFT JOIN ad_campaigns_dim k
+   ON o.ad_campaign_id = k.ad_campaign_id
 LEFT JOIN email_lists_dim l
    ON o.list_id = l.list_id
-LEFT JOIN email_sends_dim s
-   ON o.send_id = s.send_id

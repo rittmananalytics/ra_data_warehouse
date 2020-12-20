@@ -1,19 +1,19 @@
-{% if not var("enable_hubspot_crm_source")  %}
+{% if not var("enable_hubspot_email_source")  %}
 {{
     config(
         enabled=false
     )
 }}
 {% endif %}
-{% if var("stg_hubspot_crm_etl") == 'stitch' %}
+{% if var("stg_hubspot_email_etl") == 'stitch' %}
 with source as (
   select *
-  from {{ target.database}}.{{ var('stg_hubspot_crm_stitch_schema') }}.{{ var('stg_hubspot_crm_stitch_email_events_table') }}
+  from {{ target.database}}.{{ var('stg_hubspot_email_stitch_schema') }}.{{ var('stg_hubspot_email_stitch_email_events_table') }}
 ),
 renamed as (
   SELECT
-  cast(emailcampaigngroupid as string) as list_id,
-  cast(id as string) as send_id,
+  concat('{{ var('stg_hubspot_email_id-prefix') }}',cast(emailcampaignid as string)) as ad_campaign_id,
+  cast(emailcampaigngroupid as string) as send_id,
   cast(contact_id as string) as contact_id,
   created as event_ts,
   cast(lower(type) as string) as action,
@@ -26,6 +26,7 @@ LEFT JOIN
   {{ ref('stg_hubspot_crm_contacts') }} c
 on e.recipient = c.contact_email
 where type not in ('STATUSCHANGE','DELIVERED','PROCESSED')
+group by 1,2,3,4,5,6,7,8
 )
 {% endif %}
 select * from renamed

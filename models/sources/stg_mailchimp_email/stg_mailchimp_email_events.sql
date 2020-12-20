@@ -16,7 +16,7 @@ FROM
 where _sdc_batched_at = max_sdc_batched_at)
 SELECT
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',list_id) as list_id,
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) as send_id,
+  concat('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) as ad_campaign_id,
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',email_id) as contact_id,
   timestamp as event_ts,
   action,

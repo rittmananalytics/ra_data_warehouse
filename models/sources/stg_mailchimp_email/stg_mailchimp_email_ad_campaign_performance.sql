@@ -27,7 +27,7 @@ with source as (
   (
   SELECT
     TIMESTAMP(DATE(event_ts)) AS ad_campaign_serve_ts,
-    send_id AS ad_campaign_id,
+    ad_campaign_id,
     NULL AS ad_campaign_budget,
     NULL AS ad_campaign_avg_cost,
     NULL AS ad_campaign_avg_time_on_site,

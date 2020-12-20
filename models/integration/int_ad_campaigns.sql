@@ -35,9 +35,9 @@ with campaigns as
     UNION All
     {% endif %}
 
-    {% if var("enable_hubspot_crm_source")  %}
+    {% if var("enable_hubspot_email_source")  %}
     SELECT *
-    FROM   {{ ref('stg_hubspot_crm_campaigns') }}
+    FROM   {{ ref('stg_hubspot_email_campaigns') }}
     {% endif %}
   )
 select *,

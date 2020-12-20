@@ -50,6 +50,7 @@ seeds:
 vars:
   enable_harvest_projects_source:      true
   enable_hubspot_crm_source:           true
+  enable_hubspot_email_source:         true
   enable_asana_projects_source:        true
   enable_jira_projects_source:         true
   enable_stripe_payments_source:       true
@@ -151,8 +152,6 @@ vars:
   stg_hubspot_crm_stitch_pipeline_stages_table: pipeline_stages
   stg_hubspot_crm_stitch_deal_pipelines_table: deal_pipelines
   stg_hubspot_crm_stitch_engagements_table: engagements
-  stg_hubspot_crm_stitch_campaigns_table: campaigns
-  stg_hubspot_crm_stitch_email_events_table: email_events
   stg_hubspot_crm_fivetran_company_table: company
   stg_hubspot_crm_fivetran_contact_table: contact
   stg_hubspot_crm_fivetran_deal_table: deal
@@ -162,7 +161,12 @@ vars:
   stg_hubspot_crm_fivetran_property_history_table: property_history
   stg_hubspot_crm_fivetran_deal_company_table: deal_company
   stg_hubspot_crm_fivetran_engagements_table: engagements
-  stg_hubspot_crm_fivetran_campaigns_table: email_campaigns
+
+  stg_hubspot_email_stitch_email_events_table: email_events
+  stg_hubspot_email_stitch_campaigns_table: campaigns
+  stg_hubspot_email_id-prefix: hubspot-
+  stg_hubspot_email_stitch_schema: stitch_hubspot
+  stg_hubspot_email_etl: stitch
 
   stg_intercom_messaging_id-prefix: intercom-
   stg_intercom_messaging_etl: stitch

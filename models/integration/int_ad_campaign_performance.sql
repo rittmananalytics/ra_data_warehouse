@@ -25,7 +25,7 @@ with ad_campaigns as
     {% endif %}
     {% if var("enable_hubspot_crm_source")  %}
     SELECT *
-    FROM   {{ ref('stg_hubspot_crm_ad_campaign_performance') }}
+    FROM   {{ ref('stg_hubspot_email_ad_campaign_performance') }}
     {% endif %}
 
 
