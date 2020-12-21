@@ -101,7 +101,7 @@ renamed as (
       property_dealname.value                                     as deal_name,
       case when property_dealtype.value = 'newbusiness' then 'New Business'
            when property_dealtype.value = 'existingbusiness' then 'Existing Client'
-           else property_dealtype.value end as deal_type,
+           else 'Existing Client' end as deal_type,
       property_description.value                                  as deal_description,
       property_createdate.value                                   as deal_created_ts,
       TIMESTAMP_MILLIS(safe_cast(property_delivery_schedule_date.value  as int64)) as delivery_schedule_ts,
