@@ -20,7 +20,7 @@ WITH chart_of_accounts AS
   )
 
 SELECT
-   GENERATE_UUID() as account_pk,
+   {{ dbt_utils.surrogate_key(['account_id']) }} as account_pk,
    *
 FROM
    chart_of_accounts

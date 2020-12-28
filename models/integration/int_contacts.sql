@@ -15,43 +15,43 @@ with t_contacts_merge_list as
   FROM
   (
     {% if var("enable_hubspot_crm_source") %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_hubspot_crm_contacts')) }}
     FROM   {{ ref('stg_hubspot_crm_contacts') }}
     {% endif %}
     {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
     UNION ALL
     {% endif %}
     {% if var("enable_harvest_projects_source")  %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_harvest_projects_contacts')) }}
     FROM   {{ ref('stg_harvest_projects_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
     UNION ALL
     {% endif %}
     {% if var("enable_xero_accounting_source")  %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_xero_accounting_contacts')) }}
     FROM   {{ ref('stg_xero_accounting_contacts') }}
     {% endif %}
     {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
     UNION ALL
     {% endif %}
     {% if var("enable_mailchimp_email_source")  %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_mailchimp_email_contacts')) }}
     FROM   {{ ref('stg_mailchimp_email_contacts') }}
     {% endif %}
     {% if var("enable_jira_projects_source")  %}
     UNION ALL
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_jira_projects_contacts')) }}
     FROM   {{ ref('stg_jira_projects_contacts') }}
     {% endif %}
     {% if var("enable_asana_projects_source")  %}
     UNION ALL
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_asana_projects_contacts')) }}
     FROM   {{ ref('stg_asana_projects_contacts') }}
     {% endif %}
     {% if var("enable_looker_usage_source")  %}
     UNION ALL
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_looker_usage_contacts')) }}
     FROM   {{ ref('stg_looker_usage_contacts') }}
     {% endif %}
   )

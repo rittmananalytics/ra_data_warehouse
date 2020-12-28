@@ -37,7 +37,7 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        timestamp(fields.statuscategorychangedate) as task_status_change_ts,
        case when fields.status.name	 in ('Done','Done/Passed Client QA') then timestamp_diff(timestamp(fields.statuscategorychangedate),fields.created,HOUR)
         end as total_task_hours_to_complete,
-      case when fields.status.name	 not in ('Done','Done/Passed Client QA') then timestamp_diff(current_timestamp,fields.created,HOUR)
+      case when fields.status.name	 not in ('Done','Done/Passed Client QA') then timestamp_diff({{ dbt_utils.current_timestamp() }},fields.created,HOUR)
          end as total_task_hours_incomplete,
        fields.customfield_10135	as deliverable_id,
        fields.customfield_10136.value as deliverable_type,

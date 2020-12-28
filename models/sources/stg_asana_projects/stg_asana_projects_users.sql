@@ -7,9 +7,8 @@
 {% endif %}
 
 WITH source AS (
-  {{ filter_stitch_table(var('stg_asana_projects_stitch_schema'),var('stg_asana_projects_stitch_users_table'),'gid') }}
+  {{ filter_stitch_relation(relation=var('stg_asana_projects_stitch_users_table'),unique_column='gid') }}
   ),
-
 renamed AS (
   SELECT
   concat('{{ var('stg_asana_projects_id-prefix') }}',gid)           as user_id,

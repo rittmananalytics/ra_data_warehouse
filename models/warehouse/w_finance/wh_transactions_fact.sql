@@ -22,7 +22,7 @@ WITH transactions AS
   )
 
 SELECT
-   GENERATE_UUID() as transaction_pk,
+   {{ dbt_utils.surrogate_key(['transaction_id']) }}  as transaction_pk,
    *
 FROM
    transactions

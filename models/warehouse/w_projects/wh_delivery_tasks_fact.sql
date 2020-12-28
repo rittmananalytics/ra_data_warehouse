@@ -15,18 +15,18 @@
 
 WITH tasks AS
   (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('int_delivery_tasks')) }}
   FROM   {{ ref('int_delivery_tasks') }}
 ),
      projects AS
   (
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('wh_delivery_projects_dim')) }}
     FROM   {{ ref('wh_delivery_projects_dim') }}
 
   ),
   contacts as
   (
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('wh_contacts_dim')) }}
     FROM  {{ ref('wh_contacts_dim') }}
   )
 SELECT

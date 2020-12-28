@@ -9,29 +9,29 @@
 
 with source as (
   select *
-  from {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_deal_table') }}
+  from {{ var('stg_hubspot_crm_fivetran_deals_table') }}
 ),
 hubspot_deal_company as (
   select *
-  from {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_company_table') }}
+  from {{ var('stg_hubspot_crm_fivetran_companies_table') }}
 ),
 hubspot_deal_pipelines_source as (
   select *
-  from  {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_deal_pipeline_table') }}
+  from  {{ var('stg_hubspot_crm_fivetran_deal_pipelines_table') }}
 )
 ,
 hubspot_deal_property_history as (
   select *
-  from  {{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_property_history_table') }}
+  from  {{ var('stg_hubspot_crm_fivetran_property_history_table') }}
 )
 ,
 hubspot_deal_stages as (
   select *
-  from  {{ ref('stg_hubspot_crm_pipeline_stages') }}
+  from  {{ var('stg_hubspot_crm_fivetran_pipeline_stages_table') }}
 ),
 hubspot_deal_owners as (
   SELECT *
-  FROM {{ ref('stg_hubspot_crm_owners') }}
+  FROM {{ var('stg_hubspot_crm_fivetran_deal_owners_table') }}
 ),
 renamed as (
   SELECT
@@ -77,7 +77,7 @@ joined as (
 {% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 
 with source as (
-  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_deals_table'),'dealid') }}
+  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_deals_table'),unique_column='dealid') }}
 
 ),
 hubspot_deal_pipelines_source as (

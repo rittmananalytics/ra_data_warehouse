@@ -15,11 +15,11 @@
 
 WITH timesheet_projects AS
   (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('int_timesheet_projects')) }}
   FROM   {{ ref('int_timesheet_projects') }}
 ),
 companies_dim as (
-    select *
+    SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
     from {{ ref('wh_companies_dim') }}
 )
 SELECT

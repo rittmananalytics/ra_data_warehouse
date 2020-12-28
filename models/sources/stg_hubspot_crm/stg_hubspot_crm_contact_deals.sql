@@ -7,7 +7,7 @@
 {% endif %}
 {% if var("stg_hubspot_crm_etl") == 'stitch' %}
 with source as (
-  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_deals_table'),'dealid') }}
+  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_deals_table'),unique_column='dealid') }}
 ),
 renamed as (
 SELECT

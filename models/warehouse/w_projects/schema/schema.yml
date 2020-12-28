@@ -28,7 +28,7 @@ models:
         tests:
           - unique
           - not_null
-  - name: wh_delivery_tasks_dim
+  - name: wh_delivery_tasks_fact
     description: "Projects Dimension"
     columns:
       - name: timesheet_task_pk

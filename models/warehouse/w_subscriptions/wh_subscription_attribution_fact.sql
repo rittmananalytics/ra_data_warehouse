@@ -13,9 +13,8 @@
 {% endif %}
 WITH subscription_details AS
     (
-      select
-        *
-      from
+      SELECT {{ dbt_utils.star(from=ref('int_converter_subscription_revenue')) }}
+      FROM
         {{ref ('int_converter_subscription_revenue') }} ),
 converting_events as
     (

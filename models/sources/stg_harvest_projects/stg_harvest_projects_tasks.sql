@@ -7,8 +7,7 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_tasks_table'),'id') }}
-
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_tasks_table'),unique_column='id') }}
 ),
 renamed as (
 select

@@ -20,7 +20,7 @@ WITH currencies AS
   )
 
 SELECT
-   GENERATE_UUID() as currency_pk,
+   {{ dbt_utils.surrogate_key(['currency_code']) }} as currency_pk,
    *
 FROM
    currencies

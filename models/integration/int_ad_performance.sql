@@ -9,7 +9,7 @@
 with ad_performance as
   (
     {% if var("enable_facebook_ads_source") %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_facebook_ads_ad_performance')) }}
     FROM   {{ ref('stg_facebook_ads_ad_performance') }}
     {% endif %}
 
@@ -19,7 +19,7 @@ with ad_performance as
     {% endif %}
 
     {% if var("enable_google_ads_source")  %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_google_ads_ad_performance')) }}
     FROM   {{ ref('stg_google_ads_ad_performance') }}
     {% endif %}
   )

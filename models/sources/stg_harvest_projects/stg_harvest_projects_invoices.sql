@@ -7,16 +7,13 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_invoices_table'),'id') }}
-
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_invoices_table'),unique_column='id') }}
     ),
 harvest_invoice_line_items as (
-
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_invoice_line_items_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_invoice_line_items_table'),unique_column='id') }}
     ),
 harvest_expenses as (
-
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_expenses_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_expenses_table'),unique_column='id') }}
     ),
 joined as (
 select i.*,
@@ -24,8 +21,8 @@ select i.*,
   id as invoice_id,
   e.total_rechargeable_expenses,
   row_number() over (partition by i.client_id order by i.created_at) as client_invoice_seq_no,
-  date_diff(date(i.created_at),date(first_value(i.created_at) over (partition by i.client_id order by i.created_at)),MONTH) as months_since_first_invoice,
-  date_diff(date(i.created_at),date(first_value(i.created_at) over (partition by i.client_id order by i.created_at)),QUARTER) as quarters_since_first_invoice,
+  {{ dbt_utils.datediff('date(first_value(i.created_at) over (partition by i.client_id order by i.created_at))','date(i.created_at)','MONTH') }} as months_since_first_invoice,
+  {{ dbt_utils.datediff('date(first_value(i.created_at) over (partition by i.client_id order by i.created_at))','date(i.created_at)','QUARTER') }} as quarters_since_first_invoice,
   amount - ifnull(cast(tax_amount as float64),0) - ifnull(cast(e.total_rechargeable_expenses as float64),0) as net_amount,
   ifnull(a.total_amount_billed,0) as total_amount_billed,
   ifnull(a.services_amount_billed,0) as services_amount_billed,
@@ -50,7 +47,7 @@ join (select *,
          ifnull((case when kind = 'Product' then amount end),0) as expenses_amount_billed,
          ifnull((case when kind = 'Support' then amount end),0) as support_amount_billed
     FROM harvest_invoice_line_items
-group by 1,2,3,4,6,7,8,9)) a
+group by 1,2,3,4,6,7,8,9 )) a
 on   i.id = a.invoice_id
 left outer join (select invoice_id, sum(total_cost) as total_rechargeable_expenses FROM harvest_expenses  where billable group by 1 ) e
 on i.id = e.invoice_id

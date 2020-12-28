@@ -5,6 +5,6 @@
       case when '{{ res.status }}' like 'CREATE TABLE%' or '{{ res.status }}' like 'MERGE%' then
       safe_cast(replace(split('{{ res.status }}','(')[OFFSET(1)],')','') as numeric)
       else 0 end,
-      {{ res.execution_time }},  current_timestamp())
+      {{ res.execution_time }},  {{ dbt_utils.current_timestamp() }}())
   {% endfor %}
 {% endmacro %}

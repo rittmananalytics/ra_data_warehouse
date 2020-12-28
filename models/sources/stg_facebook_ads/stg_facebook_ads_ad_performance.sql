@@ -29,7 +29,7 @@ FROM
   source)
 {% elif var("stg_facebook_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('stg_facebook_ads_segment_schema'),var('stg_facebook_ads_segment_ad_performance_table')) }}
+  {{ filter_segment_relation(relation=var('stg_facebook_ads_segment_ad_performance_table')) }}
 ),
 renamed as (
 SELECT

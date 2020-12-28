@@ -27,13 +27,13 @@ WITH payments AS
     from {{ ref('wh_currencies_dim') }}
 )
 SELECT
-   GENERATE_UUID() as payment_pk,
+   {{ dbt_utils.surrogate_key(['payment_id']) }} as payment_pk,
    c.company_pk,
    row_number() over (partition by c.company_pk order by payment_date) as payment_seq,
-   date_diff(date(payment_date),min(date(payment_date)) over (partition by c.company_pk),MONTH) as months_since_first_payment,
-   timestamp(date_trunc(min(date(payment_date)) over (partition by c.company_pk),MONTH)) first_payment_month,
-   date_diff(date(payment_date),min(date(payment_date)) over (partition by c.company_pk),QUARTER) as quarters_since_first_payment,
-   timestamp(date_trunc(min(date(payment_date)) over (partition by c.company_pk),QUARTER)) first_payment_quarter,
+   {{ dbt_utils.datediff('min(date(payment_date)) over (partition by c.company_pk)', 'date(payment_date)', 'MONTH') }}  as months_since_first_payment,
+   {{ dbt_utils.date_trunc('MONTH','min(date(payment_date)) over (partition by c.company_pk)') }} as first_payment_month,
+   {{ dbt_utils.datediff('min(date(payment_date)) over (partition by c.company_pk)', 'date(payment_date)', 'QUARTER') }}  as quarters_since_first_payment,
+   {{ dbt_utils.date_trunc('QUARTER','min(date(payment_date)) over (partition by c.company_pk)') }} as first_payment_quarter,
    p.*
 FROM
    payments p

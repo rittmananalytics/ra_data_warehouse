@@ -18,9 +18,9 @@ with companies_dim as (
     from {{ ref('wh_companies_dim') }}
 )
 SELECT
-   GENERATE_UUID() as deal_pk,
-   c.company_pk,
-   d.* except (company_id)
+    {{ dbt_utils.surrogate_key(['deal_id']) }} as deal_pk,
+     c.company_pk,
+     d.* except (company_id)
 FROM
    {{ ref('int_deals') }} d
 JOIN companies_dim c

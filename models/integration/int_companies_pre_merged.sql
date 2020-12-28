@@ -13,8 +13,9 @@
 with t_companies_pre_merged as (
 
       {% if var("enable_hubspot_crm_source") %}
-      SELECT *
-      FROM   {{ ref('stg_hubspot_crm_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_hubspot_crm_companies')) }}
+      FROM
+      {{ ref('stg_hubspot_crm_companies') }}
       {% endif %}
 
       {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
@@ -22,8 +23,9 @@ with t_companies_pre_merged as (
       {% endif %}
 
       {% if var("enable_harvest_projects_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_harvest_projects_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_harvest_projects_companies')) }}
+      FROM
+      {{ ref('stg_harvest_projects_companies') }}
       {% endif %}
 
       {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
@@ -31,8 +33,9 @@ with t_companies_pre_merged as (
       {% endif %}
 
       {% if var("enable_xero_accounting_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_xero_accounting_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_xero_accounting_companies')) }}
+      FROM
+      {{ ref('stg_xero_accounting_companies') }}
       {% endif %}
 
       {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_stripe_payments_source")  %}
@@ -40,8 +43,9 @@ with t_companies_pre_merged as (
       {% endif %}
 
       {% if var("enable_stripe_payments_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_stripe_payments_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_stripe_payments_companies')) }}
+      FROM
+      {{ ref('stg_stripe_payments_companies') }}
       {% endif %}
 
       {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") ) and var("enable_asana_projects_source") %}
@@ -49,8 +53,9 @@ with t_companies_pre_merged as (
       {% endif %}
 
       {% if var("enable_asana_projects_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_asana_projects_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_asana_projects_companies')) }}
+      FROM
+      {{ ref('stg_asana_projects_companies') }}
       {% endif %}
 
       {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source") or var("enable_stripe_payments_source") or var("enable_asana_projects_source")) and var("enable_jira_projects_source") %}
@@ -58,19 +63,22 @@ with t_companies_pre_merged as (
       {% endif %}
 
       {% if var("enable_jira_projects_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_jira_projects_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_jira_projects_companies')) }}
+      FROM
+      {{ ref('stg_jira_projects_companies') }}
       {% endif %}
 
       {% if var("enable_looker_usage_source")  %}
       UNION ALL
-      SELECT *
-      FROM   {{ ref('stg_looker_usage_companies') }}
+      SELECT {{ dbt_utils.star(from=ref('stg_looker_usage_companies')) }}
+      FROM
+      {{ ref('stg_looker_usage_companies') }}
       {% endif %}
     ),
 companies_merge_list as (
-    select *
-    from   {{ ref('companies_merge_list') }}
+    SELECT {{ dbt_utils.star(from=ref('companies_merge_list')) }}
+    FROM
+    {{ ref('companies_merge_list') }}
 ),
 all_company_ids as (
        SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids

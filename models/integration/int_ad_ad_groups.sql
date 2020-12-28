@@ -1,4 +1,4 @@
-{% if (not var("enable_facebook_ads_source") and not var("enable_google_ads_source")) or not var("ad_campaigns_only") %}   
+{% if (not var("enable_facebook_ads_source") and not var("enable_google_ads_source")) or not var("ad_campaigns_only") %}
 {{
     config(
         enabled=false
@@ -9,7 +9,7 @@
 with campaigns as
   (
     {% if var("enable_facebook_ads_source") %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_facebook_ads_ad_groups')) }}
     FROM   {{ ref('stg_facebook_ads_ad_groups') }}
     {% endif %}
 
@@ -18,7 +18,7 @@ with campaigns as
     {% endif %}
 
     {% if var("enable_google_ads_source") and var("stg_google_ads_enable_google_ads_ad_groups") %}
-    SELECT *
+    SELECT {{ dbt_utils.star(from=ref('stg_google_ads_ad_groups')) }}
     FROM   {{ ref('stg_google_ads_ad_groups') }}
     {% endif %}
   )

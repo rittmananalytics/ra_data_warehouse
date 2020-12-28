@@ -17,6 +17,6 @@ WITH ad_groups AS
   (
   SELECT * from {{ ref('int_ad_ad_groups') }}
 )
-select GENERATE_UUID() as ad_group_pk,
+select {{ dbt_utils.surrogate_key(['ad_group_id']) }}  as ad_group_pk,
        a.*
 from ad_groups a

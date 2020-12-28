@@ -46,7 +46,7 @@ with sessions as
 FROM
   {{ ref('int_web_events_sessions_stitched') }}
   )
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
+{{ dbt_utils.group_by(n=28) }}
   ),
 utm_campaign_mapping as
 ( SELECT *
@@ -89,7 +89,7 @@ LEFT OUTER JOIN ad_campaigns a
 ),
 {% endif %}
 ordered as (
-select GENERATE_UUID() as web_sessions_pk,
+select {{ dbt_utils.surrogate_key(['session_id']) }} as web_sessions_pk,
         * ,
         row_number() over (partition by blended_user_id order by session_start_ts) as user_session_number
 from joined)

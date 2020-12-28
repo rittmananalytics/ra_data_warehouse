@@ -28,4 +28,4 @@ SELECT
   WHERE
     d.event_type = 'subscribed'
     AND date(b.plan_breakout_ts) = date(d.event_ts)
-    group by 1,2
+    {{ dbt_utils.group_by(n=2) }}

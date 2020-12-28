@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: stitch_facebook_ads
+    database: "{{ var('stg_facebook_ads_stitch_database') }}"
+    schema: "{{ var('stg_facebook_ads_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: uuid_ts
+
+    tables:
+      - name: insights
+      - name: ad_adsets
+      - name: ads
+      - name: campaigns
+
+  - name: segment_facebook_ads
+    database: "{{ var('stg_facebook_ads_segment_database') }}"
+    schema: "{{ var('stg_facebook_ads_segment_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: uuid_ts
+
+    tables:
+      - name: insights
+      - name: ad_adsets
+      - name: ads
+      - name: campaigns

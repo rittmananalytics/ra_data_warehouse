@@ -20,7 +20,9 @@ WITH contacts AS
   FROM
      {{ ref('int_contacts') }} c
 )
-select    GENERATE_UUID() as contact_pk,
+select    {{ dbt_utils.surrogate_key(
+          ['contact_name']
+          ) }} as contact_pk,
           *
           FROM
           contacts c

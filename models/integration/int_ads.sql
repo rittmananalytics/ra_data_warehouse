@@ -9,8 +9,9 @@
 with ads as
   (
     {% if var("enable_facebook_ads_source") %}
-    SELECT *
-    FROM   {{ ref('stg_facebook_ads') }}
+    SELECT {{ dbt_utils.star(from=ref('stg_facebook_ads')) }}
+    FROM
+    {{ ref('stg_facebook_ads') }}
     {% endif %}
 
     {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
@@ -18,15 +19,20 @@ with ads as
     {% endif %}
 
     {% if var("enable_google_ads_source") and var("stg_google_ads_enable_google_ads") %}
-    SELECT *
-    FROM   {{ ref('stg_google_ads') }}
+    SELECT {{ dbt_utils.star(from=ref('stg_google_ads')) }}
+    FROM
+    {{ ref('stg_google_ads') }}
     {% endif %}
   ),
  ad_groups as (
-   select * from {{ ref('int_ad_ad_groups') }}
+   SELECT {{ dbt_utils.star(from=ref('int_ad_ad_groups')) }}
+   FROM
+   {{ ref('int_ad_ad_groups') }}
  ),
  ad_campaigns as (
-   select * from {{ ref('int_ad_campaigns') }}
+   SELECT {{ dbt_utils.star(from=ref('int_ad_campaigns')) }}
+   FROM
+   {{ ref('int_ad_campaigns') }}
  )
 select
     a.ad_id,

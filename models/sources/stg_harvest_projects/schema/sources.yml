@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: stitch_harvest_projects
+    database: "{{ var('stg_harvest_projects_stitch_database') }}"
+    schema: "{{ var('stg_harvest_projects_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: companies
+        identifier: clients
+      - name: contacts
+      - name: invoices
+      - name: projects
+      - name: tasks
+      - name: timesheets
+        identifier: time_entries
+      - name: users
+      - name: invoice_line_items
+      - name: expenses
+      - name: project_tasks
+      - name: user_projects
+      - name: user_project_tasks

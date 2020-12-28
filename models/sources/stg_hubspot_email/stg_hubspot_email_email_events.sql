@@ -25,7 +25,7 @@ FROM
 LEFT JOIN
   {{ ref('stg_hubspot_crm_contacts') }} c
 on e.recipient = c.contact_email
-group by 1,2,3,4,5,6,7,8
+{{ dbt_utils.group_by(n=8) }}
 )
 {% endif %}
 select * from renamed

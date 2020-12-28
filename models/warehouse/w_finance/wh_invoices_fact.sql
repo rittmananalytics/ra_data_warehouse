@@ -33,14 +33,14 @@ WITH invoices AS
 )
 {% endif %}
 SELECT
-   GENERATE_UUID() as invoice_pk,
+   {{ dbt_utils.surrogate_key(['invoice_number']) }} as invoice_pk,
    c.company_pk,
    row_number() over (partition by c.company_pk order by invoice_sent_at_ts) as invoice_seq,
-   date_diff(date(invoice_sent_at_ts),min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),MONTH) as months_since_first_invoice,
-   timestamp(date_trunc(min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),MONTH)) first_invoice_month,
-   timestamp(date_trunc(max(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),MONTH)) last_invoice_month,
-   date_diff(date(invoice_sent_at_ts),min(date(invoice_sent_at_ts)) over (partition by c.company_pk  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),QUARTER) as quarters_since_first_invoice,
-   timestamp(date_trunc(min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),QUARTER)) first_invoice_quarter,
+   {{ dbt_utils.datediff('min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)', 'invoice_sent_at_ts', 'MONTH') }}  as months_since_first_invoice,
+   {{ dbt_utils.date_trunc('MONTH', 'min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)') }} first_invoice_month,
+   {{ dbt_utils.date_trunc('MONTH', 'max(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)') }} last_invoice_month,
+   {{ dbt_utils.datediff('min(date(invoice_sent_at_ts)) over (partition by c.company_pk  RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)', 'date(invoice_sent_at_ts)', 'QUARTER') }}  as quarters_since_first_invoice,
+   {{ dbt_utils.date_trunc('QUARTER','min(date(invoice_sent_at_ts)) over (partition by c.company_pk RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)') }} first_invoice_quarter,
 {% if var("enable_harvest_projects_source") %}
  /*  s.user_pk as creator_users_pk, */
    p.timesheet_project_pk,

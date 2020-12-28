@@ -25,7 +25,9 @@ with contacts as (
     {{ ref('wh_companies_dim') }},
     unnest( all_company_ids) as company_id)
 select
-       GENERATE_UUID() as contact_company_pk,
+      {{ dbt_utils.surrogate_key(
+      ['contact_pk','company_pk']
+      ) }} as contact_company_pk,
        contact_pk,
        company_pk
 from   contacts c

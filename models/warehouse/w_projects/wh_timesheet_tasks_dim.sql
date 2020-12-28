@@ -15,7 +15,7 @@
 
 WITH tasks AS
   (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('int_timesheet_tasks')) }}
   FROM   {{ ref('int_timesheet_tasks') }}
   )
 SELECT

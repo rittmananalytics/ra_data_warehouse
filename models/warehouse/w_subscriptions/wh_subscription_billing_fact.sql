@@ -14,15 +14,15 @@
 
 WITH subscriptions AS
   (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('wh_subscriptions_fact')) }}
   FROM   {{ ref('wh_subscriptions_fact') }}
 ),
 customers as (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('wh_customers_dim')) }}
   FROM   {{ ref('wh_customers_dim') }}
 ),
 subscription_billing as (
-  SELECT *
+  SELECT {{ dbt_utils.star(from=ref('int_subscription_billing')) }}
   FROM {{ ref('int_subscription_billing') }}
 )
 SELECT

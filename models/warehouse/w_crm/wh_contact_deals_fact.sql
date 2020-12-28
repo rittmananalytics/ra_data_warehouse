@@ -32,7 +32,9 @@ with contacts_dim as (
       {{ ref('int_contact_deals') }}
   )
 select
-       GENERATE_UUID() as contact_deal_pk,
+      {{ dbt_utils.surrogate_key(
+      ['contact_pk','deal_pk']
+      ) }} as contact_deal_pk,
        contact_pk,
        deal_pk
 from   contact_deals cd

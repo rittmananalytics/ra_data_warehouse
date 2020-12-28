@@ -20,7 +20,7 @@ ad_performance AS
    SELECT * from {{ ref('wh_ads_dim') }}
 ),
 ad_performance_joined as (
-select GENERATE_UUID() as ad_performance_pk,
+select {{ dbt_utils.surrogate_key(['s.ad_pk','s.ad_serve_ts','s.campaign_id']) }} as ad_performance_pk,
        s.ad_pk,
        s.ad_utm_source as utm_source,
        s.ad_utm_campaign as utm_campaign,
@@ -55,8 +55,8 @@ FROM (
   WHERE
     utm_source IN ('adwords',
       'facebook','instagram')
-  GROUP BY
-    1,2,3,4,5)
+  {{ dbt_utils.group_by(n=5) }}
+    )
 GROUP BY
   1,2,3),
   ad_network_clicks AS (

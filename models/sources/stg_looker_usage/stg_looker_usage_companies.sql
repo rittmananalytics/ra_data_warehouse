@@ -36,5 +36,5 @@ SELECT
     min(timestamp(history_created_time)) over (partition by client) as company_created_date,
     max(timestamp(history_created_time)) over (partition by client) as company_last_modified_date
     FROM source )
-    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)
+    {{ dbt_utils.group_by(n=19) }} )
 select * from renamed

@@ -10,7 +10,7 @@
     SELECT
       *
     FROM
-      {{ target.database}}.{{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_company_table') }}
+    {{ var('stg_hubspot_crm_fivetran_companies_table') }}
   ),
   renamed AS (
     SELECT
@@ -47,7 +47,7 @@
   )
   {% elif var("stg_hubspot_crm_etl") == 'stitch' %}
   WITH source AS (
-    {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_companies_table'),'companyid') }}
+    {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_companies_table'),unique_column='companyid') }}
   ),
   renamed AS (
     SELECT

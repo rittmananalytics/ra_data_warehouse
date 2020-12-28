@@ -17,6 +17,6 @@ WITH lists AS
   (
   SELECT * from {{ ref('int_email_lists') }}
 )
-select GENERATE_UUID() as list_pk,
+select {{ dbt_utils.surrogate_key(['list_id']) }} as list_pk,
        l.*
 from lists l

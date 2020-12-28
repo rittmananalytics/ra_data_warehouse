@@ -8,7 +8,7 @@
 {% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 WITH source as (
   select * from
-  from {{ target.database}}.{{ var('stg_hubspot_crm_fivetran_schema') }}.{{ var('stg_hubspot_crm_fivetran_owner_table') }}
+  from {{ var('stg_hubspot_crm_fivetran_owners_table') }}
 ),
 renamed as (
     select
@@ -21,7 +21,7 @@ renamed as (
 )
 {% elif var("stg_hubspot_crm_etl") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_table(var('stg_hubspot_crm_stitch_schema'),var('stg_hubspot_crm_stitch_owners_table'),'ownerid') }}
+  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_owners_table'),unique_column='ownerid') }}
 
 ),
 renamed as (

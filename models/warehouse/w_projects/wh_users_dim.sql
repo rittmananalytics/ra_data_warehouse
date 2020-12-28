@@ -15,7 +15,8 @@
 
 WITH users AS
   (
-  SELECT * from {{ ref('int_users') }}
+    SELECT {{ dbt_utils.star(from=ref('int_users')) }}
+    FROM {{ ref('int_users') }}
 )
 select GENERATE_UUID() as user_pk,
        u.*

@@ -33,7 +33,7 @@ email_events AS
   )
 SELECT
 
-    GENERATE_UUID() as send_outcome_pk,
+    GENERATE_UUID() as email_event_pk,
     c.contact_pk,
     l.list_pk,
     k.ad_campaign_pk,

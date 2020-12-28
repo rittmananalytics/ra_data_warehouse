@@ -43,8 +43,8 @@ on c.ad_campaign_id = s.ad_campaign_id)
       web_sessions
     WHERE
       ad_campaign_pk is not null
-    GROUP BY
-      1,2),
+    {{ dbt_utils.group_by(n=2) }}
+      ),
   ad_network_clicks AS (
   SELECT
     ad_campaign_pk,
@@ -75,8 +75,8 @@ on c.ad_campaign_id = s.ad_campaign_id)
       ad_campaign_total_invalid_clicks AS total_reported_invalid_clicks
     FROM
       campaign_performance_joined)
-  GROUP BY
-    1,2,3,4,5),
+  {{ dbt_utils.group_by(n=5) }}
+    ),
  joined as (
 SELECT
   a.*,
@@ -102,7 +102,7 @@ ON
   AND s.campaign_date = a.campaign_date
 )
 select
-      GENERATE_UUID() as ad_campaign_performance_pk,
+      {{ dbt_utils.surrogate_key(['ad_campaign_pk','campaign_date']) }} as ad_campaign_performance_pk,
       campaign_date,
       ad_campaign_pk,
       total_clicks,

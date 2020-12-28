@@ -35,7 +35,7 @@ events_with_prev_ts_event_type as
 (
 SELECT
 
-    GENERATE_UUID() as web_event_pk,
+    {{ dbt_utils.surrogate_key(['event_id']) }} as web_event_pk,
     e.*,
 
     lag(e.event_ts,1) over (partition by e.blended_user_id order by event_seq) as prev_event_ts,

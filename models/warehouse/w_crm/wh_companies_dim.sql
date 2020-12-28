@@ -14,7 +14,9 @@
 
 WITH companies_dim as (
   SELECT
-    GENERATE_UUID() as company_pk,
+  {{ dbt_utils.surrogate_key(
+  ['company_name']
+  ) }} as company_pk,
     *
   FROM
     {{ ref('int_companies') }} c

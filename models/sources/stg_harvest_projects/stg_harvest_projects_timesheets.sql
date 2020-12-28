@@ -7,23 +7,23 @@
 {% endif %}
 
 with t_harvest_time_entries as (
-  {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_time_entries_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_timesheets_table'),unique_column='id') }}
 ),
 t_harvest_projects as (
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_projects_table'),'id') }}
-  ),
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_projects_table'),unique_column='id') }}
+),
 t_harvest_users_project_tasks as (
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_user_project_tasks_table'),'project_task_id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_user_project_tasks_table'),unique_column='project_task_id') }}
   ),
 t_harvest_project_tasks as (
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_project_tasks_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_project_tasks_table'),unique_column='id') }}
   ),
 t_harvest_tasks as (
-    {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_tasks_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_tasks_table'),unique_column='id') }}
   ),
 t_harvest_users as (
-   {{ filter_stitch_table(var('stg_harvest_projects_stitch_schema'),var('stg_harvest_projects_stitch_users_table'),'id') }}
- ),
+  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_users_table'),unique_column='id') }}
+),
 renamed as (
 SELECT
   concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.client_id as string))               as company_id,

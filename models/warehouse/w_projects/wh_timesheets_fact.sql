@@ -14,26 +14,26 @@
 {% endif %}
 
 with companies_dim as (
-    select *
-    from {{ ref('wh_companies_dim') }}
+    SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
+    FROM {{ ref('wh_companies_dim') }}
 ),
 
 contacts_dim as (
-    select *
+    SELECT {{ dbt_utils.star(from=ref('wh_contacts_dim')) }}
     from {{ ref('wh_contacts_dim') }}
 ),
   tasks_dim as (
-      select *
-      from {{ ref('wh_timesheet_tasks_dim') }}
+    SELECT {{ dbt_utils.star(from=ref('wh_timesheet_tasks_dim')) }}
+    FROM {{ ref('wh_timesheet_tasks_dim') }}
 )
 ,
   projects_dim as (
-      select *
+      SELECT {{ dbt_utils.star(from=ref('wh_timesheet_projects_dim')) }}
       from {{ ref('wh_timesheet_projects_dim') }}
 )
 ,
   timesheets as (
-      select *
+      SELECT {{ dbt_utils.star(from=ref('int_timesheets')) }}
       from {{ ref('int_timesheets') }}
 )
 SELECT
