@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: stitch_mailchimp_email
+    database: "{{ var('stg_mailchimp_email_stitch_database') }}"
+    schema: "{{ var('stg_mailchimp_email_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: list_members
+      - name: reports_email_activity
+      - name: lists
+      - name: campaigns

@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH source as (
-  {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_contacts_table'),'contactid') }}
+  {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_contacts_table'),unique_column='contactid') }}
 ),
   phones as (SELECT companies.contactid, phones.phonetype, phones.phonenumber, phones.phoneareacode, phones.phonecountrycode
     FROM source companies,

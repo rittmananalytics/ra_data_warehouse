@@ -4,23 +4,9 @@
 }}
 {% endif %}
 
-WITH source AS (SELECT
-    *
-  EXCEPT
-    (    _sdc_batched_at,
-      max_sdc_batched_at)
-  FROM
-    (    SELECT
-        *,
-        MAX(_sdc_batched_at) over (        PARTITION BY id
-          ORDER BY
-            _sdc_batched_at RANGE BETWEEN unbounded preceding
-            AND unbounded following
-        ) AS max_sdc_batched_at
-      FROM
-        {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_list_members_table') }})
-  WHERE
-    _sdc_batched_at = max_sdc_batched_at),
+WITH source AS (
+  {{ filter_stitch_relation(relation=var('stg_mailchimp_email_stitch_list_members_table'),unique_column='id') }}
+),
 renamed AS
 (
 SELECT

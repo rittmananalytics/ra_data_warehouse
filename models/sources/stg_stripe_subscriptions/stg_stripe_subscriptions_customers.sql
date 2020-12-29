@@ -6,7 +6,8 @@
 }}
 {% endif %}
 with source as (
-  {{ filter_segment_table(var('stg_stripe_payments_segment_schema'),var('stg_stripe_payments_segment_customers_table')) }}
+  {{ filter_segment_relation(var('stg_stripe_payments_segment_customers_table')) }}
+
 ),
 renamed as (
   select concat('stg_stripe_payments_segment-',metadata_CLIENTREPLACEME_user_id) as customer_id,

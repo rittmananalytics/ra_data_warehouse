@@ -1,44 +1,18 @@
-{% if (not var("enable_facebook_ads_source") and not var("enable_marketing_warehouse"))  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('marketing_warehouse_ad_campaigns_sources')|length > 0 %}
+
 
 with campaigns as
   (
-    {% if var("enable_facebook_ads_source") %}
-    SELECT *
-    FROM   {{ ref('stg_facebook_ads_campaigns') }}
-    {% endif %}
+    {% for source in var('marketing_warehouse_ad_campaigns_sources') %}
+      {% set relation_source = 'stg_' + source + '_campaigns' %}
 
-    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
-    UNION All
-    {% endif %}
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
 
-    {% if var("enable_google_ads_source")  %}
-    SELECT *
-    FROM   {{ ref('stg_google_ads_campaigns') }}
-    {% endif %}
-
-    {% if (var("enable_facebook_ads_source") or var("enable_google_ads_source")) and  var("enable_mailchimp_email_source") %}
-    UNION All
-    {% endif %}
-
-    {% if var("enable_mailchimp_email_source")  %}
-    SELECT *
-    FROM   {{ ref('stg_mailchimp_email_campaigns') }}
-    {% endif %}
-
-    {% if (var("enable_facebook_ads_source") or var("enable_google_ads_source") or var("enable_mailchimp_email_source")) and  var("enable_hubspot_crm_source") %}
-    UNION All
-    {% endif %}
-
-    {% if var("enable_hubspot_email_source")  %}
-    SELECT *
-    FROM   {{ ref('stg_hubspot_email_campaigns') }}
-    {% endif %}
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 select *,
 
@@ -56,3 +30,14 @@ select *,
             when ad_campaign_name = 'Rittman Analytics Newsletter December 2020' then 'Analytics Solutions December 2020'
        else lower(ad_campaign_name) end as utm_campaign,
  from campaigns
+
+ {% else %}
+
+ {{
+     config(
+         enabled=false
+     )
+ }}
+
+
+ {% endif %}

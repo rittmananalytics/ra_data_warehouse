@@ -8,7 +8,8 @@
 
 {% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  {{ filter_stitch_table(var('stg_google_ads_stitch_schema'),var('stg_google_ads_stitch_campaigns_table'),'id') }}
+  {{ filter_stitch_relation(relation=var('stg_google_ads_stitch_campaigns_table'),unique_column='id') }}
+
 ),
 renamed as (
 
@@ -26,7 +27,7 @@ renamed as (
 )
 {% elif var("stg_google_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_campaigns_table')) }}
+  {{ filter_segment_relation(var('stg_google_ads_segment_ad_performance_table')) }}
 ),
 renamed as (
 SELECT

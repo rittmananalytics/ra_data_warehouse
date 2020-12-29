@@ -7,7 +7,7 @@
 {% endif %}
 
 WITH xero_contacts as (
-  {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_contacts_table'),'contactid') }}
+  {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_contacts_table'),unique_column='contactid') }}
 ),
 
 contacts as (

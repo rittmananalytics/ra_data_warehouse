@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: segment_stripe_subscriptions
+    database: "{{ var('stg_xero_accounting_stitch_database') }}"
+    schema: "{{ var('stg_xero_accounting_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: customers
+      - name: accounts
+      - name: cards
+      - name: coupons
+      - name: invoices
+      - name: plans
+      - name: products
+      - name: subscriptions
+      - name: balance_transactions
+      - name: charges
+      - name: events
+      - name: payout_transactions
+      - name: payouts

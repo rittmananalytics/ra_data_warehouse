@@ -7,7 +7,7 @@
 {% endif %}
 {% if var("etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('stg_stripe_payments_segment_schema'),var('stg_stripe_payments_segment_plans_table')) }}
+  {{ filter_segment_relation(var('stg_stripe_payments_segment_plans_table')) }}
 ),
 renamed as (
 SELECT

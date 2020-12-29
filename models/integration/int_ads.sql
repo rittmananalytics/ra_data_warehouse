@@ -1,28 +1,17 @@
-{% if (not var("enable_facebook_ads_source") and not var("enable_google_ads_source")) or not var("ad_campaigns_only") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('marketing_warehouse_ads_sources')|length > 0 %}
 
 with ads as
   (
-    {% if var("enable_facebook_ads_source") %}
-    SELECT {{ dbt_utils.star(from=ref('stg_facebook_ads')) }}
-    FROM
-    {{ ref('stg_facebook_ads') }}
-    {% endif %}
+    {% for source in var('marketing_warehouse_ads_sources') %}
+      {% set relation_source = 'stg_' + source %}
 
-    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
-    UNION All
-    {% endif %}
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
 
-    {% if var("enable_google_ads_source") and var("stg_google_ads_enable_google_ads") %}
-    SELECT {{ dbt_utils.star(from=ref('stg_google_ads')) }}
-    FROM
-    {{ ref('stg_google_ads') }}
-    {% endif %}
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   ),
  ad_groups as (
    SELECT {{ dbt_utils.star(from=ref('int_ad_ad_groups')) }}
@@ -54,3 +43,14 @@ left outer join ad_groups g
 on a.ad_group_id = g.ad_group_id
 left outer join ad_campaigns c
 on g.ad_campaign_id = c.ad_campaign_id
+
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
+{% endif %}

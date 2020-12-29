@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: stitch_jira_projects
+    database: "{{ var('stg_jira_projects_stitch_database') }}"
+    schema: "{{ var('stg_jira_projects_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: projects
+      - name: project_types
+      - name: issues
+      - name: project_categories
+      - name: users

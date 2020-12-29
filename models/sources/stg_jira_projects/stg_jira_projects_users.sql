@@ -7,7 +7,7 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stg_jira_projects_stitch_schema'),var('stg_jira_projects_stitch_users_table'),'accountid') }}
+  {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_users_table'),unique_column='accountid') }}
 ),
 
 renamed as

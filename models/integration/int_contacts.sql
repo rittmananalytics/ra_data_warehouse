@@ -1,10 +1,6 @@
-{% if not var("enable_crm_warehouse") and not var("enable_finance_warehouse") and not var("enable_marketing_warehouse") and not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('crm_warehouse_contact_sources')|length > 0 %}
+
+{{config(materialized="table")}}
 
 with t_contacts_merge_list as
   (SELECT * except (contact_name),
@@ -14,46 +10,17 @@ with t_contacts_merge_list as
        else contact_name end as contact_name
   FROM
   (
-    {% if var("enable_hubspot_crm_source") %}
-    SELECT {{ dbt_utils.star(from=ref('stg_hubspot_crm_contacts')) }}
-    FROM   {{ ref('stg_hubspot_crm_contacts') }}
-    {% endif %}
-    {% if var("enable_hubspot_crm_source") and var("enable_harvest_projects_source")  %}
-    UNION ALL
-    {% endif %}
-    {% if var("enable_harvest_projects_source")  %}
-    SELECT {{ dbt_utils.star(from=ref('stg_harvest_projects_contacts')) }}
-    FROM   {{ ref('stg_harvest_projects_contacts') }}
-    {% endif %}
-    {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source")) and var("enable_xero_accounting_source") %}
-    UNION ALL
-    {% endif %}
-    {% if var("enable_xero_accounting_source")  %}
-    SELECT {{ dbt_utils.star(from=ref('stg_xero_accounting_contacts')) }}
-    FROM   {{ ref('stg_xero_accounting_contacts') }}
-    {% endif %}
-    {% if (var("enable_hubspot_crm_source") or var("enable_harvest_projects_source") or var("enable_xero_accounting_source")) and var("enable_mailchimp_email_source") %}
-    UNION ALL
-    {% endif %}
-    {% if var("enable_mailchimp_email_source")  %}
-    SELECT {{ dbt_utils.star(from=ref('stg_mailchimp_email_contacts')) }}
-    FROM   {{ ref('stg_mailchimp_email_contacts') }}
-    {% endif %}
-    {% if var("enable_jira_projects_source")  %}
-    UNION ALL
-    SELECT {{ dbt_utils.star(from=ref('stg_jira_projects_contacts')) }}
-    FROM   {{ ref('stg_jira_projects_contacts') }}
-    {% endif %}
-    {% if var("enable_asana_projects_source")  %}
-    UNION ALL
-    SELECT {{ dbt_utils.star(from=ref('stg_asana_projects_contacts')) }}
-    FROM   {{ ref('stg_asana_projects_contacts') }}
-    {% endif %}
-    {% if var("enable_looker_usage_source")  %}
-    UNION ALL
-    SELECT {{ dbt_utils.star(from=ref('stg_looker_usage_contacts')) }}
-    FROM   {{ ref('stg_looker_usage_contacts') }}
-    {% endif %}
+    {% for source in var('crm_warehouse_contact_sources') %}
+      {% set relation_source = 'stg_' + source + '_contacts' %}
+
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
+
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
+
   )
 ),
 contact_emails as (
@@ -113,3 +80,14 @@ contacts as (
   join contact_company_addresses a on c.contact_name = a.contact_name
   join contact_company_ids cc on c.contact_name = cc.contact_name)
 select * from contacts
+
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
+{% endif %}

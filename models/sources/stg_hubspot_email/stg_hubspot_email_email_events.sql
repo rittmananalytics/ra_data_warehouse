@@ -8,7 +8,7 @@
 {% if var("stg_hubspot_email_etl") == 'stitch' %}
 with source as (
   select *
-  from {{ target.database}}.{{ var('stg_hubspot_email_stitch_schema') }}.{{ var('stg_hubspot_email_stitch_email_events_table') }}
+  from {{ var('stg_hubspot_email_stitch_email_events_table') }}
 ),
 renamed as (
   SELECT

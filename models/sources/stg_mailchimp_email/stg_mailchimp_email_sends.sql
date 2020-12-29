@@ -6,9 +6,11 @@
 }}
 {% endif %}
 
-WITH campaigns AS (
-  SELECT * except (_sdc_batched_at, max_sdc_batched_at)
-  FROM (
+WITH source AS (
+  SELECT *
+  FROM {{ var('stg_mailchimp_email_stitch_campaigns_table') }}
+),
+renamed as (
 SELECT
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS send_id,
   content_type AS campaign_content_type,
@@ -32,12 +34,7 @@ SELECT
   status AS campaign_status,
   tracking.html_clicks AS campaign_tracking_html_clicks,
   tracking.opens AS campaign_tracking_opens,
-  tracking.text_clicks AS campaign_tracking_text_clicks,
-  _sdc_batched_at,
-  MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-  FROM
-  {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_campaigns_table') }})
-
-  WHERE
-  _sdc_batched_at = max_sdc_batched_at)
-select * from campaigns
+  tracking.text_clicks AS campaign_tracking_text_clicks
+FROM
+  source)
+select * from renamed

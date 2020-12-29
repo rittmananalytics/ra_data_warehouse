@@ -1,16 +1,6 @@
-{% if not var("enable_crm_warehouse") and not var("enable_finance_warehouse") and not var("enable_marketing_warehouse") and not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
-{{
-    config(
-        materialized="table"
-    )
-}}
-{% endif %}
+{% if var('crm_warehouse_company_sources')|length > 0 %}
+
+{{config(materialized="table")}}
 
 with
 companies_pre_merged as (
@@ -76,3 +66,14 @@ select c.company_name,
 
        )
 select * from merged
+
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
+{% endif %}

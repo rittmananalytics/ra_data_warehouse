@@ -7,7 +7,10 @@
 {% endif %}
 {% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
-  select * from (SELECT *, max(_sdc_report_datetime) over (partition by campaignid, day) as max_sdc_report_datetime FROM `ra-development.stitch_google_ads.CAMPAIGN_PERFORMANCE_REPORT`)
+  select * from (
+    SELECT *,
+    max(_sdc_report_datetime) over (partition by campaignid, day) as max_sdc_report_datetime
+    FROM {{ var('stg_google_ads_stitch_campaign_performance_table') }})
 where _sdc_report_datetime = max_sdc_report_datetime
 order by campaignid, day
 ),
@@ -33,7 +36,7 @@ FROM
   source)
 {% elif var("stg_google_ads_etl") == 'segment' %}
 with source as (
-  {{ filter_segment_table(var('stg_google_ads_segment_schema'),var('stg_google_ads_segment_campaign_performance_table')) }}
+  {{ filter_segment_relation(var('stg_google_ads_segment_ad_performance_table')) }}
 ),
 renamed as (
 SELECT

@@ -10,7 +10,7 @@
     SELECT
       *
     FROM
-    {{ target.database}}.{{ var('stg_mixpanel_events_fivetran_schema') }}.{{ var('stg_mixpanel_events_fivetran_event_table') }}
+    {{ var('stg_mixpanel_events_fivetran_event_table') }}
   ),
 renamed_full as (
   SELECT
@@ -48,7 +48,7 @@ FROM
 )
 {% elif var("stg_mixpanel_events_etl") == 'stitch' %}
 WITH source as (
-  {{ filter_stitch_table(var('stg_mixpanel_events_stitch_schema'),var('stg_mixpanel_events_stitch_export_table'),'mp_reserved_insert_id') }}
+  {{ filter_stitch_relation(relation=var('stg_mixpanel_events_stitch_event_table'),unique_column='mp_reserved_insert_id') }}
 
 ),
 renamed_full as (

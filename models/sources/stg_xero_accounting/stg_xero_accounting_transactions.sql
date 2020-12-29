@@ -9,7 +9,8 @@
 WITH
   source AS
   (
-    {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_bank_transactions_table'),'banktransactionid') }}
+    {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_bank_transactions_table'),unique_column='banktransactionid') }}
+
   ),
 renamed as (
   SELECT

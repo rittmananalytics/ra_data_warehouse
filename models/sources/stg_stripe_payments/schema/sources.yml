@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: stitch_stripe_payments
+    database: "{{ var('stg_stripe_payments_stitch_database') }}"
+    schema: "{{ var('stg_stripe_payments_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: charges
+      - name: payouts
+      - name: balance_transactions
+      - name: events
+      - name: payout_transactions

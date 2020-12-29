@@ -7,7 +7,7 @@
 {% endif %}
 
 with source as (
-  {{ filter_stitch_table(var('stg_jira_projects_stitch_schema'),var('stg_jira_projects_stitch_issues_table'),'key') }}
+  {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_issues_table'),unique_column='key') }}
 ),
 renamed as (
 select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,

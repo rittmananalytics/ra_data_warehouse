@@ -6,6 +6,19 @@
 }}
 {% endif %}
 with source as (
+  SELECT *
+  FROM (
+    SELECT
+    *,
+    max(_sdc_received_at) over (partition by id, date(_sdc_received_at)) as max_sdc_received_at_for_day
+  from
+    {{ var('stg_hubspot_email_stitch_campaigns_table') }}
+  )
+  where _sdc_received_at = max_sdc_received_at_for_day
+  ORDER BY
+    id, _sdc_received_at
+),
+renamed as (
   SELECT
     concat('{{ var('stg_hubspot_email_id-prefix') }}',id) as ad_campaign_id,
     timestamp(DATE(_sdc_received_at)) AS ad_campaign_serve_ts,
@@ -21,12 +34,6 @@ with source as (
     coalesce(counters.unsubscribed,0)-coalesce(lag(counters.unsubscribed) over (partition by id order by _sdc_received_at),0) as ad_campaign_total_emails_unsubscribed,
     'Hubspot Email' as ad_network
   FROM
-  (
-  select *, max(_sdc_received_at) over (partition by id, date(_sdc_received_at)) as max_sdc_received_at_for_day
-  from
-  {{ target.database}}.{{ var('stg_hubspot_email_stitch_schema') }}.{{ var('stg_hubspot_email_stitch_campaigns_table') }})
-  where _sdc_received_at = max_sdc_received_at_for_day
-ORDER BY
-  id, _sdc_received_at
+    source
 )
-select * from source
+select * from renamed

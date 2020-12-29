@@ -1,26 +1,27 @@
-{% if (not var("enable_facebook_ads_source") and not var("enable_google_ads_source")) or not var("ad_campaigns_only") %}
+{% if var('marketing_warehouse_ad_performance_sources')|length > 0 %}
+
+with ad_performance as
+  (
+    {% for source in var('marketing_warehouse_ad_performance_sources') %}
+      {% set relation_source = 'stg_' + source + '_ad_performance' %}
+
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
+
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
+  )
+select * from ad_performance
+
+{% else %}
+
 {{
     config(
         enabled=false
     )
 }}
+
+
 {% endif %}
-
-with ad_performance as
-  (
-    {% if var("enable_facebook_ads_source") %}
-    SELECT {{ dbt_utils.star(from=ref('stg_facebook_ads_ad_performance')) }}
-    FROM   {{ ref('stg_facebook_ads_ad_performance') }}
-    {% endif %}
-
-    {% if var("enable_facebook_ads_source") and var("enable_google_ads_source")  %}
-  %}
-    UNION All
-    {% endif %}
-
-    {% if var("enable_google_ads_source")  %}
-    SELECT {{ dbt_utils.star(from=ref('stg_google_ads_ad_performance')) }}
-    FROM   {{ ref('stg_google_ads_ad_performance') }}
-    {% endif %}
-  )
-select * from ad_performance

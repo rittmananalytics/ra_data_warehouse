@@ -6,19 +6,10 @@
 }}
 {% endif %}
 
-WITH audiences as (
-
-  SELECT * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
-  FROM
-  (
-    SELECT *,
-           MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-    FROM         {{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_lists_table') }}
-
-  )
-  WHERE _sdc_batched_at = max_sdc_batched_at
-
-)
+WITH source AS (
+  {{ filter_stitch_relation(relation=var('stg_mailchimp_email_stitch_lists_table'),unique_column='id') }}
+),
+renamed as (
 select
     concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) as list_id,
     name as audience_name,
@@ -38,4 +29,6 @@ select
     stats.target_sub_rate AS target_sub_rate_pct,
     stats.unsubscribe_count AS total_unsubscribes,
     stats.unsubscribe_count_since_send AS total_unsubscribes_since_send
-from audiences
+from source)
+select *
+from renamed

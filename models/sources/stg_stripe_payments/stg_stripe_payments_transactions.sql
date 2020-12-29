@@ -7,8 +7,7 @@
 {% endif %}
 
 WITH source AS (
-    {{ filter_stitch_table(var('stg_stripe_payments_stitch_schema'),var('stg_stripe_payments_stitch_balance_transactions_table'),'id') }}
-
+    {{ filter_stitch_relation(relation=var('stg_stripe_payments_stitch_balance_transactions_table'),unique_column='id') }}
 ),
 renamed AS (
   SELECT

@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: stitch_xero_accounting
+    database: "{{ var('stg_xero_accounting_stitch_database') }}"
+    schema: "{{ var('stg_xero_accounting_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_batched_at
+
+    tables:
+      - name: accounts
+      - name: contacts
+      - name: currencies
+      - name: invoices
+      - name: payments
+      - name: bank_transactions

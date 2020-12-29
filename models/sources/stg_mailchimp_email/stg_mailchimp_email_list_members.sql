@@ -7,9 +7,7 @@
 {% endif %}
 
 WITH source as (
-
-  {{ filter_stitch_table(var('stg_mailchimp_email_stitch_schema'),var('stg_mailchimp_email_stitch_list_members_table'),'id') }}
-
+  {{ filter_stitch_relation(relation=var('stg_mailchimp_email_stitch_list_members_table'),unique_column='id') }}
 ),
 renamed as (
 select

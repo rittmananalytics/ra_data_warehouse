@@ -6,14 +6,18 @@
 }}
 {% endif %}
 
-with events as (Select * from (
-  SELECT
-  *,
-  MAX(_sdc_batched_at) OVER (PARTITION BY list_id,campaign_id,  email_id,  timestamp,  action,  type,  email_address ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
-FROM
-{{ target.database}}.{{ var('stg_mailchimp_email_stitch_schema') }}.{{ var('stg_mailchimp_email_stitch_reports_email_activity_table') }})
-
-where _sdc_batched_at = max_sdc_batched_at)
+with source as (
+  SELECT *
+  FROM (
+    SELECT
+      *,
+      MAX(_sdc_batched_at) OVER (PARTITION BY list_id,campaign_id,  email_id,  timestamp,  action,  type,  email_address ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+    FROM
+      {{ var('stg_mailchimp_email_stitch_reports_email_activity_table') }})
+  WHERE
+    _sdc_batched_at = max_sdc_batched_at
+),
+joined as (
 SELECT
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',list_id) as list_id,
   concat('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) as ad_campaign_id,
@@ -23,7 +27,7 @@ SELECT
   type,
   email_address,
   replace(url,'[UNIQID]',email_id) as url
-from events
+from source
 union all
 SELECT
   s.list_id,
@@ -43,4 +47,6 @@ ON
 JOIN
   {{ ref('stg_mailchimp_email_contacts') }} c
 ON
-  c.contact_email = m.contact_email
+  c.contact_email = m.contact_email)
+select *
+from joined

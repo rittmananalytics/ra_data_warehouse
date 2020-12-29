@@ -8,7 +8,8 @@
 
 WITH
   source as (
-    {{ filter_stitch_table(var('stg_xero_accounting_stitch_schema'),var('stg_xero_accounting_stitch_invoices_table'),'invoiceid') }}
+    {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_invoices_table'),unique_column='invoiceid') }}
+
       ),
 renamed as (
   SELECT

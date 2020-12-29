@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_google_ads_campaigns
+    description: "Google Ads Ads"
+    columns:
+      - name: ad_campaign_id
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+      - name: ad_campaign_name
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+      - name: ad_campaign_status
+        tests:
+          - not_null
+  - name: stg_google_ads_ad_groups
+    description: "Google Ads Ad Groups"
+    columns:
+      - name: ad_group_id
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+      - name: ad_group_name
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+      - name: ad_campaign_id
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+          - relationships:
+              to: ref('stg_google_ads_campaigns')
+              field: ad_campaign_id
+              severity: warn
+  - name: stg_google_ads
+    description: "Google Ads Ads"
+    columns:
+      - name: ad_id
+        tests:
+          - unique
+          - not_null
+      - name: ad_status
+        tests:
+          - not_null
+      - name: ad_type
+        tests:
+          - not_null
+      - name: ad_group_id
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+          - relationships:
+              to: ref('stg_google_ads_ad_groups')
+              field: ad_group_id
+              severity: warn
