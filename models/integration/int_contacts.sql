@@ -1,4 +1,4 @@
-{% if var('crm_warehouse_contact_sources')|length > 0 %}
+{% if var('crm_warehouse_contact_sources') %}
 
 {{config(materialized="table")}}
 

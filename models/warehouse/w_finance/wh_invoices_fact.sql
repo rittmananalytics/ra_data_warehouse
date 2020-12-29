@@ -26,10 +26,6 @@ WITH invoices AS
   projects_dim as (
       select *
       from {{ ref('wh_timesheet_projects_dim') }}
-),
-  user_dim as (
-    select *
-    from {{ ref('wh_users_dim') }}
 )
 {% endif %}
 SELECT

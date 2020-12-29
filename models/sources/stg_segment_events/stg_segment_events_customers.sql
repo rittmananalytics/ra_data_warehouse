@@ -1,10 +1,6 @@
-{% if not var("enable_segment_dashboard_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("product_warehouse_events_sources") %}
+{% if 'segment_events_page' in var("product_warehouse_events_sources") %}
+
 with source as (with source as (
 
     select * from {{ var('stg_segment_events_segment_users_table') }}
@@ -29,3 +25,6 @@ FROM
  source
 )
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

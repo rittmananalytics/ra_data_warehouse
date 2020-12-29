@@ -1,17 +1,4 @@
-{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
-{#
-the initial CTE in this model is unusually complicated; its function is to
-select all events (for all time) for users who have pageviews since the
-model was most recently run. there are many window functions in this model so
-in order to appropriately calculate all of them we need each user's entire
-event history, but we only want to grab that for users who have events we need to calculate.
-#}
+{% if var('product_warehouse_events_sources') %}
 
 with events as (
 
@@ -217,9 +204,12 @@ ordered_conversion_tagged as (
        case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_url,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_url,
        case when o.event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then lag(o.page_title,2) over (partition by o.blended_user_id order by o.event_seq) end as pre_converting_page_title,
   FROM ordered o)
-select * 
+select *
 from ordered_conversion_tagged
 {% endif %}
 
+{% else %}
 
+  {{config(enabled=false)}}
 
+{% endif %}

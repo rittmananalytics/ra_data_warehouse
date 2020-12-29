@@ -1,17 +1,12 @@
-{% if not var("enable_crm_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if not var("crm_warehouse_deal_sources") and var("crm_warehouse_company_sources") %}
+
 {{
     config(
         alias='deals_fact',
         unique_key='deal_id'
     )
 }}
-{% endif %}
+
 
 with companies_dim as (
     select *
@@ -25,3 +20,5 @@ FROM
    {{ ref('int_deals') }} d
 JOIN companies_dim c
    ON d.company_id IN UNNEST(c.all_company_ids)
+
+{% else %} {{config(enabled=false)}} {% endif %}

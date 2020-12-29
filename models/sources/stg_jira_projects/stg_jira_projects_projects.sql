@@ -1,10 +1,5 @@
-{% if not var("enable_jira_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("projects_warehouse_delivery_sources") %}
+{% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
 
 with source as (SELECT
   * except (projectkeys)
@@ -68,3 +63,6 @@ select p.project_id,
 from source p
 left outer join types t on p.project_type_id = t.project_type_id
 left outer join categories c on p.project_category_id = c.project_category_id
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

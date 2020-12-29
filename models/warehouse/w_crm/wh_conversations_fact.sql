@@ -1,16 +1,11 @@
-{% if not var("enable_crm_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("crm_warehouse_conversations_sources") and var("crm_warehouse_companies_sources")  %}
+
 {{
     config(
         alias='conversations_fact'
     )
 }}
-{% endif %}
+
 
 with companies_dim as (
     select *
@@ -28,3 +23,5 @@ FROM
    {{ ref('int_conversations') }} m
 JOIN contacts_dim p
    ON m.conversation_author_id IN UNNEST(p.all_contact_ids)
+
+{% else %} {{config(enabled=false)}} {% endif %}

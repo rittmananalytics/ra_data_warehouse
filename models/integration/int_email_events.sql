@@ -1,20 +1,22 @@
-{% if not var("enable_mailchimp_email_source") or (not var("enable_marketing_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('marketing_warehouse_email_event_sources') %}
 
 with t_email_campaign_events_merge_list as
   (
-    SELECT *
-    FROM   {{ ref('stg_mailchimp_email_events') }}
+    {% for source in var('marketing_warehouse_email_event_sources') %}
+      {% set relation_source = 'stg_' + source + '_events' %}
 
-  {% if var("enable_hubspot_email_source") %}
-  UNION ALL
-  SELECT *
-  FROM   {{ ref('stg_hubspot_email_email_events') }}
-  {% endif %}
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
+
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 select * from t_email_campaign_events_merge_list
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

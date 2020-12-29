@@ -1,10 +1,6 @@
-{% if not var("enable_hubspot_crm_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") and var("crm_warehouse_deal_sources")%}
+{% if 'hubspot_crm' in var("crm_warehouse_contact_sources") and 'hubspot_crm' in var("crm_warehouse_deal_sources") %}
+
 {% if var("stg_hubspot_crm_etl") == 'stitch' %}
 with source as (
   {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_deals_table'),unique_column='dealid') }}
@@ -20,3 +16,6 @@ FROM
 {% endif %}
 select *
 from   renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

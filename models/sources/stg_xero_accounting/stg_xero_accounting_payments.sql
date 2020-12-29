@@ -1,10 +1,5 @@
-{% if not var("enable_xero_accounting_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("finance_warehouse_payment_sources") %}
+{% if 'xero_accounting' in var("finance_warehouse_payment_sources") %}
 
 WITH
   source AS (
@@ -33,3 +28,6 @@ renamed as (
   FROM source
 )
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

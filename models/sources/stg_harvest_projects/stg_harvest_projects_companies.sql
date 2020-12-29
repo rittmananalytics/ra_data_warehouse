@@ -1,10 +1,5 @@
-{% if not var("enable_harvest_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+{% if 'harvest_projects' in var("crm_warehouse_company_sources") %}
 
 WITH source AS (
   {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_companies_table'),unique_column='id') }}
@@ -37,3 +32,6 @@ SELECT
   *
 FROM
   renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

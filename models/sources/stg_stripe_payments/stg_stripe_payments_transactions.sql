@@ -1,10 +1,5 @@
-{% if not var("enable_stripe_payments_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("finance_warehouse_transaction_sources") %}
+{% if 'stripe_payments' in var("finance_warehouse_transaction_sources") %}
 
 WITH source AS (
     {{ filter_stitch_relation(relation=var('stg_stripe_payments_stitch_balance_transactions_table'),unique_column='id') }}
@@ -31,3 +26,6 @@ SELECT
   *
 FROM
   renamed
+
+  {% else %} {{config(enabled=false)}} {% endif %}
+  {% else %} {{config(enabled=false)}} {% endif %}

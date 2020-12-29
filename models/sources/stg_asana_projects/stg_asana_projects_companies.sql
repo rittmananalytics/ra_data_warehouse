@@ -1,10 +1,6 @@
-{% if not var("enable_asana_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+{% if 'asana_projects' in var("crm_warehouse_company_sources") %}
+
 
 WITH source AS (
   {{ filter_stitch_relation(relation=var('stg_asana_projects_stitch_workspaces_table'),unique_column='gid') }}
@@ -33,3 +29,6 @@ select concat('{{ var('stg_asana_projects_id-prefix') }}',gid) AS company_id,
 where name != 'My Company'
   )
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

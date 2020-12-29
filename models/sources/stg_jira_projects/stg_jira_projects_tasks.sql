@@ -1,10 +1,6 @@
-{% if not var("enable_jira_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("projects_warehouse_delivery_sources") %}
+{% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
+
 
 with source as (
   {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_issues_table'),unique_column='key') }}
@@ -68,3 +64,6 @@ SELECT
  *
 FROM
  renamed
+
+ {% else %} {{config(enabled=false)}} {% endif %}
+ {% else %} {{config(enabled=false)}} {% endif %}

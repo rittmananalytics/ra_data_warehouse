@@ -1,32 +1,18 @@
-{% if (not var("enable_segment_events_source") and not var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('product_warehouse_events_sources') %}
 
 with events_merge_list as
   (
-    {% if var("enable_segment_events_source")  %}
+    {% for source in var('product_warehouse_events_sources') %}
 
-    SELECT *
-    FROM   {{ ref('stg_segment_events_pageviews') }}
-    UNION ALL
-    SELECT *
-    FROM   {{ ref('stg_segment_events_events') }}
+      {% set relation_source = 'stg_' + source + '_events' %}
 
-    {% endif %}
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
 
-    {% if var("enable_segment_events_source") and var("enable_mixpanel_events_source") %}
-    UNION ALL
-    {% endif %}
-
-    {% if var("enable_mixpanel_events_source") %}
-    SELECT *
-    FROM   {{ ref('stg_mixpanel_events_events') }}
-
-    {% endif %}
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 
 
@@ -45,4 +31,10 @@ left outer join
   {{ ref('event_mapping_list') }} m
 on
   e.event_type = m.event_type_original
+{% endif %}
+
+{% else %}
+
+{{config(enabled=false)}}
+
 {% endif %}

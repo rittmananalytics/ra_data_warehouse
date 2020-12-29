@@ -1,10 +1,5 @@
-{% if not var("enable_facebook_ads_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_ad_campaign_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_campaign_sources") %}
 
 {% if var("stg_facebook_ads_etl") == 'stitch' %}
 with source as (
@@ -46,3 +41,6 @@ select
  *
 from
  renamed
+
+ {% else %} {{config(enabled=false)}} {% endif %}
+ {% else %} {{config(enabled=false)}} {% endif %}

@@ -1,10 +1,5 @@
-{% if not var("enable_harvest_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("projects_warehouse_timesheet_sources") %}
+{% if 'harvest_projects' in var("projects_warehouse_timesheet_sources") %}
 
 with t_harvest_time_entries as (
   {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_timesheets_table'),unique_column='id') }}
@@ -54,3 +49,6 @@ SELECT
     *
   FROM
     renamed
+
+    {% else %} {{config(enabled=false)}} {% endif %}
+    {% else %} {{config(enabled=false)}} {% endif %}

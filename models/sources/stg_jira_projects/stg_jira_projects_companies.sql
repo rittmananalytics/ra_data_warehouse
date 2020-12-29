@@ -1,10 +1,5 @@
-{% if not var("enable_jira_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+{% if 'jira_projects' in var("crm_warehouse_company_sources") %}
 
   WITH source AS (
       {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_projects_table'),unique_column='id') }}
@@ -34,3 +29,6 @@ concat('{{ var('stg_jira_projects_id-prefix') }}',replace(name,' ','_')) AS comp
     FROM source )
     {{ dbt_utils.group_by(n=19) }})
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

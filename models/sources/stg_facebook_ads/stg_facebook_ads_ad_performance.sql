@@ -1,10 +1,6 @@
-{% if not var("enable_facebook_ads_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_ad_performance_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_performance_sources") %}
+
 {% if var("stg_facebook_ads_etl") == 'stitch' %}
 WITH source AS (
   {{ filter_stitch_relation(relation=var('stg_facebook_ads_stitch_ad_performance_table'),unique_column='id') }}
@@ -54,3 +50,6 @@ select
   *
 from
   renamed
+
+  {% else %} {{config(enabled=false)}} {% endif %}
+  {% else %} {{config(enabled=false)}} {% endif %}

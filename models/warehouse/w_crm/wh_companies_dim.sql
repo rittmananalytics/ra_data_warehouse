@@ -1,16 +1,6 @@
-{% if not var("enable_crm_warehouse") and not enable_finance_warehouse and not enable_marketing_warehouse and not enable_projects_warehouse %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
-{{
-    config(
-        alias='companies_dim'
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+
+{{config(alias='companies_dim')}}
 
 WITH companies_dim as (
   SELECT
@@ -22,3 +12,5 @@ WITH companies_dim as (
     {{ ref('int_companies') }} c
 )
 select * from companies_dim
+
+{% else %} {{config(enabled=false)}} {% endif %}

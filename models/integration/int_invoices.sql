@@ -1,19 +1,18 @@
+{% if var('finance_warehouse_invoice_sources') %}
+
+
 with t_invoices_merge_list as (
 
-      {% if var("enable_harvest_projects_source") %}
-      SELECT *
-      FROM   {{ ref('stg_harvest_projects_invoices') }}
-      {% endif %}
+  {% for source in var('finance_warehouse_invoice_sources') %}
+    {% set relation_source = 'stg_' + source + '_invoices' %}
 
-      {% if var("enable_xero_accounting_source") and var("enable_harvest_projects_source")  %}
-      UNION ALL
-      {% endif %}
+    select
+      '{{source}}' as source,
+      *
+      from {{ ref(relation_source) }}
 
-      {% if var("enable_xero_accounting_source")  %}
-      SELECT *
-      FROM   {{ ref('stg_xero_accounting_invoices') }}
-      {% endif %}
-
+      {% if not loop.last %}union all{% endif %}
+    {% endfor %}
 
     ),
     all_invoice_ids as (
@@ -66,3 +65,9 @@ SELECT
  *
 FROM
  joined
+
+ {% else %}
+
+ {{config(enabled=false)}}
+
+ {% endif %}

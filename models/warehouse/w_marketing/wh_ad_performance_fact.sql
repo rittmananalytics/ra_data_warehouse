@@ -45,7 +45,7 @@ FROM (
     utm_source,
     LOWER(utm_campaign) AS utm_campaign,
     utm_term,
-    TIMESTAMP_TRUNC(event_ts,DAY) AS campaign_date,
+    {{ dbt_utils.date_trunc('DAY', 'event_ts') }} AS campaign_date,
 
     blended_user_id,
 
@@ -71,7 +71,7 @@ GROUP BY
     SUM(total_reported_impressions) AS total_reported_impressions,
   FROM (
     SELECT
-      TIMESTAMP_TRUNC(ad_serve_ts,DAY) AS campaign_date,
+      {{ dbt_utils.date_trunc('DAY','ad_serve_ts') }} AS campaign_date,
       utm_source,
       utm_campaign,
       ad_total_cost AS total_reported_cost,

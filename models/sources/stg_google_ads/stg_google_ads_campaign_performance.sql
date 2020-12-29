@@ -1,10 +1,6 @@
-{% if not var("enable_google_ads_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_ad_campaign_performance_sources") %}
+{% if 'google_ads' in var("marketing_warehouse_ad_campaign_performance_sources") %}
+
 {% if var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
   select * from (
@@ -63,3 +59,6 @@ select
   *
 from
   renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

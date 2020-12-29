@@ -81,11 +81,24 @@ vars:
 
   crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects','looker_usage']
   crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects','looker_usage']
-  marketing_warehouse_ad_campaigns_sources: ['google_ads','facebook_ads','mailchimp_email','hubspot_email']
+  crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
+  marketing_warehouse_ad_campaign_sources: ['google_ads','facebook_ads','mailchimp_email','hubspot_email']
   marketing_warehouse_ad_campaign_performance_sources: ['google_ads','mailchimp_email','hubspot_email']
   marketing_warehouse_ad_performance_sources: ['facebook_ads']
-  marketing_warehouse_ad_groups_sources: []
-  marketing_warehouse_ads_sources: []
+  marketing_warehouse_ad_group_sources: []
+  marketing_warehouse_ad_sources: []
+  marketing_warehouse_email_event_sources: ['hubspot_email','mailchimp_email']
+  marketing_warehouse_email_list_sources: ['mailchimp_email']
+  marketing_warehouse_deal_sources: ['hubspot_crm']
+  projects_warehouse_delivery_sources: ['asana_projects','jira_projects']
+  projects_warehouse_timesheet_sources: ['harvest_projects']
+  finance_warehouse_invoice_sources: ['xero_accounting','harvest_projects']
+  finance_warehouse_transaction_sources: ['xero_accounting','stripe_payments']
+  finance_warehouse_payment_sources: ['xero_accounting']
+  product_warehouse_events_sources: ['segment_events_track','segment_events_page','mixpanel_events']
+  subscriptions_warehouse_plan_sources: []
+
+
 
 
   stg_asana_projects_id-prefix: asana-

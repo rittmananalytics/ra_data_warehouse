@@ -1,10 +1,5 @@
-{% if not var("enable_mailchimp_email_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_event_sources") %}
+{% if 'mailchimp_email' in var("marketing_warehouse_email_event_sources") %}
 
 WITH source AS (
   SELECT *
@@ -38,3 +33,6 @@ SELECT
 FROM
   source)
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

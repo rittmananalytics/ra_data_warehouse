@@ -1,10 +1,4 @@
-{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('product_warehouse_events_sources') %}
 
 with events as (
 
@@ -37,3 +31,9 @@ mapping as (
 )
 
 select * from mapping
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

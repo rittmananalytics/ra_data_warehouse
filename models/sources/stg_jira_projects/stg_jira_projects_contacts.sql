@@ -1,10 +1,5 @@
-{% if not var("enable_jira_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'jira_projects' in var("crm_warehouse_contact_sources") %}
 
 with source as (
   {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_users_table'),unique_column='accountid') }}
@@ -73,3 +68,6 @@ renamed as
      *
     FROM
      renamed
+
+     {% else %} {{config(enabled=false)}} {% endif %}
+     {% else %} {{config(enabled=false)}} {% endif %}

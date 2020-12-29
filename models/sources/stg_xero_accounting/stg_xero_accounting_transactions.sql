@@ -1,10 +1,5 @@
-{% if not var("enable_xero_accounting_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("finance_warehouse_transaction_sources") %}
+{% if 'xero_accounting' in var("finance_warehouse_transaction_sources") %}
 
 WITH
   source AS
@@ -31,3 +26,6 @@ renamed as (
     source i,
          UNNEST(i.lineitems) AS lineitems)
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

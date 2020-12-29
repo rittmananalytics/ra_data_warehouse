@@ -1,10 +1,5 @@
-{% if not var("enable_asana_projects_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'asana_projects' in var("crm_warehouse_contact_sources") %}
 
 WITH source AS (
   {{ filter_stitch_relation(relation=var('stg_asana_projects_stitch_users_table'),unique_column='gid') }}
@@ -74,3 +69,6 @@ renamed as (
      *
     FROM
      renamed
+
+     {% else %} {{config(enabled=false)}} {% endif %}
+     {% else %} {{config(enabled=false)}} {% endif %}

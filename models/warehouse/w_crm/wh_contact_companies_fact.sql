@@ -1,17 +1,12 @@
-{% if not var("enable_crm_warehouse") and not enable_finance_warehouse and not enable_marketing_warehouse and not enable_projects_warehouse %}
+{% if var("crm_warehouse_companies_sources") and var("crm_warehouse_contact_sources") %}
 
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+
 {{
     config(
         alias='contact_companies_fact'
     )
 }}
-{% endif %}
+
 with contacts as (
   SELECT
     contact_pk, company_id
@@ -33,3 +28,5 @@ select
 from   contacts c
 join   companies p
 on     c.company_id = p.company_id
+
+{% else %} {{config(enabled=false)}} {% endif %}

@@ -1,9 +1,9 @@
-{% if var('marketing_warehouse_ad_campaigns_sources')|length > 0 %}
+{% if var('marketing_warehouse_ad_campaign_sources') %}
 
 
 with campaigns as
   (
-    {% for source in var('marketing_warehouse_ad_campaigns_sources') %}
+    {% for source in var('marketing_warehouse_ad_campaign_sources') %}
       {% set relation_source = 'stg_' + source + '_campaigns' %}
 
       select

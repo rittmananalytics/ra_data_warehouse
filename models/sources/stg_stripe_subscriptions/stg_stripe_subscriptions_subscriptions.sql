@@ -1,10 +1,6 @@
-{% if not var("enable_stripe_subscriptions_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("subscriptions_warehouse_plan_sources") %}
+{% if 'stripe_subscriptions' in var("subscriptions_warehouse_plan_sources") %}
+
 {% if var("etl") == 'segment' %}
 with source as (
   {{ filter_segment_relation(var('stg_stripe_payments_segment_subscriptions_table')) }}
@@ -35,3 +31,6 @@ FROM
 )
 select * from renamed
 {% endif %}
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

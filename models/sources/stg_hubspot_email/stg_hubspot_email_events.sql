@@ -1,10 +1,6 @@
-{% if not var("enable_hubspot_email_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_event_sources") %}
+{% if 'hubspot_email' in var("marketing_warehouse_email_event_sources") %}
+
 {% if var("stg_hubspot_email_etl") == 'stitch' %}
 with source as (
   select *
@@ -12,7 +8,7 @@ with source as (
 ),
 renamed as (
   SELECT
-  cast(null as string) as send_id,
+  cast(null as string) as list_id,
   concat('{{ var('stg_hubspot_email_id-prefix') }}',cast(emailcampaignid as string)) as ad_campaign_id,
   cast(contact_id as string) as contact_id,
   created as event_ts,
@@ -29,3 +25,6 @@ on e.recipient = c.contact_email
 )
 {% endif %}
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

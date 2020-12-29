@@ -1,10 +1,6 @@
-{% if not var("enable_segment_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("product_warehouse_events_sources") %}
+{% if 'segment_events_track' in var("product_warehouse_events_sources") %}
+
 {{
     config(
         materialized="table"
@@ -12,7 +8,7 @@
 }}
 with source as (
 
-  select * from {{ var('stg_segment_events_segment_pages_table') }}
+    select * from {{ var('stg_segment_events_segment_tracks_table') }}
 
 ),
 
@@ -20,20 +16,20 @@ renamed as (
 
     select
         id                          as event_id,
-        'Page View'                 as event_type,
+        event                       as event_type,
         received_at                 as event_ts,
-        context_page_title                  as event_details,
-        context_page_title                  as page_title,
-        path                        as page_url_path,
+        event_text                  as event_details,
+        cast(null as string )       as page_title,
+        context_page_path           as page_url_path,
         replace(
             {{ get_url_host('context_page_referrer') }},
             'www.',
             ''
         )                           as referrer_host,
-        search                      as search,
-        url                         as page_url,
-        {{ get_url_host('url') }} as page_url_host,
-        {{ get_url_parameter('url', 'gclid') }} as gclid,
+        context_page_search         as search,
+        context_page_url            as page_url,
+        {{ get_url_host('context_page_url') }} as page_url_host,
+        {{ get_url_parameter('context_page_url', 'gclid') }} as gclid,
         context_campaign_term       as utm_term,
         context_campaign_content    as utm_content,
         context_campaign_medium     as utm_medium,
@@ -45,16 +41,14 @@ renamed as (
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
-                split(context_user_agent,'(')[safe_offset(1)],
+              split(context_user_agent,'(')[safe_offset(1)],
                 ';', '')
         end as device,
         '{{ var('stg_segment_events_site') }}'  as site
-
-
     from source
 
-),
-
+)
+,
 final as (
 
     select
@@ -69,5 +63,7 @@ final as (
     from renamed
 
 )
-
 select * from final
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

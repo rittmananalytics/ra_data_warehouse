@@ -37,7 +37,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
   segment_clicks AS (
     SELECT
       ad_campaign_pk,
-      TIMESTAMP_TRUNC(session_start_ts,DAY) AS campaign_date,
+      {{ dbt_utils.date_trunc('DAY', 'session_start_ts') }} AS campaign_date,
       COUNT(web_sessions_pk) AS total_clicks
     FROM
       web_sessions
@@ -60,7 +60,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
     SUM(total_reported_invalid_clicks) AS total_reported_invalid_clicks
   FROM (
     SELECT
-      TIMESTAMP_TRUNC(ad_campaign_serve_ts,DAY) AS campaign_date,
+      {{ dbt_utils.date_trunc('DAY', 'ad_campaign_serve_ts') }} AS campaign_date,
       ad_campaign_pk,
       utm_source,
       utm_campaign,

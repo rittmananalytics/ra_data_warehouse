@@ -1,10 +1,6 @@
-{% if not var("enable_hubspot_email_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_event_sources") %}
+{% if 'hubspot_email' in var("marketing_warehouse_email_event_sources") %}
+
 {% if var("stg_hubspot_email_etl") == 'stitch' %}
 with source as (
   {{ filter_stitch_relation(relation=var('stg_hubspot_email_stitch_campaigns_table'),unique_column='id') }}
@@ -25,3 +21,6 @@ renamed as (
 )
 {% endif %}
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

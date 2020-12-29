@@ -1,10 +1,5 @@
-{% if not var("enable_intercom_messaging_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contacts_sources") %}
+{% if 'intercom_messaging' in var("crm_warehouse_contacts_sources") %}
 
 WITH source AS (
       {{ filter_stitch_table(var('stg_intercom_messaging_stitch_schema'),var('stg_intercom_messaging_stitch_contacts_table'),'id') }}
@@ -39,3 +34,6 @@ renamed as (
   FROM
     source)
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

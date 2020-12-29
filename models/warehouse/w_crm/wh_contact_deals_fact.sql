@@ -1,17 +1,11 @@
-{% if not var("enable_crm_warehouse") and not enable_finance_warehouse and not enable_marketing_warehouse and not enable_projects_warehouse %}
+{% if var("crm_warehouse_deal_sources") and var("crm_warehouse_contact_sources") %}
 
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
 {{
     config(
         alias='contact_deals_fact'
     )
 }}
-{% endif %}
+
 with contacts_dim as (
   SELECT
     contact_pk,
@@ -42,3 +36,5 @@ join   contacts_dim c
 on     cd.contact_id = c.contact_id
 join   deals_fact d
 on     cd.deal_id = d.deal_id
+
+{% else %} {{config(enabled=false)}} {% endif %}

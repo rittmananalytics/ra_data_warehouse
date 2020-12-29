@@ -1,10 +1,5 @@
-{% if not var("enable_xero_accounting_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+{% if 'xero_accounting' in var("crm_warehouse_company_sources") %}
 
 WITH source as (
   {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_contacts_table'),unique_column='contactid') }}
@@ -44,3 +39,6 @@ renamed as (
  where contacts.lastname is null
  group by 1,2,4,9,10,11,12,13,14,15,16,17,18,19)
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

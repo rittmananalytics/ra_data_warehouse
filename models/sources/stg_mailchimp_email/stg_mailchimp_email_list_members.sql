@@ -1,10 +1,5 @@
-{% if not var("enable_mailchimp_email_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_list_sources") %}
+{% if 'mailchimp_email' in var("marketing_warehouse_email_list_sources") %}
 
 WITH source as (
   {{ filter_stitch_relation(relation=var('stg_mailchimp_email_stitch_list_members_table'),unique_column='id') }}
@@ -22,3 +17,6 @@ FROM
   source
 )
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

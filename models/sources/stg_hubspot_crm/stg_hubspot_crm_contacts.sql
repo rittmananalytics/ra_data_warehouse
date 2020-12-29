@@ -1,10 +1,6 @@
-{% if not var("enable_hubspot_crm_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'hubspot_crm' in var("crm_warehouse_contact_sources") %}
+
 {% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 WITH source as (
   select * from
@@ -78,3 +74,6 @@ renamed as (
 )
 {% endif %}
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

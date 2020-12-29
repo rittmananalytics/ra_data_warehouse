@@ -1,8 +1,6 @@
-{% if not var("enable_mixpanel_events_source") %}
-  {{ config(
-    enabled = false
-  ) }}
-{% endif %}
+{% if var("product_warehouse_events_sources") %}
+{% if 'mixpanel_events' in var("product_warehouse_events_sources") %}
+
 
 {% if var("stg_mixpanel_events_etl") == 'fivetran' %}
   WITH source AS (
@@ -133,3 +131,6 @@ final as (
 
 )
 select * from final
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

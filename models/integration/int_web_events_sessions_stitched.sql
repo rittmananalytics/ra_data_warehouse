@@ -1,10 +1,6 @@
-{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('product_warehouse_events_sources') %}
+
+
 
 with sessions as (
 
@@ -47,6 +43,12 @@ select *,
        timestamp_diff (lead(session_start_ts, 1) OVER (PARTITION BY blended_user_id ORDER BY session_start_ts DESC),session_start_ts,MINUTE) AS mins_between_sessions,
        case when events = 1 then true else false end as is_bounced_session
 
-       
+
 
         from joined
+
+{% else %}
+
+  {{config(enabled=false)}}
+
+{% endif %}

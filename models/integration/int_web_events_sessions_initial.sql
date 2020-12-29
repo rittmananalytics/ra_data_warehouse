@@ -1,16 +1,6 @@
-{% if not var("enable_segment_events_source") and not var("enable_mixpanel_events_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
-{{
-    config(
-        materialized="table"
-    )
-}}
-{% endif %}
+{% if var('product_warehouse_events_sources') %}
+
+{{config(materialized="table")}}
 
 {% set partition_by = "partition by session_id" %}
 
@@ -160,7 +150,7 @@ channel_mapped as (
            when coalesce(marketing_channel_mapping.channel,additional_referrer_mapping.channel) is null and mapped.referrer_host is not null then 'Referral'
            else 'Direct' end as channel
       from mapped
-      left join additional_referrer_mapping 
+      left join additional_referrer_mapping
       on mapped.referrer_host = additional_referrer_mapping.domain
       left join marketing_channel_mapping
       on mapped.utm_medium = marketing_channel_mapping.medium
@@ -168,3 +158,9 @@ channel_mapped as (
 )
 
 select * from channel_mapped
+
+{% else %}
+
+  {{config(enabled=false)}}
+
+{% endif %}

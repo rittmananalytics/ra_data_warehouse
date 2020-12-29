@@ -1,18 +1,12 @@
-{% if not var("enable_crm_warehouse") and not enable_finance_warehouse and not enable_marketing_warehouse and not enable_projects_warehouse %}
+{% if var("crm_warehouse_contact_sources") %}
 
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
 {{
     config(
         unique_key='contact_pk',
         alias='contacts_dim'
     )
 }}
-{% endif %}
+
 
 WITH contacts AS
   (
@@ -26,3 +20,5 @@ select    {{ dbt_utils.surrogate_key(
           *
           FROM
           contacts c
+
+{% else %} {{config(enabled=false)}} {% endif %}

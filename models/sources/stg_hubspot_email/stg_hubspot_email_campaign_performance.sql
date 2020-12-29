@@ -1,10 +1,6 @@
-{% if not var("enable_hubspot_email_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_event_sources") %}
+{% if 'hubspot_email' in var("marketing_warehouse_email_event_sources") %}
+
 with source as (
   SELECT
     ad_campaign_serve_ts,
@@ -29,3 +25,6 @@ select
   *
 from
   source
+
+  {% else %} {{config(enabled=false)}} {% endif %}
+  {% else %} {{config(enabled=false)}} {% endif %}

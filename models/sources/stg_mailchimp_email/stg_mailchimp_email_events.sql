@@ -1,10 +1,5 @@
-{% if not var("enable_mailchimp_email_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("marketing_warehouse_email_event_sources") %}
+{% if 'mailchimp_email' in var("marketing_warehouse_email_event_sources") %}
 
 with source as (
   SELECT *
@@ -31,7 +26,7 @@ from source
 union all
 SELECT
   s.list_id,
-  s.send_id,
+  s.send_id as ad_campaign_id,
   c.contact_id,
   s.campaign_sent_ts as event_ts,
   'stg_enrichment_clearbit_schema' AS action,
@@ -50,3 +45,7 @@ ON
   c.contact_email = m.contact_email)
 select *
 from joined
+
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

@@ -1,10 +1,5 @@
-{% if not var("enable_xero_accounting_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'xero_accounting' in var("crm_warehouse_contact_sources") %}
 
 WITH xero_contacts as (
   {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_contacts_table'),unique_column='contactid') }}
@@ -62,3 +57,6 @@ contacts as (
 )
 
 select * from contacts
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
