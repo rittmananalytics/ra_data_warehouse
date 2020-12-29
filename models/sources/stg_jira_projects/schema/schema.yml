@@ -12,6 +12,3 @@ models:
         tests:
           - not_null:
               severity: warn
-          - relationships:
-              to: ref('stg_asana_projects_users')
-              field: user_id

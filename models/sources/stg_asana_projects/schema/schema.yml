@@ -8,13 +8,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: lead_user_id
-        tests:
-          - not_null:
-              severity: warn
-          - relationships:
-              to: ref('stg_asana_projects_users')
-              field: user_id
       - name: project_name
         tests:
           - unique
@@ -48,31 +41,3 @@ models:
         tests:
           - not_null:
               severity: warn
-          - relationships:
-              to: ref('stg_asana_projects_users')
-              field: user_id
-  - name: stg_asana_projects_users
-    description: "Asana Delivery Tasks"
-    columns:
-        - name: user_id
-          tests:
-            - unique
-            - not_null
-        - name: user_email
-          tests:
-            - unique:
-                severity: warn
-            - not_null:
-                severity: warn
-        - name: user_default_hourly_rate
-          tests:
-            - not_null:
-                severity: warn
-        - name: user_cost_rate
-          tests:
-            - not_null:
-                severity: warn
-        - name: user_weekly_capacity
-          tests:
-            - not_null:
-                severity: warn

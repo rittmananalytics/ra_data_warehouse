@@ -14,13 +14,6 @@ models:
         tests:
           - unique
           - not_null
-  - name: wh_users_dim
-    description: "Staff Dimension"
-    columns:
-      - name: user_pk
-        tests:
-          - unique
-          - not_null
   - name: wh_timesheet_tasks_dim
     description: "Projects Dimension"
     columns:
@@ -48,12 +41,6 @@ models:
           - relationships:
               to: ref('wh_companies_dim')
               field: company_pk
-      - name: user_pk
-        tests:
-          - not_null
-          - relationships:
-              to: ref('wh_users_dim')
-              field: user_pk
       - name: project_pk
         tests:
           - not_null

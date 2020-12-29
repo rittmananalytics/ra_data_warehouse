@@ -1,15 +1,18 @@
-{% if not var("enable_harvest_projects_source") or not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("projects_warehouse_timesheet_sources") %}
 
 with t_timesheets_merge_list as
   (
-    SELECT * except (timesheet_id),
-           timesheet_id as harvest_timesheet_id
-    FROM   {{ ref('stg_harvest_projects_timesheets') }}
+    {% for source in var('projects_warehouse_timesheet_sources') %}
+      {% set relation_source = 'stg_' + source + '_timesheets' %}
+
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
+
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 select * from t_timesheets_merge_list
+
+{% endif %}

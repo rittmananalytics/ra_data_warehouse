@@ -26,11 +26,3 @@ models:
               severity: warn
           - not_null:
               severity: warn
-  - name: wh_deals_fact
-    description: "Deals Facts"
-    columns:
-      - name: deal_pk
-        tests:
-          - unique
-          - not_null
-  

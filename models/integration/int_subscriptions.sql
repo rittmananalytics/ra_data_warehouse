@@ -1,10 +1,8 @@
-{% if not var("enable_stripe_subscriptions_source") %}
 {{
     config(
         enabled=false
     )
 }}
-{% endif %}
 
 
 with subscriptions_merge_list as

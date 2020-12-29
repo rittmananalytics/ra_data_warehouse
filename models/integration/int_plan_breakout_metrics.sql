@@ -1,10 +1,8 @@
-{% if not var("enable_baremetrics_analytics_source") %}
 {{
     config(
         enabled=false
     )
 }}
-{% endif %}
 
 
 with plans_breakout_merge_list as

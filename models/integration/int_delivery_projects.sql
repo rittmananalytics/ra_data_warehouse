@@ -1,20 +1,18 @@
-{% if (not var("enable_asana_projects_source") and not var("enable_jira_projects_source")) or not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("projects_warehouse_delivery_sources") %}
+
 with t_delivery_projects_merge_list as
   (
-    SELECT *
-    FROM   {{ ref('stg_jira_projects_projects') }}
+    {% for source in var('projects_warehouse_delivery_sources') %}
+      {% set relation_source = 'stg_' + source + '_projects' %}
 
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
 
-    {% if enable_asana_projects_source %}
-    UNION ALL
-    SELECT *
-    FROM   {{ ref('stg_asana_projects_projects') }}
-    {% endif %}
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 select * from t_delivery_projects_merge_list
+
+{% endif %}

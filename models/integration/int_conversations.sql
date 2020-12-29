@@ -1,28 +1,20 @@
-{% if not var("enable_crm_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var('crm_warehouse_conversations_sources') %}
+
 
 
 with conversations_merge_list as
   (
-    {% if var("enable_hubspot_crm_source") %}
+    {% for source in var('crm_warehouse_conversations_sources') %}
+      {% set relation_source = 'stg_' + source + '_conversations' %}
 
-    SELECT *
-    FROM   {{ ref('stg_hubspot_crm_conversations') }}
+      select
+        '{{source}}' as source,
+        *
+        from {{ ref(relation_source) }}
 
-    {% endif %}
-    {% if var("enable_intercom_messaging_source") and var("enable_hubspot_crm_source")  %}
-    UNION ALL
-    {% endif %}
-    {% if var("enable_intercom_messaging_source")  %}
-
-    SELECT *
-    FROM   {{ ref('stg_intercom_messaging_conversations') }}
-
-    {% endif %}
+        {% if not loop.last %}union all{% endif %}
+      {% endfor %}
   )
 select * from conversations_merge_list
+
+{% endif %}

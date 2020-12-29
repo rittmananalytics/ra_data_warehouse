@@ -1,5 +1,5 @@
-{% if var("crm_warehouse_contact_sources") and var("crm_warehouse_deal_sources")%}
-{% if 'hubspot_crm' in var("crm_warehouse_contact_sources") and 'hubspot_crm' in var("crm_warehouse_deal_sources") %}
+{% if var("crm_warehouse_contact_sources") and var("marketing_warehouse_deal_sources")%}
+{% if 'hubspot_crm' in var("crm_warehouse_contact_sources") and 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
 {% if var("stg_hubspot_crm_etl") == 'stitch' %}
 with source as (

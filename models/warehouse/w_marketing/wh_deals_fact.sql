@@ -1,4 +1,4 @@
-{% if not var("crm_warehouse_deal_sources") and var("crm_warehouse_company_sources") %}
+{% if var("marketing_warehouse_deal_sources") and var("crm_warehouse_company_sources") %}
 
 {{
     config(

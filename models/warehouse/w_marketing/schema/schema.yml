@@ -1,0 +1,9 @@
+version: 2
+models:
+  - name: wh_deals_fact
+    description: "Deals Facts"
+    columns:
+      - name: deal_pk
+        tests:
+          - unique
+          - not_null
