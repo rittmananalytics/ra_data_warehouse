@@ -1,10 +1,6 @@
-{% if not var("enable_looker_usage_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'looker_usage' in var("crm_warehouse_contact_sources") %}
+
 WITH source AS (
 
     select
@@ -45,3 +41,6 @@ SELECT
     FROM source )
     group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26)
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

@@ -1,17 +1,11 @@
-{% if not var("enable_harvest_projects_source") or (not var("enable_projects_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("projects_warehouse_timesheet_sources") %}
 {{
     config(
         unique_key='timesheet_projects_pk',
         alias='timesheets_fact'
     )
 }}
-{% endif %}
+
 
 with companies_dim as (
     SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
@@ -65,3 +59,9 @@ LEFT OUTER JOIN tasks_dim ta
    ON t.timesheet_task_id = ta.task_id
 JOIN contacts_dim u
    ON cast(t.timesheet_users_id as string) IN UNNEST(u.all_contact_ids)
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

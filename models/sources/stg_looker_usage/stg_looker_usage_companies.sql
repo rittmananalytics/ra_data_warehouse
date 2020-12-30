@@ -1,10 +1,6 @@
-{% if not var("enable_looker_usage_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("crm_warehouse_company_sources") %}
+{% if 'looker_usage' in var("crm_warehouse_company_sources") %}
+
 WITH source AS (
 
     select
@@ -38,3 +34,6 @@ SELECT
     FROM source )
     {{ dbt_utils.group_by(n=19) }} )
 select * from renamed
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

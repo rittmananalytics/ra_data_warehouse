@@ -1,17 +1,11 @@
-{% if not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("projects_warehouse_delivery_sources") %}
 {{
     config(
         unique_key='delivery_task_pk',
         alias='delivery_tasks_fact'
     )
 }}
-{% endif %}
+
 
 WITH tasks AS
   (
@@ -40,3 +34,9 @@ JOIN contacts c
       ON t.task_assignee_user_id IN UNNEST(c.all_contact_ids)
 LEFT OUTER JOIN projects p
    on t.project_id = p.project_id
+
+   {% else %}
+
+   {{config(enabled=false)}}
+
+   {% endif %}

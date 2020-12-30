@@ -1,17 +1,11 @@
-{% if not var("enable_harvest_projects_source") or (not var("enable_projects_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("projects_warehouse_timesheet_sources") %}
 {{
     config(
         unique_key='timesheet_task_pk',
         alias='timesheet_tasks_dim'
     )
 }}
-{% endif %}
+
 
 WITH tasks AS
   (
@@ -29,3 +23,9 @@ SELECT
    t.task_is_active
 FROM
    tasks t
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

@@ -1,17 +1,12 @@
-{% if not var("enable_finance_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("finance_warehouse_invoice_sources") %}
+
 {{
     config(
         unique_key='currency_pk',
         alias='currency_dim'
     )
 }}
-{% endif %}
+
 
 WITH currencies AS
   (
@@ -24,3 +19,4 @@ SELECT
    *
 FROM
    currencies
+{% endif %}

@@ -48,37 +48,6 @@ seeds:
     schema: seed
 
 vars:
-  enable_harvest_projects_source:      true
-  enable_hubspot_crm_source:           true
-  enable_hubspot_email_source:         true
-  enable_asana_projects_source:        true
-  enable_jira_projects_source:         true
-  enable_stripe_payments_source:       true
-  enable_stripe_subscriptions_source:  false
-  enable_xero_accounting_source:       true
-  enable_mailchimp_email_source:       true
-  enable_segment_events_source:        true
-  enable_google_ads_source:            true
-  enable_facebook_ads_source:          true
-  enable_intercom_messaging_source:    true
-  enable_custom_source_1:              false
-  enable_custom_source_2:              false
-  enable_mixpanel_events_source:       true
-  enable_clearbit_enrichment_source:   true
-  enable_baremetrics_analytics_source: false
-  enable_looker_usage_source:           true
-  contacts_enrichment:                 true
-  companies_enrichment:                true
-
-
-  enable_crm_warehouse:                true
-  enable_finance_warehouse:            true
-  enable_projects_warehouse:           true
-  enable_marketing_warehouse:          true
-  enable_ads_warehouse:                true
-  enable_product_warehouse:            true
-  enable_subscriptions_warehouse:      false
-
   crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects','looker_usage']
   crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects','looker_usage']
   crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
@@ -97,9 +66,6 @@ vars:
   finance_warehouse_payment_sources: ['xero_accounting']
   product_warehouse_events_sources: ['segment_events_track','segment_events_page','mixpanel_events']
   subscriptions_warehouse_plan_sources: []
-
-
-
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch

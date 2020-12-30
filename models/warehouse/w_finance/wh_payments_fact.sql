@@ -1,17 +1,12 @@
-{% if not var("enable_finance_warehouse") and not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("finance_warehouse_payment_sources") %}
+
 {{
     config(
         unique_key='payment_pk',
         alias='payments_fact'
     )
 }}
-{% endif %}
+
 
 WITH payments AS
   (
@@ -41,3 +36,4 @@ JOIN companies_dim c
       ON p.company_id IN UNNEST(c.all_company_ids)
 JOIN currencies_dim d
       ON p.currency_code = d.currency_code
+{% endif %}

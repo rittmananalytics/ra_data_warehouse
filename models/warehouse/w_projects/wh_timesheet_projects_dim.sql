@@ -1,17 +1,11 @@
-{% if not var("enable_harvest_projects_source") or (not var("enable_projects_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("projects_warehouse_timesheet_sources") %}
 {{
     config(
         unique_key='timesheet_projects_pk',
         alias='timesheet_projects_dim'
     )
 }}
-{% endif %}
+
 
 WITH timesheet_projects AS
   (
@@ -44,3 +38,9 @@ FROM
    timesheet_projects p
    JOIN companies_dim c
       ON cast(p.company_id as string) IN UNNEST(c.all_company_ids)
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

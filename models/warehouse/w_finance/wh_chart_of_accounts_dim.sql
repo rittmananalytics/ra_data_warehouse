@@ -1,17 +1,11 @@
-{% if not var("enable_finance_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("finance_warehouse_invoice_sources") %}
 {{
     config(
         unique_key='account_pk',
         alias='chart_of_accounts_dim'
     )
 }}
-{% endif %}
+
 
 WITH chart_of_accounts AS
   (
@@ -24,3 +18,4 @@ SELECT
    *
 FROM
    chart_of_accounts
+{% endif %}

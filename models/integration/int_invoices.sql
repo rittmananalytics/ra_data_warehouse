@@ -22,7 +22,7 @@ with t_invoices_merge_list as (
        merged as (
        SELECT invoice_number,
        max(company_id) as company_id,
-       {% if var("enable_harvest_projects_source") %}
+       {% if 'harvest_projects' in var("projects_warehouse_timesheet_sources") %}
        max(project_id) as project_id,
        max(invoice_creator_users_id) as invoice_creator_users_id,
        {% endif %}
@@ -37,7 +37,7 @@ with t_invoices_merge_list as (
        max(invoice_local_total_revenue_amount) as invoice_local_total_revenue_amount,
        max(invoice_currency) as invoice_currency,
        max(total_local_amount) as total_local_amount,
-       {% if var("enable_harvest_projects_source") %}
+       {% if 'harvest_projects' in var("projects_warehouse_timesheet_sources") %}
        max(invoice_local_total_billed_amount) as invoice_local_total_billed_amount,
        max(invoice_local_total_services_amount) as invoice_local_total_services_amount,
        max(invoice_local_total_licence_referral_fee_amount) as invoice_local_total_licence_referral_fee_amount,

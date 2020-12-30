@@ -1,10 +1,5 @@
-{% if not var("enable_finance_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("finance_warehouse_transaction_sources") %}
+
 {{
     config(
         alias='transactions_fact',
@@ -13,7 +8,7 @@
         materialized='incremental'
     )
 }}
-{% endif %}
+
 
 WITH transactions AS
   (
@@ -31,4 +26,6 @@ FROM
         -- this filter will only be applied on an incremental run
         where transaction_created_ts > (select max(transaction_created_ts) from {{ this }})
         or    transaction_last_modified_ts > (select max(transaction_last_modified_ts) from {{ this }})
+   {% endif %}
+
    {% endif %}

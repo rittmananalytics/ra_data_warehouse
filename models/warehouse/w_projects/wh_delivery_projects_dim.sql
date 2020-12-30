@@ -1,17 +1,11 @@
-{% if not var("enable_projects_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("projects_warehouse_delivery_sources") %}
 {{
     config(
         unique_key='delivery_projects_pk',
         alias='delivery_projects_dim'
     )
 }}
-{% endif %}
+
 
 WITH delivery_projects AS
   (
@@ -38,3 +32,9 @@ FROM
    delivery_projects p
    JOIN companies_dim c
       ON cast(p.company_id as string) IN UNNEST(c.all_company_ids)
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

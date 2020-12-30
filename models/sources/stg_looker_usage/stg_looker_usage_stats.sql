@@ -1,10 +1,4 @@
-{% if not var("enable_looker_usage_source") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+
 WITH source AS (
 
     select
