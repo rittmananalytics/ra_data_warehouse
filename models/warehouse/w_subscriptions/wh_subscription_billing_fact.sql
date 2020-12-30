@@ -1,16 +1,11 @@
-{% if not var("enable_stripe_subscriptions_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("subscriptions_warehouse_sources")  %}
+
 {{
     config(
         alias='subscription_billing_fact'
     )
 }}
-{% endif %}
+
 
 WITH subscriptions AS
   (

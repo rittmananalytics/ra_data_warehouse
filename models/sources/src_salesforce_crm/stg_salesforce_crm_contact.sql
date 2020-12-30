@@ -1,5 +1,5 @@
 {% if var("crm_warehouse_contact_sources") %}
-{% if 'hubspot_crm' in var("crm_warehouse_contact_sources")  %}
+{% if 'salesforce_crm' in var("crm_warehouse_contact_sources")  %}
 
 with source as (
 

@@ -1,16 +1,11 @@
-{% if not var("enable_baremetrics_analytics_source") or not var("enable_stripe_subscriptions_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("subscriptions_warehouse_sources")  %}
+
 {{
     config(
       alias='attribution_fact'
     )
 }}
-{% endif %}
+
 WITH subscription_details AS
     (
       SELECT {{ dbt_utils.star(from=ref('int_converter_subscription_revenue')) }}

@@ -4,7 +4,7 @@
         alias='plan_breakout_fact'
     )
 }}
-{% endif %}
+
 
 WITH plans AS
   (

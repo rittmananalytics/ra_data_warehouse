@@ -4,7 +4,7 @@
         alias='subscriptions_fact'
     )
 }}
-{% endif %}
+
 
 WITH subscriptions AS
   (

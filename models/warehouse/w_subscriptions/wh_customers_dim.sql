@@ -4,7 +4,7 @@
         alias='customers_dim'
     )
 }}
-{% endif %}
+
 
 with customers as
   (
