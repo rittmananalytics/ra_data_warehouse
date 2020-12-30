@@ -23,3 +23,9 @@ SELECT
     p.*
 FROM
    plans p
+
+   {% else %}
+
+      {{config(enabled=false)}}
+
+   {% endif %}

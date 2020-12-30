@@ -1,8 +1,5 @@
-{{
-    config(
-        enabled=false
-    )
-}}
+{% if var("subscriptions_warehouse_sources")  %}
+
 
 with customers_merge_list as
   (
@@ -42,3 +39,14 @@ merged as (
     group by 1
 )
 select * from merged
+
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
+{% endif %}

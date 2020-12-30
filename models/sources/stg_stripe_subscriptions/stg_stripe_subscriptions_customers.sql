@@ -1,5 +1,5 @@
-{% if var("subscriptions_warehouse_plan_sources") %}
-{% if 'stripe_subscriptions' in var("subscriptions_warehouse_plan_sources") %}
+{% if var("subscriptions_warehouse_sources") %}
+{% if 'stripe_subscriptions' in var("subscriptions_warehouse_sources") %}
 
 with source as (
   {{ filter_segment_relation(var('stg_stripe_payments_segment_customers_table')) }}

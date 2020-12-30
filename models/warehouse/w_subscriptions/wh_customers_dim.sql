@@ -1,10 +1,4 @@
-{% if not var("enable_subscriptions_warehouse")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("subscriptions_warehouse_sources")  %}
 {{
     config(
         alias='customers_dim'
@@ -23,3 +17,9 @@ SELECT
     c.*
 FROM
    customers c
+
+   {% else %}
+
+      {{config(enabled=false)}}
+
+   {% endif %}

@@ -1,8 +1,5 @@
-{{
-    config(
-        enabled=false
-    )
-}}
+{% if var("subscriptions_warehouse_sources")  %}
+
 SELECT
     d.event_id AS event_id,
     d.user_id,
@@ -27,3 +24,14 @@ SELECT
     d.event_type = 'subscribed'
     AND date(b.plan_breakout_ts) = date(d.event_ts)
     {{ dbt_utils.group_by(n=2) }}
+
+    {% else %}
+
+    {{
+        config(
+            enabled=false
+        )
+    }}
+
+
+    {% endif %}

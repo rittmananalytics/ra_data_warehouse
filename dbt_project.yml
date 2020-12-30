@@ -65,7 +65,7 @@ vars:
   finance_warehouse_transaction_sources: ['xero_accounting','stripe_payments']
   finance_warehouse_payment_sources: ['xero_accounting']
   product_warehouse_events_sources: ['segment_events_track','segment_events_page','mixpanel_events']
-  subscriptions_warehouse_plan_sources: []
+  subscriptions_warehouse_sources: []
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch

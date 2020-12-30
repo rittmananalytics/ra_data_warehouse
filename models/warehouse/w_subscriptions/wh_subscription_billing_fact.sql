@@ -39,3 +39,9 @@ JOIN
    subscriptions s
 ON
    b.subscription_id = s.subscription_id
+
+   {% else %}
+
+      {{config(enabled=false)}}
+
+   {% endif %}

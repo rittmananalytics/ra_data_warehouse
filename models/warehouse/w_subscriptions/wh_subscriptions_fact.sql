@@ -1,10 +1,4 @@
-{% if not var("enable_stripe_subscriptions_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("subscriptions_warehouse_sources")  %}
 {{
     config(
         alias='subscriptions_fact'
@@ -39,3 +33,9 @@ JOIN
    plans p
 ON
    s.plan_id = p.plan_id
+
+{% else %}
+
+   {{config(enabled=false)}}
+
+{% endif %}

@@ -1,10 +1,4 @@
-{% if not var("enable_baremetrics_analytics_source")  %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("subscriptions_warehouse_sources")  %}
 {{
     config(
         alias='plan_breakout_fact'
@@ -30,3 +24,9 @@ FROM
 JOIN
    plans p
 ON b.plan_id = p.plan_id
+
+{% else %}
+
+   {{config(enabled=false)}}
+
+{% endif %}

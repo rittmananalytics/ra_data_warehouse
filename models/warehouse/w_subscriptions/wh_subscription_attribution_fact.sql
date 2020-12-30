@@ -142,3 +142,9 @@ select
   *
 from
   final
+
+  {% else %}
+
+     {{config(enabled=false)}}
+
+  {% endif %}
