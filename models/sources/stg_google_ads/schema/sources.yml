@@ -21,7 +21,7 @@ sources:
     freshness:
       warn_after: {count: 1, period: day}
 
-    loaded_at_field: _sdc_batched_at
+    loaded_at_field: uuid_ts
 
     tables:
       - name: campaign_performance_reports

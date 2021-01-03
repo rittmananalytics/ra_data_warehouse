@@ -23,10 +23,7 @@ sources:
     database: "{{ var('stg_hubspot_crm_fivetran_database') }}"
     schema: "{{ var('stg_hubspot_crm_fivetran_schema') }}"
 
-    freshness:
-      warn_after: {count: 1, period: day}
 
-    loaded_at_field: _sdc_batched_at
 
     tables:
       - name: companies

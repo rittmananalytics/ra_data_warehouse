@@ -8,7 +8,7 @@ sources:
     freshness:
       warn_after: {count: 1, period: day}
 
-    loaded_at_field: uuid_ts
+    loaded_at_field: _sdc_batched_at
 
     tables:
       - name: insights
