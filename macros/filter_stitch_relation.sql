@@ -1,7 +1,7 @@
 {%- macro filter_stitch_relation(relation, unique_column) -%}
 
 SELECT
-  * EXCEPT (_sdc_batched_at, max_sdc_batched_at)
+  * EXCEPT (max_sdc_batched_at)
 FROM
   (
     SELECT
