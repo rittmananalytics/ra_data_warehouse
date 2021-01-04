@@ -23,29 +23,62 @@ with t_contacts_merge_list as
 
   )
 ),
-contact_emails as (
-         SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
-         FROM t_contacts_merge_list
-         group by 1),
-contact_ids as (
-         SELECT contact_name, array_agg(contact_id ignore nulls) as all_contact_ids
-         FROM t_contacts_merge_list
-         group by 1),
-contact_company_ids as (
-               SELECT contact_name, array_agg(contact_company_id ignore nulls) as all_contact_company_ids
-               FROM t_contacts_merge_list
-               group by 1),
-contact_company_addresses as (
-         select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
-         FROM t_contacts_merge_list
-         group by 1),
+
+{% if target.type == 'bigquery' %}
+
+    contact_emails as (
+             SELECT contact_name, array_agg(distinct lower(contact_email) ignore nulls) as all_contact_emails
+             FROM t_contacts_merge_list
+             group by 1),
+    contact_ids as (
+             SELECT contact_name, array_agg(contact_id ignore nulls) as all_contact_ids
+             FROM t_contacts_merge_list
+             group by 1),
+    contact_company_ids as (
+                   SELECT contact_name, array_agg(contact_company_id ignore nulls) as all_contact_company_ids
+                   FROM t_contacts_merge_list
+                   group by 1),
+    contact_company_addresses as (
+             select contact_name, ARRAY_AGG(STRUCT( contact_address, contact_city, contact_state, contact_country, contact_postcode_zip)) as all_contact_addresses
+             FROM t_contacts_merge_list
+             group by 1),
+
+{% elif target.type == 'snowflake' %}
+
+    contact_emails as (
+             SELECT contact_name, array_agg(distinct lower(contact_email)) as all_contact_emails
+             FROM t_contacts_merge_list
+             group by 1),
+    contact_ids as (
+             SELECT contact_name, array_agg(contact_id) as all_contact_ids
+             FROM t_contacts_merge_list
+             group by 1),
+    contact_company_ids as (
+                   SELECT contact_name, array_agg(contact_company_id) as all_contact_company_ids
+                   FROM t_contacts_merge_list
+                   group by 1),
+    contact_company_addresses as (
+             select contact_name,
+                       array_agg(
+                            parse_json (
+                              concat('{"contact_address":"',contact_address,
+                                     '", "contact_city":"',contact_city,
+                                     '", "contact_state":"',contact_state,
+                                     '", "contact_country":"',contact_country,
+                                     '", "contact_postcode_zip":"',contact_postcode_zip,'"} ')
+                            )
+                       ) as all_contact_addresses
+             FROM t_contacts_merge_list
+             group by 1),
+
+{% else %}
+      {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
+
+{% endif %}
+
 contacts as (
    select all_contact_ids,
-          case when c.contact_name like '%@%' then initcap(concat(split(c.contact_name,'@')[safe_offset(0)],' ',
-              case when split(split(c.contact_name,'@')[safe_offset(1)],'.')[safe_offset(1)] not in ('com','co','net','gov','nl','edu','org','dk','gr')
-              then split(c.contact_name,'@')[safe_offset(1)] else '' end
-              ))
-              else c.contact_name end as contact_name,
+          c.contact_name,
           job_title,
           contact_phone,
           contact_mobile_phone,

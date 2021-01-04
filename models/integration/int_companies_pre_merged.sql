@@ -18,24 +18,53 @@ with t_companies_pre_merged as (
 
     ),
 
-companies_merge_list as (
-    SELECT {{ dbt_utils.star(from=ref('companies_merge_list')) }}
-    FROM
-    {{ ref('companies_merge_list') }}
-),
-all_company_ids as (
-       SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids
-       FROM t_companies_pre_merged
-       group by 1),
-all_company_addresses as (
-       SELECT company_name, array_agg(struct(company_address,
-                                             company_address2,
-                                             case when length(trim(company_city)) = 0 then null else company_city end as company_city,
-                                             case when length(trim(company_state)) = 0 then null else company_state end as company_state,
-                                             case when length(trim(company_country)) = 0 then null else company_country end as company_country,
-                                             case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
-       FROM t_companies_pre_merged
-       group by 1),
+{% if target.type == 'bigquery' %}
+
+      all_company_ids as (
+             SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids
+             FROM t_companies_pre_merged
+             group by 1),
+      all_company_addresses as (
+             SELECT company_name, array_agg(struct(company_address,
+                                                   company_address2,
+                                                   case when length(trim(company_city)) = 0 then null else company_city end as company_city,
+                                                   case when length(trim(company_state)) = 0 then null else company_state end as company_state,
+                                                   case when length(trim(company_country)) = 0 then null else company_country end as company_country,
+                                                   case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
+             FROM t_companies_pre_merged
+             group by 1),
+
+{% elif target.type == 'snowflake' %}
+
+      all_company_ids as (
+          SELECT company_name,
+                 array_agg(
+                    distinct company_id
+                  ) as all_company_ids
+            FROM t_companies_pre_merged
+          group by 1),
+      all_company_addresses as (
+          SELECT company_name,
+                 array_agg(
+                      parse_json (
+                        concat('{"company_address":"',company_address,
+                               '", "company_address2":"',company_address2,
+                               '", "company_city":"',company_city,
+                               '", "company_state":"',company_state,
+                               '", "company_country":"',company_country,
+                               '", "company_zip":"',company_zip,'"} ')
+                      )
+                 ) as all_company_addresses
+          FROM t_companies_pre_merged
+          where length(coalesce(company_address,company_address2,company_city,company_state,company_country,company_zip)) >0
+          group by 1
+      ),
+
+{% else %}
+    {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
+
+{% endif %}
+
 grouped as (
       SELECT
       company_name,

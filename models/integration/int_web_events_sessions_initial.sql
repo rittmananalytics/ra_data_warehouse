@@ -1,4 +1,4 @@
-{% if var('product_warehouse_events_sources') %}
+{% if var('product_warehouse_event_sources') %}
 
 {{config(materialized="table")}}
 
@@ -100,11 +100,11 @@ diffs as (
 
         *,
 
-        timestamp_diff(
-        session_end_ts,
-        session_start_ts,
-        second
-        )
+        {{dbt_utils.datediff(
+        'session_end_ts',
+        'session_start_ts',
+        'SECOND') }}
+
  as duration_in_s
 
     from agg

@@ -1,16 +1,12 @@
-{% if not var("enable_marketing_warehouse") %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if  var("marketing_warehouse_ad_campaign_performance_sources") and var("product_warehouse_event_sources")
+and var("marketing_warehouse_ad_campaign_sources") %}
+
 {{
     config(
       alias='ad_campaign_performance_fact'
     )
 }}
-{% endif %}
+
 WITH
   campaign_performance AS
   (
@@ -81,18 +77,12 @@ on c.ad_campaign_id = s.ad_campaign_id)
 SELECT
   a.*,
   coalesce(s.total_clicks,0) as total_clicks,
-  safe_divide(s.total_clicks,
-    A.total_reported_clicks) AS actual_vs_reported_clicks_pct,
-  safe_divide(a.total_reported_cost,
-    a.total_reported_clicks) AS reported_cpc,
-  safe_divide(a.total_reported_cost,
-    s.total_clicks) AS actual_cpc,
-  safe_divide(a.total_reported_clicks,
-    a.total_reported_impressions) as reported_ctr,
-    safe_divide(s.total_clicks,
-      a.total_reported_impressions) as actual_ctr,
-    safe_divide((a.total_reported_cost*1000),
-      a.total_reported_impressions) as reported_cpm
+  {{ safe_divide('s.total_clicks','A.total_reported_clicks') }} AS actual_vs_reported_clicks_pct,
+  {{ safe_divide('a.total_reported_cost','a.total_reported_clicks') }} as reported_cpc,
+  {{ safe_divide('a.total_reported_cost','s.total_clicks') }}   AS actual_cpc,
+  {{ safe_divide('a.total_reported_clicks','a.total_reported_impressions') }}   AS reported_ctr,
+  {{ safe_divide('s.total_clicks','a.total_reported_impressions') }}   AS actual_ctr,
+  {{ safe_divide('a.total_reported_cost*1000','a.total_reported_impressions') }}   AS reported_cpm
 FROM
   ad_network_clicks a
 LEFT OUTER JOIN
@@ -116,5 +106,9 @@ select
       reported_cpm
       from joined
 where trim(utm_campaign) is not null
---where utm_source is not null
---and utm_campaign is not null
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

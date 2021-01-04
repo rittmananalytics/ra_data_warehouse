@@ -1,16 +1,10 @@
-{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("product_warehouse_event_sources") %}
+
 {{
     config(
         alias='web_sessions_fact'
     )
 }}
-{% endif %}
 
 with sessions as
   (
@@ -47,50 +41,54 @@ FROM
   {{ ref('int_web_events_sessions_stitched') }}
   )
 {{ dbt_utils.group_by(n=28) }}
-  ),
-utm_campaign_mapping as
-( SELECT *
-  FROM {{ ref('utm_campaign_mapping')}}
-),
-ad_campaigns as (
-  SELECT *
-    FROM {{ ref('wh_ad_campaigns_dim')}}
-),
-{% if var("enable_subscriptions_warehouse")  %}
+  )
+
+{% if var('marketing_warehouse_ad_campaign_sources') %}
+      ,
+    utm_campaign_mapping as
+    ( SELECT *
+      FROM {{ ref('utm_campaign_mapping')}}
+    ),
+    ad_campaigns as (
+      SELECT *
+        FROM {{ ref('wh_ad_campaigns_dim')}}
+    )
+{% endif %}
+{% if var("subscriptions_warehouse_sources")  %}
+  ,
     customers as (
    SELECT *
     FROM   {{ ref('wh_customers_dim') }}
-     ),
+     )
+{% endif %}
+,
 joined as (
 SELECT
-    c.customer_pk,
-    s.*,
-    a.ad_campaign_pk
+    s.*
+    {% if var('marketing_warehouse_ad_campaign_sources') %},a.ad_campaign_pk{% endif %}
+    {% if var("subscriptions_warehouse_sources")  %},c.customer_pk{% endif %}
 FROM
    sessions s
-LEFT OUTER JOIN customers c
+{% if var("subscriptions_warehouse_sources")  %}
+   LEFT OUTER JOIN customers c
    ON s.blended_user_id = c.customer_id
-LEFT OUTER JOIN utm_campaign_mapping m
+{% endif %}
+{% if var('marketing_warehouse_ad_campaign_sources') %}
+   LEFT OUTER JOIN utm_campaign_mapping m
    ON s.utm_campaign = m.utm_campaign
 LEFT OUTER JOIN ad_campaigns a
          ON m.ad_campaign_id = a.ad_campaign_id
- ),
-{% else %}
-joined as (
-SELECT
-   s.*,a.ad_campaign_pk
-FROM
-   sessions s
-LEFT OUTER JOIN utm_campaign_mapping m
-      ON s.utm_campaign = m.utm_campaign
-      AND s.utm_source = m.utm_source
-LEFT OUTER JOIN ad_campaigns a
-      ON m.ad_campaign_id = a.ad_campaign_id
-),
 {% endif %}
+),
 ordered as (
 select {{ dbt_utils.surrogate_key(['session_id']) }} as web_sessions_pk,
         * ,
         row_number() over (partition by blended_user_id order by session_start_ts) as user_session_number
 from joined)
 select * from ordered
+
+{% else %}
+
+{{config(enabled=false)}}
+
+{% endif %}

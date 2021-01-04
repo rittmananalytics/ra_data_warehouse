@@ -1,4 +1,4 @@
-{% if var('product_warehouse_events_sources') %}
+{% if var('product_warehouse_event_sources') %}
 
 
 
@@ -40,7 +40,7 @@ joined as (
 )
 
 select *,
-       timestamp_diff (lead(session_start_ts, 1) OVER (PARTITION BY blended_user_id ORDER BY session_start_ts DESC),session_start_ts,MINUTE) AS mins_between_sessions,
+       {{ dbt_utils.datediff('lead(session_start_ts, 1) OVER (PARTITION BY blended_user_id ORDER BY session_start_ts DESC)','session_start_ts','MINUTE') }} AS mins_between_sessions,
        case when events = 1 then true else false end as is_bounced_session
 
 

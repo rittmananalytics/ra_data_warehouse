@@ -87,18 +87,12 @@ GROUP BY
 SELECT
   a.*,
   coalesce(s.total_clicks,0) as total_clicks,
-  safe_divide(s.total_clicks,
-    A.total_reported_clicks) AS actual_vs_reported_clicks_pct,
-  safe_divide(a.total_reported_cost,
-    a.total_reported_clicks) AS reported_avg_cpc,
-  safe_divide(a.total_reported_cost,
-    s.total_clicks) AS actual_avg_cpc,
-  safe_divide(a.total_reported_clicks,
-    a.total_reported_impressions) as reported_ctr,
-  safe_divide(s.total_clicks,
-    a.total_reported_impressions) as actual_ctr,
-  safe_divide((a.total_reported_cost*1000),
-    a.total_reported_impressions) as reported_cpm,
+  {{ safe_divide('s.total_clicks','A.total_reported_clicks') }} AS actual_vs_reported_clicks_pct,
+  {{ safe_divide('a.total_reported_cost','a.total_reported_clicks') }} as reported_cpc,
+  {{ safe_divide('a.total_reported_cost','s.total_clicks') }}   AS actual_cpc,
+  {{ safe_divide('a.total_reported_clicks','a.total_reported_impressions') }}   AS reported_ctr,
+  {{ safe_divide('s.total_clicks','a.total_reported_impressions') }}   AS actual_ctr,
+  {{ safe_divide('a.total_reported_cost*1000','a.total_reported_impressions') }}   AS reported_cpm
 FROM
   ad_network_clicks a
 LEFT JOIN

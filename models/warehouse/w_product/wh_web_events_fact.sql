@@ -1,22 +1,18 @@
-{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% else %}
+{% if var("product_warehouse_event_sources") %}
+
 {{
     config(
         alias='web_events_fact'
     )
 }}
-{% endif %}
 
 with events as
   (
     SELECT *
     FROM   {{ ref('int_web_events_sessionized') }}
-  ),
+  )
+{% if var('marketing_warehouse_ad_campaign_sources') %}
+  ,
 utm_campaign_mapping as
 ( SELECT *
   FROM {{ ref('utm_campaign_mapping')}}
@@ -24,13 +20,17 @@ utm_campaign_mapping as
 ad_campaigns as (
   SELECT *
     FROM {{ ref('wh_ad_campaigns_dim')}}
-),
-{% if var("enable_subscriptions_warehouse")  %}
-    customers as (
+)
+{% endif %}
+
+{% if var("subscriptions_warehouse_sources")  %}
+,
+customers as (
    SELECT *
     FROM   {{ ref('wh_customers_dim') }}
   ),
 {% endif %}
+,
 events_with_prev_ts_event_type as
 (
 SELECT
@@ -43,32 +43,31 @@ SELECT
 FROM
    events e
 )
-{% if var("enable_subscriptions_warehouse")  %}
 ,
 joined as
 (
   SELECT
-      e.*,
-      a.ad_campaign_pk,
-      c.customer_pk
+      e.*
+      {% if var('marketing_warehouse_ad_campaign_sources') %},a.ad_campaign_pk{% endif %}
+      {% if var("subscriptions_warehouse_sources")  %},c.customer_pk{% endif %}
   FROM
      events_with_prev_ts_event_type e
+  {% if var("subscriptions_warehouse_sources")  %}
   LEFT OUTER JOIN customers c
      ON e.user_id = c.customer_id
+  {% endif %}
+  {% if var('marketing_warehouse_ad_campaign_sources') %}
   LEFT OUTER JOIN utm_campaign_mapping m
      ON e.utm_campaign = m.utm_campaign
      AND e.utm_source = m.utm_source
   LEFT OUTER JOIN ad_campaigns a
            ON m.ad_campaign_id = a.ad_campaign_id
+  {% endif %}
 )
 select * from joined
+
 {% else %}
-select e.*,
-       a.ad_campaign_pk
-from events_with_prev_ts_event_type e
-LEFT OUTER JOIN utm_campaign_mapping m
-   ON e.utm_campaign = m.utm_campaign
-   AND e.utm_source = m.utm_source
-LEFT OUTER JOIN ad_campaigns a
-         ON m.ad_campaign_id = a.ad_campaign_id
+
+{{config(enabled=false)}}
+
 {% endif %}

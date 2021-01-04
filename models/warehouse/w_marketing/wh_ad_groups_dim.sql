@@ -1,17 +1,11 @@
-{% if not var("enable_marketing_warehouse") or not var("ad_campaigns_only") %}
+{% if var("marketing_warehouse_ad_group_sources")  %}
+
 {{
     config(
-        enabled=false
+        unique_key='campaign_pk',
+        alias='ad_campaigns_dim'
     )
 }}
-{% else %}
-{{
-    config(
-        unique_key='ad_group_pk',
-        alias='ad_groups_dim'
-    )
-}}
-{% endif %}
 
 WITH ad_groups AS
   (
@@ -20,3 +14,5 @@ WITH ad_groups AS
 select {{ dbt_utils.surrogate_key(['ad_group_id']) }}  as ad_group_pk,
        a.*
 from ad_groups a
+
+{% else %} {{config(enabled=false)}} {% endif %}

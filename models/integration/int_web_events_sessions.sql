@@ -1,4 +1,4 @@
-{% if var('product_warehouse_events_sources') %}
+{% if var('product_warehouse_event_sources') %}
 
 {% set sessionization_cutoff %}
 (
