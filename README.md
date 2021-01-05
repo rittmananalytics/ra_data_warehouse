@@ -41,7 +41,7 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 
 ### Current Dimensional Model
 
-![Dimensional Model](img/dimensional_model.png)
+![Dimensional Model](img/dimensional_model.png){:height="400px" width="400px"}
 
 ### dbt Transformation Graph
 
