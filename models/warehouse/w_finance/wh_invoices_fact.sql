@@ -47,4 +47,4 @@ JOIN companies_dim c
 LEFT OUTER JOIN projects_dim p
    ON cast(i.project_id as string) = p.timesheet_project_id
 {% endif %}
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

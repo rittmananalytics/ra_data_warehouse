@@ -18,4 +18,4 @@ SELECT
 FROM
   t_currencies_merge_list
 
-  {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

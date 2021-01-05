@@ -18,4 +18,4 @@ SELECT
    *
 FROM
    chart_of_accounts
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

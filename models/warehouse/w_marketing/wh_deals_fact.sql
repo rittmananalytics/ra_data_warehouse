@@ -33,6 +33,7 @@ FROM
  JOIN companies_dim c
      ON d.company_id IN UNNEST(c.all_company_ids)
 {% elif target.type == 'snowflake' %}
+JOIN companies_dim c
      ON d.company_id = c.company_id
 {% else %}
        {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}

@@ -17,4 +17,4 @@ with conversations_merge_list as
   )
 select * from conversations_merge_list
 
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

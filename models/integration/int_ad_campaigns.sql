@@ -28,7 +28,7 @@ select *,
        case when ad_campaign_name like '%Winter 2019%' then 'winter_2019'
             when ad_campaign_name like '%Summer 2020%' then 'summer_2020'
             when ad_campaign_name = 'Rittman Analytics Newsletter December 2020' then 'Analytics Solutions December 2020'
-       else lower(ad_campaign_name) end as utm_campaign,
+       else lower(ad_campaign_name) end as utm_campaign
  from campaigns
 
  {% else %}

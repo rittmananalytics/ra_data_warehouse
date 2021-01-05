@@ -18,4 +18,4 @@ union all
 select 'unknown_values' as source,
 * from {{ ref('stg_unknown_projects_tasks') }}
 
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

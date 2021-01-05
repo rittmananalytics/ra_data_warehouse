@@ -3,12 +3,6 @@
 {{config(materialized="table")}}
 
 with t_contacts_merge_list as
-  (SELECT * except (contact_name),
-  case when contact_name in ('Rob','Rob Bramwell') then 'Robert Bramwell'
-       when contact_name = 'Lewis' then 'Lewis Baker'
-       when contact_name = 'Mark' then 'Mark Rittman'
-       else contact_name end as contact_name
-  FROM
   (
     {% for source in var('crm_warehouse_contact_sources') %}
       {% set relation_source = 'stg_' + source + '_contacts' %}
@@ -20,9 +14,7 @@ with t_contacts_merge_list as
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
-
-  )
-),
+  ),
 
 {% if target.type == 'bigquery' %}
 
@@ -81,7 +73,6 @@ contacts as (
           c.contact_name,
           job_title,
           contact_phone,
-          contact_mobile_phone,
           contact_is_contractor,
           contact_is_staff,
           contact_weekly_capacity,
@@ -97,15 +88,14 @@ contacts as (
             select contact_name,
                 max(contact_job_title) as job_title,
                 max(contact_phone) as contact_phone,
-                max(contact_mobile_phone) as contact_mobile_phone ,
                 min(contact_created_date) as contact_created_date,
                 max(contact_last_modified_date) as contact_last_modified_date,
-                max(user_is_contractor)         as contact_is_contractor,
-                max(user_is_staff) as contact_is_staff,
-                max(user_weekly_capacity)          as contact_weekly_capacity,
-                max(user_default_hourly_rate)          as contact_default_hourly_rate,
-                max(user_cost_rate)           as contact_cost_rate,
-                max(user_is_active)                          as contact_is_active
+                max(contact_is_contractor)         as contact_is_contractor,
+                max(contact_is_staff) as contact_is_staff,
+                max(contact_weekly_capacity)          as contact_weekly_capacity,
+                max(contact_default_hourly_rate)          as contact_default_hourly_rate,
+                max(contact_cost_rate)           as contact_cost_rate,
+                max(contact_is_active)                          as contact_is_active
             FROM t_contacts_merge_list
          group by 1) c
   join contact_emails e on c.contact_name = e.contact_name

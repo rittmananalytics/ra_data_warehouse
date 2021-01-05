@@ -1,10 +1,4 @@
-{% if not var("enable_looker_usage_source") or (not var("enable_product_warehouse")) %}
-{{
-    config(
-        enabled=false
-    )
-}}
-{% endif %}
+{% if var("product_warehouse_usage_sources")  %}
 
 with looker_usage_merge as
   (
@@ -12,3 +6,5 @@ with looker_usage_merge as
     FROM   {{ ref('stg_looker_usage_stats') }}
   )
 select * from looker_usage_merge
+
+{% else %} {{config(enabled=false)}} {% endif %}

@@ -1,8 +1,8 @@
-{% if var('product_warehouse_events_sources') %}
+{% if var('product_warehouse_event_sources') %}
 
 with events_merge_list as
   (
-    {% for source in var('product_warehouse_events_sources') %}
+    {% for source in var('product_warehouse_event_sources') %}
 
       {% set relation_source = 'stg_' + source + '_events' %}
 

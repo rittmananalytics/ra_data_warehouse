@@ -26,7 +26,7 @@ companies_dim as (
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 SELECT
-   GENERATE_UUID() as timesheet_project_pk,
+  {{ dbt_utils.surrogate_key(['timesheet_project_id']) }} as timesheet_project_pk,
    c.company_pk,
    p.timesheet_project_id,
    p.project_name,

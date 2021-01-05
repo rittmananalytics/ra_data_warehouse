@@ -3,7 +3,7 @@
 {{
     config(
         unique_key='campaign_pk',
-        alias='ad_campaigns_dim'
+        alias='ads_dim'
     )
 }}
 

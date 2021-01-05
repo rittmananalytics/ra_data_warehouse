@@ -25,13 +25,4 @@ SELECT
     AND date(b.plan_breakout_ts) = date(d.event_ts)
     {{ dbt_utils.group_by(n=2) }}
 
-    {% else %}
-
-    {{
-        config(
-            enabled=false
-        )
-    }}
-
-
-    {% endif %}
+    {% else %} {{config(enabled=false)}} {% endif %}

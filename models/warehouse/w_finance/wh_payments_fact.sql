@@ -36,4 +36,5 @@ JOIN companies_dim c
       ON p.company_id IN UNNEST(c.all_company_ids)
 JOIN currencies_dim d
       ON p.currency_code = d.currency_code
-{% endif %}
+
+{% else %} {{config(enabled=false)}} {% endif %}

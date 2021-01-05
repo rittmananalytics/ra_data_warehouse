@@ -13,7 +13,7 @@ WITH tasks AS
   FROM   {{ ref('int_timesheet_tasks') }}
   )
 SELECT
-   GENERATE_UUID() as timesheet_task_pk,
+{{ dbt_utils.surrogate_key(['task_id']) }} as timesheet_task_pk,
    t.task_id,
    t.task_name,
    t.task_billable_by_default,

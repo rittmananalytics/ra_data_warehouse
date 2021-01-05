@@ -72,13 +72,13 @@ from companies_pre_merged c
 
 ```
 SELECT user_name,
-		MAX(user_is_contractor) as user_is_contractor,
-		MAX(user_is_staff) as user_is_staff,
+		MAX(contact_is_contractor) as contact_is_contractor,
+		MAX(contact_is_staff) as contact_is_staff,
 		MAX(user_weekly_capacity) as user_weekly_capacity ,
 		MAX(user_phone) as user_phone,
 		MAX(user_default_hourly_rate) as user_default_hourly_rate,
 		MAX(user_cost_rate) as user_cost_rate,
-		MAX(user_is_active) as user_is_active,
+		MAX(contact_is_active) as contact_is_active,
 		MAX(user_created_ts) as user_created_ts,
 		MAX(user_last_modified_ts) as user_last_modified_ts,
 	FROM t_users_merge_list
@@ -93,13 +93,13 @@ SELECT i.all_user_ids,
         e.all_user_emails
  FROM (
 	SELECT user_name,
-		MAX(user_is_contractor) as user_is_contractor,
-		MAX(user_is_staff) as user_is_staff,
+		MAX(contact_is_contractor) as contact_is_contractor,
+		MAX(contact_is_staff) as contact_is_staff,
 		MAX(user_weekly_capacity) as user_weekly_capacity ,
 		MAX(user_phone) as user_phone,
 		MAX(user_default_hourly_rate) as user_default_hourly_rate,
 		MAX(user_cost_rate) as user_cost_rate,
-		MAX(user_is_active) as user_is_active,
+		MAX(contact_is_active) as contact_is_active,
 		MAX(user_created_ts) as user_created_ts,
 		MAX(user_last_modified_ts) as user_last_modified_ts,
 	FROM t_users_merge_list

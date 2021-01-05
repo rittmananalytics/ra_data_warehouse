@@ -19,4 +19,4 @@ SELECT
    *
 FROM
    currencies
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

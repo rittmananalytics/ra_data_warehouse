@@ -113,9 +113,17 @@ session_ids AS (
     device,
     device_category,
     event_number,
-    md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
-              ''), '-', coalesce(CAST(session_number AS string ),
-              '')) AS string )) AS session_id,
+    {% if target.type == 'bigquery' %}
+        to_hex(md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
+                  ''), '-', coalesce(CAST(session_number AS string ),
+                  '')) AS string ))) AS session_id,
+    {% if target.type == 'snowflake' %}
+        md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
+                  ''), '-', coalesce(CAST(session_number AS string ),
+                  '')) AS string )) AS session_id,
+    {% else %}
+        {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
+    {% endif %}
     site
   FROM
     session_numbers ),

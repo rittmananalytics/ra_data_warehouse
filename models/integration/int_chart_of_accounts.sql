@@ -16,4 +16,4 @@ with t_chart_of_accounts_merge_list as
   )
 SELECT * from t_chart_of_accounts_merge_list
 
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

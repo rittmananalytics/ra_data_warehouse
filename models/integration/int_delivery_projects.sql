@@ -15,4 +15,4 @@ with t_delivery_projects_merge_list as
   )
 select * from t_delivery_projects_merge_list
 
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

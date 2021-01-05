@@ -12,7 +12,9 @@ sources:
 
     tables:
       - name: insights
+      - name: ads_insights
       - name: ad_adsets
+      - name: adsets
       - name: ads
       - name: campaigns
 

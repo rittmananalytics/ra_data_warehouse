@@ -64,7 +64,7 @@ vars:
   finance_warehouse_invoice_sources: ['xero_accounting','harvest_projects']
   finance_warehouse_transaction_sources: ['xero_accounting','stripe_payments']
   finance_warehouse_payment_sources: ['xero_accounting']
-  product_warehouse_events_sources: ['segment_events_track','segment_events_page','mixpanel_events']
+  product_warehouse_event_sources: ['segment_events_track','segment_events_page','mixpanel_events']
   subscriptions_warehouse_sources: []
 
   stg_asana_projects_id-prefix: asana-
@@ -87,13 +87,15 @@ vars:
   stg_facebook_ads_stitch_database: ra-development
   stg_facebook_ads_stitch_schema: stitch_facebook_ads
   stg_facebook_ads_stitch_ad_performance_table: "{{ source('stitch_facebook_ads', 'insights') }}"
-  stg_facebook_ads_stitch_ad_groups_table: "{{ source('stitch_facebook_ads', 'ad_adsets') }}"
+  stg_facebook_ads_stitch_ad_performance_table_snowflake: "{{ source('stitch_facebook_ads', 'ads_insights') }}"
+  stg_facebook_ads_stitch_ad_groups_table: "{{ source('stitch_facebook_ads', 'ad_sets') }}"
+  stg_facebook_ads_stitch_ad_groups_table_snowflake: "{{ source('stitch_facebook_ads', 'adsets') }}"
   stg_facebook_ads_stitch_ads_table: "{{ source('stitch_facebook_ads', 'ads') }}"
   stg_facebook_ads_stitch_campaigns_table: "{{ source('stitch_facebook_ads', 'campaigns') }}"
   stg_facebook_ads_segment_database: ra-development
   stg_facebook_ads_segment_schema: facebook_ads
   stg_facebook_ads_segment_ad_performance_table: "{{ source('segment_facebook_ads', 'insights') }}"
-  stg_facebook_ads_segment_ad_groups_table: "{{ source('stitch_facebook_ads', 'ad_sets') }}"
+  stg_facebook_ads_segment_ad_groups_table: "{{ source('stitch_facebook_ads', 'ad_adsets') }}"
   stg_facebook_ads_segment_ads_table: "{{ source('segment_facebook_ads', 'ads') }}"
   stg_facebook_ads_segment_campaigns_table: "{{ source('segment_facebook_ads', 'campaigns') }}"
 

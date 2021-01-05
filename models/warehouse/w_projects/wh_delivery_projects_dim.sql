@@ -26,7 +26,7 @@ companies_dim as (
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 SELECT
-   GENERATE_UUID() as delivery_project_pk,
+   {{ dbt_utils.surrogate_key(['p.project_id']) }} as timesheet_project_pk,
    p.project_id,
    c.company_pk,
    p.project_name,
@@ -39,8 +39,15 @@ SELECT
    p.project_modified_at_ts
 FROM
    delivery_projects p
-   JOIN companies_dim c
-      ON cast(p.company_id as string) IN UNNEST(c.all_company_ids)
+   {% if target.type == 'bigquery' %}
+     JOIN companies_dim c
+       ON p.company_id IN UNNEST(c.all_company_ids)
+   {% elif target.type == 'snowflake' %}
+     JOIN companies_dim c
+       ON p.company_id = c.company_id
+    {% else %}
+     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
+   {% endif %}
 
 {% else %}
 

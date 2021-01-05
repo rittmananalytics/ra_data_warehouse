@@ -5,7 +5,7 @@
 {% if var("stg_facebook_ads_etl") == 'stitch' %}
 with source as (
 
-  {{ filter_stitch_relation(relation=var('stg_facebook_ads_segment_campaigns_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=var('stg_facebook_ads_stitch_campaigns_table'),unique_column='id') }}
 
 ),
 renamed as (

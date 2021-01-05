@@ -1,6 +1,6 @@
 {{config(enabled = target.type == 'bigquery')}}
-{% if var("product_warehouse_events_sources") %}
-{% if 'segment_events_page' in var("product_warehouse_events_sources") %}
+{% if var("product_warehouse_event_sources") %}
+{% if 'segment_events_page' in var("product_warehouse_event_sources") %}
 
 with source as (
 

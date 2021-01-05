@@ -11,6 +11,7 @@
           {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
       {% endif %}
       else 0 end,
-      {{ res.execution_time }},  {{ dbt_utils.current_timestamp() }}())
+
+      {{ res.execution_time }},  {{ dbt_utils.current_timestamp() }})
   {% endfor %}
 {% endmacro %}

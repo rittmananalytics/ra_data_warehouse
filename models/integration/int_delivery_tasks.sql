@@ -13,8 +13,8 @@ with t_tasks_merge_list as
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select *,
+select *
 
  from t_tasks_merge_list
 
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

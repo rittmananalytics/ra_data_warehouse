@@ -1,4 +1,5 @@
-select * except(max_load_ts) from (
+{{config(enabled = target.type == 'bigquery')}}
+select * from (
 SELECT *,
       (lag(row_count,1) over (partition by object order by load_ts)) previous_load_ts,
       row_count-(lag(row_count,1) over (partition by object order by load_ts)) as diff_from_previous_load_ts,

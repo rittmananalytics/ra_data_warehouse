@@ -28,4 +28,4 @@ FROM
         or    transaction_last_modified_ts > (select max(transaction_last_modified_ts) from {{ this }})
    {% endif %}
 
-   {% endif %}
+   {% else %} {{config(enabled=false)}} {% endif %}

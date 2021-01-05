@@ -9,7 +9,7 @@
 with sessions as
   (
     select * from (SELECT
-  session_id,
+  to_hex(session_id),
   session_start_ts,
   session_end_ts,
   events,

@@ -1,6 +1,6 @@
 {{config(enabled = target.type == 'bigquery')}}
-{% if var("product_warehouse_events_sources") %}
-{% if 'mixpanel_events' in var("product_warehouse_events_sources") %}
+{% if var("product_warehouse_event_sources") %}
+{% if 'mixpanel_events' in var("product_warehouse_event_sources") %}
 
 
 {% if var("stg_mixpanel_events_etl") == 'fivetran' %}

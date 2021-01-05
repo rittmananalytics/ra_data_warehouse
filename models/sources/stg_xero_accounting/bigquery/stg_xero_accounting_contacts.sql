@@ -24,7 +24,6 @@ contacts as (
         coalesce(concat(contacts.firstname,' ',contacts.lastname),contacts.emailaddress) as contact_name,
         contacts.emailaddress as contact_email,
         replace(concat(replace(defaultphone.phonecountrycode,'+','00'),defaultphone.phoneareacode,defaultphone.phonenumber),' ','') as contact_phone,
-        replace(concat(replace(mobilephone.phonecountrycode,'+','00'),mobilephone.phoneareacode,mobilephone.phonenumber),' ','') as contact_mobile_phone,
         string_agg(distinct addresses.addressline1) as contact_address,
         string_agg(distinct addresses.city) as contact_city,
         string_agg(distinct addresses.region) as contact_state,
@@ -35,12 +34,12 @@ contacts as (
         cast(null as string) as contact_company_id,
         cast(null as string) as contact_owner_id,
         contacts.contactstatus as contact_lifecycle_stage,
-        cast(null as boolean)         as user_is_contractor,
-        cast(null as boolean) as user_is_staff,
-        cast(null as int64)           as user_weekly_capacity,
-        cast(null as int64)           as user_default_hourly_rate,
-        cast(null as int64)           as user_cost_rate,
-        false                          as user_is_active,
+        cast(null as boolean)         as contact_is_contractor,
+        cast(null as boolean) as contact_is_staff,
+        cast(null as int64)           as contact_weekly_capacity,
+        cast(null as int64)           as contact_default_hourly_rate,
+        cast(null as int64)           as ucontact_ost_rate,
+        false                          as contact_is_active,
         cast(null as timestamp) as contact_created_date,
         contacts.updateddateutc as contact_last_modified_date
  from xero_contacts contacts
@@ -54,7 +53,7 @@ contacts as (
  on contacts.contactid = defaultphone.contactid
  and mobilephone.phonetype = 'DEFAULT'
  where concat(contacts.firstname,' ',contacts.lastname) is not null
- group by 1,2,3,4,5,6,7,8,14,15,16,17,18,19,20,21,22,23,24,25,26
+ group by 1,2,3,4,5,6,7,13,14,15,16,17,18,19,20,21,22,23,24,25
 )
 
 select * from contacts

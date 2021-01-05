@@ -1,7 +1,7 @@
 {%- macro filter_segment_relation(relation) -%}
 
 SELECT
-  * EXCEPT (uuid_ts, max_uuid_ts)
+  * 
 FROM
   (
     SELECT

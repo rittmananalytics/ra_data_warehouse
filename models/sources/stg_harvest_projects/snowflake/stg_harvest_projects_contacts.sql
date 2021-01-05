@@ -14,7 +14,6 @@ renamed as (
   cast(null as string) AS contact_job_title,
   email AS contact_email,
   replace(replace(replace(replace(telephone,'+','00'),' ',''),')',''),'(','')  AS contact_phone,
-  replace(replace(replace(replace(telephone,'+','00'),' ',''),')',''),'(','')  AS contact_phone_mobile,
   cast(null as string)  as contact_address,
   cast(null as string)  as contact_city,
   cast(null as string)  as contact_state,

@@ -4,7 +4,7 @@
 
 {% if var("stg_facebook_ads_etl") == 'stitch' %}
 WITH source AS (
-{{ filter_stitch_relation(relation=var('stg_facebook_ads_stitch_ad_groups_table'),unique_column='id') }}
+{{ filter_stitch_relation(relation=var('stg_facebook_ads_stitch_ad_groups_table_snowflake'),unique_column='id') }}
 
 ),
 renamed as (
