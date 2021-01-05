@@ -51,8 +51,8 @@ lagged as (
 diffed as (
 
     select
-        *
-        ,{{ dbt_utils.datediff('event_ts','previous_event_ts','second') }} as period_of_inactivity
+        *,
+        {{ dbt_utils.datediff('event_ts','previous_event_ts','second') }} as period_of_inactivity
 
     from lagged
 
@@ -113,17 +113,9 @@ session_ids AS (
     device,
     device_category,
     event_number,
-    {% if target.type == 'bigquery' %}
-        to_hex(md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
-                  ''), '-', coalesce(CAST(session_number AS string ),
-                  '')) AS string ))) AS session_id,
-    {% if target.type == 'snowflake' %}
-        md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
-                  ''), '-', coalesce(CAST(session_number AS string ),
-                  '')) AS string )) AS session_id,
-    {% else %}
-        {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
-    {% endif %}
+    md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
+     ''), '-', coalesce(CAST(session_number AS string ),
+     '')) AS string )) AS session_id,
     site
   FROM
     session_numbers ),

@@ -26,7 +26,7 @@ companies_dim as (
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 SELECT
-   {{ dbt_utils.surrogate_key(['p.project_id']) }} as timesheet_project_pk,
+   {{ dbt_utils.surrogate_key(['p.project_id']) }} as delivery_project_pk,
    p.project_id,
    c.company_pk,
    p.project_name,

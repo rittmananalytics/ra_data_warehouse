@@ -27,9 +27,9 @@ renamed as
     CAST(NULL AS STRING) AS contact_lifecycle_stage,
     cast(null as boolean)         as contact_is_contractor,
     case when emailaddress like '%@{{ var('stg_jira_projects_staff_email_domain') }}%' then true else false end as contact_is_staff,
-    cast(null as int64)           as user_weekly_capacity,
-    cast(null as int64)           as user_default_hourly_rate,
-    cast(null as int64)           as user_cost_rate,
+    cast(null as int64)           as contact_weekly_capacity,
+    cast(null as int64)           as contact_default_hourly_rate,
+    cast(null as int64)           as contact_cost_rate,
     active                        as contact_is_active,
     cast(null as timestamp) AS contact_created_date,
     cast(null as timestamp) AS contact_last_modified_date

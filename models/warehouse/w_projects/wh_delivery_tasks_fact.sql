@@ -24,7 +24,7 @@ WITH tasks AS
     FROM  {{ ref('wh_contacts_dim') }}
   )
 SELECT
-  {{ dbt_utils.surrogate_key(['task_id']) }} as timesheet_project_pk,
+  {{ dbt_utils.surrogate_key(['task_id']) }} as delivery_task_pk,
    p.delivery_project_pk,
    c.contact_pk,
    t.* except (project_id),

@@ -39,7 +39,7 @@ SELECT
   min(timestamp(history_created_time)) over (partition by coalesce(name,user_name)) AS contact_created_date,
   max(timestamp(history_created_time)) over (partition by coalesce(name,user_name)) as contact_last_modified_date
     FROM source )
-    group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26)
+    {{ dbt_utils.group_by(25) }})
 select * from renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
