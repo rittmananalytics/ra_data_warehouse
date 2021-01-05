@@ -28,13 +28,13 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 [Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
 
 
-### Current Dimensional Model
+### Dimensional Model
 
 ![Dimensional Model](img/dimensional_model.png)
 
 ### dbt Transformation Graph
 
-![dbt DAG](img/dbt_graph.jpg)
+![dbt DAG](img/dbt_graph.jpeg)
 
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
