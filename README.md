@@ -8,6 +8,7 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 * [Data Centralization](https://rittmananalytics.com/data-centralization) consulting packages
 * [Rittman Analytics Blog dbt Posts](https://rittmananalytics.com/blog/tag/dbt)
 * [Contact Us](https://rittmananalytics.com/home-index/#about-us)
+* [What's New in v1.2.0](whats_new_in_v_1_2_0.md)
 
 [dbt](getdbt.com) is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Data Warehouse framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
 
