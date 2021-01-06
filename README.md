@@ -80,6 +80,107 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 * Product (Web Page Views, Web Sessions,)
 
+## Setup Steps .
+
+Note that these are fairly basic instructions and more documentation will be added in due course, consider this a starting point and be prepared to dig around in the code to work out how it all works - also check-out [what's new in the v1.2.0 release (whats_new_in_v_1_2_0.md)
+
+1. Fork or clone the repo to create a fresh copy for your project.
+
+2. Install dbt and create your profile.yml file with either Google BigQuery (Standard SQL) or Snowflake as your target data warehouse. The RA Warehouse framework will automatically run either BigQuery or Snowflake-dialect SQL code depending on which warehouse target is being used.
+
+3. Edit the dbt_project.yml configuration file to specify which data sources provide data for the various integration modules. The table below shows current support for data sources and data pipeline services for BigQuery warehouse targets:
+
+|Data Source                                        |HubSpot CRM     |Harvest Projects|Jira Projects|Asana Projects|Xero Accounting|Stripe Payments|Mailchimp Email|Hubspot Email|Facebook Ads   |Google Ads     |Segment Events|Mixpanel Events |Stripe Subscriptions|Intercom Messaging|
+|---------------------------------------------------|----------------|----------------|-------------|--------------|---------------|---------------|---------------|-------------|---------------|---------------|--------------|----------------|--------------------|------------------|
+|crm_warehouse_company_sources                      |Fivetran, Stitch|Stitch          |Stitch       |Stitch        |Stitch         |Stitch         |               |             |               |               |              |                |Segment             |Stitch            |
+|crm_warehouse_contact_sources                      |Fivetran, Stitch|Stitch          |Stitch       |Stitch        |Stitch         |Stitch         |Stitch         |Stitch       |               |               |              |                |                    |Stitch            |
+|crm_warehouse_conversations_sources                |Fivetran, Stitch|                |             |              |               |               |               |             |               |               |              |                |                    |                  |
+|marketing_warehouse_ad_campaign_sources            |                |                |             |              |               |               |Stitch         |Stitch       |               |Stitch, Segment|              |                |                    |                  |
+|marketing_warehouse_ad_campaign_performance_sources|                |                |             |              |               |               |Stitch         |Stitch       |Stitch, Segment|Stitch, Segment|              |                |                    |                  |
+|marketing_warehouse_ad_performance_sources         |                |                |             |              |               |               |               |             |Stitch, Segment|Stitch, Segment|              |                |                    |                  |
+|marketing_warehouse_ad_group_sources               |                |                |             |              |               |               |               |             |Stitch, Segment|Stitch, Segment|              |                |                    |                  |
+|marketing_warehouse_ad_sources                     |                |                |             |              |               |               |               |             |Stitch, Segment|Stitch, Segment|              |                |                    |                  |
+|marketing_warehouse_email_event_sources            |                |                |             |              |               |               |Stitch         |Stitch       |               |               |              |                |                    |                  |
+|marketing_warehouse_email_list_sources             |                |                |             |              |               |               |Stitch         |Stitch       |               |               |              |                |                    |                  |
+|marketing_warehouse_deal_sources                   |Fivetran, Stitch|                |             |              |               |               |               |             |               |               |              |                |                    |                  |
+|projects_warehouse_delivery_sources                |                |                |Stitch       |Stitch        |               |               |               |             |               |               |              |                |                    |                  |
+|projects_warehouse_timesheet_sources               |                |Stitch          |             |              |               |               |               |             |               |               |              |                |                    |                  |
+|finance_warehouse_invoice_sources                  |                |Stitch          |             |              |Stitch         |Stitch         |               |             |               |               |              |                |                    |                  |
+|finance_warehouse_transaction_sources              |                |                |             |              |Stitch         |Stitch         |               |             |               |               |              |                |                    |                  |
+|finance_warehouse_payment_sources                  |                |                |             |              |Stitch         |Stitch         |               |             |               |               |              |                |                    |                  |
+|product_warehouse_event_sources                    |                |                |             |              |               |               |               |             |               |               |Segment       |Fivetran, Stitch|                    |                  |
+|subscriptions_warehouse_sources                    |                |                |             |              |               |               |               |             |               |               |              |                |Segment             |                  |
+
+
+For Snowflake, the current supported data sources and pipeline services are as follows:
+
+|Data Source                                        |HubSpot CRM     |Harvest Projects|Jira Projects|Mailchimp Email|Hubspot Email|Facebook Ads    |Google Ads      |Segment Events|
+|---------------------------------------------------|----------------|----------------|-------------|---------------|-------------|----------------|----------------|--------------|
+|crm_warehouse_company_sources                      |Stitch          |Stitch          |Stitch       |               |             |                |                |              |
+|crm_warehouse_contact_sources                      |Stitch          |Stitch          |Stitch       |Stitch         |Stitch       |                |                |              |
+|crm_warehouse_conversations_sources                |Stitch          |                |             |               |             |                |                |              |
+|marketing_warehouse_ad_campaign_sources            |                |                |             |Stitch         |Stitch       |                |Stitch, Segment |              |
+|marketing_warehouse_ad_campaign_performance_sources|                |                |             |Stitch         |Stitch       |Stitch, Segment |Stitch, Segment |              |
+|marketing_warehouse_ad_performance_sources         |                |                |             |               |             |Stitch, Segment |Stitch, Segment |              |
+|marketing_warehouse_ad_group_sources               |                |                |             |               |             |Stitch, Segment |Stitch, Segment |              |
+|marketing_warehouse_ad_sources                     |                |                |             |               |             |Stitch, Segment |Stitch, Segment |              |
+|marketing_warehouse_email_event_sources            |                |                |             |Stitch         |Stitch       |                |                |              |
+|marketing_warehouse_email_list_sources             |                |                |             |Stitch         |Stitch       |                |                |              |
+|marketing_warehouse_deal_sources                   |Stitch          |                |             |               |             |                |                |              |
+|projects_warehouse_delivery_sources                |                |                |Stitch       |               |             |                |                |              |
+|projects_warehouse_timesheet_sources               |                |Stitch          |             |               |             |                |                |              |
+|finance_warehouse_invoice_sources                  |                |Stitch          |             |               |             |                |                |              |
+|finance_warehouse_transaction_sources              |                |                |             |               |             |                |                |              |
+|finance_warehouse_payment_sources                  |                |                |             |               |             |                |                |              |
+|product_warehouse_event_sources                    |                |                |             |               |             |                |                |Segment       |
+|subscriptions_warehouse_sources                    |                |                |             |               |             |                |                |              |
+
+
+Start by locating the vars: section in the config file:
+
+```vars:
+  crm_warehouse_company_sources: []
+  crm_warehouse_contact_sources: []
+  crm_warehouse_conversations_sources: []
+  marketing_warehouse_ad_campaign_sources: []
+```
+
+and specify the data sources for each integration table like this:
+
+```
+vars:
+  crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects','looker_usage']
+  crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects','looker_usage']
+  crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
+  marketing_warehouse_ad_campaign_sources: ['google_ads','facebook_ads','mailchimp_email','hubspot_email']
+```
+
+4. Now edit the variable settings for the source modules you have chosen to use, for example for Facebook Ads you can choose from Stitch or Segment as the data pipeline (ETL) technology, specify the database name and schema name.
+
+```
+stg_facebook_ads_id-prefix: fbads-
+  stg_facebook_ads_etl: segment
+  stg_facebook_ads_stitch_database:
+  stg_facebook_ads_stitch_schema: stitch_facebook_ads
+  stg_facebook_ads_stitch_ad_performance_table: "{{ source('stitch_facebook_ads', 'insights') }}"
+```
+
+5. Note also the settings as the end of the dbt_project.yml file:
+
+```
+web_sessionization_trailing_window: 3
+  web_inactivity_cutoff: 30 * 60
+  attribution_create_account_event_type: account_opened
+  attribution_conversion_event_type: subscribed
+  attribution_topup_event_type: account_credited
+  attribution_converter_ltv: 200
+  enable_companies_merge_file: true
+  enable_ip_geo_enrichment: false
+```
+
+TODO: Further documentation on the setup process.
+
+
 
 ## Contributing
 
