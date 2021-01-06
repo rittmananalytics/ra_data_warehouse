@@ -4,7 +4,7 @@ The RA Warehouse dbt framework is a set of data models, data transformations and
 
 ![Conceptual Diagram](img/dw_diagram.png)
 
-* [What's New in v1.2.0](whats_new_in_v_1_2_0.md)
+* [What's New in the v1.2.0 release](whats_new_in_v_1_2_0.md)
 
 You can read more about our work with dbt, Google BigQuery, Snowflake and other modern data stack technologies on our website and blog:
 
