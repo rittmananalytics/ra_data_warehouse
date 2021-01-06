@@ -86,21 +86,21 @@ FROM
   timesheets t
 
   {% if target.type == 'bigquery' %}
-  JOIN companies_dim C
-  ON t.company_id IN unnest(
-    C.all_company_ids
-  )
-  JOIN contacts_dim u
-  ON CAST(
-    t.timesheet_users_id AS STRING
-  ) IN unnest(
-    u.all_contact_ids
-  )
+    JOIN companies_dim C
+    ON t.company_id IN unnest(
+      C.all_company_ids
+    )
+    JOIN contacts_dim u
+    ON CAST(
+      t.timesheet_users_id AS STRING
+    ) IN unnest(
+      u.all_contact_ids
+    )
   {% elif target.type == 'snowflake' %}
-  JOIN companies_dim C
-  ON t.company_id = C.company_id
-  JOIN contacts_dim u
-  ON t.timesheet_users_id :: STRING = u.contact_id
+    JOIN companies_dim C
+    ON t.company_id = C.company_id
+    JOIN contacts_dim u
+    ON t.timesheet_users_id :: STRING = u.contact_id
 {% else %}
   {{ exceptions.raise_compiler_error(
     target.type ~ " not supported in this project"
