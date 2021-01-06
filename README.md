@@ -2,6 +2,8 @@
 
 The RA Warehouse dbt framework is a set of data models, data transformations and data warehouse dimensional models we use for ingesting, combining and restructuring data from multiple source systems into a conformed, Kimball-style data warehouse running on Google BigQuery or Snowflake Data Warehouse.
 
+![Conceptual Diagram](img/dw_diagram.png)
+
 The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
