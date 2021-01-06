@@ -1,16 +1,19 @@
 ## Introduction
 
-The RA Warehouse dbt framework is a set of data models, data transformations and data warehouse dimensional models we use for ingesting, combining and restructuring data from multiple source systems into a conformed, Kimball-style data warehouse running on Google BigQuery or Snowflake Data Warehouse.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use when modern data stacks for clients and for internal use. We've decided to open-source this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, contribute and fork this repository.
 
 ![Conceptual Diagram](img/dw_diagram.png)
 
-The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
+* [What's New in v1.2.0](whats_new_in_v_1_2_0.md)
+
+You can read more about our work with dbt, Google BigQuery, Snowflake and other modern data stack technologies on our website and blog:
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
 * [Data Centralization](https://rittmananalytics.com/data-centralization) consulting packages
 * [Rittman Analytics Blog dbt Posts](https://rittmananalytics.com/blog/tag/dbt)
 * [Contact Us](https://rittmananalytics.com/home-index/#about-us)
-* [What's New in v1.2.0](whats_new_in_v_1_2_0.md)
+
+## Why Did We Create This Framework?
 
 [dbt](getdbt.com) is a toolkit that solves the problem of testing, repeatability and modularity of analysts code by bringing the principles of modern software development to the analysts' workflow. The RA Data Warehouse framework solves the problem of how to design your dbt transformations so that your project doesn't grind to a halt after you integrate your second, third, fourth data source because you need to combine identity across multiple systems, deduplicate multiple sources of customer data and make sure that numbers coming out of your BI tool still match with the numbers in your source systems.
 
@@ -20,16 +23,16 @@ The framework is based around dbt ("Data Build Tool"), open-source toolkit for t
 
 ## Design Goals
 
-1. To provide standards around how to model and transform various data sources
-2. To make it simpler to run data quality tests than to not, by defining these tests in-advance
-3. To enable merging of customer, product, contact and other shared entity data with no single authoratitive source
+1. To provide standards for our team on how to structure, model and transform data for analysis
+2. To enable merging of customer, product, contact and other shared entity data with no single authoratitive source
+3. To provide fast time-to-value on client projects by pre-building and pre-integrating common SaaS data sources
 4. To pre-create derived analytics measures for individual and combinations of sources
 5. To create a means of selecting sources and warehouses and have just those sources/warehouses loaded (and deployed for a customer)
-6. To enable use of either Stitch, Fivetran or Segment as the pipeline technology based on client need
-7. To enable loading and integration of custom (customer app database) sources into the warehouse
+6. To support use of multiple warehouse platforms and combinations of extract technologies while maintaining a single code base
+7. To make it simpler to run data quality tests than to not, by defining these tests in-advance
+8. To enable loading and integration of custom (customer app database) sources into the warehouse
 
 [Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
-
 
 ### Dimensional Model
 
