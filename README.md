@@ -5,7 +5,7 @@ The RA Warehouse dbt framework is a set of data models, data transformations and
 The framework is based around dbt ("Data Build Tool"), open-source toolkit for templating and orchestrating SQL-based data transformations of RAW API-sourced data into structures suitable for analysis, and pre-built transformations and design patterns taken from Rittman Analytics' previous data warehousing consulting experience.
 
 * [Rittman Analytics](https://rittmananalytics.com/home-index) homepage
-* [Centralize and Connect your Data](https://rittmananalytics.com/data-centralisation) consulting packages
+* [Data Centralization](https://rittmananalytics.com/data-centralization) consulting packages
 * [Rittman Analytics Blog dbt Posts](https://rittmananalytics.com/blog/tag/dbt)
 * [Contact Us](https://rittmananalytics.com/home-index/#about-us)
 
