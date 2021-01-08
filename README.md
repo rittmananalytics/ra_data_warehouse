@@ -71,6 +71,8 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 * Baremetrics Analytics (Segment)
 * Custom data sources
 
+See [Compatibility Matrix](compatibility.md) for full details.
+
 ## What Warehouse modules are Modelled?
 
 * Finance (Invoices, Chart of Accounts, Currencies)
