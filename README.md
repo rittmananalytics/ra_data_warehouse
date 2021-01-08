@@ -174,7 +174,7 @@ Note that these are fairly basic instructions and more documentation will be add
 
 2. Install dbt and create your profile.yml file with either Google BigQuery (Standard SQL) or Snowflake as your target data warehouse. The RA Warehouse framework will automatically run either BigQuery or Snowflake-dialect SQL code depending on which warehouse target is being used.
 
-3. Edit the dbt_project.yml configuration file to specify which data sources provide data for the various integration modules. The table below shows current support for data sources and data pipeline services for BigQuery warehouse targets:
+3. Edit the dbt_project.yml configuration file to specify which data sources provide data for the various integration modules. See [Compatibility Matrix](compatibility.md) for what targets and sources are compatible with individual warehouse types.
 
 Start by locating the vars: section in the config file:
 
