@@ -1,6 +1,18 @@
 ## Introduction
 
-The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use when modern data stacks for clients and for internal use. We've decided to open-source this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, contribute and fork this repository.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use when centralizing data for modern data stack client projects.
+
+The RA Warehouse dbt framework:
+
+* Contains pre-built, standardised data source models for popular SaaS applications (Hubspot, Xero, Facebook Ads, Segment etc)
+* Supports Stitch, Fivetran and Segment data pipeline services
+* Works with both Google BigQuery and Snowflake data warehouse targets
+* Combines and integrates data from multiple sources, deduplicates and creates single contact and company records
+* Creates subject-area dimensional warehouses e.g. Finance, Marketing, Product, CRM
+* Provides utilities for data profiling, ETL run logging and analysis
+* Is configured through a set of variables in the dbt_project.yml file
+
+We've decided to open-source this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, contribute and fork this repository.
 
 ![Conceptual Diagram](img/dw_diagram.png)
 
