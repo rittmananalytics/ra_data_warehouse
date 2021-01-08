@@ -16,4 +16,13 @@ with t_deals_merge_list as
   )
 select * from t_deals_merge_list
 
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
 {% endif %}

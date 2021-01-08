@@ -62,7 +62,7 @@ vars:
   projects_warehouse_delivery_sources: []
   projects_warehouse_timesheet_sources: []
   finance_warehouse_invoice_sources: []
-  finance_warehouse_transaction_sources: [']
+  finance_warehouse_transaction_sources: []
   finance_warehouse_payment_sources: []
   product_warehouse_event_sources: []
   subscriptions_warehouse_sources: []
@@ -255,7 +255,7 @@ vars:
 
   stg_stripe_subscriptions_id-prefix: stripe-
   stg_stripe_subscriptions_etl: segment
-  stg_stripe_subscriptions_segment_database: 
+  stg_stripe_subscriptions_segment_database:
   stg_stripe_subscriptions_segment_schema: stripe
   stg_stripe_subscriptions_segment_customers_table: "{{ source('segment_stripe_subscriptions', 'customers') }}"
   stg_stripe_subscriptions_segment_accounts_table: "{{ source('segment_stripe_subscriptions', 'accounts') }}"

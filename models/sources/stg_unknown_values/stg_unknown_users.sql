@@ -1,3 +1,5 @@
+{% if var("projects_warehouse_delivery_sources") %}
+
 SELECT
   'Unassigned' AS user_id,
   'Unassigned' AS user_name,
@@ -17,3 +19,5 @@ SELECT
   CAST(
     NULL AS TIMESTAMP
   ) AS user_last_modified_ts
+
+  {% else %} {{config(enabled=false)}} {% endif %}

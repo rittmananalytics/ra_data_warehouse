@@ -19,4 +19,13 @@ SELECT
 FROM
   t_contact_deals_list
 
+{% else %}
+
+{{
+    config(
+        enabled=false
+    )
+}}
+
+
 {% endif %}
