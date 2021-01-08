@@ -1,3 +1,5 @@
+# Compatibility Matrix
+
 ## Google BigQuery (Standard SQL)
 
 |Data Source                                        |HubSpot CRM     |Harvest Projects|Jira Projects|Asana Projects|Xero Accounting|Stripe Payments|Mailchimp Email|Hubspot Email|Facebook Ads   |Google Ads     |Segment Events|Mixpanel Events |Stripe Subscriptions|Intercom Messaging|
