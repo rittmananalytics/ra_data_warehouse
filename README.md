@@ -80,6 +80,90 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 * Product (Web Page Views, Web Sessions,)
 
+## How is this dbt Package Structured?
+
+```
+├── analysis
+├── data                      <-- "seed" files used for matching/merging companies, projects etc
+├── macros
+├── models
+│   ├── integration           <-- "integration" models used to merge and dedupe models across multiple sources
+│   ├── sources
+│   │   ├── stg_asana_projects   <-- "source" models with data-source specific transformations and renaming of columns into common formats.
+│   │   │   ├── bigquery         <-- target-specific folders containing SQL in correct format for BigQuery or Snowflake,
+│   │   │   │   ├── stitch            enabled and disabled automatically by choice of target type in profiles.yml
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_custom_source_1             
+│   │   ├── stg_custom_source_2            
+│   │   ├── stg_facebook_ads 
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch         <--- stitch, segment or fivetran code enabled/disabled by reference to stg_XXXX_etl variables in dbt_project.yml
+│   │   │   │   ├── segment
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch              
+│   │   ├── stg_gcp_billing_export         
+│   │   ├── stg_google_ads
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   │   ├── segment
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_harvest_projects
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_hubspot_crm
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   │   ├── fivetran
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_intercom_messaging
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   ├── stg_jira_projects
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_mailchimp_email
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   ├── snowflake    
+│   │   │   │   ├── stitch
+│   │   ├── stg_mixpanel_events
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   │   ├── segment
+│   │   ├── stg_segment_events
+│   │   │   ├── bigquery
+│   │   │   │   ├── segment
+│   │   │   ├── snowflake    
+│   │   │   │   ├── segment
+│   │   ├── stg_stripe_payments
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   │   ├── segment
+│   │   ├── stg_stripe_subscriptions
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   │   │   │   ├── segment
+│   │   ├── stg_unknown_values
+│   │   └── stg_xero_accounting
+│   │   │   ├── bigquery
+│   │   │   │   ├── stitch
+│   ├── utils                           <-- "utils" models, for example for row count logging
+│   └── warehouse                       <-- "warehouse" models containing fact and dimension tables,
+│       ├── w_crm                           grouped by subject area
+│       ├── w_finance
+│       ├── w_marketing
+│       ├── w_product
+│       └── w_projects
+│       └── w_subscriptions
+```
+
 ## Setup Steps .
 
 Note that these are fairly basic instructions and more documentation will be added in due course, consider this a starting point and be prepared to dig around in the code to work out how it all works - also check-out [what's new in the v1.2.0 release (whats_new_in_v_1_2_0.md)
