@@ -101,8 +101,8 @@ diffs as (
         *,
 
         {{dbt_utils.datediff(
-        'session_end_ts',
         'session_start_ts',
+        'session_end_ts',
         'SECOND') }}
 
  as duration_in_s
