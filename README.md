@@ -56,13 +56,7 @@ Thereafter we typically extend and customise the data sources and warehouses alr
 
 TODO: Add customization and extension guidelines
 
-### Dimensional Model
 
-![Dimensional Model](img/dimensional_model.png)
-
-### dbt Transformation Graph
-
-![dbt DAG](img/dbt_graph.jpeg)
 
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
@@ -104,7 +98,31 @@ See [Compatibility Matrix](compatibility.md) for full details.
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 * Product (Web Page Views, Web Sessions,)
 
-## How is this dbt Package Structured?
+## Design Approach
+
+### Separation of Data Sources, Integration and Warehouse Module Layers
+
+There are three distinct layers in the data warehouse:
+
+1. A layer of source and ETL pipeline-specific data sources, containing SQL code used to transform and rename incoming tables from each source into common formats
+
+2. An Integration layer, containing SQL transformations used to integrate, merge, deduplicate and transform data ready for loading into the main warehouse fact and dimension tables.
+
+3. A warehouse layer made-up of subject area data marts, each of which contains multiple fact and conformed dimension tables
+
+![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
+
+### Dimensional Model
+
+![Dimensional Model](img/dimensional_model.png)
+
+### dbt Transformation Graph
+
+![dbt DAG](img/dbt_graph.jpeg)
+
+### dbt Package Structure
+
+dbt models inside this project are grouped together by these layers, with each data source "adapter" having all of its source SQL transformations contained with it.
 
 ```
 ├── analysis
