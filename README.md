@@ -1,6 +1,6 @@
 ## Introduction
 
-The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use when centralizing data for modern data stack client projects.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use as the core set of models and transformations on all of our client projects.
 
 The RA Warehouse dbt framework:
 
@@ -12,7 +12,7 @@ The RA Warehouse dbt framework:
 * Provides utilities for data profiling, ETL run logging and analysis
 * Is configured through a set of variables in the dbt_project.yml file
 
-We've decided to open-source this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, contribute and fork this repository.
+We've open-sourced this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, fork and hopefully contribute content back for others to use.
 
 ![Conceptual Diagram](img/dw_diagram.png)
 
@@ -45,6 +45,16 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 8. To enable loading and integration of custom (customer app database) sources into the warehouse
 
 [Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
+
+## How Do We Use It?
+
+Unlike most dbt packages this one isn't intended to be included in the packages.yml file of another, master package.
+
+Instead, we typically clone or fork the entire repo when starting a new client project and then enable or disable data sources and targets as appropriate using the configuration settings in the dbt_project.yml file (see "Setup Steps" later in this readme)
+
+Thereafter we typically extend and customise the data sources and warehouses already included in the package (submitting those changes back to the master repo if we think they'd be useful for other clients on subsequent projects), or we add new source modules, integration and warehouse models if they're not already in the framework (and again, publish them back to the master repo if they're generally applicable).
+
+TODO: Add customization and extension guidelines
 
 ### Dimensional Model
 
@@ -178,7 +188,7 @@ See [Compatibility Matrix](compatibility.md) for full details.
 │       └── w_subscriptions
 ```
 
-## Setup Steps .
+## Setup Steps.
 
 Note that these are fairly basic instructions and more documentation will be added in due course, consider this a starting point and be prepared to dig around in the code to work out how it all works - also check-out [what's new in the v1.2.0 release (whats_new_in_v_1_2_0.md)
 
