@@ -1,6 +1,6 @@
 ## Introduction
 
-The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use when centralizing data for modern data stack client projects.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use as the core set of models and transformations on all of our client projects.
 
 The RA Warehouse dbt framework:
 
@@ -12,7 +12,7 @@ The RA Warehouse dbt framework:
 * Provides utilities for data profiling, ETL run logging and analysis
 * Is configured through a set of variables in the dbt_project.yml file
 
-We've decided to open-source this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, contribute and fork this repository.
+We've open-sourced this framework to share our learnings and experience with the dbt and analytics engineering community, and to invite others to review, fork and hopefully contribute content back for others to use.
 
 ![Conceptual Diagram](img/dw_diagram.png)
 
@@ -46,13 +46,17 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 
 [Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
 
-### Dimensional Model
+## How Do We Use It?
 
-![Dimensional Model](img/dimensional_model.png)
+Unlike most dbt packages this one isn't intended to be included in the packages.yml file of another, master package.
 
-### dbt Transformation Graph
+Instead, we typically clone or fork the entire repo when starting a new client project and then enable or disable data sources and targets as appropriate using the configuration settings in the dbt_project.yml file (see "Setup Steps" later in this readme)
 
-![dbt DAG](img/dbt_graph.jpeg)
+Thereafter we typically extend and customise the data sources and warehouses already included in the package (submitting those changes back to the master repo if we think they'd be useful for other clients on subsequent projects), or we add new source modules, integration and warehouse models if they're not already in the framework (and again, publish them back to the master repo if they're generally applicable).
+
+TODO: Add customization and extension guidelines
+
+
 
 ## What Data Warehouse, Data Pipeline and Data Collection Technologies are Supported?
 
@@ -94,7 +98,31 @@ See [Compatibility Matrix](compatibility.md) for full details.
 * Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
 * Product (Web Page Views, Web Sessions,)
 
-## How is this dbt Package Structured?
+## Design Approach
+
+### Separation of Data Sources, Integration and Warehouse Module Layers
+
+There are three distinct layers in the data warehouse:
+
+1. A layer of source and ETL pipeline-specific data sources, containing SQL code used to transform and rename incoming tables from each source into common formats
+
+2. An Integration layer, containing SQL transformations used to integrate, merge, deduplicate and transform data ready for loading into the main warehouse fact and dimension tables.
+
+3. A warehouse layer made-up of subject area data marts, each of which contains multiple fact and conformed dimension tables
+
+![Model Layers](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_flow.png)
+
+### Dimensional Model
+
+![Dimensional Model](img/dimensional_model.png)
+
+### dbt Transformation Graph
+
+![dbt DAG](img/dbt_graph.jpeg)
+
+### dbt Package Structure
+
+dbt models inside this project are grouped together by these layers, with each data source "adapter" having all of its source SQL transformations contained with it.
 
 ```
 ├── analysis
@@ -178,7 +206,7 @@ See [Compatibility Matrix](compatibility.md) for full details.
 │       └── w_subscriptions
 ```
 
-## Setup Steps .
+## Setup Steps.
 
 Note that these are fairly basic instructions and more documentation will be added in due course, consider this a starting point and be prepared to dig around in the code to work out how it all works - also check-out [what's new in the v1.2.0 release (whats_new_in_v_1_2_0.md)
 
