@@ -513,7 +513,7 @@ One of the challenges when centralising data from a new source is how to efficie
 
 ![](https://github.com/rittmananalytics/ra_data_warehouse/blob/master/img/data_profile.png)
 
-### Design Pattern
+### How Does Data Profiling Work?
 
 Data Profiling is based around a dbt macro that, for every view or table ("relation") in a given schema, generates an SQL query that creates a series of SQL query blocks that generate stats for each database object, unions those queries together and then joins the results to another query against the INFORMATION_SCHEMA.COLUMNS to obtain each object's metadata.
 
