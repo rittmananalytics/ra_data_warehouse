@@ -48,8 +48,8 @@ seeds:
     schema: seed
 
 vars:
-  crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects','looker_usage']
-  crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects','looker_usage']
+  crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects']
+  crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects']
   crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
   marketing_warehouse_ad_campaign_sources: ['google_ads','facebook_ads','mailchimp_email','hubspot_email']
   marketing_warehouse_ad_campaign_performance_sources: ['google_ads','mailchimp_email','hubspot_email']
