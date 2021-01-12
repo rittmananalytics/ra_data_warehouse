@@ -206,11 +206,11 @@ dbt models inside this project are grouped together by these layers, with each d
 │       └── w_subscriptions
 ```
 
-### Dimension Merge and Deduplication Design Pattern
+### Dimension Union and Merge Deduplication Design Pattern
 
 Customers, contacts, projects and other shared dimensions are automatically created from all data sources, deduplicating by name and merge lookup files using a process that preserves source system keys whilst assigning a unique ID for each customer, contact etc.
 
-1. Each set of source adapter dbt dimension table models provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream. 
+1. Each set of dbt source module provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream. 
 
 ```
 WITH source AS (
@@ -246,7 +246,15 @@ FROM
   renamed
 ```
 
-2. These tables are then initially merged (UNION ALL) together in the i_* integration view.
+2. These tables are then initially unioned (UNION ALL) together in the i_* integration view, with the set of sources to be merged determined by the relevant variable in the dbt_project.yml config file:
+
+```
+
+crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects'
+
+```
+
+Unioning takes place using a Jinja "for" loop
 
 ```
 with t_companies_pre_merged as (
