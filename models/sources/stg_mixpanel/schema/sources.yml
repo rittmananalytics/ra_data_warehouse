@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: mixpanel
+    database: data-analysis-207614
+    schema: mixpanel_realtime
+
+    freshness:
+      warn_after: {count: 1, period: day}
+      error_after: {count: 2, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_events
+        identifier: event

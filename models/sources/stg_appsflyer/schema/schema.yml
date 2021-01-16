@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_appsflyer_events
+    description: AppsFlyer's table of events
+    columns:
+      - name: appsflyer_events_natural_key
+        description: >
+          Unique identifier for AppFlyer's events

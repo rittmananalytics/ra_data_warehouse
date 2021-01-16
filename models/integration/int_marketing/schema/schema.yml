@@ -1,0 +1,12 @@
+version: 2
+models:
+
+  - name: int_marketing_user_sessions
+    description: User sessions on platform
+    columns:
+      - name: user_session_sk
+        description: >
+            Unique identifier for platform sessions
+        tests:
+            - unique
+            - not_null

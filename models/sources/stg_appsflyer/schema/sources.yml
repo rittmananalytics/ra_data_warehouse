@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: appsflyer
+    database: data-analysis-207614
+    schema: appsflyer
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_events
+        identifier: data_locker_v_2_events

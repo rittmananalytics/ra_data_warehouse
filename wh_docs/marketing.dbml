@@ -1,0 +1,93 @@
+project footballindex_marketing {
+
+    database_type: 'bigquery'
+
+}
+
+Table marketing_conversion_attributions_xa [headercolor: #98db34] {
+  marketing_conversion_attribution_pk int [pk]
+  platform_user_fk int [ref: - platform_users_dim.platform_user_pk]
+  marketing_user_event_fk int [ref: - marketing_user_events_fct.marketing_user_event_pk]
+  marketing_user_session_fk int [ref: - marketing_user_sessions_fct.marketing_user_session_pk]
+  
+  user_session_starting_ts datetime
+
+  conversion_event_name varchar
+  conversion_event_ts datetime
+
+  signup_affiliate_referrer varchar
+  appsflyer_media_source varchar
+  appsflyer_campaign varchar
+  utm_source varchar
+  utm_medium varchar
+  utm_campaign varchar
+
+  first_touch_attribution_points int
+  last_touch_attribution_points int
+  linear_attribution_points decimal
+}
+
+Table marketing_user_journeys_xa [headercolor: #98db34] {
+  marketing_user_journey_pk int [pk]
+  platform_user_fk int [ref: - platform_users_dim.platform_user_pk]
+  
+  install_event_fk int [ref: - marketing_user_events_fct.marketing_user_event_pk]
+  install_event_ts datetime
+  registration_event_fk int [ref: - marketing_user_events_fct.marketing_user_event_pk]
+  registration_event_ts datetime
+  first_deposit_event_fk int [ref: - marketing_user_events_fct.marketing_user_event_pk]
+  first_deposit_event_ts datetime
+}
+
+Table marketing_session_paths_xa [headercolor: #98db34] {
+  marketing_session_session_path_pk int [pk]
+  platform_user_fk int [ref: - platform_users_dim.platform_user_pk]
+  marketing_user_session_fk int [ref: - marketing_user_sessions_fct.marketing_user_session_pk]
+
+  event_X varchar
+  event_X_properties varchar
+}
+
+Table marketing_user_paths_xa [headercolor: #98db34] {
+  marketing_user_session_path_pk int [pk]
+  platform_user_fk int [ref: - platform_users_dim.platform_user_pk]
+
+  event_X varchar
+  event_X_properties varchar
+}
+
+Table marketing_user_sessions_fct [headercolor: #3498db] {
+  marketing_user_session_pk int [pk]
+  
+  starting_ts datetime
+  ending_ts datetime
+  duration_s int
+  sequence int
+
+  landing_page varchar
+  exit_page varchar
+
+  appsflyer_media_source varchar
+  appsflyer_campaign varchar
+  utm_source varchar
+  utm_medium varchar
+  utm_campaign varchar
+
+  events_completed int
+}
+
+Table marketing_user_events_fct [headercolor: #3498db] {
+  marketing_user_event_pk int [pk]
+  platform_user_fk int [ref: - platform_users_dim.platform_user_pk]
+  marketing_user_session_fk int [ref: - marketing_user_sessions_fct.marketing_user_session_pk]
+  
+  event_sequence_for_session int
+  event_sequence_for_user int
+  event_name varchar
+  event_properties varchar
+  event_ts datetime
+}
+
+Table platform_users_dim [headercolor: #db7734] {
+  platform_user_pk int [pk]
+}

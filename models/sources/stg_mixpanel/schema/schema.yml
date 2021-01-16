@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_mixpanel_events
+    description: Mixpanel's table of events
+    columns:
+      - name: mixpanel_events_natural_key
+        description: >
+          Unique identifier for Mixpanel's events
+        tests:
+          - not_null
