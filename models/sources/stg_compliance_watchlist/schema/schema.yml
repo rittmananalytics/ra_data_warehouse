@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  
+  - name: stg_compliance_watchlist
+    description: compliance watchlist table
+    columns:
+      - name: review_ts
+        tests:
+          - not_null
+      - name: platform_user_fk
+        tests:
+          - not_null
+      - name: staff_email
+        tests:
+          - not_null
+      - name: dashboard_name
+        tests:
+          - not_null
+

@@ -1,0 +1,436 @@
+version: 2
+
+models:
+  - name: stg_opta_stats_competition
+    description: Eligible football competition details
+    columns:
+      - name: opta_stats_competition_natural_key
+        description: >
+          Unique identifier for football competition
+        tests:
+          - unique
+          - not_null
+
+      - name: competition_name
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['world cup','french ligue 1','italian serie a','spanish la liga','champions league','german bundesliga','uefa europa league','uefa nations league','english premier league','european championship finals','european championship qualifiers']
+
+      - name: season_name
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+
+  - name: stg_opta_stats_match_stats
+    description: Details of individual matches
+    columns:
+      - name: opta_stats_match_stats_natural_key
+        description: >
+          Unique identifier the match
+        tests:
+          - unique
+          - not_null
+
+      - name: opta_stats_competition_natural_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_opta_stats_competition')
+              field: opta_stats_competition_natural_key
+
+      - name: opta_stats_home_team_natural_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_opta_stats_team')
+              field: opta_stats_team_natural_key
+              severity: warn
+
+      - name: opta_stats_away_team_natural_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_opta_stats_team')
+              field: opta_stats_team_natural_key
+              severity: warn
+
+      - name: opta_stats_winning_team_natural_key
+        tests:
+          - relationships:
+              to: ref('stg_opta_stats_team')
+              field: opta_stats_team_natural_key
+              severity: warn
+
+      - name: match_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+
+      - name: match_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['latest', 'result']
+
+      - name: match_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['prematch', 'fulltime', 'abandoned', 'halftime', 'firsthalf', 'secondhalf']
+          - dbt_utils.not_constant
+
+      - name: match_result_type
+        tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['postponed', 'normalresult', 'awaygoals', 'aggregate', 'penaltyshootout', 'afterextratime', 'abandoned', 'delayed']
+
+      - name: first_half_time
+        tests:
+          - dbt_utils.not_constant
+
+      - name: second_half_time
+        tests:
+          - dbt_utils.not_constant
+
+      - name: first_half_extra_time
+        tests:
+          - dbt_utils.not_constant
+
+      - name: second_half_extra_time
+        tests:
+          - dbt_utils.not_constant
+
+      - name: team_home_score
+        tests:
+          - dbt_utils.not_constant
+
+      - name: team_away_score
+        tests:
+          - dbt_utils.not_constant
+
+      - name: team_home_shootout_score
+        tests:
+          - dbt_utils.not_constant
+
+      - name: team_away_shootout_score
+        tests:
+          - dbt_utils.not_constant
+
+  - name: stg_opta_stats_player
+    description: Player details
+    columns:
+      - name: opta_stats_player_natural_key
+        description: >
+          Unique identifier for players
+        tests:
+          - unique
+          - not_null
+
+      - name: player_name
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+
+      - name: player_position
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['defender', 'forward', 'midfielder', 'goalkeeper', 'unknown']
+
+      - name: real_position
+        tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['winger','striker','unknown','full back','wing back','goalkeeper','second striker','central defender','central midfielder','attacking midfielder','defensive midfielder']
+
+      - name: real_position_side
+        tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['right','left','left/right','centre/right','unknown','left/centre/right','left/centre','centre']
+
+      - name: preferred_foot
+        tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['left','right','both','mostly right']
+
+      - name: shirt_number
+        tests:
+          - dbt_utils.not_constant
+
+      - name: join_ts
+        tests:
+          - dbt_utils.not_constant
+
+      - name: leave_ts
+        tests:
+          - dbt_utils.not_constant
+
+  - name: stg_opta_stats_player_stats
+    description: Player Match Data
+    columns:
+      - name: opta_stats_player_stats_natural_key
+        description: >
+          unique Identifier player match data
+        tests:
+          - unique
+          - not_null
+
+      - name: opta_stats_match_stats_natural_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_opta_stats_match_stats')
+              field: opta_stats_match_stats_natural_key
+              severity: warn
+
+      - name: opta_stats_player_natural_key
+        tests:
+          - relationships:
+              to: ref('stg_opta_stats_player')
+              field: opta_stats_player_natural_key
+              severity: warn
+
+      - name: opta_stats_team_natural_key
+        tests:
+          - relationships:
+              to: ref('stg_opta_stats_team')
+              field: opta_stats_team_natural_key
+              severity: warn
+
+      - name: player_stats_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+
+      - name: player_stats_position
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+          - accepted_values:
+              values: ['striker', 'defender', 'midfielder', 'goalkeeper', 'substitute']
+
+      - name: is_starter
+        tests:
+          - not_null
+
+      - name: shirt_number
+        tests:
+          - dbt_utils.not_constant
+
+      - name: accurate_crosses
+        tests:
+          - dbt_utils.not_constant
+
+      - name: ball_recoveries
+        tests:
+          - dbt_utils.not_constant
+
+      - name: blocked_shots
+        tests:
+          - dbt_utils.not_constant
+
+      - name: clean_sheets
+        tests:
+          - dbt_utils.not_constant
+
+      - name: clearances
+        tests:
+          - dbt_utils.not_constant
+
+      - name: crosses
+        tests:
+          - dbt_utils.not_constant
+
+      - name: fouls
+        tests:
+          - dbt_utils.not_constant
+
+      - name: giveaway_passes
+        tests:
+          - dbt_utils.not_constant
+
+      - name: goal_assists
+        tests:
+          - dbt_utils.not_constant
+
+      - name: goals
+        tests:
+          - dbt_utils.not_constant
+
+      - name: goals_conceded
+        tests:
+          - dbt_utils.not_constant
+
+      - name: interceptions
+        tests:
+          - dbt_utils.not_constant
+
+      - name: offsides
+        tests:
+          - dbt_utils.not_constant
+
+      - name: passes
+        tests:
+          - dbt_utils.not_constant
+
+      - name: own_goals
+        tests:
+          - dbt_utils.not_constant
+
+      - name: penalties_conceded
+        tests:
+          - dbt_utils.not_constant
+
+      - name: penalties_missed
+        tests:
+          - dbt_utils.not_constant
+
+      - name: penalty_scored
+        tests:
+          - dbt_utils.not_constant
+
+      - name: penalty_saved
+        tests:
+          - dbt_utils.not_constant
+
+      - name: saves
+        tests:
+          - dbt_utils.not_constant
+
+      - name: red_cards
+        tests:
+          - dbt_utils.not_constant
+
+      - name: second_yellow_cards
+        tests:
+          - dbt_utils.not_constant
+
+      - name: set_pieces
+        tests:
+          - dbt_utils.not_constant
+
+      - name: shots
+        tests:
+          - dbt_utils.not_constant
+
+      - name: shots_on_target
+        tests:
+          - dbt_utils.not_constant
+
+      - name: tackles
+        tests:
+          - dbt_utils.not_constant
+
+      - name: was_fouled
+        tests:
+          - dbt_utils.not_constant
+
+      - name: winning_goals
+        tests:
+          - dbt_utils.not_constant
+
+      - name: match_won
+        tests:
+          - dbt_utils.not_constant
+
+      - name: match_lost
+        tests:
+          - dbt_utils.not_constant
+
+      - name: won_corners
+        tests:
+          - dbt_utils.not_constant
+
+      - name: won_tackles
+        tests:
+          - dbt_utils.not_constant
+
+      - name: yellow_cards
+        tests:
+          - dbt_utils.not_constant
+
+      - name: minutes_played
+        tests:
+          - dbt_utils.not_constant
+
+      - name: accurate_keeper_sweeper
+        tests:
+          - dbt_utils.not_constant
+
+      - name: accurate_long_balls
+        tests:
+          - dbt_utils.not_constant
+
+      - name: accurate_through_ball
+        tests:
+          - dbt_utils.not_constant
+
+      - name: aerial_duel_won
+        tests:
+          - dbt_utils.not_constant
+
+      - name: big_chance_created
+        tests:
+          - dbt_utils.not_constant
+
+      - name: big_chance_missed
+        tests:
+          - dbt_utils.not_constant
+
+      - name: goalkeeper_smother
+        tests:
+          - dbt_utils.not_constant
+
+      - name: goalkeeper_high_catch
+        tests:
+          - dbt_utils.not_constant
+
+      - name: last_man_tackle
+        tests:
+          - dbt_utils.not_constant
+
+      - name: punches
+        tests:
+          - dbt_utils.not_constant
+
+      - name: second_goal_assist
+        tests:
+          - dbt_utils.not_constant
+
+      - name: key_passes
+        tests:
+          - dbt_utils.not_constant
+
+      - name: total_contest
+        tests:
+          - dbt_utils.not_constant
+
+      - name: won_contest
+        tests:
+          - dbt_utils.not_constant
+
+      - name: game_started
+        tests:
+          - dbt_utils.not_constant
+
+
+  - name: stg_opta_stats_team
+    description: Team details
+    columns:
+      - name: opta_stats_team_natural_key
+        description: >
+          Unique identifier for the team
+        tests:
+          - unique
+          - not_null
+
+      - name: team_name
+        tests:
+          - not_null
+          - dbt_utils.not_constant

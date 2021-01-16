@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: analytics_compliance
+    database: data-analysis-207614
+    schema: analytics_compliance
+
+    loaded_at_field: review_ts
+
+    tables:
+      - name: s_compliance_watchlist
+        identifier: compliance_watchlist

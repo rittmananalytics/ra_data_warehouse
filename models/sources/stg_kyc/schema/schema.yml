@@ -1,0 +1,69 @@
+version: 2
+
+models:
+
+  - name: stg_kyc_user_check_results
+    description: kyc (know your customer) check results
+    columns:
+      - name: kyc_check_result_id_natural_key
+        description: >
+          Unique identifier for kyc checks
+        tests:
+          - not_null
+          - unique
+      - name: results_started_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: results_completed_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: result_comment
+        tests:
+          - dbt_utils.not_constant
+
+  - name: stg_kyc_user_checks
+    description: kyc (know your customer) check results
+    columns:
+      - name: kyc_check_id_natural_key
+        description: >
+          Unique identifier for kyc checks
+        tests:
+          - unique
+          - not_null
+      - name: kyc_user_id_natural_key
+        description: >
+          Unique identifier for kyc user checks
+        tests:
+          - not_null
+      - name: check_started_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: check_completed_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: kyc_check_type
+        tests:
+          - not_null
+          
+  - name: stg_kyc_users
+    description: kyc (know your customer) check results
+    columns:
+      - name: kyc_user_id_natural_key
+        description: >
+          Unique identifier for kyc user checks
+        tests:
+          - unique
+          - not_null
+      - name: kyc_created_ts
+        tests:
+          - not_null
+      - name: first_name
+        tests:
+          - not_null
+      - name: last_name
+        tests:
+          - not_null

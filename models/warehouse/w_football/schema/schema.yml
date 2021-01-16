@@ -1,0 +1,94 @@
+version: 2
+models:
+  - name: wh_football_player_dim
+    columns:
+      - name: football_player_pk
+        tests:
+          - unique
+          - not_null
+
+  - name: wh_football_player_stats_fact
+    columns:
+      - name: football_player_stats_pk
+        tests:
+          - unique
+          - not_null
+      - name: football_player_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_player_dim')
+              field: football_player_pk
+              severity: warn
+      - name: football_team_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_team_dim')
+              field: football_team_pk
+              severity: warn
+      - name: football_match_stats_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_match_stats_fact')
+              field: football_match_stats_pk
+              severity: warn
+
+
+  - name: wh_football_team_dim
+    columns:
+      - name: football_team_pk
+        tests:
+          - unique
+          - not_null
+
+
+  - name: wh_football_competition_dim
+    columns:
+      - name: football_competition_pk
+        tests:
+          - unique
+          - not_null
+
+
+  - name: wh_football_match_stats_fact
+    columns:
+      - name: football_match_stats_pk
+        tests:
+          - unique
+          - not_null
+      - name: football_home_team_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_team_dim')
+              field: football_team_pk
+              severity: warn
+      - name: football_away_team_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_team_dim')
+              field: football_team_pk
+              severity: warn
+      - name: football_winning_team_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_team_dim')
+              field: football_team_pk
+              severity: warn
+      - name: football_competition_fk
+        tests:
+          - relationships:
+              to: ref('wh_football_competition_dim')
+              field: football_competition_pk
+
+  - name: wh_football_media_articles_fact
+    columns:
+      - name: football_media_article_pk
+        tests:
+          - unique
+          - not_null
+
+  - name: wh_football_media_celebrity_scores_fact
+    columns:
+      - name: football_media_celebrity_score_pk
+        tests:
+          - unique
+          - not_null

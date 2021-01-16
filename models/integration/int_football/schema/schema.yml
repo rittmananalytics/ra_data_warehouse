@@ -1,0 +1,6 @@
+version: 2
+models:
+  - name: int_football_media_articles
+    description: Integration model to create media articles entity table
+  - name: int_football_media_celebrity_scores
+    description: Integration model to create media celebrity scores entity table

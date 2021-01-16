@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: affordability_checks
+    database: data-analysis-207614
+    schema: common_pg_prod_public
+
+    freshness:
+      error_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_affordability_checks
+        identifier: checks

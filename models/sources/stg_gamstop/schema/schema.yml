@@ -1,0 +1,34 @@
+version: 2
+
+models:
+
+  - name: stg_gamstop_check_history
+    description: gamstop check results
+    columns:
+      - name: gamstop_natural_key
+        description: >
+          Unique identifier for gamstop checks
+        tests:
+          - unique
+          - not_null
+          - dbt_utils.not_constant
+      - name: platform_users_natural_key
+        tests:
+          - not_null
+      - name: check_count
+        tests:
+          - not_null
+      - name: gamstop_created_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: gamstop_updated_ts
+        tests:
+          - not_null
+          - dbt_utils.not_constant
+      - name: gamstop_status
+        tests:
+          - not_null
+      - name: latest_check_type
+        tests:
+          - not_null

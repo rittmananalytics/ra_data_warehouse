@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  
+  - name: stg_affordability_check_history
+    description: affordability check results
+    columns:
+      - name: affordability_natural_key
+        description: >
+          Unique identifier for affordability checks
+        tests:
+          - unique
+          - not_null
+      - name: affordability_check_natural_key
+        tests:
+          - not_null
+      - name: request_natural_key
+        tests:
+          - not_null
+      - name: platform_users_natural_key
+        tests:
+          - not_null
+      - name: check_ts
+        tests:
+          - not_null
+      - name: affordability_created_ts
+        tests:
+          - not_null

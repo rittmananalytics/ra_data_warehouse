@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: kyc_checks
+    database: data-analysis-207614
+    schema: common_prod_fv_kyc_prod
+
+    freshness:
+      error_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_kyc_checks
+        identifier: kyc_checks
+      - name: s_kyc_check_results
+        identifier: kyc_check_results
+      - name: s_kyc_users
+        identifier: users

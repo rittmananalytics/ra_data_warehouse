@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: gamstop
+    database: data-analysis-207614
+    schema: fv_platform_prod_fv_platform
+
+    freshness:
+      error_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_gamstop_check_history
+        identifier: gamstop_check_history

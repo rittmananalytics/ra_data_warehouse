@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: opta_stats
+    database: data-analysis-207614
+    schema: mysql_football_stats
+
+    freshness:
+      warn_after: {count: 72, period: hour}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: s_player
+        identifier: player
+      - name: s_team
+        identifier: team
+      - name: s_competition
+        identifier: competition
+      - name: s_player_stats
+        identifier: player_match_stats
+      - name: s_match_stats
+        identifier: match_data
