@@ -15,7 +15,7 @@ renamed as (
   SELECT cast(id as string) as ad_group_id,
          name as ad_group_name,
          effective_status as ad_group_status,
-         cast(campaignid as string) ad_campaign_id,
+         cast(campaign_id as string) ad_campaign_id,
          targeting as adset_targeting,
          created_time as adset_created_ts,
          end_time as adset_end_ts,

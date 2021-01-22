@@ -27,10 +27,10 @@ with t_companies_pre_merged as (
       all_company_addresses as (
              SELECT company_name, array_agg(struct(company_address,
                                                    company_address2,
-                                                   case when length(trim(company_city)) = 0 then null else company_city end as company_city,
-                                                   case when length(trim(company_state)) = 0 then null else company_state end as company_state,
-                                                   case when length(trim(company_country)) = 0 then null else company_country end as company_country,
-                                                   case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
+                                                   company_city,
+                                                   company_state,
+                                                   company_country,
+                                                   company_zip) ignore nulls) as all_company_addresses
              FROM t_companies_pre_merged
              group by 1),
 

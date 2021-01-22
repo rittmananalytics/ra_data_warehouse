@@ -15,11 +15,11 @@ renamed as (
 
     select
     cast(id as string)      as campaign_id,
-    name      as campaign_name,
-    status          as ad_campaign_status,
+    name    as campaign_name,
+    effective_status          as ad_campaign_status,
     effective_status as campaign_effective_status,
     start_time      as ad_campaign_start_date,
-    stop_time        as ad_campaign_end_date,
+    cast(null as timestamp)        as ad_campaign_end_date,
     'Facebook Ads' as ad_network
 
     from source
