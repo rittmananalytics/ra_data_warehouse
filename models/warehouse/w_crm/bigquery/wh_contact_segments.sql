@@ -22,5 +22,5 @@ SELECT
 END
   AS contact_segment
 FROM
-  {{ ref('contacts_audiences_xa') }}
+  {{ ref('wh_contacts_audiences_xa') }}
   {% else %} {{config(enabled=false)}} {% endif %}
