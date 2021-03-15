@@ -1,5 +1,5 @@
 {{config(enabled = target.type == 'bigquery')}}
-{% if var("crm_warehouse_company_sources") and and var("crm_warehouse_deal_sources") and var("crm_warehouse_contact_sources") and var("enable_looker_usage_source") %}
+{% if var("crm_warehouse_company_sources") and var("crm_warehouse_deal_sources") and var("crm_warehouse_contact_sources") and var("enable_looker_usage_source") %}
 {{config(alias='contacts_influencer_list_xa',
          materialized="view")}}
 WITH
