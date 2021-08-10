@@ -1,5 +1,7 @@
 {% if var('marketing_warehouse_email_event_sources') %}
 
+{{config(materialized="table")}}
+
 with t_email_campaign_events_merge_list as
   (
     {% for source in var('marketing_warehouse_email_event_sources') %}
