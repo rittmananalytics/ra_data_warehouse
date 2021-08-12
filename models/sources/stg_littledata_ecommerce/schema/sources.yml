@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: segment_shopify
+    database: "{{ var('stg_segment_shopify_events_segment_database') }}"
+    schema: "{{ var('stg_segment_shopify_events_segment_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: uuid_ts
+
+    tables:
+      - name: pages
+      - name: tracks
+      - name: users
+      - name: order_completed
+      - name: order_refunded
+      - name: order_deleted
+      - name: checkout_started

@@ -17,3 +17,24 @@ sources:
       - name: invoices
       - name: payments
       - name: bank_transactions
+
+  - name: fivetran_xero_accounting
+    database: "{{ var('stg_xero_accounting_fivetran_database') }}"
+    schema: "{{ var('stg_xero_accounting_fivetran_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: account
+      - name: contact
+      - name: contact_address
+      - name: currency
+      - name: invoice
+      - name: payment
+      - name: bank_transaction
+      - name: bank_transaction_line_items
+      - name: journal
+      - name: journal_line

@@ -124,18 +124,28 @@ vars:
   stg_segment_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
+  stg_heap_events_id-prefix: heap-
+  stg_heap_events_etl: heap
+  stg_heap_events_heap_database:
+  stg_heap_events_heap_schema: heap
+  stg_heap_events_heap_tracks_table: "{{ source('heap', 'tracks') }}"
+  stg_heap_events_heap_pages_table: "{{ source('heap', 'pages') }}"
+  stg_heap_events_heap_users_table: "{{ source('heap', 'users') }}"
+  stg_heap_events_heap_sessions_table: "{{ source('heap', 'sessions') }}"
+  stg_heap_events_heap_user_migrations_table: "{{ source('heap', 'user_migrations') }}"
+
   stg_baremetrics_analytics_id-prefix: baremetrics-
   stg_baremetrics_analytics_etl:
   stg_baremetrics_analytics_etl: segment
   stg_baremetrics_analytics_segment_schema: baremetrics
   stg_baremetrics_analytics_segment_plan_breakdown_table: plan_breakdown
 
-  stg_harvest_projects_id-prefix: harvest-
-  stg_harvest_projects_etl: stitch
+  stg_harvest_projects_id-prefix:
+  stg_harvest_projects_etl:
   stg_harvest_projects_stitch_database:
-  stg_harvest_projects_stitch_schema: rittman_analytics
-  stg_harvest_projects_staff_email_domain: rittmananalytics.com
-  stg_harvest_projects_stitch_companies_table: "{{ source('stitch_harvest_projects', 'companies') }}"
+  stg_harvest_projects_stitch_schema:
+  stg_harvest_projects_staff_email_domain:
+  stg_harvest_projects_stitch_companies_table:
   stg_harvest_projects_stitch_contacts_table: "{{ source('stitch_harvest_projects', 'contacts') }}"
   stg_harvest_projects_stitch_invoices_table: "{{ source('stitch_harvest_projects', 'invoices') }}"
   stg_harvest_projects_stitch_invoice_line_items_table: "{{ source('stitch_harvest_projects', 'invoice_line_items') }}"

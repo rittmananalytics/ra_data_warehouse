@@ -2,6 +2,8 @@
 {% if var("crm_warehouse_contact_sources") %}
 {% if 'xero_accounting' in var("crm_warehouse_contact_sources") %}
 
+{% if var("stg_xero_accounting_etl") == 'stitch' %}
+
 WITH xero_contacts as (
   {{ filter_stitch_relation(relation=var('stg_xero_accounting_stitch_contacts_table'),unique_column='contactid') }}
 ),
@@ -38,7 +40,7 @@ contacts as (
         cast(null as boolean) as contact_is_staff,
         cast(null as int64)           as contact_weekly_capacity,
         cast(null as int64)           as contact_default_hourly_rate,
-        cast(null as int64)           as ucontact_ost_rate,
+        cast(null as int64)           as contact_cost_rate,
         false                          as contact_is_active,
         cast(null as timestamp) as contact_created_date,
         contacts.updateddateutc as contact_last_modified_date
@@ -56,7 +58,56 @@ contacts as (
  group by 1,2,3,4,5,6,7,13,14,15,16,17,18,19,20,21,22,23,24,25
 )
 
-select * from contacts
+{% elif var("stg_xero_accounting_etl") == 'fivetran' %}
+
+with source as (
+  select *
+  from {{ var('stg_xero_accounting_fivetran_contacts_table') }}
+
+),
+      addresses as (SELECT contact_id, address_type, address_line_1, address_line_2, address_line_3, address_line_4, city, region, country, postal_code
+         FROM {{ var('stg_xero_accounting_fivetran_contact_address_table') }}
+
+),
+renamed as (
+ select
+     concat('{{ var('stg_xero_accounting_id-prefix') }}',contacts.contact_id) as contact_id,
+     contacts.first_name as contact_first_name,
+     contacts.last_name as contact_last_name,
+     cast(null as string) as contact_job_title,
+     coalesce(concat(contacts.first_name,' ',contacts.last_name),contacts.email_address) as contact_name,
+     contacts.email_address as contact_email,
+     cast(null as string) as company_phone,
+     string_agg(distinct addresses.address_line_1) as contact_address,
+     string_agg(distinct addresses.city) as contact_city,
+     string_agg(distinct addresses.region) as contact_state,
+     string_agg(distinct addresses.country) as contact_country,
+     string_agg(distinct addresses.postal_code) as contact_postcode_zip,
+     cast(null as string) as contact_company,
+     cast(null as string) as contact_website,
+     cast(null as string) as contact_company_id,
+     cast(null as string) as contact_owner_id,
+     contacts.contact_status as contact_lifecycle_stage,
+     cast(null as boolean)         as contact_is_contractor,
+     cast(null as boolean) as contact_is_staff,
+     cast(null as int64)           as contact_weekly_capacity,
+     cast(null as int64)           as contact_default_hourly_rate,
+     cast(null as int64)           as contact_cost_rate,
+     false                          as contact_is_active,
+     cast(null as timestamp) as contact_created_date,
+     timestamp(contacts.updated_date_utc) as contact_last_modified_date
+ from source as contacts
+ left outer join addresses as addresses
+ on contacts.contact_id = addresses.contact_id and addresses.address_type = 'STREET'
+ where concat(contacts.first_name,' ',contacts.last_name) is not null
+ group by 1,2,3,4,5,6,7,13,14,15,16,17,18,19,20,21,22,23,24,25)
+
+
+{% endif %}
+
+select * from renamed
+
+
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
