@@ -10,6 +10,7 @@ with source as (
 
 renamed as (
 
+    select
 
         id as account_id,
         parentid as parent_id,
