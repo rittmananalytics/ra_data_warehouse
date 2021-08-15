@@ -42,18 +42,18 @@ renamed as (
     a.event_id::varchar AS event_id,
     event_table_name AS event_type,
     a.time AS event_ts,
-    cast(null as varchar) AS event_details,
-    cast(NULL AS varchar) AS page_title,
-    cast(NULL AS varchar) AS page_url_path,
+     {{ cast(datatype='string') }} AS event_details,
+     {{ cast(datatype='string') }} AS page_title,
+     {{ cast(datatype='string') }} AS page_url_path,
     replace(
         {{ dbt_utils.get_url_host('referrer') }},
         'www.',
        ''
     )                           as referrer_host,
-    cast(NULL AS varchar) AS search,
-    cast(NULL AS varchar) AS page_url,
+     {{ cast(datatype='string') }} AS search,
+     {{ cast(datatype='string') }} AS page_url,
     {{ dbt_utils.get_url_host('landing_page') }} as page_url_host,
-    cast(NULL AS varchar) AS gclid,
+     {{ cast(datatype='string') }} AS gclid,
     s.utm_term AS utm_term,
     s.utm_content AS utm_content,
     s.utm_medium AS utm_medium,
@@ -62,7 +62,7 @@ renamed as (
     s.ip AS ip,
     a.user_id::varchar AS visitor_id,
     u."identity" AS user_id,
-    cast(null as varchar) AS device,
+     {{ cast(datatype='string') }} AS device,
     device as device_category,
     'intostudy.com' AS site
 FROM

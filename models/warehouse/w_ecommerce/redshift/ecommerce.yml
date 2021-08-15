@@ -200,7 +200,7 @@ models:
       - name: total_shipping_price_set
         description: The total shipping price set to the order.
 
-  - name: wh_customers_dim
+  - name: wh_ecommerce_customers_dim
     description: Each record represents a customer in Shopify.
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -247,7 +247,7 @@ models:
       - name: lifetime_total_amount
         description: The total amount of money (minus refunds) that the customer has spent across their order history.
 
-  - name: wh_products_dim
+  - name: wh_ecommerce_products_dim
     description: Each record represents a product in Shopify.
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -385,7 +385,7 @@ models:
       - name: image_id
         description: Image id of the product variant associated with the order line.
 
-  - name: wh_transactions_fact
+  - name: wh_ecommerce_transactions_fact
     description: Each record represents a transaction in Shopify.
     tests:
       - dbt_utils.unique_combination_of_columns:

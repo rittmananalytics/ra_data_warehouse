@@ -30,8 +30,8 @@ SELECT
     cast (null as string)     as company_description,
     cast (null as string)     as company_finance_status,
     cast (null as string)     as company_currency_code,
-    cast(null as timestamp)   as company_created_date,
-    cast(null as timestamp)   as company_last_modified_date
+     {{ cast(datatype='timestamp') }}   as company_created_date,
+     {{ cast(datatype='timestamp') }}   as company_last_modified_date
 FROM source
 )
 select * from renamed

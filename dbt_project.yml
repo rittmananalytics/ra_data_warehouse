@@ -18,6 +18,7 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
 
 on-run-start:
+    - "{% do create_schema(api.Relation.create(database=target.project, schema=generate_prefixed_target_name().strip() + '_logs')) %}"
     - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 
 on-run-end:
@@ -42,6 +43,13 @@ models:
           materialized: table
           schema: logs
 
+# fivetran models
+
+  shopify:
+    +enabled: false
+  shopify_source:
+    +enabled: false
+
 # seeds (reference files, loaded into tables) module settings
 seeds:
   ra_data_warehouse:
@@ -51,40 +59,68 @@ vars:
   crm_warehouse_company_sources: []
   crm_warehouse_contact_sources: []
   crm_warehouse_conversations_sources: []
-  marketing_warehouse_ad_campaign_sources: []
   marketing_warehouse_ad_campaign_performance_sources: []
-  marketing_warehouse_ad_performance_sources: []
-  marketing_warehouse_ad_group_sources: []
-  marketing_warehouse_ad_sources: []
+  marketing_warehouse_ad_performance_sources: ['facebook_ads']
+  marketing_warehouse_ad_campaign_sources: ['facebook_ads']
+  marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_sources: ['facebook_ads']
   marketing_warehouse_email_event_sources: []
   marketing_warehouse_email_list_sources: []
   marketing_warehouse_deal_sources: []
   projects_warehouse_delivery_sources: []
   projects_warehouse_timesheet_sources: []
   finance_warehouse_invoice_sources: []
+  finance_warehouse_currencies_sources: []
   finance_warehouse_transaction_sources: []
+  finance_warehouse_bank_transaction_sources: []
+  finance_warehouse_journal_sources: []
+  finance_warehouse_journal_line_sources: []
   finance_warehouse_payment_sources: []
   product_warehouse_event_sources: []
   subscriptions_warehouse_sources: []
+  dev_warehouse_git_sources: []
+  product_warehouse_usage_sources: []
+  crm_warehouse_nps_sources: []
+
+  stg_git_repos_id-prefix: github-
+  stg_git_repos_etl: fivetran
+  stg_git_repos_fivetran_database: ra-warehouse-dev
+  stg_git_repos_fivetran_schema: fivetran_github
+
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch
-  stg_asana_projects_stitch_database:
-  stg_asana_projects_stitch_schema:
-  stg_asana_projects_staff_email_domain: .com
+  stg_asana_projects_stitch_database: ra-warehouse-dev
+  stg_asana_projects_stitch_schema: stitch_asana
+  stg_asana_projects_staff_email_domain: rittmananalytics.com
   stg_asana_projects_stitch_workspaces_table: "{{ source('stitch_asana_projects', 'workspaces') }}"
   stg_asana_projects_stitch_projects_table: "{{ source('stitch_asana_projects', 'projects') }}"
   stg_asana_projects_stitch_tasks_table: "{{ source('stitch_asana_projects', 'tasks') }}"
   stg_asana_projects_stitch_users_table: "{{ source('stitch_asana_projects', 'users') }}"
 
   stg_looker_usage_stats_id-prefix: looker-
-  stg_looker_usage_database:
-  stg_looker_usage_schema:
-  stg_looker_usage_stats_table:
+  stg_looker_usage_database: ra-warehouse-dev
+  stg_looker_usage_schema: fivetran_email
+  stg_looker_usage_stats_table: usage_stats
+
+  stg_gcp_billing_product_usage_id-prefix: gcp-billing-
+  stg_gcp_billing_product_usage_database: ra-warehouse-dev
+  stg_gcp_billing_product_usage_schema: gcp_billing_export
+  stg_gcp_billing_product_usage_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
+  stg_gcp_billing_products_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
+  stg_gcp_billing_companies_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
+
+  stg_bigquery_usage_id-prefix: bigquery-log-
+  stg_bigquery_usage_database: ra-warehouse-dev
+  stg_bigquery_usage_schema: bigquery_log_export
+  stg_bigquery_usage_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
+  stg_bigquery_products_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
+  stg_bigquery_companies_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
+
 
   stg_facebook_ads_id-prefix: fbads-
-  stg_facebook_ads_etl: segment
-  stg_facebook_ads_stitch_database:
+  stg_facebook_ads_etl: stitch
+  stg_facebook_ads_stitch_database: ra-warehouse-dev
   stg_facebook_ads_stitch_schema: stitch_facebook_ads
   stg_facebook_ads_stitch_ad_performance_table: "{{ source('stitch_facebook_ads', 'insights') }}"
   stg_facebook_ads_stitch_ad_performance_table_snowflake: "{{ source('stitch_facebook_ads', 'ads_insights') }}"
@@ -92,7 +128,7 @@ vars:
   stg_facebook_ads_stitch_ad_groups_table_snowflake: "{{ source('stitch_facebook_ads', 'adsets') }}"
   stg_facebook_ads_stitch_ads_table: "{{ source('stitch_facebook_ads', 'ads') }}"
   stg_facebook_ads_stitch_campaigns_table: "{{ source('stitch_facebook_ads', 'campaigns') }}"
-  stg_facebook_ads_segment_database:
+  stg_facebook_ads_segment_database: ra-warehouse-dev
   stg_facebook_ads_segment_schema: facebook_ads
   stg_facebook_ads_segment_ad_performance_table: "{{ source('segment_facebook_ads', 'insights') }}"
   stg_facebook_ads_segment_ad_groups_table: "{{ source('stitch_facebook_ads', 'ad_adsets') }}"
@@ -101,11 +137,14 @@ vars:
 
   stg_google_ads_id-prefix: gads-
   stg_google_ads_etl: stitch
-  stg_google_ads_stitch_database:
+  stg_google_ads_stitch_database: ra-warehouse-dev
   stg_google_ads_stitch_schema: stitch_google_ads
   stg_google_ads_stitch_campaign_performance_table: "{{ source('stitch_google_ads', 'CAMPAIGN_PERFORMANCE_REPORT') }}"
   stg_google_ads_stitch_campaigns_table: "{{ source('stitch_google_ads', 'campaigns') }}"
-  stg_google_ads_segment_database:
+  stg_google_ads_stitch_ads_table: "{{ source('stitch_google_ads', 'ads') }}"
+  stg_google_ads_stitch_ad_groups_table: "{{ source('stitch_google_ads', 'ad_groups') }}"
+
+  stg_google_ads_segment_database: ra-warehouse-dev
   stg_google_ads_segment_schema: google_ads
   stg_google_ads_segment_campaign_performance_table: "{{ source('segment_google_ads', 'campaign_performance_reports') }}"
   stg_google_ads_segment_ad_performance_table: "{{ source('segment_google_ads', 'ad_performance_reports') }}"
@@ -116,36 +155,36 @@ vars:
 
   stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
-  stg_segment_events_segment_database:
-  stg_segment_events_segment_schema:
+  stg_segment_events_segment_database: ra-warehouse-dev
+  stg_segment_events_segment_schema: company_website
   stg_segment_events_segment_tracks_table: "{{ source('segment', 'tracks') }}"
   stg_segment_events_segment_pages_table: "{{ source('segment', 'pages') }}"
   stg_segment_events_segment_users_table: "{{ source('segment', 'users') }}"
   stg_segment_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
-  stg_heap_events_id-prefix: heap-
-  stg_heap_events_etl: heap
-  stg_heap_events_heap_database:
-  stg_heap_events_heap_schema: heap
-  stg_heap_events_heap_tracks_table: "{{ source('heap', 'tracks') }}"
-  stg_heap_events_heap_pages_table: "{{ source('heap', 'pages') }}"
-  stg_heap_events_heap_users_table: "{{ source('heap', 'users') }}"
-  stg_heap_events_heap_sessions_table: "{{ source('heap', 'sessions') }}"
-  stg_heap_events_heap_user_migrations_table: "{{ source('heap', 'user_migrations') }}"
+  stg_rudderstack_events_id-prefix: rudderstack-
+  stg_rudderstack_events_etl: rudderstack
+  stg_rudderstack_events_rudderstack_database: ra-warehouse-dev
+  stg_rudderstack_events_rudderstack_schema: rudderstack_ra_website
+  stg_rudderstack_events_rudderstack_tracks_table: "{{ source('rudderstack', 'tracks') }}"
+  stg_rudderstack_events_rudderstack_pages_table: "{{ source('rudderstack', 'pages') }}"
+  stg_rudderstack_events_rudderstack_users_table: "{{ source('rudderstack', 'users') }}"
+  stg_rudderstack_events_site: rittmananalytics.com
+  enable_event_type_mapping: true
 
   stg_baremetrics_analytics_id-prefix: baremetrics-
-  stg_baremetrics_analytics_etl:
+  stg_baremetrics_analytics_etl: ra-warehouse-dev
   stg_baremetrics_analytics_etl: segment
   stg_baremetrics_analytics_segment_schema: baremetrics
   stg_baremetrics_analytics_segment_plan_breakdown_table: plan_breakdown
 
-  stg_harvest_projects_id-prefix:
-  stg_harvest_projects_etl:
-  stg_harvest_projects_stitch_database:
-  stg_harvest_projects_stitch_schema:
-  stg_harvest_projects_staff_email_domain:
-  stg_harvest_projects_stitch_companies_table:
+  stg_harvest_projects_id-prefix: harvest-
+  stg_harvest_projects_etl: stitch
+  stg_harvest_projects_stitch_database: ra-warehouse-dev
+  stg_harvest_projects_stitch_schema: stitch_harvest
+  stg_harvest_projects_staff_email_domain: rittmananalytics.com
+  stg_harvest_projects_stitch_companies_table: "{{ source('stitch_harvest_projects', 'companies') }}"
   stg_harvest_projects_stitch_contacts_table: "{{ source('stitch_harvest_projects', 'contacts') }}"
   stg_harvest_projects_stitch_invoices_table: "{{ source('stitch_harvest_projects', 'invoices') }}"
   stg_harvest_projects_stitch_invoice_line_items_table: "{{ source('stitch_harvest_projects', 'invoice_line_items') }}"
@@ -159,9 +198,9 @@ vars:
   stg_harvest_projects_stitch_expenses_table: "{{ source('stitch_harvest_projects', 'expenses') }}"
 
   stg_hubspot_crm_id-prefix: hubspot-
-  stg_hubspot_crm_stitch_database:
+  stg_hubspot_crm_stitch_database: ra-warehouse-dev
   stg_hubspot_crm_stitch_schema: stitch_hubspot
-  stg_hubspot_crm_fivetran_database:
+  stg_hubspot_crm_fivetran_database: ra-warehouse-dev
   stg_hubspot_crm_fivetran_schema: fivetran_hubspot_euwest2
   stg_hubspot_crm_etl: stitch
   stg_hubspot_crm_stitch_companies_table: "{{ source('stitch_hubspot_crm', 'companies') }}"
@@ -183,8 +222,9 @@ vars:
   stg_hubspot_crm_fivetran_engagements_table: "{{ source('fivetran_hubspot_crm', 'engagements') }}"
 
 
+
   stg_hubspot_email_id-prefix: hubspot-
-  stg_hubspot_email_stitch_database:
+  stg_hubspot_email_stitch_database: ra-warehouse-dev
   stg_hubspot_email_stitch_schema: stitch_hubspot
   stg_hubspot_email_etl: stitch
   stg_hubspot_email_stitch_email_events_table: "{{ source('stitch_hubspot_email', 'email_events') }}"
@@ -192,7 +232,7 @@ vars:
 
   stg_intercom_messaging_id-prefix: intercom-
   stg_intercom_messaging_etl: stitch
-  stg_intercom_messaging_stitch_database:
+  stg_intercom_messaging_stitch_database: ra-warehouse-dev
   stg_intercom_messaging_stitch_schema: stitch_intercom
   stg_intercom_messaging_stitch_contacts_table: contacts
   stg_intercom_messaging_stitch_conversations_table: conversations
@@ -200,9 +240,9 @@ vars:
 
   stg_jira_projects_id-prefix: jira-
   stg_jira_projects_etl: stitch
-  stg_jira_projects_stitch_database:
+  stg_jira_projects_stitch_database: ra-warehouse-dev
   stg_jira_projects_stitch_schema: stitch_jira
-  stg_jira_projects_staff_email_domain:
+  stg_jira_projects_staff_email_domain: rittmananalytics.com
   stg_jira_projects_stitch_projects_table: "{{ source('stitch_jira_projects', 'projects') }}"
   stg_jira_projects_stitch_project_types_table: "{{ source('stitch_jira_projects', 'project_types') }}"
   stg_jira_projects_stitch_project_categories_table: "{{ source('stitch_jira_projects', 'project_categories') }}"
@@ -212,7 +252,7 @@ vars:
 
   stg_mailchimp_email_id-prefix: mailchimp-
   stg_mailchimp_email_etl: stitch
-  stg_mailchimp_email_stitch_database:
+  stg_mailchimp_email_stitch_database: ra-warehouse-dev
   stg_mailchimp_email_stitch_schema: stitch_mailchimp
   stg_mailchimp_email_stitch_list_members_table: "{{ source('stitch_mailchimp_email', 'list_members') }}"
   stg_mailchimp_email_stitch_reports_email_activity_table: "{{ source('stitch_mailchimp_email', 'reports_email_activity') }}"
@@ -220,22 +260,51 @@ vars:
   stg_mailchimp_email_stitch_campaigns_table: "{{ source('stitch_mailchimp_email', 'campaigns') }}"
 
   stg_mixpanel_events_id-prefix: mixpanel-
-  stg_mixpanel_events_stitch_database:
-  stg_mixpanel_events_fivetran_database:
+  stg_mixpanel_events_stitch_database: ra-warehouse-dev
+  stg_mixpanel_events_fivetran_database: ra-warehouse-dev
   stg_mixpanel_events_stitch_schema: mixpanel_stitch
   stg_mixpanel_events_fivetran_schema: fivetran_mixpanel
-  stg_mixpanel_events_etl: fivetran
+  stg_mixpanel_events_etl: stitch
   stg_mixpanel_events_fivetran_event_table: "{{ source('fivetran_mixpanel_events', 'event') }}"
   stg_mixpanel_events_stitch_event_table: "{{ source('stitch_mixpanel_events', 'event') }}"
   stg_mixpanel_events_site: rittmananalytics.com
 
+  stg_heap_events_id-prefix: heap-
+  stg_heap_events_etl: heap
+  stg_heap_events_heap_database: ra-warehouse-dev
+  stg_heap_events_heap_schema: heap
+  stg_heap_events_heap_tracks_table: "{{ source('heap', 'tracks') }}"
+  stg_heap_events_heap_pages_table: "{{ source('heap', 'pages') }}"
+  stg_heap_events_heap_users_table: "{{ source('heap', 'users') }}"
+  stg_heap_events_heap_sessions_table: "{{ source('heap', 'sessions') }}"
+  stg_heap_events_heap_user_migrations_table: "{{ source('heap', 'user_migrations') }}"
 
+  stg_heap_events_site: rittmananalytics.com
+  enable_event_type_mapping: true
 
+  stg_shopify_ecommerce_id-prefix: shopify-
+  stg_shopify_ecommerce_etl: fivetran
+  stg_shopify_ecommerce_fivetran_database: ra-warehouse-dev
+  stg_shopify_ecommerce_fivetran_schema: shopify
+  stg_shopify_ecommerce_fivetran_customer_tags_table: "{{ source('fivetran_shopify', 'customer_tag') }}"
+  stg_shopify_ecommerce_fivetran_order_tags_table: "{{ source('fivetran_shopify', 'order_tag') }}"
 
+  stg_segment_shopify_events_id-prefix: segment_shopify-
+  stg_segment_shopify_events_etl: segment
+  stg_segment_shopify_events_segment_database: ra-warehouse-dev
+  stg_segment_shopify_events_segment_schema: production_shopify_by_littledata
+  stg_segment_shopify_events_segment_tracks_table: "{{ source('segment_shopify', 'tracks') }}"
+  stg_segment_shopify_events_segment_pages_table: "{{ source('segment_shopify', 'pages') }}"
+  stg_segment_shopify_events_segment_users_table: "{{ source('segment_shopify', 'users') }}"
+  stg_segment_shopify_events_segment_checkout_started_table: "{{ source('segment_shopify', 'checkout_started') }}"
+  stg_segment_shopify_events_segment_order_completed_table: "{{ source('segment_shopify', 'order_completed') }}"
+  stg_segment_shopify_events_segment_order_refunded_table: "{{ source('segment_shopify', 'order_refunded') }}"
+  stg_segment_shopify_events_segment_order_deleted_table: "{{ source('segment_shopify', 'order_deleted') }}"
+  stg_segment_shopify_events_site: rittmananalytics.com
 
   stg_xero_accounting_id-prefix: xero-
   stg_xero_accounting_etl: stitch
-  stg_xero_accounting_stitch_database:
+  stg_xero_accounting_stitch_database: ra-warehouse-dev
   stg_xero_accounting_stitch_schema: xero
   stg_xero_accounting_stitch_accounts_table: "{{ source('stitch_xero_accounting', 'accounts') }}"
   stg_xero_accounting_stitch_payments_table: "{{ source('stitch_xero_accounting', 'payments') }}"
@@ -245,16 +314,25 @@ vars:
   stg_xero_accounting_stitch_currencies_table: "{{ source('stitch_xero_accounting', 'currencies') }}"
   stg_xero_accounting_stitch_expense_claims_table: "{{ source('stitch_xero_accounting', 'expense_claims') }}"
   stg_xero_accounting_stitch_invoices_table: "{{ source('stitch_xero_accounting', 'invoices') }}"
+  stg_xero_accounting_fivetran_database: ra-warehouse-dev
+  stg_xero_accounting_fivetran_schema: fivetran_xero
+  stg_xero_accounting_fivetran_accounts_table: "{{ source('fivetran_xero_accounting', 'account') }}"
+  stg_xero_accounting_fivetran_payments_table: "{{ source('fivetran_xero_accounting', 'payment') }}"
+  stg_xero_accounting_fivetran_categories_table: "{{ source('fivetran_xero_accounting', 'tracking_category') }}"
+  stg_xero_accounting_fivetran_bank_transactions_table: "{{ source('fivetran_xero_accounting', 'bank_transaction') }}"
+  stg_xero_accounting_fivetran_bank_transaction_line_items_table: "{{ source('fivetran_xero_accounting', 'bank_transaction_line_items') }}"
+  stg_xero_accounting_fivetran_journal_table: "{{ source('fivetran_xero_accounting', 'journal') }}"
+  stg_xero_accounting_fivetran_journal_line_table: "{{ source('fivetran_xero_accounting', 'journal_line') }}"
+  stg_xero_accounting_fivetran_contacts_table: "{{ source('fivetran_xero_accounting', 'contact') }}"
+  stg_xero_accounting_fivetran_contact_address_table: "{{ source('fivetran_xero_accounting', 'contact_address') }}"
 
-  stg_enrichment_id-prefix: clearbit-
-  stg_enrichment_clearbit_schema: enrichment
-  stg_enrichment_clearbit_contacts_table: contacts_companies
-  stg_enrichment_clearbit_companies_table: contacts_companies
-  stg_enrichment_geolite_city_table: company_website.geolite_city_bq_b2b
+  stg_xero_accounting_fivetran_currency_table: "{{ source('fivetran_xero_accounting', 'currency') }}"
+  stg_xero_accounting_fivetran_expense_claims_table: "{{ source('fivetran_xero_accounting', 'expense_claim') }}"
+  stg_xero_accounting_fivetran_invoices_table: "{{ source('fivetran_xero_accounting', 'invoice') }}"
 
   stg_stripe_payments_id-prefix: stripe-
   stg_stripe_payments_etl: stitch
-  stg_stripe_payments_stitch_database:
+  stg_stripe_payments_stitch_database: ra-warehouse-dev
   stg_stripe_payments_stitch_schema: stitch_stripe
   stg_stripe_payments_stitch_balance_transactions_table: "{{ source('stitch_stripe_payments', 'balance_transactions') }}"
   stg_stripe_payments_stitch_charges_table: "{{ source('stitch_stripe_payments', 'charges') }}"
@@ -264,8 +342,8 @@ vars:
   stg_stripe_payments_stitch_charges_table: "{{ source('stitch_stripe_payments', 'charges') }}"
 
   stg_stripe_subscriptions_id-prefix: stripe-
-  stg_stripe_subscriptions_etl: segment
-  stg_stripe_subscriptions_segment_database:
+  stg_stripe_subscriptions_etl: stitch
+  stg_stripe_subscriptions_segment_database: ra-warehouse-dev
   stg_stripe_subscriptions_segment_schema: stripe
   stg_stripe_subscriptions_segment_customers_table: "{{ source('segment_stripe_subscriptions', 'customers') }}"
   stg_stripe_subscriptions_segment_accounts_table: "{{ source('segment_stripe_subscriptions', 'accounts') }}"
@@ -281,6 +359,22 @@ vars:
   stg_stripe_subscriptions_segment_events_table: "{{ source('segment_stripe_subscriptions', 'eventsplans') }}"
   stg_stripe_subscriptions_segment_payout_transactions_table: "{{ source('segment_stripe_subscriptions', 'payout_transactions') }}"
   stg_stripe_subscriptions_segment_payouts_table: "{{ source('segment_stripe_subscriptions', 'payouts') }}"
+  stg_stripe_subscriptions_stitch_database: ra-warehouse-dev
+  stg_stripe_subscriptions_stitch_schema: stripe
+  stg_stripe_subscriptions_stitch_customers_table: "{{ source('stitch_stripe_subscriptions', 'customers') }}"
+  stg_stripe_subscriptions_stitch_accounts_table: "{{ source('sstitch_stripe_subscriptions', 'accounts') }}"
+  stg_stripe_subscriptions_stitch_cards_table: "{{ source('stitch_stripe_subscriptions', 'cards') }}"
+  stg_stripe_subscriptions_stitch_coupons_table: "{{ source('stitch_stripe_subscriptions', 'coupons') }}"
+  stg_stripe_subscriptions_stitch_discounts_table: "{{ source('stitch_stripe_subscriptions', 'discounts') }}"
+  stg_stripe_subscriptions_stitch_invoices_table: "{{ source('stitch_stripe_subscriptions', 'invoices') }}"
+  stg_stripe_subscriptions_stitch_plans_table: "{{ source('stitch_stripe_subscriptions', 'plans') }}"
+  stg_stripe_subscriptions_stitch_products_table: "{{ source('stitch_stripe_subscriptions', 'products') }}"
+  stg_stripe_subscriptions_stitch_subscriptions_table: "{{ source('stitch_stripe_subscriptions', 'subscriptions') }}"
+  stg_stripe_subscriptions_stitch_balance_transactions_table: "{{ source('stitch_stripe_subscriptions', 'balance_transactions') }}"
+  stg_stripe_subscriptions_stitch_charges_table: "{{ source('stitch_stripe_subscriptions', 'charges') }}"
+  stg_stripe_subscriptions_stitch_events_table: "{{ source('stitch_stripe_subscriptions', 'eventsplans') }}"
+  stg_stripe_subscriptions_stitch_payout_transactions_table: "{{ source('stitch_stripe_subscriptions', 'payout_transactions') }}"
+  stg_stripe_subscriptions_stitch_payouts_table: "{{ source('stitch_stripe_subscriptions', 'payouts') }}"
 
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
@@ -292,3 +386,38 @@ vars:
 
   enable_companies_merge_file: true
   enable_ip_geo_enrichment: false
+
+  shopify:
+    shopify_customer:           "{{ ref('stg_shopify__customer') }}"
+    shopify_order:              "{{ ref('stg_shopify__order') }}"
+    shopify_order_line:         "{{ ref('stg_shopify__order_line') }}"
+    shopify_order_line_refund:  "{{ ref('stg_shopify__order_line_refund') }}"
+    shopify_product:            "{{ ref('stg_shopify__product') }}"
+    shopify_product_variant:    "{{ ref('stg_shopify__product_variant') }}"
+    shopify_transaction:        "{{ ref('stg_shopify__transaction') }}"
+    shopify_refund:             "{{ ref('stg_shopify__refund') }}"
+    shopify_order_adjustment:   "{{ ref('stg_shopify__order_adjustment') }}"
+
+  shopify_source:
+    customer_source:                        "{{ source('shopify','customer') }}"
+    order_line_refund_source:               "{{ source('shopify','order_line_refund') }}"
+    order_line_source:                      "{{ source('shopify','order_line') }}"
+    order_source:                           "{{ source('shopify','order') }}"
+    product_source:                         "{{ source('shopify','product') }}"
+    product_variant_source:                 "{{ source('shopify','product_variant') }}"
+    transaction_source:                     "{{ source('shopify','transaction') }}"
+    refund_source:                          "{{ source('shopify','refund') }}"
+    order_adjustment_source:                "{{ source('shopify','order_adjustment') }}"
+
+    customer_pass_through_columns:          []
+    order_line_refund_pass_through_columns: []
+    order_line_pass_through_columns:        []
+    order_pass_through_columns:             []
+    product_pass_through_columns:           []
+    product_variant_pass_through_columns:   []
+    transaction_pass_through_columns:       []
+
+
+
+  dbt_utils_dispatch_list: [spark_utils, fivetran_utils]
+  fivetran_utils_dispatch_list: [spark_utils]

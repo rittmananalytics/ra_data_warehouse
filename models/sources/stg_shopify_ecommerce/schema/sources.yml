@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: fivetran_shopify
+    database: "{{ var('stg_shopify_ecommerce_fivetran_database') }}"
+    schema: "{{ var('stg_shopify_ecommerce_fivetran_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: customer_tag
+      - name: order_tag

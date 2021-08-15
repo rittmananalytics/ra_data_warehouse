@@ -17,7 +17,7 @@ SELECT
     currency as plan_currency,
     is_deleted as plan_is_deleted,
     created   as plan_created_ts,
-    cast(null as timestamp) as plan_last_modified_ts
+     {{ cast(datatype='timestamp') }} as plan_last_modified_ts
 FROM
   source
 )

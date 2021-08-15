@@ -14,7 +14,7 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        coalesce(concat('{{ var('stg_jira_projects_id-prefix') }}',fields.assignee.accountid),concat('{{ var('stg_jira_projects_id-prefix') }}','-999')) as task_assignee_user_id,
        fields.summary as task_name,
        fields.issuetype.name as task_type,
-       cast(null as string) as task_description,
+       {{ cast() }} as task_description,
        concat('{{ var('stg_jira_projects_jira_url') }}','/software/projects/',fields.project.key,'/issues/', key) as task_url,
        fields.status.name	 as task_status,
        case when fields.status.name	 = 'To Do' then 1
