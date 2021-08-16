@@ -37,7 +37,7 @@ with source as (
         cast(protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatus.error.code as string) as product_usage_error_code,
         cast(protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobStatus.error.message as string) as product_usage_error_status,
         protopayload_auditlog.servicedata_v1_bigquery.jobCompletedEvent.job.jobName.jobId as product_usage_job_id,
-        {{ cast() }} as contact_id
+        cast(null as {{ dbt_utils.type_string() }}) as contact_id
 
         FROM
           source

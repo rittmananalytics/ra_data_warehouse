@@ -21,11 +21,11 @@ on u.id = n.user_id
 renamed as (
     select
 
-       {{ cast('id','string') }} as contact_id,
+       cast(id as {{ dbt_utils.type_string() }}) as contact_id,
        first_name as first_name,
        last_name as last_name,
        concat(concat(first_name,' '),last_name) as contact_name,
-        {{ cast(datatype='string') }} contact_job_title,
+        cast(null as {{ dbt_utils.type_string() }}) contact_job_title,
        email as contact_email,
        phone as contact_phone,
        address_street contact_address,
@@ -33,11 +33,11 @@ renamed as (
        address_state contact_state,
        address_country as contact_country,
        address_postal_code contact_postcode_zip,
-        {{ cast(datatype='string') }} contact_company,
-        {{ cast(datatype='string') }} contact_website,
-        {{ cast(datatype='string') }} as contact_company_id,
-        {{ cast(datatype='string') }} as contact_owner_id,
-        {{ cast(datatype='string') }} as contact_lifecycle_stage,
+        cast(null as {{ dbt_utils.type_string() }}) contact_company,
+        cast(null as {{ dbt_utils.type_string() }}) contact_website,
+        cast(null as {{ dbt_utils.type_string() }}) as contact_company_id,
+        cast(null as {{ dbt_utils.type_string() }}) as contact_owner_id,
+        cast(null as {{ dbt_utils.type_string() }}) as contact_lifecycle_stage,
        cast(null as boolean) as contact_is_staff,
        state='enabled'                          as contact_is_active,
        coalesce((REGEXP_COUNT ( tags, 'PRO,')>0 or REGEXP_COUNT ( tags, 'PRO_25,')>0 or REGEXP_COUNT ( tags, 'PRO_20,')>0
@@ -50,7 +50,7 @@ renamed as (
         non_sample_orders as contact_non_sample_orders,
         sample_orders as contact_sample_orders,
        created_at as contact_created_date,
-        {{ cast(datatype='timestamp') }} as contact_last_modified_date
+        cast(null as {{ dbt_utils.type_timestamp() }}) as contact_last_modified_date
     from source
 )
 select * from renamed

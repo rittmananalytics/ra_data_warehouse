@@ -5,7 +5,7 @@
 {% if var("stg_facebook_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(source('segment_facebook_ads', 'campaigns')) }}
+  {{ filter_segment_relation(source('segment_facebook_ads_2', 'campaigns')) }}
 ),
 renamed as (
 SELECT
@@ -16,7 +16,7 @@ SELECT
   start_time                      as ad_campaign_start_date,
   stop_time                       as ad_campaign_end_date,
   'Facebook Ads'                  as ad_network,
-  {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+  {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
 FROM
   source)
@@ -25,7 +25,7 @@ FROM
 
 with source as (
 
-  {{ filter_stitch_relation(relation=source('stitch_facebook_ads','campaigns'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_facebook_ads_2','campaigns'),unique_column='id') }}
 
 ),
 renamed as (
@@ -38,7 +38,7 @@ renamed as (
     start_time                as ad_campaign_start_date,
      cast(null as {{ dbt_utils.type_timestamp() }})   as ad_campaign_end_date,
     'Facebook Ads'            as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
 
     from source

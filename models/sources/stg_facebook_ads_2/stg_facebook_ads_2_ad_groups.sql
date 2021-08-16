@@ -1,11 +1,11 @@
 {% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("marketing_warehouse_ad_group_sources") %}
-{% if 'facebook_ads' in var("marketing_warehouse_ad_group_sources") %}
+{% if 'facebook_ads_2' in var("marketing_warehouse_ad_group_sources") %}
 
 {% if var("stg_facebook_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(source('segment_facebook_ads', 'ad_sets')) }}
+  {{ filter_segment_relation(source('segment_facebook_ads_2', 'ad_sets')) }}
 ),
 renamed as (
   SELECT cast(id as {{ dbt_utils.type_string() }})  as ad_group_id,
@@ -16,14 +16,14 @@ renamed as (
          cast(null as {{ dbt_utils.type_timestamp() }}) as adset_end_ts,
          cast(null as {{ dbt_utils.type_timestamp() }}) as adset_start_ts,
          'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+         {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
   FROM source )
 
 {% elif var("stg_facebook_ads_etl") == 'stitch' %}
 
 WITH source AS (
-{{ filter_stitch_relation(relation=source('stitch_facebook_ads', 'adsets'),unique_column='id') }}
+{{ filter_stitch_relation(relation=source('stitch_facebook_ads_2', 'adsets'),unique_column='id') }}
 
 ),
 renamed as (
@@ -36,7 +36,7 @@ renamed as (
          end_time as adset_end_ts,
          start_time as adset_start_ts,
          'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+         {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
   FROM source
 

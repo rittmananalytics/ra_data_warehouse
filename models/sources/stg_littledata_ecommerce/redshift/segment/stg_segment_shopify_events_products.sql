@@ -29,7 +29,16 @@ select   json_extract_path_text(replace(replace(products,'[',''),']',''), 'sku')
 from
    products
 group by 1,2,3,4,5,6,7,8,9,10)
-select md5(concat(concat(concat(shopify_product_id::varchar,shopify_variant_id::varchar),category::varchar),variant::varchar)) as product_uid,
+select {{ dbt_utils.hash('concat(
+														concat(
+															concat(
+																cast(shopify_product_id as dbt_utils.type_string() ),
+																cast(shopify_variant_id as dbt_utils.type_string() )
+															),
+															cast(category as dbt_utils.type_string() )
+														),
+														cast(variant as  dbt_utils.type_string() )
+													)') }} as product_uid,
        *
 from products_deduped
 order by 3,4,9

@@ -11,16 +11,16 @@ renamed as (
   email as customer_email,
   description as customer_description,
   concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as customer_alternative_id,
-  {{ cast() }} as customer_plan,
+  cast(null as {{ dbt_utils.type_string() }}) as customer_plan,
   metadata_source as customer_source,
-  {{ cast() }} as customer_type,
-  {{ cast() }} as customer_industry,
-  {{ cast() }} as customer_currency,
+  cast(null as {{ dbt_utils.type_string() }}) as customer_type,
+  cast(null as {{ dbt_utils.type_string() }}) as customer_industry,
+  cast(null as {{ dbt_utils.type_string() }}) as customer_currency,
   cast(null as boolean) as customer_is_enterprise,
   cast(null as boolean) as customer_is_delinquent,
   cast(null as boolean) as customer_is_deleted,
-   {{ cast(datatype='timestamp') }} as customer_created_date,
-   {{ cast(datatype='timestamp') }} as customer_last_modified_date
+   cast(null as {{ dbt_utils.type_timestamp() }}) as customer_created_date,
+   cast(null as {{ dbt_utils.type_timestamp() }}) as customer_last_modified_date
 from source
 )
 select * from renamed
