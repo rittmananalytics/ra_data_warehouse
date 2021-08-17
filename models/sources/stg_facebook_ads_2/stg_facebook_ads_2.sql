@@ -5,7 +5,7 @@
 {% if var("stg_facebook_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(source('segment_facebook_ads', 'ads')) }}
+  {{ filter_segment_relation(source('segment_facebook_ads_2', 'ads')) }}
 ),
 renamed as (
 SELECT
@@ -21,7 +21,7 @@ SELECT
       utm_medium as ad_utm_medium,
       utm_source as ad_utm_source,
       'Facebook Ads' as ad_network,
-      {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+      {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
 FROM
   source)
@@ -29,7 +29,7 @@ FROM
 {% elif var("stg_facebook_ads_etl") == 'stitch' %}
 
 WITH source AS (
-  {{ filter_stitch_relation(relation=source('stitch_facebook_ads', 'ads'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_facebook_ads_2', 'ads'),unique_column='id') }}
 ),
 renamed as (
 
@@ -46,7 +46,7 @@ renamed as (
     cast(null as {{ dbt_utils.type_string() }})as ad_utm_medium,
     cast(null as {{ dbt_utils.type_string() }}) as ad_utm_source,
     'Facebook Ads' as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    {{ tenant_name(var("stg_facebook_ads_2_tenant_name")) }}
 
 
     from source

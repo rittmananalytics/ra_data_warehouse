@@ -9,17 +9,17 @@ with source as (
 ),
 renamed as (
 SELECT
-      {{ cast('id','string') }}          as ad_id,
+      cast(id as {{ dbt_utils.type_string() }})          as ad_id,
       status      as ad_status,
       type        as ad_type,
       final_urls  as ad_final_urls,
-      cast(ad_group_id as string) as ad_group_id,
-      {{ cast() }} as ad_bid_type,
-      {{ cast() }}  as ad_utm_parameters,
-      {{ cast() }}  as ad_utm_campaign,
-      {{ cast() }}  as ad_utm_content,
-      {{ cast() }}  as ad_utm_medium,
-      {{ cast() }}  as ad_utm_source,
+      cast(ad_group_id) as {{ dbt_utils.type_string() }}) as ad_group_id,
+      cast(null as {{ dbt_utils.type_string() }}) as ad_bid_type,
+      cast(null as {{ dbt_utils.type_string() }})  as ad_utm_parameters,
+      cast(null as {{ dbt_utils.type_string() }})  as ad_utm_campaign,
+      cast(null as {{ dbt_utils.type_string() }})  as ad_utm_content,
+      cast(null as {{ dbt_utils.type_string() }})  as ad_utm_medium,
+      cast(null as {{ dbt_utils.type_string() }})  as ad_utm_source,
       'Google Ads' as ad_network
 FROM
   source)

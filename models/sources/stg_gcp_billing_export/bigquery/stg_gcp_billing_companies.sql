@@ -33,8 +33,8 @@ with source as (
          cast (null as string) AS company_twitterhandle,
          cast (null as string) AS company_description,
          cast (null as string) as company_finance_status,
-          {{ cast(datatype='timestamp') }} as company_created_date,
-          {{ cast(datatype='timestamp') }} as company_last_modified_date
+          cast(null as {{ dbt_utils.type_timestamp() }}) as company_created_date,
+          cast(null as {{ dbt_utils.type_timestamp() }}) as company_last_modified_date
   FROM source
   GROUP BY 1)
 SELECT

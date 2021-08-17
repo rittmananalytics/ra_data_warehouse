@@ -9,7 +9,7 @@ with source as (
 ),
 renamed as (
   SELECT
-  {{ cast() }} as list_id,
+  cast(null as {{ dbt_utils.type_string() }}) as list_id,
   concat('{{ var('stg_hubspot_email_id-prefix') }}',cast(emailcampaignid as string)) as ad_campaign_id,
   cast(contact_id as string) as contact_id,
   created as event_ts,

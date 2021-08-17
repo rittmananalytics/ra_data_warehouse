@@ -44,7 +44,7 @@ renamed as
     NULL AS ad_campaign_avg_cost,
     NULL AS ad_campaign_avg_time_on_site,
     NULL AS ad_campaign_bounce_rate,
-    {{ cast() }} AS ad_campaign_status,
+    cast(null as {{ dbt_utils.type_string() }}) AS ad_campaign_status,
     NULL AS ad_campaign_total_assisted_conversions,
     total_clicks AS ad_campaign_total_clicks,
     NULL AS ad_campaign_total_conversion_value,

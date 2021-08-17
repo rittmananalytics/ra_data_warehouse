@@ -34,7 +34,7 @@ renamed as (
         cast (null as string) AS company_description,
         contacts.contactstatus as company_finance_status,
         cast (null as string)     as company_currency_code,
-         {{ cast(datatype='timestamp') }} as company_created_date,
+         cast(null as {{ dbt_utils.type_timestamp() }}) as company_created_date,
         contacts.updateddateutc as company_last_modified_date
  from source contacts left outer join addresses as addresses on contacts.contactid = addresses.contactid and addresses.addresstype = 'STREET'
  left outer join phones as mobilephone on contacts.contactid = mobilephone.contactid and mobilephone.phonetype = 'MOBILE'
@@ -63,7 +63,7 @@ renamed as (
         string_agg(distinct region) as company_state,
         string_agg(distinct country) as company_country,
         string_agg(distinct postal_code) as company_zip,
-        {{ cast() }} as company_phone,
+        cast(null as {{ dbt_utils.type_string() }}) as company_phone,
         cast (null as string) AS company_website,
         cast (null as string) AS company_industry,
         cast (null as string) AS company_linkedin_company_page,
@@ -72,7 +72,7 @@ renamed as (
         cast (null as string) AS company_description,
         contact_status as company_finance_status,
         cast (null as string)     as company_currency_code,
-         {{ cast(datatype='timestamp') }} as company_created_date,
+         cast(null as {{ dbt_utils.type_timestamp() }}) as company_created_date,
         timestamp(updated_date_utc) as company_last_modified_date
  from source as contacts
  left outer join addresses as addresses

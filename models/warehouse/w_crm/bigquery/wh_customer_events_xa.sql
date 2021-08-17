@@ -89,8 +89,8 @@ select * from (SELECT company_pk,
        'Delivery Cost' as event_type,
        cast(delivery.delivery_days as string) as event_details,
        delivery.delivery_cost_amount as event_value,
-       {{ cast() }} as event_contact_pk,
-       {{ cast() }} as event_contact_name
+       cast(null as {{ dbt_utils.type_string() }}) as event_contact_pk,
+       cast(null as {{ dbt_utils.type_string() }}) as event_contact_name
 FROM {{ ref('wh_customer_contacts_360_xa') }},
 unnest(delivery) as delivery1,
 unnest(delivery1.delivery) as delivery)

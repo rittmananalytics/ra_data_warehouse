@@ -30,18 +30,18 @@ renamed as (
         url                         as page_url,
         {{ dbt_utils.get_url_host('url') }} as page_url_host,
         {{ dbt_utils.get_url_parameter('url', 'gclid') }} as gclid,
-        cast(null as varchar )      as utm_term,
-        cast(null as varchar )    as utm_content,
-        cast(null as varchar )     as utm_medium,
-        cast(null as varchar )       as utm_campaign,
-        cast(null as varchar )     as utm_source,
+        cast(null as {{ dbt_utils.type_string() }})      as utm_term,
+        cast(null as {{ dbt_utils.type_string() }})    as utm_content,
+        cast(null as {{ dbt_utils.type_string() }})     as utm_medium,
+        cast(null as {{ dbt_utils.type_string() }})       as utm_campaign,
+        cast(null as {{ dbt_utils.type_string() }})     as utm_source,
         context_ip                  as ip,
         anonymous_id                as visitor_id,
-        cast(null as varchar )                     as user_id,
+        cast(null as {{ dbt_utils.type_string() }})                     as user_id,
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
-                split_part(context_user_agent,'(',1),
+                {{ dbt_utils.split_part('context_user_agent','(',1) }},
                 ';', '')
         end as device,
         '{{ var('stg_segment_events_site') }}'  as site

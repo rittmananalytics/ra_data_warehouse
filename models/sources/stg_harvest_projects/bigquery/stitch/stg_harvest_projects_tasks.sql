@@ -7,7 +7,7 @@ with source as (
 ),
 renamed as (
 select
-       concat('{{ var('stg_harvest_projects_id-prefix') }}',{{ cast('id','string') }})                  as task_id,
+       concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(id as {{ dbt_utils.type_string() }}))                  as task_id,
        name                as task_name,
        billable_by_default as task_billable_by_default,
        default_hourly_rate as task_default_hourly_rate,

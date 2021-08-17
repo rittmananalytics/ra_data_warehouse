@@ -9,10 +9,10 @@ with source as (
   {{ filter_segment_relation(var('stg_google_ads_segment_ad_groups_table')) }}
 ),
 renamed as (
-  SELECT {{ cast('id','string') }} as ad_group_id,
+  SELECT cast(id as {{ dbt_utils.type_string() }}) as ad_group_id,
          name as ad_group_name,
          status as ad_group_status,
-          {{ cast('campaign_id','string') }} ad_campaign_id,
+          cast(campaign_id as {{ dbt_utils.type_string() }}) ad_campaign_id,
          'Google Ads' as ad_network
   FROM source )
 
@@ -23,13 +23,13 @@ WITH source AS (
 ),
 renamed as (
 
-  SELECT {{ cast('id','string') }} as ad_group_id,
+  SELECT cast(id as {{ dbt_utils.type_string() }}) as ad_group_id,
          name as ad_group_name,
          status as ad_group_status,
-          {{ cast('campaignid','string') }} ad_campaign_id,
-          {{ cast(datatype='timestamp')}} as adset_created_ts,
-          {{ cast(datatype='timestamp')}} as adset_end_ts,
-          {{ cast(datatype='timestamp')}} as adset_start_ts,
+          cast (campaignid as {{ dbt_utils.type_string() }}) ad_campaign_id,
+          cast (null as {{ dbt_utils.type_timestamp() }}) as adset_created_ts,
+          cast (null as {{ dbt_utils.type_timestamp() }}) as adset_end_ts,
+          cast (null as {{ dbt_utils.type_timestamp() }}) as adset_start_ts,
          'Google Ads' as ad_network
   FROM source
 )
