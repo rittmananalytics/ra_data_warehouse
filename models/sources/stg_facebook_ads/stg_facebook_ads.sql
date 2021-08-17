@@ -20,8 +20,7 @@ SELECT
       utm_content as ad_utm_content,
       utm_medium as ad_utm_medium,
       utm_source as ad_utm_source,
-      'Facebook Ads' as ad_network,
-      {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+      'Facebook Ads' as ad_network
 
 FROM
   source)
@@ -45,8 +44,7 @@ renamed as (
     cast(null as {{ dbt_utils.type_string() }})as ad_utm_content,
     cast(null as {{ dbt_utils.type_string() }})as ad_utm_medium,
     cast(null as {{ dbt_utils.type_string() }}) as ad_utm_source,
-    'Facebook Ads' as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    'Facebook Ads' as ad_network
 
 
     from source

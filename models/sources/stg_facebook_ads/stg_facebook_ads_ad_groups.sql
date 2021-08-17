@@ -15,8 +15,7 @@ renamed as (
          cast(null as {{ dbt_utils.type_timestamp() }}) as adset_created_ts,
          cast(null as {{ dbt_utils.type_timestamp() }}) as adset_end_ts,
          cast(null as {{ dbt_utils.type_timestamp() }}) as adset_start_ts,
-         'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+         'Facebook Ads' as ad_network
 
   FROM source )
 
@@ -35,8 +34,7 @@ renamed as (
          created_time as adset_created_ts,
          end_time as adset_end_ts,
          start_time as adset_start_ts,
-         'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+         'Facebook Ads' as ad_network
 
   FROM source
 

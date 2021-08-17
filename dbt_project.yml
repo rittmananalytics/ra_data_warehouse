@@ -123,28 +123,11 @@ vars:
   stg_facebook_ads_etl: stitch
   stg_facebook_ads_stitch_schema: stitch_facebook_ads
   stg_facebook_ads_segment_schema: facebook_ads
-  stg_facebook_ads_tenant_name: rittmananalytics.com
-  stg_facebook_ads_2_id-prefix: fbads-
-  stg_facebook_ads_2_stitch_schema: stitch_facebook_ads_2
-  stg_facebook_ads_2_tenant_name: ecomstartup.com
-
 
   stg_google_ads_id-prefix: gads-
   stg_google_ads_etl: stitch
-  stg_google_ads_stitch_database: ra-warehouse-dev
   stg_google_ads_stitch_schema: stitch_google_ads
-  stg_google_ads_stitch_campaign_performance_table: "{{ source('stitch_google_ads', 'CAMPAIGN_PERFORMANCE_REPORT') }}"
-  stg_google_ads_stitch_campaigns_table: "{{ source('stitch_google_ads', 'campaigns') }}"
-  stg_google_ads_stitch_ads_table: "{{ source('stitch_google_ads', 'ads') }}"
-  stg_google_ads_stitch_ad_groups_table: "{{ source('stitch_google_ads', 'ad_groups') }}"
-
-  stg_google_ads_segment_database: ra-warehouse-dev
   stg_google_ads_segment_schema: google_ads
-  stg_google_ads_segment_campaign_performance_table: "{{ source('segment_google_ads', 'campaign_performance_reports') }}"
-  stg_google_ads_segment_ad_performance_table: "{{ source('segment_google_ads', 'ad_performance_reports') }}"
-  stg_google_ads_segment_ad_groups_table: "{{ source('segment_google_ads', 'ad_groups') }}"
-  stg_google_ads_segment_ads_table: "{{ source('segment_google_ads', 'ads') }}"
-  stg_google_ads_segment_campaigns_table: "{{ source('segment_google_ads', 'campaigns') }}"
   ads_campaigns_only: true
 
   stg_segment_events_id-prefix: segment-

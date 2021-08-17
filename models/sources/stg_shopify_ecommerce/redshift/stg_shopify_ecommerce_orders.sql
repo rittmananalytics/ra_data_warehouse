@@ -10,7 +10,7 @@ with source as (
 ),
    order_tags as (
 
-  select * from {{ var('stg_shopify_ecommerce_fivetran_order_tags_table') }}
+  select * from {{ source('fivetran_shopify', 'order_tag') }}
 
 ),
 renamed as (

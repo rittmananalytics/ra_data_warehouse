@@ -22,8 +22,7 @@ SELECT
     unique_impressions                                as ad_total_unique_impressions,
     cast(null as {{ dbt_utils.type_float() }})        as ad_total_conversion_value,
     spend                        as ad_total_cost,
-    'Facebook Ads' as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    'Facebook Ads' as ad_network
 
 FROM
   source)
@@ -49,8 +48,7 @@ SELECT
 
     cast(null as {{ dbt_utils.type_float() }})       as ad_total_conversion_value,
     spend                                             as ad_total_cost,
-    'Facebook Ads'                                    as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    'Facebook Ads'                                    as ad_network
 
 FROM
   source)

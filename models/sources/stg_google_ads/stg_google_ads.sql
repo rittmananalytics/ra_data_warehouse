@@ -5,7 +5,7 @@
 
 
 with source as (
-  {{ filter_segment_relation(var('stg_google_ads_segment_ads_table')) }}
+  {{ filter_segment_relation(source('segment_google_ads', 'ads')) }}
 ),
 renamed as (
 SELECT

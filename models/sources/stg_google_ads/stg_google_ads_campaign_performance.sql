@@ -6,7 +6,7 @@
 {% if var("stg_google_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(var('stg_google_ads_segment_ad_performance_table')) }}
+  {{ filter_segment_relation(source('segment_google_ads', 'campaign_performance_reports')) }}
 ),
 renamed as (
 SELECT
@@ -32,7 +32,7 @@ FROM
 {% elif var("stg_google_ads_etl") == 'stitch' %}
 WITH source AS (
 
-  {{ filter_stitch_relation(relation=var('stg_google_ads_stitch_campaign_performance_table'),unique_column='concat(campaignid,day)') }}
+  {{ filter_stitch_relation(relation=source('stitch_google_ads', 'CAMPAIGN_PERFORMANCE_REPORT'),unique_column='concat(campaignid,day)') }}
 
 ),
 

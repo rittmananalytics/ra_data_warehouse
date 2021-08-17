@@ -15,8 +15,7 @@ SELECT
   buying_type                     as campaign_buying_type,
   start_time                      as ad_campaign_start_date,
   stop_time                       as ad_campaign_end_date,
-  'Facebook Ads'                  as ad_network,
-  {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+  'Facebook Ads'                  as ad_network
 
 FROM
   source)
@@ -37,8 +36,7 @@ renamed as (
     effective_status          as campaign_effective_status,
     start_time                as ad_campaign_start_date,
      cast(null as {{ dbt_utils.type_timestamp() }})   as ad_campaign_end_date,
-    'Facebook Ads'            as ad_network,
-    {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
+    'Facebook Ads'            as ad_network
 
 
     from source
