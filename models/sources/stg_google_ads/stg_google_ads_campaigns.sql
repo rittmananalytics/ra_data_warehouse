@@ -10,12 +10,12 @@ with source as (
 ),
 renamed as (
 SELECT
-  cast(id as {{ dbt_utils.type_string() }})             as ad_campaign_id,
+  {{ cast('id','string') }}             as ad_campaign_id,
   name            as ad_campaign_name,
   status          as ad_campaign_status,
-  cast(null as {{ dbt_utils.type_string() }}) as campaign_buying_type,
-   cast(null as {{ dbt_utils.type_timestamp() }})      as ad_campaign_start_date,
-   cast(null as {{ dbt_utils.type_timestamp() }})        as ad_campaign_end_date,
+  {{ cast() }} as campaign_buying_type,
+   {{ cast(datatype='timestamp') }}      as ad_campaign_start_date,
+   {{ cast(datatype='timestamp') }}        as ad_campaign_end_date,
   'Google Ads' as ad_network
 FROM
   source)
@@ -29,12 +29,12 @@ WITH source AS (
 renamed as (
 
     select
-    cast(id as {{ dbt_utils.type_string() }})              as ad_campaign_id,
+    {{ cast('id','string') }}              as ad_campaign_id,
     name            as ad_campaign_name,
     status          as ad_campaign_status,
-    cast(null as {{ dbt_utils.type_string() }}) as campaign_buying_type,
-     cast(null as {{ dbt_utils.type_timestamp() }})      as ad_campaign_start_date,
-     cast(null as {{ dbt_utils.type_timestamp() }})        as ad_campaign_end_date,
+    {{ cast() }} as campaign_buying_type,
+     {{ cast(datatype='timestamp') }}      as ad_campaign_start_date,
+     {{ cast(datatype='timestamp') }}        as ad_campaign_end_date,
     'Google Ads' as ad_network
 
     from source

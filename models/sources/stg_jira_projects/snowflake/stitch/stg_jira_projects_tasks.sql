@@ -14,7 +14,7 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        coalesce(concat('{{ var('stg_jira_projects_id-prefix') }}',fields:assignee:accountid::STRING),concat('{{ var('stg_jira_projects_id-prefix') }}','-999')) as task_assignee_user_id,
        fields:summary::STRING as task_name,
        fields:issuetype:name::STRING as task_type,
-       cast(null as {{ dbt_utils.type_string() }}) as task_description,
+       {{ cast() }} as task_description,
        concat('{{ var('stg_jira_projects_jira_url') }}','/software/projects/',fields:project:key::STRING,'/issues/', key) as task_url,
        fields:status:name::string	 as task_status,
        case when fields:status:name::string	 = 'To Do' then 1

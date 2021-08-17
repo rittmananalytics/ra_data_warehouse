@@ -26,7 +26,7 @@ SELECT
   is_deleted as subscription_is_deleted,
   metadata_organization_id as organization_id,
   created as subscription_created_ts,
-   cast(null as {{ dbt_utils.type_timestamp() }}) as subscription_last_modified_ts
+   {{ cast(datatype='timestamp') }} as subscription_last_modified_ts
 FROM
   source
 )

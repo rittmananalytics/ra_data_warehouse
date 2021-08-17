@@ -1,5 +1,6 @@
 {% if var('marketing_warehouse_ad_campaign_sources') %}
 
+
 with campaigns as
   (
     {% for source in var('marketing_warehouse_ad_campaign_sources') %}

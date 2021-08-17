@@ -11,7 +11,7 @@ with source as (
 renamed as (
 SELECT
     date_start                    as ad_serve_ts,
-    cast (ad_id as {{ dbt_utils.type_string() }})                      as ad_id,
+     {{ cast('ad_id','string') }}                      as ad_id,
     average_cost/1000000          AS ad_avg_cost,
     average_time_on_site          as ad_avg_time_on_site,
     bounce_rate                   as ad_bounce_rate,
@@ -19,10 +19,10 @@ SELECT
     clicks                        as ad_total_clicks,
     conversion_value              as ad_total_conversion_value,
     cost/1000000                  as ad_total_cost,
-    cast(null as {{ dbt_utils.type_int() }})                  as ad_total_impressions,
-    cast(null as {{ dbt_utils.type_int() }})                        as ad_total_reach,
-    cast(null as {{ dbt_utils.type_int() }})                as as_total_unique_clicks,
-    cast(null as {{ dbt_utils.type_int() }})           as ad_total_unique_impressions,
+     {{ cast(datatype='integer') }}                  as ad_total_impressions,
+     {{ cast(datatype='integer') }}                        as ad_total_reach,
+     {{ cast(datatype='integer') }}                as as_total_unique_clicks,
+     {{ cast(datatype='integer') }}           as ad_total_unique_impressions,
     'Google Ads' as ad_network
 FROM
   source)
@@ -30,12 +30,12 @@ FROM
 {% elif var("stg_google_ads_etl") == 'stitch' %}
 
 WITH source AS (
-  {{ filter_stitch_relation(relation=source('stitch_facebook_ads', 'insights'),unique_column='concat(adid,day)') }}
+  {{ filter_stitch_relation(relation=var('stg_google_ads_stitch_ad_performance_table'),unique_column='concat(adid,day)') }}
 ),
 renamed as (
 SELECT
     day                    as ad_serve_ts,
-    cast (adid as {{ dbt_utils.type_string() }})                  as ad_id,
+     {{ cast('adid','string') }}                  as ad_id,
     averagecost/1000000          AS ad_avg_cost,
     averagesessiondurationseconds          as ad_avg_time_on_site,
     bouncerate                   as ad_bounce_rate,
@@ -43,10 +43,10 @@ SELECT
     clicks                       as ad_total_clicks,
     valueconv                    as ad_total_conversion_value,
     cost/1000000                 as ad_total_cost,
-    cast(null as {{ dbt_utils.type_int() }})                  as ad_total_impressions,
-    cast(null as {{ dbt_utils.type_int() }})                        as ad_total_reach,
-    cast(null as {{ dbt_utils.type_int() }})                as as_total_unique_clicks,
-    cast(null as {{ dbt_utils.type_int() }})           as ad_total_unique_impressions,
+     {{ cast(datatype='integer') }}                  as ad_total_impressions,
+     {{ cast(datatype='integer') }}                        as ad_total_reach,
+     {{ cast(datatype='integer') }}                as as_total_unique_clicks,
+     {{ cast(datatype='integer') }}           as ad_total_unique_impressions,
     'Google Ads' as ad_network
 FROM
   source)

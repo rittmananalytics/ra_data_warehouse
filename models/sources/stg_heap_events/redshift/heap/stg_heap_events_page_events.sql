@@ -47,7 +47,7 @@ renamed as (
     query AS search,
     concat(DOMAIN, path) AS page_url,
     domain as page_url_host,
-     cast(null as {{ dbt_utils.type_string() }}) AS gclid,
+     {{ cast(datatype='string') }} AS gclid,
     utm_term AS utm_term,
     utm_content AS utm_content,
     utm_medium AS utm_medium,

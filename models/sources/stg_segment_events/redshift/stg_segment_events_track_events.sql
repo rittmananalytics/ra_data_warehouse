@@ -20,7 +20,7 @@ renamed as (
         event                       as event_type,
         received_at                 as event_ts,
         event_text                  as event_details,
-        cast(null as {{ dbt_utils.type_string() }})       as page_title,
+        cast(null as varchar )       as page_title,
         context_page_path           as page_url_path,
         replace(
             {{ dbt_utils.get_url_host('context_page_referrer') }},

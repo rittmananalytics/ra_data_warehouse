@@ -11,7 +11,7 @@ with source as (
 renamed as (
 SELECT
   date_start                    as ad_campaign_serve_ts,
-   cast(campaign_id as {{ dbt_utils.type_string() }})                  as ad_campaign_id,
+   {{ cast('campaign_id','string') }}                  as ad_campaign_id,
   amount/1000000                AS ad_campaign_budget,
   average_cost/1000000          AS ad_campaign_avg_cost,
   average_time_on_site          as ad_campaign_avg_time_on_site,
@@ -44,7 +44,7 @@ SELECT
   avgcost/1000000           AS ad_campaign_avg_cost,
   avgsessiondurationseconds as ad_campaign_avg_time_on_site,
   bouncerate                    as ad_campaign_bounce_rate,
-  cast(null as {{ dbt_utils.type_string() }})          as ad_campaign_status,
+  {{ cast() }}          as ad_campaign_status,
   clickassistedconv             as ad_campaign_total_assisted_conversions,
   clicks                        as ad_campaign_total_clicks,
   valueconv                     as ad_campaign_total_conversion_value,

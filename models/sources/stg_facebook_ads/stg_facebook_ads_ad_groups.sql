@@ -5,39 +5,32 @@
 {% if var("stg_facebook_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(source('segment_facebook_ads', 'ad_sets')) }}
+  {{ filter_segment_relation(var('stg_facebook_ads_segment_ad_groups_table')) }}
 ),
 renamed as (
-  SELECT cast(id as {{ dbt_utils.type_string() }})  as ad_group_id,
+  SELECT {{ cast('id','string') }}  as ad_group_id,
          name as ad_group_name,
          effective_status as ad_group_status,
-         cast(campaign_id as {{ dbt_utils.type_string() }}) as ad_campaign_id,
-         cast(null as {{ dbt_utils.type_timestamp() }}) as adset_created_ts,
-         cast(null as {{ dbt_utils.type_timestamp() }}) as adset_end_ts,
-         cast(null as {{ dbt_utils.type_timestamp() }}) as adset_start_ts,
-         'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
-
+          {{ cast('campaign_id','string') }} as ad_campaign_id,
+         'Facebook Ads' as ad_network
   FROM source )
 
 {% elif var("stg_facebook_ads_etl") == 'stitch' %}
 
 WITH source AS (
-{{ filter_stitch_relation(relation=source('stitch_facebook_ads', 'adsets'),unique_column='id') }}
+{{ filter_stitch_relation(relation=var('stg_facebook_ads_stitch_ad_groups_table'),unique_column='id') }}
 
 ),
 renamed as (
 
-  SELECT cast(id as {{ dbt_utils.type_string() }}) as ad_group_id,
+  SELECT {{ cast('id','string') }} as ad_group_id,
          name as ad_group_name,
          effective_status as ad_group_status,
-         cast(campaign_id as {{ dbt_utils.type_string() }}) ad_campaign_id,
+          {{ cast('campaign_id','string') }} ad_campaign_id,
          created_time as adset_created_ts,
          end_time as adset_end_ts,
          start_time as adset_start_ts,
-         'Facebook Ads' as ad_network,
-         {{ tenant_name(var("stg_facebook_ads_tenant_name")) }}
-
+         'Facebook Ads' as ad_network
   FROM source
 
 )
