@@ -14,14 +14,14 @@ renamed AS (
   name as project_name,
   current_status as project_status,
   notes as project_notes,
-  cast (null as string) as project_type,
-  cast (null as string) as project_category_description,
-  cast (null as string) as project_category_name,
+  cast (null as {{ dbt_utils.type_string() }}) as project_type,
+  cast (null as {{ dbt_utils.type_string() }}) as project_category_description,
+  cast (null as {{ dbt_utils.type_string() }}) as project_category_name,
   created_at as project_created_at_ts,
   modified_at as project_modified_at_ts,
   FROM
     source
-  where name = 'BI Roadmap for Looker'
+
 
 )
 SELECT

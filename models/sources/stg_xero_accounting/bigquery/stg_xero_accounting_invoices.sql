@@ -35,7 +35,7 @@ renamed as (
     cast(null as {{ dbt_utils.type_string() }}) as invoice_tax_rate_pct,
     totaltax as invoice_local_total_tax_amount,
     amountdue as invoice_local_total_due_amount,
-    cast (null as string) as invoice_payment_term,
+    cast (null as {{ dbt_utils.type_string() }}) as invoice_payment_term,
     case when status = 'AUTHORISED' then 'Authorised'
          when status = 'PAID' then 'Paid'
          when status = 'VOIDED' then 'Voided'
@@ -77,7 +77,7 @@ renamed as (
        cast(null as {{ dbt_utils.type_string() }}) as invoice_tax_rate_pct,
        total_tax as invoice_local_total_tax_amount,
        amount_due as invoice_local_total_due_amount,
-       cast (null as string) as invoice_payment_term,
+       cast (null as {{ dbt_utils.type_string() }}) as invoice_payment_term,
        case when status = 'AUTHORISED' then 'Authorised'
             when status = 'PAID' then 'Paid'
             when status = 'VOIDED' then 'Voided'

@@ -57,12 +57,12 @@ renamed as (
       cast(null as {{ dbt_utils.type_string() }}) AS contact_lifecycle_stage,
       cast(null as boolean)         as contact_is_contractor,
       false as contact_is_staff,
-       cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
-       cast(null as {{ dbt_utils.type_int() }})           as contact_efault_hourly_rate,
-       cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,
+      cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
+      cast(null as {{ dbt_utils.type_int() }})           as contact_efault_hourly_rate,
+      cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,
       false                          as contact__is_active,
-       cast(null as {{ dbt_utils.type_timestamp() }}) AS contact_created_date,
-       cast(null as {{ dbt_utils.type_timestamp() }}) AS contact_last_modified_date
+      cast(null as {{ dbt_utils.type_timestamp() }}) AS contact_created_date,
+      cast(null as {{ dbt_utils.type_timestamp() }}) AS contact_last_modified_date
     )
     SELECT
      *

@@ -27,8 +27,8 @@
       properties.linkedinbio.value AS               company_linkedin_bio,
       properties.twitterhandle.value AS             company_twitterhandle,
       properties.description.value AS               company_description,
-      CAST (NULL AS STRING) AS                      company_finance_status,
-      cast (null as string)      as                 company_currency_code,
+      cast (null as {{ dbt_utils.type_string() }}) AS                      company_finance_status,
+      cast (null as {{ dbt_utils.type_string() }})      as                 company_currency_code,
       properties.createdate.value AS                company_created_date,
       properties.hs_lastmodifieddate.value          company_last_modified_date
     FROM

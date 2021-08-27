@@ -134,33 +134,33 @@ dbt models inside this project are grouped together by these layers, with each d
 │   │   ├── stg_asana_projects   <-- "source" models with data-source specific transformations and renaming of columns into common formats.
 │   │   │   ├── bigquery         <-- target-specific folders containing SQL in correct format for BigQuery or Snowflake,
 │   │   │   │   ├── stitch            enabled and disabled automatically by choice of target type in profiles.yml
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
-│   │   ├── stg_custom_source_1             
-│   │   ├── stg_custom_source_2            
-│   │   ├── stg_facebook_ads 
+│   │   ├── stg_custom_source_1
+│   │   ├── stg_custom_source_2
+│   │   ├── stg_facebook_ads
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch         <--- stitch, segment or fivetran code enabled/disabled by reference to stg_XXXX_etl variables in dbt_project.yml
 │   │   │   │   ├── segment
-│   │   │   ├── snowflake    
-│   │   │   │   ├── stitch              
-│   │   ├── stg_gcp_billing_export         
+│   │   │   ├── snowflake
+│   │   │   │   ├── stitch
+│   │   ├── stg_gcp_billing_export
 │   │   ├── stg_google_ads
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
 │   │   │   │   ├── segment
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
 │   │   ├── stg_harvest_projects
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
 │   │   ├── stg_hubspot_crm
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
 │   │   │   │   ├── fivetran
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
 │   │   ├── stg_intercom_messaging
 │   │   │   ├── bigquery
@@ -168,12 +168,12 @@ dbt models inside this project are grouped together by these layers, with each d
 │   │   ├── stg_jira_projects
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
 │   │   ├── stg_mailchimp_email
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── stitch
 │   │   ├── stg_mixpanel_events
 │   │   │   ├── bigquery
@@ -182,7 +182,7 @@ dbt models inside this project are grouped together by these layers, with each d
 │   │   ├── stg_segment_events
 │   │   │   ├── bigquery
 │   │   │   │   ├── segment
-│   │   │   ├── snowflake    
+│   │   │   ├── snowflake
 │   │   │   │   ├── segment
 │   │   ├── stg_stripe_payments
 │   │   │   ├── bigquery
@@ -210,7 +210,7 @@ dbt models inside this project are grouped together by these layers, with each d
 
 Customers, contacts, projects and other shared dimensions are automatically created from all data sources, deduplicating by name and merge lookup files using a process that preserves source system keys whilst assigning a unique ID for each customer, contact etc.
 
-1. Each set of dbt source module provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream. 
+1. Each set of dbt source module provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream.
 
 ```
 WITH source AS (
@@ -233,8 +233,8 @@ WITH source AS (
       properties.linkedinbio.value AS               company_linkedin_bio,
       properties.twitterhandle.value AS             company_twitterhandle,
       properties.description.value AS               company_description,
-      CAST (NULL AS STRING) AS                      company_finance_status,
-      cast (null as string)      as                 company_currency_code,
+      cast (null as {{ dbt_utils.type_string() }}) AS                      company_finance_status,
+      cast (null as {{ dbt_utils.type_string() }})      as                 company_currency_code,
       properties.createdate.value AS                company_created_date,
       properties.hs_lastmodifieddate.value          company_last_modified_date
     FROM
@@ -444,9 +444,9 @@ SELECT i.all_user_ids,
 		MAX(user_last_modified_ts) as user_last_modified_ts,
 	FROM t_users_merge_list
 	GROUP BY 1) u
-JOIN user_emails e 
+JOIN user_emails e
 ON u.user_name = COALESCE(e.user_name,'Unknown')
-JOIN user_ids i 
+JOIN user_ids i
 ON u.user_name = i.user_name
 ```
 
@@ -495,7 +495,7 @@ companies_dim as (
     SELECT c.company_pk, cf.value::string as company_id
     from {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
 )
-SELECT 
+SELECT
    ...
 FROM
    delivery_projects p

@@ -13,9 +13,9 @@ with source as (SELECT *
     name as project_name,
     projectkeys.value::STRING as projectkeys,
     projecttypekey as project_type_id,
-    cast (null as string) as project_status,
+    cast (null as {{ dbt_utils.type_string() }}) as project_status,
 
-    cast (null as string) as project_notes,
+    cast (null as {{ dbt_utils.type_string() }}) as project_notes,
 
     projectcategory:id::STRING as project_category_id,
     _sdc_batched_at,

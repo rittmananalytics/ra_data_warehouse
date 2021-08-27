@@ -19,8 +19,8 @@ SELECT company_pk,
        invoice.invoice_event as event_type,
        invoice.project_name as event_details,
        invoice.invoice_local_total_services_amount as event_value,
-       cast (null as string) as event_contact_pk,
-       cast (null as string) as event_contact_name
+       cast (null as {{ dbt_utils.type_string() }}) as event_contact_pk,
+       cast (null as {{ dbt_utils.type_string() }}) as event_contact_name
 FROM {{ ref('wh_customer_contacts_360_xa') }} ,
 unnest(invoice) as invoice1,
 unnest(invoice1.invoice) as invoice

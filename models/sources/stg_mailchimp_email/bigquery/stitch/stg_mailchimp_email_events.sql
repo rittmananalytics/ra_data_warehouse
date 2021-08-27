@@ -33,7 +33,7 @@ SELECT
   'stg_enrichment_clearbit_schema' AS action,
   NULL AS type,
   c.contact_email as email_address,
-  cast (null as string) as url
+  cast (null as {{ dbt_utils.type_string() }}) as url
 FROM
   {{ ref('stg_mailchimp_email_sends') }}  s
 JOIN
