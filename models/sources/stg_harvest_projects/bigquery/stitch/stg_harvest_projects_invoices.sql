@@ -3,13 +3,13 @@
 {% if 'harvest_projects' in var("finance_warehouse_invoice_sources") %}
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_invoices_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'invoices'),unique_column='id') }}
     ),
 harvest_invoice_line_items as (
-  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_invoice_line_items_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'invoice_line_items'),unique_column='id') }}
     ),
 harvest_expenses as (
-  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_expenses_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'expenses'),unique_column='id') }}
     ),
 joined as (
 select i.*,

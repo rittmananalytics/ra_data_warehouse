@@ -3,7 +3,7 @@
 {% if 'harvest_projects' in var("crm_warehouse_contact_sources") %}
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_users_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'contacts'),unique_column='id') }}
 ),
 renamed as (
   SELECT

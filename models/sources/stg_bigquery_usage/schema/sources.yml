@@ -3,7 +3,6 @@ version: 2
 sources:
     - name: bigquery_usage_product_usage
       description: "BigQuery Usage Logs"
-      database: ra-development
       schema: bigquery_log_export
       tables:
         - name: cloudaudit_data_access

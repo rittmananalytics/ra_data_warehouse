@@ -8,7 +8,7 @@
 }}
 with source as (
 
-  select * from {{ var('stg_segment_events_segment_pages_table') }}
+  select * from {{ source('segment', 'pages') }}
 
 ),
 

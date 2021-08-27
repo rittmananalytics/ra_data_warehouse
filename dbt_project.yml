@@ -85,13 +85,11 @@ vars:
 
   stg_git_repos_id-prefix: github-
   stg_git_repos_etl: fivetran
-  stg_git_repos_fivetran_database: ra-warehouse-dev
   stg_git_repos_fivetran_schema: fivetran_github
 
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch
-  stg_asana_projects_stitch_database: ra-warehouse-dev
   stg_asana_projects_stitch_schema: stitch_asana
   stg_asana_projects_staff_email_domain: rittmananalytics.com
   stg_asana_projects_stitch_workspaces_table: "{{ source('stitch_asana_projects', 'workspaces') }}"
@@ -100,24 +98,17 @@ vars:
   stg_asana_projects_stitch_users_table: "{{ source('stitch_asana_projects', 'users') }}"
 
   stg_looker_usage_stats_id-prefix: looker-
-  stg_looker_usage_database: ra-warehouse-dev
   stg_looker_usage_schema: fivetran_email
   stg_looker_usage_stats_table: usage_stats
 
   stg_gcp_billing_product_usage_id-prefix: gcp-billing-
-  stg_gcp_billing_product_usage_database: ra-warehouse-dev
   stg_gcp_billing_product_usage_schema: gcp_billing_export
   stg_gcp_billing_product_usage_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
   stg_gcp_billing_products_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
   stg_gcp_billing_companies_table: "{{ source('gcp_billing_product_usage', 'gcp_billing_export_v1_01002B_781DA7_8295B1') }}"
 
   stg_bigquery_usage_id-prefix: bigquery-log-
-  stg_bigquery_usage_database: ra-warehouse-dev
   stg_bigquery_usage_schema: bigquery_log_export
-  stg_bigquery_usage_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
-  stg_bigquery_products_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
-  stg_bigquery_companies_table: "{{ source('bigquery_usage_product_usage', 'cloudaudit_data_access') }}"
-
 
   stg_facebook_ads_id-prefix: fbads-
   stg_facebook_ads_etl: stitch
@@ -132,7 +123,6 @@ vars:
 
   stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
-  stg_segment_events_segment_database: ra-warehouse-dev
   stg_segment_events_segment_schema: company_website
   stg_segment_events_segment_tracks_table: "{{ source('segment', 'tracks') }}"
   stg_segment_events_segment_pages_table: "{{ source('segment', 'pages') }}"
@@ -142,7 +132,6 @@ vars:
 
   stg_rudderstack_events_id-prefix: rudderstack-
   stg_rudderstack_events_etl: rudderstack
-  stg_rudderstack_events_rudderstack_database: ra-warehouse-dev
   stg_rudderstack_events_rudderstack_schema: rudderstack_ra_website
   stg_rudderstack_events_rudderstack_tracks_table: "{{ source('rudderstack', 'tracks') }}"
   stg_rudderstack_events_rudderstack_pages_table: "{{ source('rudderstack', 'pages') }}"
@@ -151,31 +140,17 @@ vars:
   enable_event_type_mapping: true
 
   stg_baremetrics_analytics_id-prefix: baremetrics-
-  stg_baremetrics_analytics_etl: ra-warehouse-dev
   stg_baremetrics_analytics_etl: segment
   stg_baremetrics_analytics_segment_schema: baremetrics
   stg_baremetrics_analytics_segment_plan_breakdown_table: plan_breakdown
 
   stg_harvest_projects_id-prefix: harvest-
   stg_harvest_projects_etl: stitch
-  stg_harvest_projects_stitch_database: ra-warehouse-dev
   stg_harvest_projects_stitch_schema: stitch_harvest
   stg_harvest_projects_staff_email_domain: rittmananalytics.com
-  stg_harvest_projects_stitch_companies_table: "{{ source('stitch_harvest_projects', 'companies') }}"
-  stg_harvest_projects_stitch_contacts_table: "{{ source('stitch_harvest_projects', 'contacts') }}"
-  stg_harvest_projects_stitch_invoices_table: "{{ source('stitch_harvest_projects', 'invoices') }}"
-  stg_harvest_projects_stitch_invoice_line_items_table: "{{ source('stitch_harvest_projects', 'invoice_line_items') }}"
-  stg_harvest_projects_stitch_projects_table: "{{ source('stitch_harvest_projects', 'projects') }}"
-  stg_harvest_projects_stitch_tasks_table: "{{ source('stitch_harvest_projects', 'tasks') }}"
-  stg_harvest_projects_stitch_project_tasks_table: "{{ source('stitch_harvest_projects', 'project_tasks') }}"
-  stg_harvest_projects_stitch_timesheets_table: "{{ source('stitch_harvest_projects', 'timesheets') }}"
-  stg_harvest_projects_stitch_users_table: "{{ source('stitch_harvest_projects', 'users') }}"
-  stg_harvest_projects_stitch_user_projects_table: "{{ source('stitch_harvest_projects', 'user_projects') }}"
-  stg_harvest_projects_stitch_user_project_tasks_table: "{{ source('stitch_harvest_projects', 'user_project_tasks') }}"
-  stg_harvest_projects_stitch_expenses_table: "{{ source('stitch_harvest_projects', 'expenses') }}"
+
 
   stg_hubspot_crm_id-prefix: hubspot-
-  stg_hubspot_crm_stitch_database: ra-warehouse-dev
   stg_hubspot_crm_stitch_schema: stitch_hubspot
   stg_hubspot_crm_fivetran_database: ra-warehouse-dev
   stg_hubspot_crm_fivetran_schema: fivetran_hubspot_euwest2

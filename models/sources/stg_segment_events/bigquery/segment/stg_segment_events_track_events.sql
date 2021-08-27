@@ -9,7 +9,7 @@
 }}
 with source as (
 
-    select * from {{ var('stg_segment_events_segment_tracks_table') }}
+    select * from {{ source('segment', 'tracks') }}
 
 ),
 

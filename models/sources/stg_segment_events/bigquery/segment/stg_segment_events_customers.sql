@@ -4,7 +4,7 @@
 
 with source as (
 
-    select * from {{ var('stg_segment_events_segment_users_table') }}
+    select * from {{ source('segment', 'users') }}
 
 ),
 renamed as (
