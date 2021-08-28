@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("product_warehouse_event_sources") %}
 {% if 'segment_events_page' in var("product_warehouse_event_sources") %}
 {{
@@ -68,5 +68,6 @@ final as (
 
 select * from final
 
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -124,9 +124,6 @@ vars:
   stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
   stg_segment_events_segment_schema: company_website
-  stg_segment_events_segment_tracks_table: "{{ source('segment', 'tracks') }}"
-  stg_segment_events_segment_pages_table: "{{ source('segment', 'pages') }}"
-  stg_segment_events_segment_users_table: "{{ source('segment', 'users') }}"
   stg_segment_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 

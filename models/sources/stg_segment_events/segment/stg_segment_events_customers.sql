@@ -1,10 +1,10 @@
-{{config(enabled = target.type == 'snowflake')}}
-{% if var("product_warehouse_event_sources") and var("subscriptions_warehouse_sources") %}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
+{% if var("product_warehouse_event_sources") %}
 {% if 'segment_events_page' in var("product_warehouse_event_sources") %}
 
 with source as (
 
-    select * from {{ var('stg_segment_events_segment_users_table') }}
+    select * from {{ source('segment', 'users') }}
 
 ),
 renamed as (
@@ -25,5 +25,6 @@ FROM
 )
 select * from renamed
 
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

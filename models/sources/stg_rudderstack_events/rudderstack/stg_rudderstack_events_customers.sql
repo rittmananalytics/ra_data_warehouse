@@ -1,16 +1,16 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("product_warehouse_event_sources") %}
 {% if 'rudderstack_events_page' in var("product_warehouse_event_sources") %}
 
 with source as (
 
-    select * from {{ var('stg_rudderstack_events_rudderstack_users_table') }}
+    select * from {{ source('rudderstack', 'users') }}
 
 ),
 renamed as (
    select concat('stg_rudderstack_events_id-prefix',id) as customer_id,
    email as customer_email,
-   cast(null as {{ dbt_utils.type_string() }}) as customer_description,
+  cast(null as {{ dbt_utils.type_string() }}) as customer_description,
   cast(null as {{ dbt_utils.type_string() }}) as customer_source,
   cast(null as {{ dbt_utils.type_string() }}) as customer_type,
   cast(null as {{ dbt_utils.type_string() }}) as customer_industry,
@@ -25,5 +25,6 @@ FROM
 )
 select * from renamed
 
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
