@@ -3,7 +3,7 @@
 {% if 'intercom_messaging' in var("crm_warehouse_contacts_sources") %}
 
 WITH source AS (
-      {{ filter_stitch_table(var('stg_intercom_messaging_stitch_schema'),var('stg_intercom_messaging_stitch_contacts_table'),'id') }}
+      {{ filter_stitch_table(relation=source('stitch_intercom_messaging','contacts'),'id') }}
   ),
 renamed as (
   SELECT
@@ -23,8 +23,8 @@ renamed as (
     cast(null as {{ dbt_utils.type_string() }}) as contact_company_id,
     cast(null as {{ dbt_utils.type_string() }}) as contact_owner_id,
     cast(null as {{ dbt_utils.type_string() }}) as contact_lifecycle_stage,
-    cast(null as boolean)         as contact_is_contractor,
-    cast(null as boolean) as contact_is_staff,
+    cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
+    cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
      cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
      cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
      cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,

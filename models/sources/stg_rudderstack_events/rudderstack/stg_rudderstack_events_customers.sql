@@ -16,8 +16,8 @@ renamed as (
   cast(null as {{ dbt_utils.type_string() }}) as customer_industry,
   cast(null as {{ dbt_utils.type_string() }}) as customer_currency,
   cast(null as {{ dbt_utils.type_string() }}) as customer_is_enterprise,
-  cast(null as boolean) as customer_is_delinquent,
-  cast(null as boolean) as customer_is_deleted,
+  cast(null as {{ dbt_utils.type_boolean() }}) as customer_is_delinquent,
+  cast(null as {{ dbt_utils.type_boolean() }}) as customer_is_deleted,
   min(received_at) over (partition by id) as customer_created_date,
   max(received_at) over (partition by id) as customer_last_modified_date
 FROM

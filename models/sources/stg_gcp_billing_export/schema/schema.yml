@@ -2,10 +2,9 @@ version: 2
 
 sources:
   - name: gcp_billing
-    database: ra-development
     schema: gcp_billing_export
     tables:
-      - name: s_gcp_billing_export
+      - name: gcp_billing_export
         identifier: gcp_billing_export_v1_01002B_781DA7_8295B1
 
 

@@ -1,9 +1,9 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("crm_warehouse_company_sources") %}
 {% if 'jira_projects' in var("crm_warehouse_company_sources") %}
 
   WITH source AS (
-      {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_projects_table'),unique_column='id') }}
+      {{ filter_stitch_relation(relation=source('stitch_jira_projects','projects'),unique_column='id') }}
   ),
 renamed as (
 select * from (

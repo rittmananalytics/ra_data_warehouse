@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'redshift')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("ecommerce_warehouse_product_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_product_sources") %}
 

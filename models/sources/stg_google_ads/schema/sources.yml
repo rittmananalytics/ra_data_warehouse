@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_google_ads
-    database: "{{ var('stg_google_ads_stitch_database') }}"
     schema: "{{ var('stg_google_ads_stitch_schema') }}"
 
     freshness:

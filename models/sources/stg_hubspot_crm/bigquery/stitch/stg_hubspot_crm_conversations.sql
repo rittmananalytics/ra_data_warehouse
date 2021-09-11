@@ -8,7 +8,7 @@
 
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_engagements_table'),unique_column='engagement_id') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','engagements'),unique_column='engagement_id') }}
 ),
 renamed as (
 SELECT
@@ -26,8 +26,8 @@ SELECT
   coalesce(metadata.subject,cast(null as {{ dbt_utils.type_string() }}))    as  conversation_subject,
   engagement.createdat as conversation_created_date,
   engagement.lastupdated as contact_last_modified_date,
-  cast(null as boolean) AS is_conversation_read,
-  cast(null as boolean) AS is_conversation_open,
+  cast(null as {{ dbt_utils.type_boolean() }}) AS is_conversation_read,
+  cast(null as {{ dbt_utils.type_boolean() }}) AS is_conversation_open,
   dealids.value                    as deal_id
 FROM
   source,

@@ -13,7 +13,7 @@ with source as (
     {{ dbt_utils.date_trunc('DAY', 'send_time') }} AS ad_campaign_start_date,
     {{ dbt_utils.date_trunc('DAY', 'send_time') }} AS ad_campaign_end_date,
     'Mailchimp' AS ad_network
-  FROM `ra-development.stitch_mailchimp.campaigns`
+  FROM {{ source('stitch_mailchimp_email', 'campaigns') }}
   group by 1,2,3,4,5,6,7,8
 ),
 renamed as (

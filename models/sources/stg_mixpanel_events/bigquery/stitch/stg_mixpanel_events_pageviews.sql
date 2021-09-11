@@ -7,7 +7,7 @@
 {% if 'mixpanel_events' in var("product_warehouse_event_sources") %}
 
 WITH source as (
-  {{ filter_stitch_relation(relation=var('stg_mixpanel_events_stitch_event_table'),unique_column='mp_reserved_insert_id') }}
+  {{ filter_stitch_relation(relation=source('stitch_mixpanel_events','event'),unique_column='mp_reserved_insert_id') }}
 
 ),
 renamed_full as (

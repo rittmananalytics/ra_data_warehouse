@@ -3,7 +3,7 @@
 {% if 'mailchimp_email' in var("crm_warehouse_contact_sources") %}
 
 WITH source AS (
-  {{ filter_stitch_relation(relation=var('stg_mailchimp_email_stitch_list_members_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation={{ source('stitch_mailchimp_email', 'list_members') }},unique_column='id') }}
 ),
 renamed AS
 (
@@ -25,8 +25,8 @@ SELECT
     cast(null as {{ dbt_utils.type_string() }}) AS contact_company_id,
     cast(null as {{ dbt_utils.type_string() }}) AS contact_owner_id,
     status AS contact_lifecycle_stage,
-    cast(null as boolean)         as contact_is_contractor,
-    cast(null as boolean) as contact_is_staff,
+    cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
+    cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
      cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
      cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
      cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,

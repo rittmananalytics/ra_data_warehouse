@@ -1,9 +1,9 @@
-{{config(enabled = target.type == 'snowflake')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("crm_warehouse_contact_sources") %}
 {% if 'harvest_projects' in var("crm_warehouse_contact_sources") %}
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_harvest_projects_stitch_users_table'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'contacts'),unique_column='id') }}
 ),
 renamed as (
   SELECT
@@ -21,7 +21,7 @@ renamed as (
   cast(null as {{ dbt_utils.type_string() }})  as contact_postcode_zip,
   cast(null as {{ dbt_utils.type_string() }})  as contact_company,
   cast(null as {{ dbt_utils.type_string() }})  as contact_website,
-  cast(null as {{ dbt_utils.type_string() }})  AS contact_company_id,
+  cast(null as {{ dbt_utils.type_string() }}) AS contact_company_id,
   cast(null as {{ dbt_utils.type_string() }})  as contact_owner_id,
   cast(null as {{ dbt_utils.type_string() }})  as contact_lifecycle_stage,
   is_contractor                      as contact_is_contractor,

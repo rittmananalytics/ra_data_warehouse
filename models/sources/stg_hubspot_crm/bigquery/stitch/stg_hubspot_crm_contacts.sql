@@ -8,7 +8,7 @@
 
 
 WITH source as (
-  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_contacts_table'),unique_column='canonical_vid') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','contacts'),unique_column='canonical_vid') }}
 
 ),
 renamed as (
@@ -30,8 +30,8 @@ renamed as (
        concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.associatedcompanyid.value as string)) as contact_company_id,
        concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.hubspot_owner_id.value as string)) as contact_owner_id,
        properties.lifecyclestage.value as contact_lifecycle_stage,
-       cast(null as boolean)         as contact_is_contractor,
-       cast(null as boolean) as contact_is_staff,
+       cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
+       cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
         cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
         cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
         cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,

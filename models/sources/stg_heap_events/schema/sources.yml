@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: heap
-    database: "{{ var('stg_heap_events_heap_database') }}"
     schema: "{{ var('stg_heap_events_heap_schema') }}"
 
     freshness:

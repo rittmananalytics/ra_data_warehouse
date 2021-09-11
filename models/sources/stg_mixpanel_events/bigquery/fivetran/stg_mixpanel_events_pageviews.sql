@@ -12,7 +12,7 @@
     SELECT
       *
     FROM
-    {{ var('stg_mixpanel_events_fivetran_event_table') }}
+    {{ source('fivetran_mixpanel_events','events') }}
   ),
 renamed_full as (
   SELECT

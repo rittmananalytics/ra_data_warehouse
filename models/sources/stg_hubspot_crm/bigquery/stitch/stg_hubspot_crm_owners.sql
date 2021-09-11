@@ -8,7 +8,7 @@
 
 
 WITH source as (
-  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_owners_table'),unique_column='ownerid') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','owners'),unique_column='ownerid') }}
 
 ),
 renamed as (

@@ -6,15 +6,15 @@
 
 with journals as (
     select *
-    from {{ var('stg_xero_accounting_fivetran_journal_table') }}
+    from {{ source('fivetran_xero_accounting','journal') }}
 ),
 journal_lines as (
     select *
-    from {{ var('stg_xero_accounting_fivetran_journal_line_table') }}
+    from {{ source('fivetran_xero_accounting','journal_line') }}
 ),
 accounts as (
     select *
-    from {{ ref('stg_xero_accounting_accounts') }}
+    from {{ source('fivetran_xero_accounting','account') }}
 ),
 renamed as (
   SELECT

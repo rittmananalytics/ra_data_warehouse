@@ -38,7 +38,7 @@ renamed as (
         cast(null as {{ dbt_utils.type_string() }}) as contact_company_id,
         cast(null as {{ dbt_utils.type_string() }}) as contact_owner_id,
         cast(null as {{ dbt_utils.type_string() }}) as contact_lifecycle_stage,
-       cast(null as boolean) as contact_is_staff,
+       cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
        state='enabled'                          as contact_is_active,
        coalesce((REGEXP_COUNT ( tags, 'PRO,')>0 or REGEXP_COUNT ( tags, 'PRO_25,')>0 or REGEXP_COUNT ( tags, 'PRO_20,')>0
         or REGEXP_COUNT ( tags, 'PRO_15,')>0 or REGEXP_COUNT ( tags, 'PRO_FACEBOOK')),false) as contact_is_pro,

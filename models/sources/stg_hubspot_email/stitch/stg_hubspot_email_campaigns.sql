@@ -4,7 +4,7 @@
 {% if var("stg_hubspot_email_etl") == 'stitch' %}
 
 with source as (
-  {{ filter_stitch_relation(relation=source('stitch_hubspot_email', 'campaigns'),unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_email','campaigns'),unique_column='id') }}
 ),
 renamed as (
   select * from (

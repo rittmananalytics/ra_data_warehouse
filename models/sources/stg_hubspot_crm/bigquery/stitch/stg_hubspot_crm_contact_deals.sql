@@ -8,7 +8,7 @@
 
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_deals_table'),unique_column='dealid') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','deals'),unique_column='dealid') }}
 ),
 renamed as (
 SELECT

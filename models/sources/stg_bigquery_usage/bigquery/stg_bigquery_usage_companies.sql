@@ -32,7 +32,7 @@ with source as (
          cast (null as timestamp) as company_created_date,
          cast (null as timestamp) as company_last_modified_date
   FROM source
-  group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+  {{dbt_utils.group_by(18) }} )
 SELECT
  *
 FROM

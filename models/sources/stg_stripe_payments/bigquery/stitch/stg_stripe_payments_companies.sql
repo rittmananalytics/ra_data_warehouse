@@ -3,7 +3,7 @@
 {% if 'hubspot_crm' in var("crm_warehouse_company_sources") %}
 
 WITH source AS (
-    {{ filter_stitch_relation(relation=var('stg_stripe_payments_stitch_charges_table'),unique_column='id') }}
+    {{ filter_stitch_relation(relation=source('stitch_stripe_payments','charges'),unique_column='id') }}
 ),
 renamed as (
 select * from (

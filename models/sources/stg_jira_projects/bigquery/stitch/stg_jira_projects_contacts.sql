@@ -1,9 +1,9 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("crm_warehouse_contact_sources") %}
 {% if 'jira_projects' in var("crm_warehouse_contact_sources") %}
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_users_table'),unique_column='accountid') }}
+  {{ filter_stitch_relation(relation=source('stitch_jira_projects','users'),unique_column='accountid') }}
 ),
 renamed as
  (
@@ -25,7 +25,7 @@ renamed as
     cast(null as {{ dbt_utils.type_string() }}) AS contact_company_id,
     cast(null as {{ dbt_utils.type_string() }}) AS contact_owner_id,
     cast(null as {{ dbt_utils.type_string() }}) AS contact_lifecycle_stage,
-    cast(null as boolean)         as contact_is_contractor,
+    cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
     case when emailaddress like '%@{{ var('stg_jira_projects_staff_email_domain') }}%' then true else false end as contact_is_staff,
      cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
      cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
@@ -54,7 +54,7 @@ renamed as
       cast(null as {{ dbt_utils.type_string() }}) AS contact_company_id,
       cast(null as {{ dbt_utils.type_string() }}) AS contact_owner_id,
       cast(null as {{ dbt_utils.type_string() }}) AS contact_lifecycle_stage,
-      cast(null as boolean)         as contact_is_contractor,
+      cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
       false as contact_is_staff,
        cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
        cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,

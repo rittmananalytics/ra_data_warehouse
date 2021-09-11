@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'redshift')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("ecommerce_warehouse_order_lines_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_order_lines_sources") %}
 
@@ -48,7 +48,6 @@ renamed as (
       price,
       product_id ,
       property_charge_interval_frequency ,
-      property_for_shipping_jan_3_rd_2020 ,
       property_shipping_interval_frequency ,
       property_shipping_interval_unit_type ,
       property_subscription_id ,

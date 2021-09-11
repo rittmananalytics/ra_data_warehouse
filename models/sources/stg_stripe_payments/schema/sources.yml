@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_stripe_payments
-    database: "{{ var('stg_stripe_payments_stitch_database') }}"
     schema: "{{ var('stg_stripe_payments_stitch_schema') }}"
 
     freshness:

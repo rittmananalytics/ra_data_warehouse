@@ -6,29 +6,29 @@
 
 with source as (
   select *
-  from {{ var('stg_hubspot_crm_fivetran_deals_table') }}
+  from {{ source('fivetran_hubspot_crm','deals') }}
 ),
 hubspot_deal_company as (
   select *
-  from {{ var('stg_hubspot_crm_fivetran_companies_table') }}
+  from {{ source('fivetran_hubspot_crm','companies') }}
 ),
 hubspot_deal_pipelines_source as (
   select *
-  from  {{ var('stg_hubspot_crm_fivetran_deal_pipelines_table') }}
+  from  {{ source('fivetran_hubspot_crm','deal_pipelines') }}
 )
 ,
 hubspot_deal_property_history as (
   select *
-  from  {{ var('stg_hubspot_crm_fivetran_property_history_table') }}
+  from  {{ source('fivetran_hubspot_crm','property_history') }}
 )
 ,
 hubspot_deal_stages as (
   select *
-  from  {{ var('stg_hubspot_crm_fivetran_pipeline_stages_table') }}
+  from  {{ source('fivetran_hubspot_crm','pipeline_stages') }}
 ),
 hubspot_deal_owners as (
   SELECT *
-  FROM {{ var('stg_hubspot_crm_fivetran_deal_owners_table') }}
+  FROM {{ source('fivetran_hubspot_crm','deal_owners') }}
 ),
 renamed as (
   SELECT

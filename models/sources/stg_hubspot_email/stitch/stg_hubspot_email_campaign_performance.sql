@@ -22,7 +22,7 @@ with source as (
     ad_campaign_bounces + ad_campaign_total_emails_unsubscribed as ad_campaign_total_invalid_clicks,
     ad_network
    FROM
-  {{ ref('stg_hubspot_email_email_performance')}} )
+  {{ source('stitch_hubspot_email','email_performance') }} )
 select
   *
 from

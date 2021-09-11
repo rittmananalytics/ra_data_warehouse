@@ -9,7 +9,7 @@ with source as (
       *,
       MAX(_sdc_batched_at) OVER (PARTITION BY list_id,campaign_id,  email_id,  timestamp,  action,  type,  email_address ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ var('stg_mailchimp_email_stitch_reports_email_activity_table') }})
+      {{ source('stitch_mailchimp_email', 'email_activity') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at
 ),

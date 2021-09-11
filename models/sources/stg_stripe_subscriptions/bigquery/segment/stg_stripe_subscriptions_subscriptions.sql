@@ -4,7 +4,7 @@
 
 {% if var("etl") == 'segment' %}
 with source as (
-  {{ filter_segment_relation(var('stg_stripe_payments_segment_subscriptions_table')) }}
+  {{ filter_segment_relation(relation=source('segment_stripe_subscriptions','subscriptions')) }}
 ),
 renamed as (
 SELECT

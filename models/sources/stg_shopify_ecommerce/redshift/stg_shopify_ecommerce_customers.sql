@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'redshift')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("ecommerce_warehouse_customer_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_customer_sources") %}
 
@@ -31,7 +31,10 @@ renamed as (
       lifetime_total_refunded ,
       lifetime_total_amount ,
       lifetime_count_orders ,
-      listagg(t.value,',') as customer_tags
+      {{ fivetran_utils.string_agg(
+        't.value',
+        ','
+      ) }} AS  as customer_tags
 
     from source c
     left join customer_tags t

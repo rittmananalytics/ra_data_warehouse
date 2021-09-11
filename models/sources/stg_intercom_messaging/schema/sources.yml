@@ -1,8 +1,8 @@
 version: 2
 
 sources:
-  - name: stitch_hubspot_email
-    schema: "{{ var('stg_hubspot_email_stitch_schema') }}"
+  - name: stitch_intercom_messaging
+    schema: "{{ var('stg_intercom_messaging_stitch_schema') }}"
 
     freshness:
       warn_after: {count: 1, period: day}

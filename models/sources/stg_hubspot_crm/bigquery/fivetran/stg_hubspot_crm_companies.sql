@@ -7,7 +7,7 @@ WITH source AS (
     SELECT
       *
     FROM
-    {{ var('stg_hubspot_crm_fivetran_companies_table') }}
+    {{ source('fivetran_hubspot_crm','companies') }}
   ),
   renamed AS (
     SELECT

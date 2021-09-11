@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_mailchimp_email
-    database: "{{ var('stg_mailchimp_email_stitch_database') }}"
     schema: "{{ var('stg_mailchimp_email_stitch_schema') }}"
 
     freshness:

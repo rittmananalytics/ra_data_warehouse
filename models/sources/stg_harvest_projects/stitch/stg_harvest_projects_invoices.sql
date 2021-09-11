@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("finance_warehouse_invoice_sources") %}
 {% if 'harvest_projects' in var("finance_warehouse_invoice_sources") %}
 

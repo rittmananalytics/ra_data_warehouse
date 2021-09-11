@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'redshift')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("ecommerce_warehouse_order_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_order_sources") %}
 
@@ -91,7 +91,10 @@ renamed as (
       line_item_count ,
       customer_order_seq_number ,
       new_vs_repeat,
-      listagg(t.value,',') as order_tags
+      {{ fivetran_utils.string_agg(
+        't.value',
+        ','
+      ) }}  as order_tags
     from source o
     left join order_tags t
     on o.order_id = t.order_id

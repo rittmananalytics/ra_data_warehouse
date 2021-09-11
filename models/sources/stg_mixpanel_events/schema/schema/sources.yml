@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: fivetran_mixpanel_events
-    database: "{{ var('stg_mixpanel_events_fivetran_database') }}"
     schema: "{{ var('stg_mixpanel_events_fivetran_schema') }}"
 
 
@@ -11,7 +10,6 @@ sources:
       - name: event
 
   - name: stitch_mixpanel_events
-    database: "{{ var('stg_mixpanel_events_stitch_database') }}"
     schema: "{{ var('stg_mixpanel_events_stitch_schema') }}"
 
     freshness:

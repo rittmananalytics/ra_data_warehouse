@@ -4,7 +4,7 @@
 
 WITH source as (
   select * from
-  {{ var('stg_hubspot_crm_fivetran_contacts_table') }}
+  {{ source('fivetran_hubspot_crm','contacts') }}
 ),
 renamed as (
     select
@@ -26,8 +26,8 @@ renamed as (
        cast(property_associatedcompanyid as string) as contact_company_id,
        cast(property_hubspot_owner_id as string) as contact_owner_id,
        property_lifecyclestage as contact_lifecycle_stage,
-       cast(null as boolean)         as contact_is_contractor,
-       cast(null as boolean) as contact_is_staff,
+       cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
+       cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
         cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
         cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
         cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,
