@@ -176,8 +176,6 @@ vars:
   stg_hubspot_email_stitch_database: ra-warehouse-dev
   stg_hubspot_email_stitch_schema: stitch_hubspot
   stg_hubspot_email_etl: stitch
-  stg_hubspot_email_stitch_email_events_table: "{{ source('stitch_hubspot_email', 'email_events') }}"
-  stg_hubspot_email_stitch_campaigns_table: "{{ source('stitch_hubspot_email', 'campaigns') }}"
 
   stg_intercom_messaging_id-prefix: intercom-
   stg_intercom_messaging_etl: stitch
