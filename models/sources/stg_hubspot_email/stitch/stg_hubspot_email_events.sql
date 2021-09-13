@@ -24,7 +24,6 @@ LEFT JOIN
 on e.recipient = c.contact_email
 {{ dbt_utils.group_by(n=8) }}
 )
-{% endif %}
 select * from renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}

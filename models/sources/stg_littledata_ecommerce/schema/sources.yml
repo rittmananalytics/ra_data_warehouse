@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: segment_shopify
-    database: "{{ var('stg_segment_shopify_events_segment_database') }}"
     schema: "{{ var('stg_segment_shopify_events_segment_schema') }}"
 
     freshness:

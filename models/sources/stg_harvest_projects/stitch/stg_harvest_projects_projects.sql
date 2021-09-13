@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("projects_warehouse_timesheet_sources") %}
 {% if 'harvest_projects' in var("projects_warehouse_timesheet_sources") %}
 
@@ -30,5 +30,6 @@ SELECT
 FROM
   renamed
 
+  {% else %} {{config(enabled=false)}} {% endif %}
   {% else %} {{config(enabled=false)}} {% endif %}
   {% else %} {{config(enabled=false)}} {% endif %}

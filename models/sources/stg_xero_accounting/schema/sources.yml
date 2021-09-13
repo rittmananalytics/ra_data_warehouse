@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_xero_accounting
-    database: "{{ var('stg_xero_accounting_stitch_database') }}"
     schema: "{{ var('stg_xero_accounting_stitch_schema') }}"
 
     freshness:
@@ -19,7 +18,6 @@ sources:
       - name: bank_transactions
 
   - name: fivetran_xero_accounting
-    database: "{{ var('stg_xero_accounting_fivetran_database') }}"
     schema: "{{ var('stg_xero_accounting_fivetran_schema') }}"
 
     freshness:

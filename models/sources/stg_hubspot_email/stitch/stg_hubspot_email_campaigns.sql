@@ -20,7 +20,6 @@ renamed as (
     )
   {{ dbt_utils.group_by(n=7) }}
 )
-{% endif %}
 select * from renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}

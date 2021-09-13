@@ -60,11 +60,11 @@ vars:
   crm_warehouse_contact_sources: []
   marketing_warehouse_channel_performance: []
   crm_warehouse_conversations_sources: []
-  marketing_warehouse_ad_campaign_performance_sources: []
-  marketing_warehouse_ad_performance_sources: ['facebook_ads','facebook_ads_2']
-  marketing_warehouse_ad_campaign_sources: ['facebook_ads','facebook_ads_2']
-  marketing_warehouse_ad_group_sources: ['facebook_ads','facebook_ads_2']
-  marketing_warehouse_ad_sources: ['facebook_ads','facebook_ads_2']
+  marketing_warehouse_ad_campaign_performance_sources: ['google_ads']
+  marketing_warehouse_ad_performance_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
   marketing_warehouse_email_event_sources: []
   marketing_warehouse_email_list_sources: []
   marketing_warehouse_deal_sources: []
@@ -86,7 +86,6 @@ vars:
   stg_git_repos_id-prefix: github-
   stg_git_repos_etl: fivetran
   stg_git_repos_fivetran_schema: fivetran_github
-
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch
@@ -136,25 +135,17 @@ vars:
   stg_harvest_projects_stitch_schema: stitch_harvest
   stg_harvest_projects_staff_email_domain: rittmananalytics.com
 
-
   stg_hubspot_crm_id-prefix: hubspot-
   stg_hubspot_crm_stitch_schema: stitch_hubspot
   stg_hubspot_crm_fivetran_schema: fivetran_hubspot_euwest2
   stg_hubspot_crm_etl: stitch
 
-
-
-
-
-
   stg_hubspot_email_id-prefix: hubspot-
-  stg_hubspot_email_stitch_database: ra-warehouse-dev
   stg_hubspot_email_stitch_schema: stitch_hubspot
   stg_hubspot_email_etl: stitch
 
   stg_intercom_messaging_id-prefix: intercom-
   stg_intercom_messaging_etl: stitch
-  stg_intercom_messaging_stitch_database: ra-warehouse-dev
   stg_intercom_messaging_stitch_schema: stitch_intercom
   stg_intercom_messaging_stitch_contacts_table: contacts
   stg_intercom_messaging_stitch_conversations_table: conversations
@@ -162,23 +153,13 @@ vars:
 
   stg_jira_projects_id-prefix: jira-
   stg_jira_projects_etl: stitch
-  stg_jira_projects_stitch_database: ra-warehouse-dev
   stg_jira_projects_stitch_schema: stitch_jira
   stg_jira_projects_staff_email_domain: rittmananalytics.com
-  stg_jira_projects_stitch_projects_table: "{{ source('stitch_jira_projects', 'projects') }}"
-  stg_jira_projects_stitch_project_types_table: "{{ source('stitch_jira_projects', 'project_types') }}"
-  stg_jira_projects_stitch_project_categories_table: "{{ source('stitch_jira_projects', 'project_categories') }}"
-  stg_jira_projects_stitch_issues_table: "{{ source('stitch_jira_projects', 'issues') }}"
-  stg_jira_projects_stitch_users_table: "{{ source('stitch_jira_projects', 'users') }}"
   stg_jira_projects_jira_url: rittmananalytics.atlassian.net/jira
 
   stg_mailchimp_email_id-prefix: mailchimp-
   stg_mailchimp_email_etl: stitch
   stg_mailchimp_email_stitch_schema: stitch_mailchimp
-  stg_mailchimp_email_stitch_list_members_table: "{{ source('stitch_mailchimp_email', 'list_members') }}"
-  stg_mailchimp_email_stitch_reports_email_activity_table: "{{ source('stitch_mailchimp_email', 'reports_email_activity') }}"
-  stg_mailchimp_email_stitch_lists_table: "{{ source('stitch_mailchimp_email', 'lists') }}"
-  stg_mailchimp_email_stitch_campaigns_table: "{{ source('stitch_mailchimp_email', 'campaigns') }}"
 
   stg_mixpanel_events_id-prefix: mixpanel-
   stg_mixpanel_events_stitch_schema: mixpanel_stitch
@@ -196,18 +177,9 @@ vars:
   stg_shopify_ecommerce_etl: fivetran
   stg_shopify_ecommerce_fivetran_schema: shopify
 
-
   stg_segment_shopify_events_id-prefix: segment_shopify-
   stg_segment_shopify_events_etl: segment
-  stg_segment_shopify_events_segment_database: ra-warehouse-dev
   stg_segment_shopify_events_segment_schema: production_shopify_by_littledata
-  stg_segment_shopify_events_segment_tracks_table: "{{ source('segment_shopify', 'tracks') }}"
-  stg_segment_shopify_events_segment_pages_table: "{{ source('segment_shopify', 'pages') }}"
-  stg_segment_shopify_events_segment_users_table: "{{ source('segment_shopify', 'users') }}"
-  stg_segment_shopify_events_segment_checkout_started_table: "{{ source('segment_shopify', 'checkout_started') }}"
-  stg_segment_shopify_events_segment_order_completed_table: "{{ source('segment_shopify', 'order_completed') }}"
-  stg_segment_shopify_events_segment_order_refunded_table: "{{ source('segment_shopify', 'order_refunded') }}"
-  stg_segment_shopify_events_segment_order_deleted_table: "{{ source('segment_shopify', 'order_deleted') }}"
   stg_segment_shopify_events_site: rittmananalytics.com
 
   stg_xero_accounting_id-prefix: xero-
@@ -218,13 +190,10 @@ vars:
   stg_stripe_payments_etl: stitch
   stg_stripe_payments_stitch_schema: stitch_stripe
 
-
   stg_stripe_subscriptions_id-prefix: stripe-
   stg_stripe_subscriptions_etl: stitch
-  stg_stripe_subscriptions_segment_database: ra-warehouse-dev
   stg_stripe_subscriptions_segment_schema: stripe
   stg_stripe_subscriptions_stitch_schema: stripe
-
 
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
@@ -232,7 +201,6 @@ vars:
   attribution_conversion_event_type: subscribed
   attribution_topup_event_type: account_credited
   attribution_converter_ltv: 200
-
 
   enable_companies_merge_file: true
   enable_ip_geo_enrichment: false

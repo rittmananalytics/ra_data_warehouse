@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_jira_projects
-    database: "{{ var('stg_jira_projects_stitch_database') }}"
     schema: "{{ var('stg_jira_projects_stitch_schema') }}"
 
     freshness:

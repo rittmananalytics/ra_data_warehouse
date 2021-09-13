@@ -17,7 +17,6 @@ sources:
       - name: "AD_PERFORMANCE_REPORT"
 
   - name: segment_google_ads
-    database: "{{ var('stg_google_ads_segment_database') }}"
     schema: "{{ var('stg_google_ads_segment_schema') }}"
 
     freshness:

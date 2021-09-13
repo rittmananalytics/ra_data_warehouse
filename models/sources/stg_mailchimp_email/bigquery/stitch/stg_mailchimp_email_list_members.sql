@@ -3,7 +3,7 @@
 {% if 'mailchimp_email' in var("marketing_warehouse_email_list_sources") %}
 
 WITH source as (
-  {{ filter_stitch_relation(relation={{ source('stitch_mailchimp_email', 'list_members') }},unique_column='id') }}
+  {{ filter_stitch_relation(relation=source('stitch_mailchimp_email', 'list_members') ,unique_column='id') }}
 ),
 renamed as (
 select

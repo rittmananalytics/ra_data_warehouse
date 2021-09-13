@@ -36,7 +36,7 @@ renamed as (
 SELECT
     day                    as ad_serve_ts,
     cast (adid as {{ dbt_utils.type_string() }})                  as ad_id,
-    averagecost/1000000          AS ad_avg_cost,
+    avgcost/1000000          AS ad_avg_cost,
     averagesessiondurationseconds          as ad_avg_time_on_site,
     bouncerate                   as ad_bounce_rate,
     clickassistedconv            as ad_total_assisted_conversions,

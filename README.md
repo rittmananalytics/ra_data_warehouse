@@ -698,7 +698,6 @@ vars:
 ```
 stg_facebook_ads_id-prefix: fbads-
   stg_facebook_ads_etl: segment
-  stg_facebook_ads_stitch_database:
   stg_facebook_ads_stitch_schema: stitch_facebook_ads
   stg_facebook_ads_stitch_ad_performance_table: "{{ source('stitch_facebook_ads', 'insights') }}"
 ```

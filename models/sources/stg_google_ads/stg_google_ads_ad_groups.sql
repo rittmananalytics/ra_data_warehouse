@@ -6,7 +6,7 @@
 {% if var("stg_google_ads_etl") == 'segment' %}
 
 with source as (
-  {{ filter_segment_relation(var('stg_google_ads_segment_ad_groups_table')) }}
+  {{ filter_segment_relation(relation=source('segment_google_ads', 'ad_groups')) }}
 ),
 renamed as (
   SELECT cast(id as {{ dbt_utils.type_string() }}) as ad_group_id,
@@ -19,7 +19,7 @@ renamed as (
 {% elif var("stg_google_ads_etl") == 'stitch' %}
 
 WITH source AS (
-  {{ filter_stitch_relation(relation=var('stg_google_ads_stitch_ad_groups_table'),unique_column='id') }}
+  relation=source('stitch_google_ads', 'ad_groups'),unique_column='id'
 ),
 renamed as (
 

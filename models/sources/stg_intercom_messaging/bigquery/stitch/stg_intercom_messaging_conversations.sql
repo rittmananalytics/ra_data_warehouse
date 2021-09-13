@@ -3,7 +3,7 @@
 {% if 'intercom_messaging' in var("crm_warehouse_conversations_sources") %}
 
 WITH source AS (
-      {{ filter_stitch_table(relation=source('stitch_intercom_messaging','conversations'),'id') }}
+      {{ filter_stitch_relation(relation=source('stitch_intercom_messaging', 'conversations'),unique_column='id') }}
   ),
 renamed as (
   SELECT

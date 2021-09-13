@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: fivetran_shopify
-    database: "{{ var('stg_shopify_ecommerce_fivetran_database') }}"
     schema: "{{ var('stg_shopify_ecommerce_fivetran_schema') }}"
 
     freshness:

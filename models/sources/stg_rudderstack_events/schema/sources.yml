@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: rudderstack
-    database: "{{ var('stg_rudderstack_events_rudderstack_database') }}"
     schema: "{{ var('stg_rudderstack_events_rudderstack_schema') }}"
 
     freshness:

@@ -67,3 +67,4 @@ left outer join categories c on p.project_category_id = c.project_category_id
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
