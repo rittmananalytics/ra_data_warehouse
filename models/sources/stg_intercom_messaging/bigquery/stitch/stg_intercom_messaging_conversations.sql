@@ -3,14 +3,14 @@
 {% if 'intercom_messaging' in var("crm_warehouse_conversations_sources") %}
 
 WITH source AS (
-      {{ filter_stitch_table(var('stg_intercom_messaging_stitch_schema'),var('stg_intercom_messaging_stitch_conversations_table'),'id') }}
+      {{ filter_stitch_relation(relation=source('stitch_intercom_messaging', 'conversations'),unique_column='id') }}
   ),
 renamed as (
   SELECT
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',id) as conversation_id,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',user.id) AS conversation_user_id,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.author.id) AS conversation_author_id,
-    cast (null as string) as company_id,
+    cast (null as {{ dbt_utils.type_string() }}) as company_id,
     conversation_message.author.type AS conversation_author_type,
     user.type AS  conversation_user_type,
     concat('{{ var('stg_intercom_messaging_id-prefix') }}',assignee.id) AS conversation_assignee_id,

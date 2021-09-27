@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: rudderstack
+    schema: "{{ var('stg_rudderstack_events_rudderstack_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: uuid_ts
+
+    tables:
+      - name: pages
+      - name: tracks
+      - name: users

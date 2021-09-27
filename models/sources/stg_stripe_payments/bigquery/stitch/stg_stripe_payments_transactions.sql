@@ -3,13 +3,13 @@
 {% if 'stripe_payments' in var("finance_warehouse_transaction_sources") %}
 
 WITH source AS (
-    {{ filter_stitch_relation(relation=var('stg_stripe_payments_stitch_balance_transactions_table'),unique_column='id') }}
+    {{ filter_stitch_relation(relation=source('stitch_stripe_payments','transactions'),unique_column='id') }}
 ),
 renamed AS (
   SELECT
       concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as transaction_id,
       description as transaction_description,
-      cast(null as string) as account_code,
+      cast(null as {{ dbt_utils.type_string() }}) as account_code,
       currency as transaction_currency,
       exchange_rate as transaction_exchange_rate,
       amount/100 as transaction_gross_amount,

@@ -31,7 +31,7 @@ with source as (
       tracking.text_clicks AS campaign_tracking_text_clicks,
       _sdc_batched_at,
       max(_sdc_batched_at) over (partition by id order by _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as max_sdc_batched_at,
-    FROM `ra-development.stitch_mailchimp.campaigns`
+    FROM {{ source('stitch_mailchimp_email', 'campaigns') }}
     {{ dbt_utils.group_by(25) }})
     where _sdc_batched_at = max_sdc_batched_at
 ),
@@ -44,7 +44,7 @@ renamed as
     NULL AS ad_campaign_avg_cost,
     NULL AS ad_campaign_avg_time_on_site,
     NULL AS ad_campaign_bounce_rate,
-    CAST(NULL AS string) AS ad_campaign_status,
+    cast(null as {{ dbt_utils.type_string() }}) AS ad_campaign_status,
     NULL AS ad_campaign_total_assisted_conversions,
     total_clicks AS ad_campaign_total_clicks,
     NULL AS ad_campaign_total_conversion_value,

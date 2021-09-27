@@ -7,7 +7,7 @@
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_deal_pipelines_table'),unique_column='pipelineid') }}
+  {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','deal_pipelines'),unique_column='pipelineid') }}
 ),
 renamed as (
     select

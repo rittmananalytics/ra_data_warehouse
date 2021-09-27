@@ -4,7 +4,7 @@
 
 WITH source AS (
   SELECT *
-  FROM {{ var('stg_mailchimp_email_stitch_campaigns_table') }}
+  FROM {{ source('stitch_mailchimp_email', 'campaigns') }}
 ),
 renamed as (
 SELECT

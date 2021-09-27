@@ -11,7 +11,7 @@ with source as (
     SELECT
       *
     FROM
-      {{ source('gcp_billing', 's_gcp_billing_export') }}
+      {{ source('gcp_billing', 'gcp_billing_export') }}
   ),
  renamed as
  (

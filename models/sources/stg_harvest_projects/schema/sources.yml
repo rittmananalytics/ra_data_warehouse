@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_harvest_projects
-    database: "{{ var('stg_harvest_projects_stitch_database') }}"
     schema: "{{ var('stg_harvest_projects_stitch_schema') }}"
 
     freshness:

@@ -4,7 +4,7 @@
 
 with source as (
   select * from
-  from {{ var('stg_hubspot_crm_fivetran_pipeline_stages_table') }}
+  from {{ source('fivetran_hubspot_crm','pipeline_stages') }}
 
 ),
 renamed as (

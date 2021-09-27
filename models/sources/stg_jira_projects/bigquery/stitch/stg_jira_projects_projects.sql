@@ -1,4 +1,4 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("projects_warehouse_delivery_sources") %}
 {% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
 
@@ -12,14 +12,14 @@ with source as (SELECT
     name as project_name,
     projectkeys ,
     projecttypekey as project_type_id,
-    cast (null as string) as project_status,
-    cast (null as string) as project_notes,
+    cast (null as {{ dbt_utils.type_string() }}) as project_status,
+    cast (null as {{ dbt_utils.type_string() }}) as project_notes,
 
     projectcategory.id as project_category_id,
     _sdc_batched_at,
     MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
-    {{ var('stg_jira_projects_stitch_projects_table') }}
+    source('stitch_jira_projects','projects')
   ),
     unnest(projectkeys) jira_project_key
 WHERE
@@ -33,7 +33,7 @@ types as (SELECT
         _sdc_batched_at,
       MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
-      {{ var('stg_jira_projects_stitch_project_types_table') }})
+      {{ source('stitch_jira_projects','project_types') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
 categories as (SELECT
@@ -46,7 +46,7 @@ categories as (SELECT
           _sdc_batched_at,
         MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
-        {{ var('stg_jira_projects_stitch_project_categories_table') }})
+        {{ source('stitch_jira_projects','project_categories') }})
     WHERE
       _sdc_batched_at = max_sdc_batched_at)
 select p.project_id,
@@ -65,5 +65,6 @@ from source p
 left outer join types t on p.project_type_id = t.project_type_id
 left outer join categories c on p.project_category_id = c.project_category_id
 
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

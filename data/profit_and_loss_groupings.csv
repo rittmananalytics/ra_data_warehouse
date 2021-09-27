@@ -1,0 +1,62 @@
+report_order,category,category_order,sub_category,sub_category_order,account_group,account_code
+1,Revenue,1,Sales,1,Consulting,200
+2,Revenue,1,Ancillaries,2,Referral Fees,201
+2,Revenue,1,Ancillaries,2,Other Revenue,260
+2,Revenue,1,Ancillaries,2,Other Revenue,220
+3,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,320
+4,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,476
+5,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,323
+6,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,412
+7,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,321
+8,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,479
+8,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,301
+8,Cost of Delivery,2,Delivery Team,3,Delivery Team Wages,300
+9,Cost of Delivery,2,Delivery Team,3,Delivery Expenses,480
+10,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,303
+11,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,325
+12,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,496
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,497
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,495
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,502
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,360
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,501
+13,Cost of Delivery,3,Delivery Team,4,Delivery Expenses,497 - REXP
+14,Overheads,4,Selling and Distribution Costs,5,Sales & Customer Success,322
+15,Overheads,4,Selling and Distribution Costs,5,Sales & Customer Success,424
+16,Overheads,4,Selling and Distribution Costs,5,Marketing,420
+17,Overheads,4,Selling and Distribution Costs,5,Marketing,400
+18,Overheads,4,Selling and Distribution Costs,5,Marketing,485
+18,Overheads,4,Selling and Distribution Costs,5,Marketing,494
+19,Overheads,4,Selling and Distribution Costs,5,Marketing,418
+19,Overheads,4,Selling and Distribution Costs,5,Marketing,503
+19,Overheads,4,Selling and Distribution Costs,5,Marketing,504
+20,Overheads,4,Back Office,6,Office,469
+21,Overheads,4,Back Office,6,Office,433
+22,Overheads,4,Back Office,6,Office,441
+23,Overheads,4,Back Office,6,Office,425
+24,Overheads,4,Back Office,6,Office,429
+24,Overheads,4,Back Office,6,Office,488
+24,Overheads,4,Back Office,6,Office,473
+24,Overheads,4,Back Office,6,Office,461
+25,Overheads,4,Back Office,7,Shared Services,463
+26,Overheads,4,Back Office,7,Shared Services,464
+27,Overheads,4,Back Office,7,Shared Services,489
+27,Overheads,4,Back Office,7,Shared Services,416
+28,Overheads,4,Banking,8,Bank Fees,404
+29,Overheads,4,Banking,8,Audit & Accounting Fees,401
+30,Overheads,4,Banking,8,Bank Fees,497
+31,Overheads,4,Banking,8,Foreign Exchange,499
+32,Overheads,4,Banking,8,Foreign Exchange,498
+33,Overheads,4,Directors Wages,9,Owner Drawings & Salary,478
+34,Overheads,4,Directors Wages,9,Owner Drawings & Salary,482
+35,Overheads,4,Back Office,10,Office Staff,477
+35,Overheads,4,Back Office,10,Office Staff,450
+35,Overheads,4,Back Office,10,Office Staff,449
+36,Overheads,4,Back Office,10,Office Staff,827
+37,Overheads,4,Back Office,10,Office Staff,493
+38,Overheads,4,Back Office,10,Office Staff,366
+39,Overheads,4,Back Office,10,Office Staff,470
+40,Taxation,5,Tax,11,Corporation Tax,500
+40,Taxation,5,Tax,11,Corporation Tax,520
+40,Taxation,5,Tax,11,Corporation Tax,91
+41,Dividends,6,Dividends,12,Dividends,484

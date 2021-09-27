@@ -1,3 +1,5 @@
 packages:
  - package: fishtown-analytics/dbt_utils
-   version: 0.6.2
+   version: 0.6.6
+ - package: fivetran/shopify
+   version: 0.4.2

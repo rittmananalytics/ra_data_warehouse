@@ -14,13 +14,13 @@ WITH source as (
 renamed as (
 select
        concat('custom_1-',id)                   as timesheet_project_id,
-       cast(null as string)                     as company_id,
-       cast(null as string)                     as project_name,
-       cast(null as string)                     as project_code,
-       cast(null as timestamp)                  as project_delivery_start_ts,
-       cast(null as timestamp)                  as project_delivery_end_ts,
-       cast(null as boolean)                    as project_is_active,
-       cast(null as boolean)                    as project_is_billable,
+       cast(null as {{ dbt_utils.type_string() }})                     as company_id,
+       cast(null as {{ dbt_utils.type_string() }})                     as project_name,
+       cast(null as {{ dbt_utils.type_string() }})                     as project_code,
+        cast(null as {{ dbt_utils.type_timestamp() }})                  as project_delivery_start_ts,
+        cast(null as {{ dbt_utils.type_timestamp() }})                  as project_delivery_end_ts,
+       cast(null as {{ dbt_utils.type_boolean() }})                    as project_is_active,
+       cast(null as {{ dbt_utils.type_boolean() }})                    as project_is_billable,
        cast(null as numeric)                    as project_hourly_rate,
        cast(null as numeric)                    as project_cost_budget,
        p.is_fixed_fee                           as project_is_fixed_fee,
@@ -28,7 +28,7 @@ select
        cast(null as numeric)                   as project_fee_amount,
        cast(null as numeric)                    as project_budget_amount,
        cast(null as numeric)                    as project_over_budget_notification_pct,
-       cast(null as string)                     as project_budget_by
+       cast(null as {{ dbt_utils.type_string() }})                     as project_budget_by
 from source p)
 SELECT
   *

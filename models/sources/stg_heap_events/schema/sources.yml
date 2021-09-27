@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: heap
+    schema: "{{ var('stg_heap_events_heap_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: time
+
+    tables:
+      - name: pages
+        identifier: pageviews
+      - name: tracks
+        identifier: all_events
+      - name: users
+      - name: sessions
+      - name: user_migrations

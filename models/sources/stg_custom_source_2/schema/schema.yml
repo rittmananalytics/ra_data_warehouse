@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: custom_source_2
-    database: ra-development
     schema: custom_schema_2
     tables:
       - name: s_customers

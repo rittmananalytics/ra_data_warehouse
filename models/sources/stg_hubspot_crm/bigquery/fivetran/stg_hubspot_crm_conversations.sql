@@ -4,7 +4,7 @@
 
 with source as (
   select * from
-  from {{ var('stg_hubspot_crm_fivetran_engagements_table') }}
+  from {{ source('fivetran_hubspot_crm','engagements') }}
 
 ),
 SELECT

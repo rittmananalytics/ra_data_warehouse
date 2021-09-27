@@ -11,7 +11,7 @@
     SELECT
       *
     FROM
-    {{ var('stg_mixpanel_events_fivetran_event_table') }}
+    {{ source('fivetran_mixpanel_events','events') }}
   ),
 renamed_full as (
   SELECT
@@ -65,12 +65,12 @@ renamed as (
     event_current_url           as page_url,
     {{ dbt_utils.get_url_host('event_current_url') }} as page_url_host,
     {{ dbt_utils.get_url_parameter('event_current_url', 'gclid') }} as gclid,
-    cast(null as string)        as utm_term,
-    cast(null as string)        as utm_content,
-    cast(null as string)        as utm_medium,
-    cast(null as string)        as utm_campaign,
-    cast(null as string)        as utm_source,
-    cast(null as string)        as ip,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_term,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_content,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_medium,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_campaign,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_source,
+    cast(null as {{ dbt_utils.type_string() }})        as ip,
     user_id                     as visitor_id,
     user_id                     as user_id,
     device                      as device,

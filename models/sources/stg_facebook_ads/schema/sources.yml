@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_facebook_ads
-    database: "{{ var('stg_facebook_ads_stitch_database') }}"
     schema: "{{ var('stg_facebook_ads_stitch_schema') }}"
 
     freshness:
@@ -12,13 +11,12 @@ sources:
 
     tables:
       - name: insights
-      - name: ads_insights
+        identifier: ads_insights
       - name: adsets
       - name: ads
       - name: campaigns
 
   - name: segment_facebook_ads
-    database: "{{ var('stg_facebook_ads_segment_database') }}"
     schema: "{{ var('stg_facebook_ads_segment_schema') }}"
 
     freshness:

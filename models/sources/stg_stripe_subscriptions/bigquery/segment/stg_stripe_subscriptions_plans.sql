@@ -4,7 +4,7 @@
 
 {% if var("etl") == 'segment' %}
 with source as (
-  {{ filter_segment_relation(var('stg_stripe_payments_segment_plans_table')) }}
+  {{ filter_segment_relation(relation=source('segment_stripe_subscriptions','plans')) }}
 ),
 renamed as (
 SELECT
@@ -17,7 +17,7 @@ SELECT
     currency as plan_currency,
     is_deleted as plan_is_deleted,
     created   as plan_created_ts,
-    cast(null as timestamp) as plan_last_modified_ts
+     cast(null as {{ dbt_utils.type_timestamp() }}) as plan_last_modified_ts
 FROM
   source
 )

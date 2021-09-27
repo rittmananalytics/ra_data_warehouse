@@ -1,10 +1,10 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("projects_warehouse_delivery_sources") %}
 {% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
 
 
 with source as (
-  {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_issues_table'),unique_column='key') }}
+  {{ filter_stitch_relation(relation=source('stitch_jira_projects','issues'),unique_column='key') }}
 ),
 renamed as (
 select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
@@ -14,7 +14,7 @@ select concat('{{ var('stg_jira_projects_id-prefix') }}',id) as task_id,
        coalesce(concat('{{ var('stg_jira_projects_id-prefix') }}',fields.assignee.accountid),concat('{{ var('stg_jira_projects_id-prefix') }}','-999')) as task_assignee_user_id,
        fields.summary as task_name,
        fields.issuetype.name as task_type,
-       cast(null as string) as task_description,
+       cast(null as {{ dbt_utils.type_string() }}) as task_description,
        concat('{{ var('stg_jira_projects_jira_url') }}','/software/projects/',fields.project.key,'/issues/', key) as task_url,
        fields.status.name	 as task_status,
        case when fields.status.name	 = 'To Do' then 1
@@ -66,5 +66,6 @@ SELECT
 FROM
  renamed
 
+ {% else %} {{config(enabled=false)}} {% endif %}
  {% else %} {{config(enabled=false)}} {% endif %}
  {% else %} {{config(enabled=false)}} {% endif %}

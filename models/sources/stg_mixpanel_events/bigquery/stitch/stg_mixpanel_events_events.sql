@@ -7,11 +7,11 @@
 {% if 'mixpanel_events' in var("product_warehouse_event_sources") %}
 
 WITH source as (
-  {{ filter_stitch_relation(relation=var('stg_mixpanel_events_stitch_event_table'),unique_column='mp_reserved_insert_id') }}
+  {{ filter_stitch_relation(relation=source('stitch_mixpanel_events','event'),unique_column='mp_reserved_insert_id') }}
 ),
 renamed_full as (
   SELECT
-    cast(mp_reserved_insert_id as string)      as event_id,
+    CAST(mp_reserved_insert_id AS {{ dbt_utils.type_string() }})  as event_id,
      event as event_type,
      path as event_property_path,
      title as event_property_title,
@@ -61,12 +61,12 @@ renamed as (
     event_current_url           as page_url,
     {{ dbt_utils.get_url_host('event_current_url') }} as page_url_host,
     {{ dbt_utils.get_url_parameter('event_current_url', 'gclid') }} as gclid,
-    cast(null as string)        as utm_term,
-    cast(null as string)        as utm_content,
-    cast(null as string)        as utm_medium,
-    cast(null as string)        as utm_campaign,
-    cast(null as string)        as utm_source,
-    cast(null as string)        as ip,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_term,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_content,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_medium,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_campaign,
+    cast(null as {{ dbt_utils.type_string() }})        as utm_source,
+    cast(null as {{ dbt_utils.type_string() }})        as ip,
     user_id                     as visitor_id,
     user_id                     as user_id,
     device                      as device,

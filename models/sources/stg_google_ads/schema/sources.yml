@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: stitch_google_ads
-    database: "{{ var('stg_google_ads_stitch_database') }}"
     schema: "{{ var('stg_google_ads_stitch_schema') }}"
 
     freshness:
@@ -13,9 +12,11 @@ sources:
     tables:
       - name: "CAMPAIGN_PERFORMANCE_REPORT"
       - name: campaigns
+      - name: ad_groups
+      - name: ads
+      - name: "AD_PERFORMANCE_REPORT"
 
   - name: segment_google_ads
-    database: "{{ var('stg_google_ads_segment_database') }}"
     schema: "{{ var('stg_google_ads_segment_schema') }}"
 
     freshness:
