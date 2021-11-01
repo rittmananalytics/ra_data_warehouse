@@ -62,7 +62,7 @@ vars:
   marketing_warehouse_channel_performance: []
   crm_warehouse_conversations_sources: []
   marketing_warehouse_ad_campaign_performance_sources: ['classic_google_ads']
-  marketing_warehouse_ad_performance_sources: ['classic_facebook_ads','classic_google_ads']
+  marketing_warehouse_ad_group_performance_sources: ['classic_facebook_ads','classic_google_ads']
   marketing_warehouse_ad_campaign_sources: ['classic_facebook_ads','classic_google_ads']
   marketing_warehouse_ad_group_sources: ['classic_facebook_ads','classic_google_ads']
   marketing_warehouse_ad_sources: ['classic_facebook_ads','classic_google_ads']
@@ -208,6 +208,26 @@ vars:
 
   facebook_ads_schema: fivetran_facebook_ads
   facebook_ads_database: ra-warehouse-dev
+
+  google_ads_api_source: adwords
+  google_ads__url_passthrough_metrics: []
+  google_ads__criteria_passthrough_metrics: []
+  google_ads__ad_stats_passthrough_metrics: []
+  google_ads_schema: fivetran_google_ads
+  google_ads_database: ra-warehouse-dev
+
+  ad_reporting__pinterest_enabled: false
+  ad_reporting__microsoft_ads_enabled: false
+  ad_reporting__linkedin_ads_enabled: false
+  ad_reporting__google_ads_enabled: true
+  ad_reporting__twitter_ads_enabled: false
+  ad_reporting__facebook_ads_enabled: true
+  ad_reporting__snapchat_ads_enabled: false
+
+  ad_reporting__facebook_ads_schema: staging
+  ad_reporting__facebook_ads_database: ra-warehouse-dev
+  ad_reporting__google_ads_schema: staging
+  ad_reporting__google_ads_database: ra-warehouse-dev
 
   shopify:
     shopify_customer:           "{{ ref('stg_shopify__customer') }}"

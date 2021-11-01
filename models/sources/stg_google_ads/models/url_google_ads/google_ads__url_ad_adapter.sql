@@ -1,39 +1,39 @@
-{{ config(enabled=var('api_source') == 'google_ads') }}
+{{ config(enabled=var('google_ads_api_source') == 'google_ads') }}
 
 with stats as (
 
     select *
-    from {{ var('ad_stats') }}
+    from {{ ref('stg_google_ads__ad_stats') }}
 
 ), accounts as (
 
     select *
-    from {{ var('account') }}
-    
+    from {{ ref('stg_google_ads__account') }}
+
 ), campaigns as (
 
     select *
-    from {{ var('campaign_history') }}
+    from {{ ref('stg_google_ads__campaign_history') }}
     where is_most_recent_record = True
-    
+
 ), ad_groups as (
 
     select *
-    from {{ var('ad_group_history') }}
+    from {{ ref('stg_google_ads__ad_group_history') }}
     where is_most_recent_record = True
-    
+
 ), ads as (
 
     select *
-    from {{ var('ad_history') }}
+    from {{ ref('stg_google_ads__ad_history') }}
     where is_most_recent_record = True
-    
+
 ), final_url as (
 
     select *
-    from {{ var('ad_final_url_history') }}
+    from {{ ref('stg_google_ads__ad_final_url_history') }}
     where is_most_recent_record = True
-    
+
 ), fields as (
 
     select

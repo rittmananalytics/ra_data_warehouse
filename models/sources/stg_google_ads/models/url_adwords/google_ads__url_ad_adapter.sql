@@ -1,9 +1,9 @@
-{{ config(enabled=var('api_source') == 'adwords') }}
+{{ config(enabled=var('google_ads_api_source') == 'adwords') }}
 
 with base as (
 
     select *
-    from {{ var('final_url_performance') }}
+    from {{ ref('stg_google_ads__final_url_performance') }}
 
 ), fields as (
 

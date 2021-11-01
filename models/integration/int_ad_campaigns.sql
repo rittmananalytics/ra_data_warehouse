@@ -1,31 +1,25 @@
 {% if var('marketing_warehouse_ad_campaign_sources') %}
 
-with campaigns as
+with ad_reporting as
   (
-    {% for source in var('marketing_warehouse_ad_campaign_sources') %}
-      {% set relation_source = 'stg_' + source + '_campaigns' %}
-
-      select
-        '{{source}}' as source,
-        *
-        from {{ ref(relation_source) }}
-
-        {% if not loop.last %}union all{% endif %}
-      {% endfor %}
-  )
-select *,
-
-       case when ad_network = 'Google Ads' then 'adwords'
-            when ad_network = 'Facebook Ads' then 'facebook'
-            when ad_network = 'Hubspot Email' then 'hs_email'
-            end as utm_source,
-       case when ad_network = 'Google Ads' then 'ppc'
-            when ad_network = 'Facebook Ads' then 'paid_social'
-            when ad_network in ('Mailchimp','Hubspot Email') then 'email'
-            else null end as utm_medium,
-       lower(ad_campaign_name) as utm_campaign
- from campaigns
-
+SELECT
+  campaign_id     AS ad_campaign_id,
+  campaign_name   AS ad_campaign_name,
+  platform        AS ad_network,
+  account_name    AS ad_account_name,
+  account_id      AS ad_account_id,
+  utm_source      AS utm_source,
+  utm_medium      AS utm_medium,
+  utm_campaign    AS utm_campaign,
+  utm_content     AS utm_content,
+  utm_term        AS utm_term
+FROM
+  {{ ref('int_ad_reporting') }}
+GROUP BY
+  1,2,3,4,5,6,7,8,9,10
+)
+select *
+from ad_reporting
  {% else %}
 
  {{

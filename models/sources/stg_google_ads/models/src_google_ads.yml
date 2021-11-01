@@ -1,0 +1,210 @@
+version: 2
+
+sources:
+  - name: adwords
+    schema: "{{ var('google_ads_schema', var('google_ads_api_source')) }}"
+    database: "{% if target.type != 'spark'%}{{ var('google_ads_database', target.database) }}{% endif %}"
+
+    loader: Fivetran
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: ad_final_url_history
+        description: Each record represents a version of an ad final url in Google Ads.
+        columns:
+          - name: ad_group_id
+            description: "{{ doc('ad_group_id') }}"
+          - name: ad_id
+            description: "{{ doc('ad_id') }}"
+          - name: updated_at
+            description: "{{ doc('updated_at') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: url
+            description: "{{ doc('effective_final_url') }}"
+
+      - name: ad_stats
+        description: Each record represents the daily performance of an ad in Google Ads.
+        columns:
+          - name: customer_id
+            description: "{{ doc('external_customer_id') }}"
+          - name: date
+            description: "{{ doc('date') }}"
+          - name: ad_group
+            description: "{{ doc('ad_group_id') }}"
+          - name: ad_id
+            description: "{{ doc('ad_id') }}"
+          - name: campaign_id
+            description: "{{ doc('campaign_id') }}"
+          - name: clicks
+            description: "{{ doc('clicks') }}"
+          - name: cost_micros
+            description: "{{ doc('cost') }}"
+          - name: impressions
+            description: "{{ doc('impressions') }}"
+
+      - name: ad_history
+        description: Each record represents a version of an ad in Google Ads.
+        columns:
+          - name: ad_group_id
+            description: "{{ doc('ad_group_id') }}"
+          - name: id
+            description: "{{ doc('ad_id') }}"
+          - name: updated_at
+            description: "{{ doc('updated_at') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: ad_type
+            description: "{{ doc('ad_type') }}"
+          - name: status
+            description: "{{ doc('ad_status') }}"
+
+      - name: ad_group_history
+        description: Each record represents a version of an ad group in Google Ads.
+        columns:
+          - name: id
+            description: "{{ doc('ad_group_id') }}"
+          - name: updated_at
+            description: "{{ doc('updated_at') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: ad_group_type
+            description: "{{ doc('ad_group_type') }}"
+          - name: campaign_id
+            description: "{{ doc('campaign_id') }}"
+          - name: campaign_name
+            description: "{{ doc('campaign_name') }}"
+          - name: name
+            description: "{{ doc('ad_group_name') }}"
+          - name: status
+            description: "{{ doc('ad_group_status') }}"
+
+      - name: campaign_history
+        description: Each record represents a version of a campaign in Google Ads.
+        columns:
+          - name: id
+            description: "{{ doc('campaign_id') }}"
+          - name: updated_at
+            description: "{{ doc('updated_at') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: name
+            description: "{{ doc('campaign_name') }}"
+          - name: customer_id
+            description: "{{ doc('external_customer_id') }}"
+
+      - name: account
+        description: Each record represents a version of an account in Google Ads.
+        columns:
+          - name: id
+            description: "{{ doc('account_id') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: currency_code
+            description: The currency of the spend reported.
+          - name: name
+            description: "{{ doc('account_descriptive_name') }}"
+
+      - name: final_url_performance
+        description: Each record represents the performance of a final url at the ad group level.
+        columns:
+          - name: _fivetran_id
+            description: "{{ doc('_fivetran_id') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: account_descriptive_name
+            description: "{{ doc('account_descriptive_name') }}"
+          - name: ad_group_id
+            description: "{{ doc('ad_group_id') }}"
+          - name: ad_group_name
+            description: "{{ doc('ad_group_name') }}"
+          - name: ad_group_status
+            description: "{{ doc('ad_group_status') }}"
+          - name: campaign_id
+            description: "{{ doc('campaign_id') }}"
+          - name: campaign_name
+            description: "{{ doc('campaign_name') }}"
+          - name: campaign_status
+            description: "{{ doc('campaign_status') }}"
+          - name: clicks
+            description: "{{ doc('clicks') }}"
+          - name: cost
+            description: "{{ doc('cost') }}"
+          - name: date
+            description: "{{ doc('date') }}"
+          - name: effective_final_url
+            description: "{{ doc('effective_final_url') }}"
+          - name: external_customer_id
+            description: "{{ doc('external_customer_id') }}"
+          - name: impressions
+            description: "{{ doc('impressions') }}"
+      - name: click_performance
+        description: The Click Performance report includes stats aggregated at each click level.
+        columns:
+          - name: _fivetran_id
+            description: "{{ doc('_fivetran_id') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: account_descriptive_name
+            description: "{{ doc('account_descriptive_name') }}"
+          - name: ad_group_id
+            description: "{{ doc('ad_group_id') }}"
+          - name: ad_group_name
+            description: "{{ doc('ad_group_name') }}"
+          - name: ad_group_status
+            description: "{{ doc('ad_group_status') }}"
+          - name: campaign_id
+            description: "{{ doc('campaign_id') }}"
+          - name: campaign_name
+            description: "{{ doc('campaign_name') }}"
+          - name: campaign_status
+            description: "{{ doc('campaign_status') }}"
+          - name: clicks
+            description: "{{ doc('clicks') }}"
+          - name: criteria_id
+            description: "{{ doc('criteria_id') }}"
+          - name: date
+            description: "{{ doc('date') }}"
+          - name: external_customer_id
+            description: "{{ doc('external_customer_id') }}"
+          - name: gcl_id
+            description: "{{ doc('gcl_id') }}"
+      - name: criteria_performance
+        description: The Criteria Performance report includes statistics aggregated at the ad group criteria level, one row per ad group and criteria combination.
+        columns:
+          - name: _fivetran_id
+            description: "{{ doc('_fivetran_id') }}"
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: account_descriptive_name
+            description: "{{ doc('account_descriptive_name') }}"
+          - name: ad_group_id
+            description: "{{ doc('ad_group_id') }}"
+          - name: ad_group_name
+            description: "{{ doc('ad_group_name') }}"
+          - name: ad_group_status
+            description: "{{ doc('ad_group_status') }}"
+          - name: campaign_id
+            description: "{{ doc('campaign_id') }}"
+          - name: campaign_name
+            description: "{{ doc('campaign_name') }}"
+          - name: campaign_status
+            description: "{{ doc('campaign_status') }}"
+          - name: clicks
+            description: "{{ doc('clicks') }}"
+          - name: cost
+            description: "{{ doc('cost') }}"
+          - name: criteria
+            description: "{{ doc('criteria') }}"
+          - name: criteria_destination_url
+            description: "{{ doc('criteria_destination_url') }}"
+          - name: criteria_type
+            description: "{{ doc('criteria_type') }}"
+          - name: date
+            description: "{{ doc('date') }}"
+          - name: external_customer_id
+            description: "{{ doc('external_customer_id') }}"
+          - name: id
+            description: ID of the main object of this row.
+          - name: impressions
+            description: "{{ doc('impressions') }}"

@@ -1,9 +1,9 @@
-{{ config(enabled=var('api_source') == 'adwords') }}
+{{ config(enabled=var('google_ads_api_source') == 'adwords') }}
 
 with base as (
 
     select *
-    from {{ var('click_performance') }}
+    from {{ ref('stg_google_ads__click_performance') }}
 
 ), fields as (
 
@@ -20,7 +20,7 @@ with base as (
 
     select *
     from fields
-    where gclid is not null 
+    where gclid is not null
     and rn = 1
 
 )

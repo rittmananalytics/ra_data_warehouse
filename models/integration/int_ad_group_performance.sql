@@ -1,11 +1,10 @@
-{% if var('marketing_warehouse_ad_campaign_performance_sources') %}
+{% if var('marketing_warehouse_ad_group_performance_sources') %}
 
-
-with ad_campaign_performance as
+with ad_group_performance as
   (
     SELECT
       date_day          as ad_campaign_serve_ts,
-      campaign_id       as ad_campaign_id,
+      ad_group_id       as ad_group_id,
       account_id        as ad_account_id,
       platform          as ad_network,
       sum(clicks)       as ad_campaign_total_clicks,
@@ -16,7 +15,7 @@ with ad_campaign_performance as
     GROUP BY
       1,2,3,4
   )
-select * from ad_campaign_performance
+select * from ad_group_performance
 
 {% else %}
 

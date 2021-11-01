@@ -1,9 +1,9 @@
-{{ config(enabled=var('api_source') == 'adwords') }}
+{{ config(enabled=var('google_ads_api_source') == 'adwords') }}
 
 with base as (
 
     select *
-    from {{ var('criteria_performance') }}
+    from {{ ref('stg_google_ads__criteria_performance') }}
 
 ), fields as (
 
@@ -15,7 +15,7 @@ with base as (
         campaign_id,
         ad_group_name,
         ad_group_id,
-        criteria, 
+        criteria,
         criteria_type,
         sum(spend) as spend,
         sum(clicks) as clicks,
