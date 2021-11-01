@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: google_ads__url_ad_adapter
+    description: Each record in this table represents the daily performance of URLs at the ad group level.
+    columns:
+      - name: date_day
+        description: "{{ doc('date') }}"
+      - name: account_name
+        description: "{{ doc('account_descriptive_name') }}"
+      - name: external_customer_id
+        description: "{{ doc('external_customer_id') }}"
+      - name: campaign_name
+        description: "{{ doc('campaign_name') }}"
+      - name: campaign_id
+        description: "{{ doc('campaign_id') }}"
+      - name: ad_group_name
+        description: "{{ doc('ad_group_name') }}"
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: base_url
+        description: "{{ doc('base_url') }}"
+      - name: url_host
+        description: "{{ doc('url_host') }}"
+      - name: url_path
+        description: "{{ doc('url_path') }}"
+      - name: utm_source
+        description: "{{ doc('utm_source') }}"
+      - name: utm_medium
+        description: "{{ doc('utm_medium') }}"
+      - name: utm_campaign
+        description: "{{ doc('utm_campaign') }}"
+      - name: utm_content
+        description: "{{ doc('utm_content') }}"
+      - name: utm_term
+        description: "{{ doc('utm_term') }}"
+      - name: spend
+        description: "{{ doc('cost') }}"
+      - name: clicks
+        description: "{{ doc('clicks') }}"
+      - name: impressions
+        description: "{{ doc('impressions') }}"
+      - name: criteria
+        description: "{{ doc('criteria') }}"
+      - name: criteria_type
+        description: "{{ doc('criteria_type') }}"
+  - name: google_ads__click_performance
+    description: Each record represents a click, with a unique Google Click ID (gclid).
+    columns:
+      - name: date_day
+        description: "{{ doc('date') }}"
+      - name: campaign_id
+        description: "{{ doc('campaign_id') }}"
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: criteria_id
+        description: "{{ doc('criteria_id') }}"
+      - name: gclid
+        description: "{{ doc('gcl_id') }}"
+      - name: rn
+        description: Row number partitioned by gclid and ordered by date_day which is used to dedupe possible double gclids.

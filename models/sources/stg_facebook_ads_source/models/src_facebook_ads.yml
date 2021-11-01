@@ -1,0 +1,122 @@
+version: 2
+
+sources:
+  - name: facebook_ads
+    schema: "{{ var('facebook_ads_schema', 'facebook_ads') }}"
+    database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
+    loader: Fivetran
+    loaded_at_field: _fivetran_synced
+    tables:
+      - name: account_history
+        description: Each record in this table reflects a version of a Facebook ad account.
+        columns:
+          - name: id
+            description: The ID of the ad account.
+          - name: name
+            description: Name of the account.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: ad_history
+        description: Each record in this table reflects a version of a Facebook ad.
+        columns:
+          - name: id
+            description: The ID of this ad.
+          - name: account_id
+            description: The ID of the ad account that this ad belongs to.
+          - name: ad_set_id
+            description: ID of the ad set that contains the ad.
+          - name: campaign_id
+            description: Ad campaign that contains this ad.
+          - name: creative_id
+            description: The ID of the ad creative to be used by this ad.
+          - name: name
+            description: Name of the ad.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: ad_set_history
+        description: Each record in this table reflects a version of a Facebook ad set.
+        columns:
+          - name: id
+            description: The ID of the ad set.
+          - name: account_id
+            description: The ID of the ad account that this ad set belongs to.
+          - name: campaign_id
+            description: Ad campaign that contains this ad set.
+          - name: name
+            description: The name of the ad set.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: basic_ad
+        description: Each record represents the daily performance of an ad in Facebook.
+        columns:
+          - name: ad_id
+            description: The ID of the ad the report relates to.
+          - name: date
+            description: The date of the reported performance.
+          - name: account_id
+            description: The ID of the ad account that this ad belongs to.
+          - name: impressions
+            description: The number of impressions the ad had on the given day.
+          - name: inline_link_clicks
+            description: The number of clicks the ad had on the given day.
+          - name: spend
+            description: The spend on the ad in the given day.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: campaign_history
+        description: Each record in this table reflects a version of a Facebook campaign.
+        columns:
+          - name: id
+            description: The ID of the campaign.
+          - name: account_id
+            description: The ID of the ad account that this campaign belongs to.
+          - name: name
+            description: The name of the campaign.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+
+      - name: creative_history
+        description: Each record in this table reflects a version of a Facebook creative.
+        columns:
+          - name: _fivetran_id
+            description: Unique record identifier
+          - name: page_link
+            description: URL destination of Facebook ads.
+          - name: template_page_link
+            description: URL destination of Facebook dynamic ads.
+          - name: id
+            description: Unique ID for an ad creative.
+          - name: account_id
+            description: Ad account ID for the account this ad creative belongs to.
+          - name: name
+            description: Name of this ad creative as seen in the ad account's library.
+          - name: url_tags        
+            description: A set of query string parameters which will replace or be appended to urls clicked from page post ads, message of the post, and canvas app install creatives only.
+          - name: _fivetran_synced
+            description: "{{ doc('_fivetran_synced') }}"
+          - name: template_page_link
+            description: URL destination of Facebook dynamic ads.
+          - name: asset_feed_spec_link_urls
+            description: Link to the asset feed spec
+          - name: object_story_link_data_child_attachments
+            description: Link of the object story child attachments
+          - name: object_story_link_data_caption
+            description: Link of the object story caption
+          - name: object_story_link_data_description
+            description: Link of the object story description
+          - name: object_story_link_data_link
+            description: Link of the object story link
+          - name: object_story_link_data_message
+            description: Link of the object story message
+          - name: template_app_link_spec_ios
+            description: Link of the object story spec for ios
+          - name: template_app_link_spec_ipad
+            description: Link of the template app spec for ipad
+          - name: template_app_link_spec_android
+            description: Link of the template app for android
+          - name: template_app_link_spec_iphone
+            description: Link of the template app for iphone

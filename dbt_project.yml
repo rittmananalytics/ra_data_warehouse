@@ -30,6 +30,7 @@ models:
       sources:
           materialized: view
           schema: staging
+
 # integration layer settings
       integration:
           materialized: view
@@ -60,11 +61,11 @@ vars:
   crm_warehouse_contact_sources: []
   marketing_warehouse_channel_performance: []
   crm_warehouse_conversations_sources: []
-  marketing_warehouse_ad_campaign_performance_sources: ['google_ads']
-  marketing_warehouse_ad_performance_sources: ['facebook_ads','google_ads']
-  marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
-  marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
-  marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_campaign_performance_sources: ['classic_google_ads']
+  marketing_warehouse_ad_performance_sources: ['classic_facebook_ads','classic_google_ads']
+  marketing_warehouse_ad_campaign_sources: ['classic_facebook_ads','classic_google_ads']
+  marketing_warehouse_ad_group_sources: ['classic_facebook_ads','classic_google_ads']
+  marketing_warehouse_ad_sources: ['classic_facebook_ads','classic_google_ads']
   marketing_warehouse_email_event_sources: []
   marketing_warehouse_email_list_sources: []
   marketing_warehouse_deal_sources: []
@@ -205,6 +206,9 @@ vars:
   enable_companies_merge_file: true
   enable_ip_geo_enrichment: false
 
+  facebook_ads_schema: fivetran_facebook_ads
+  facebook_ads_database: ra-warehouse-dev
+
   shopify:
     shopify_customer:           "{{ ref('stg_shopify__customer') }}"
     shopify_order:              "{{ ref('stg_shopify__order') }}"
@@ -234,6 +238,19 @@ vars:
     product_pass_through_columns:           []
     product_variant_pass_through_columns:   []
     transaction_pass_through_columns:       []
+
+
+
+
+  stg_facebook_ads_source:
+    account_history: "{{ source('facebook_ads','account_history') }}"
+    ad_history: "{{ source('facebook_ads','ad_history') }}"
+    ad_set_history: "{{ source('facebook_ads','ad_set_history') }}"
+    basic_ad: "{{ source('facebook_ads','basic_ad') }}"
+    campaign_history: "{{ source('facebook_ads','campaign_history') }}"
+    creative_history: "{{ source('facebook_ads','creative_history') }}"
+    facebook_ads_schema: fivetran_facebook_ads
+    facebook_ads_database: ra-warehouse-dev
 
 
 

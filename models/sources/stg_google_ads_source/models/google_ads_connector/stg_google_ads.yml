@@ -1,0 +1,122 @@
+version: 2
+
+models:
+  - name: stg_google_ads__account
+    description: Each record represents a version of an account in Google Ads.
+    columns:
+      - name: account_id
+        description: "{{ doc('account_id') }}"
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: currency_code
+        description: The currency of the spend reported.
+      - name: account_name
+        description: "{{ doc('account_descriptive_name') }}"
+
+  - name: stg_google_ads__ad_final_url_history
+    description: Each record represents a version of an ad final url in Google Ads.
+    columns:
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: ad_id
+        description: "{{ doc('ad_id') }}"
+      - name: updated_timestamp
+        description: "{{ doc('updated_at') }}"
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: final_url
+        description: "{{ doc('effective_final_url') }}"
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+      - name: base_url
+        description: "{{ doc('base_url') }}"
+      - name: url_host
+        description: "{{ doc('url_host') }}"
+      - name: url_path
+        description: "{{ doc('url_path') }}"
+      - name: utm_source
+        description: "{{ doc('utm_source') }}"
+      - name: utm_medium
+        description: "{{ doc('utm_medium') }}"
+      - name: utm_campaign
+        description: "{{ doc('utm_campaign') }}"
+      - name: utm_content
+        description: "{{ doc('utm_content') }}"
+      - name: utm_term
+        description: "{{ doc('utm_term') }}"
+
+  - name: stg_google_ads__ad_group_history
+    description: Each record represents a version of an ad group in Google Ads.
+    columns:
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: updated_timestamp
+        description: "{{ doc('updated_at') }}"
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: ad_group_type
+        description: "{{ doc('ad_group_type') }}"
+      - name: campaign_id
+        description: "{{ doc('campaign_id') }}"
+      - name: campaign_name
+        description: "{{ doc('campaign_name') }}"
+      - name: ad_group_name
+        description: "{{ doc('ad_group_name') }}"
+      - name: ad_group_status
+        description: "{{ doc('ad_group_status') }}"
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_google_ads__ad_history
+    description: Each record represents a version of an ad in Google Ads.
+    columns:
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: ad_id
+        description: "{{ doc('ad_id') }}"
+      - name: updated_timestamp
+        description: "{{ doc('updated_at') }}"
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: ad_type
+        description: "{{ doc('ad_type') }}"
+      - name: ad_status
+        description: "{{ doc('ad_status') }}"
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_google_ads__ad_stats
+    description: Each record represents the daily performance of an ad in Google Ads.
+    columns:
+      - name: account_id
+        description: "{{ doc('external_customer_id') }}"
+      - name: date_day
+        description: "{{ doc('date') }}"
+      - name: ad_group_id
+        description: "{{ doc('ad_group_id') }}"
+      - name: ad_id
+        description: "{{ doc('ad_id') }}"
+      - name: campaign_id
+        description: "{{ doc('campaign_id') }}"
+      - name: clicks
+        description: "{{ doc('clicks') }}"
+      - name: spend
+        description: "{{ doc('cost') }}"
+      - name: impressions
+        description: "{{ doc('impressions') }}"
+
+  - name: stg_google_ads__campaign_history
+    description: Each record represents a version of a campaign in Google Ads.
+    columns:
+      - name: campaign_id
+        description: "{{ doc('campaign_id') }}"
+      - name: updated_timestamp
+        description: "{{ doc('updated_at') }}"
+      - name: _fivetran_synced
+        description: "{{ doc('_fivetran_synced') }}"
+      - name: campaign_name
+        description: "{{ doc('campaign_name') }}"
+      - name: account_id
+        description: "{{ doc('external_customer_id') }}"
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"

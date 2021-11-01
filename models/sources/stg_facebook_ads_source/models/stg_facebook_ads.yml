@@ -1,0 +1,123 @@
+version: 2
+
+models:
+  - name: stg_facebook_ads__account_history
+    description: Each record in this table reflects a Facebook ad account.
+    columns:
+      - name: account_id
+        description: The ID of the ad account.
+        tests:
+          - not_null
+      - name: account_name
+        description: Name of the account.
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_facebook_ads__ad_history
+    description: Each record in this table reflects a Facebook ad.
+    columns:
+      - name: ad_id
+        description: The ID of this ad.
+        tests:
+          - not_null
+      - name: account_id
+        description: The ID of the ad account that this ad belongs to.
+      - name: ad_set_id
+        description: ID of the ad set that contains the ad.
+      - name: campaign_id
+        description: Ad campaign that contains this ad.
+      - name: creative_id
+        description: The ID of the ad creative to be used by this ad.
+      - name: ad_name
+        description: Name of the ad.
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_facebook_ads__ad_set_history
+    description: Each record in this table reflects a Facebook ad set.
+    columns:
+      - name: ad_set_id
+        description: The ID of the ad set.
+        tests:
+          - not_null
+      - name: account_id
+        description: The ID of the ad account that this ad set belongs to.
+      - name: campaign_id
+        description: Ad campaign that contains this ad set.
+      - name: ad_set_name
+        description: The name of the ad set.
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_facebook_ads__campaign_history
+    description: Each record in this table reflects a Facebook campaign.
+    columns:
+      - name: campaign_id
+        description: The ID of the campaign.
+        tests:
+          - not_null
+      - name: account_id
+        description: The ID of the ad account that this campaign belongs to.
+      - name: campaign_name
+        description: The name of the campaign.
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+
+  - name: stg_facebook_ads__creative_history
+    description: Each record in this table reflects a Facebook creative.
+    columns:
+      - name: _fivetran_id
+        description: Unique record identifier
+      - name: creative_id
+        tests:
+          - not_null
+      - name: creative_id
+        description: Unique ID for an ad creative.
+      - name: account_id
+        description: Ad account ID for the account this ad creative belongs to.
+      - name: creative_name
+        description: Name of this ad creative as seen in the ad account's library.
+      - name: url_tags
+        description: A set of query string parameters which will replace or be appended to urls clicked from page post ads, message of the post, and canvas app install creatives only.
+      - name: is_most_recent_record
+        description: "{{ doc('is_most_recent_record') }}"
+      - name: page_link
+        description: Link for the page.
+      - name: template_page_link
+        description: URL destination of Facebook dynamic ads.
+      - name: asset_feed_spec_link_urls
+        description: Link to the asset feed spec
+      - name: object_story_link_data_child_attachments
+        description: Link of the object story child attachments
+      - name: object_story_link_data_caption
+        description: Link of the object story caption
+      - name: object_story_link_data_description
+        description: Link of the object story description
+      - name: object_story_link_data_link
+        description: Link of the object story link
+      - name: object_story_link_data_message
+        description: Link of the object story message
+      - name: template_app_link_spec_ios
+        description: Link of the object story spec for ios
+      - name: template_app_link_spec_ipad
+        description: Link of the template app spec for ipad
+      - name: template_app_link_spec_android
+        description: Link of the template app for android
+      - name: template_app_link_spec_iphone
+        description: Link of the template app for iphone
+
+  - name: stg_facebook_ads__basic_ad
+    description: Each record represents the daily performance of an ad in Facebook.
+    columns:
+      - name: ad_id
+        description: The ID of the ad the report relates to.
+      - name: date_day
+        description: The date of the reported performance.
+      - name: account_id
+        description: The ID of the ad account that this ad belongs to.
+      - name: impressions
+        description: The number of impressions the ad had on the given day.
+      - name: clicks
+        description: The number of clicks the ad had on the given day.
+      - name: spend
+        description: The spend on the ad in the given day.

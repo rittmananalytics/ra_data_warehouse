@@ -1,5 +1,15 @@
 packages:
- - package: fishtown-analytics/dbt_utils
-   version: 0.6.6
+ - package: dbt-labs/dbt_utils
+   version: 0.7.1
  - package: fivetran/shopify
-   version: 0.4.2
+   version: 0.5.0
+ - package: fivetran/ad_reporting
+   version: 0.5.0
+ - package: fivetran/facebook_ads
+   version: 0.3.0
+ - package: fivetran/facebook_ads_source
+   version: 0.3.0
+ - package: fivetran/google_ads_source
+   version: 0.4.0
+ - package: fivetran/google_ads
+   version: 0.4.0

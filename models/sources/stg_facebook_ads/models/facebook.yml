@@ -1,0 +1,110 @@
+version: 2
+
+models:
+  - name: facebook_ads__ad_adapter
+    description: Each record represents the daily performance of a Facebook ad at the URL level.
+    columns:
+      - name: date_day
+        description: The date of the performance.
+      - name: account_id
+        description: The ID of the related account.
+      - name: account_name
+        description: The name of the related account.
+      - name: campaign_id
+        description: The ID of the related campaign.
+      - name: campaign_name
+        description: The name of the related campaign.
+      - name: ad_set_id
+        description: The ID of the related ad set.
+      - name: ad_set_name
+        description: The name of the related ad set.
+      - name: ad_id
+        description: The ID of the related ad.
+      - name: ad_name
+        description: The name of the related ad.
+      - name: creative_id
+        description: The ID of the related creative.
+      - name: creative_name
+        description: The name of the related creative.     
+      - name: base_url
+        description: The base URL of the ad, extracted from the page_link and template_page_link.
+      - name: url_host
+        description: The URL host of the ad, extracted from the page_link and template_page_link.
+      - name: url_path
+        description: The URL path of the ad, extracted from the page_link and template_page_link.
+      - name: utm_source
+        description: The utm_source parameter of the ad, extracted from the page_link and template_page_link.
+      - name: utm_medium
+        description: The utm_medium parameter of the ad, extracted from the page_link and template_page_link.
+      - name: utm_campaign
+        description: The utm_campaign parameter of the ad, extracted from the page_link and template_page_link.
+      - name: utm_content
+        description: The utm_content parameter of the ad, extracted from the page_link and template_page_link.
+      - name: utm_term
+        description: The utm_term parameter of the ad, extracted from the page_link and template_page_link.
+      - name: clicks
+        description: The number of clicks the ad had on the given day.
+      - name: impressions
+        description: The number of impressions the ad had on the given day.
+      - name: spend
+        description: The spend on the ad in the given day.
+
+  - name: facebook_ads__ad_set_report
+    description: Each record represents the daily performance of a Facebook ad set.
+    columns:
+      - name: date_day
+        description: The date of the performance.
+      - name: account_id
+        description: The ID of the related account.
+      - name: account_name
+        description: The name of the related account.
+      - name: campaign_id
+        description: The ID of the related campaign.
+      - name: campaign_name
+        description: The name of the related campaign.
+      - name: ad_set_id
+        description: The ID of the related ad set.
+      - name: ad_set_name
+        description: The name of the related ad set.
+      - name: clicks
+        description: The number of clicks the ad had on the given day.
+      - name: impressions
+        description: The number of impressions the ad had on the given day.
+      - name: spend
+        description: The spend on the ad in the given day.
+
+  - name: facebook_ads__campaign_report
+    description: Each record represents the daily performance of a Facebook campaign.
+    columns:
+      - name: date_day
+        description: The date of the performance.
+      - name: account_id
+        description: The ID of the related account.
+      - name: account_name
+        description: The name of the related account.
+      - name: campaign_id
+        description: The ID of the related campaign.
+      - name: campaign_name
+        description: The name of the related campaign.
+      - name: clicks
+        description: The number of clicks the ad had on the given day.
+      - name: impressions
+        description: The number of impressions the ad had on the given day.
+      - name: spend
+        description: The spend on the ad in the given day.
+
+  - name: facebook_ads__account_report
+    description: Each record represents the daily performance of a Facebook account.
+    columns:
+      - name: date_day
+        description: The date of the performance.
+      - name: account_id
+        description: The ID of the related account.
+      - name: account_name
+        description: The name of the related account.
+      - name: clicks
+        description: The number of clicks the ad had on the given day.
+      - name: impressions
+        description: The number of impressions the ad had on the given day.
+      - name: spend
+        description: The spend on the ad in the given day.
