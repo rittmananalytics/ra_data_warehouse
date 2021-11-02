@@ -1,4 +1,7 @@
-{{ config(enabled=var('google_ads_api_source') == 'adwords') }}
+{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
+{% if var("marketing_warehouse_ad_sources") %}
+{% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
+{% if var("google_ads_api_source") == 'adwords' %}
 
 with base as (
 
@@ -26,3 +29,8 @@ with base as (
 )
 
 select * from filtered
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
