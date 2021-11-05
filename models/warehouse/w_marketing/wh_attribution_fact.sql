@@ -1,16 +1,10 @@
 {% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
 {{
     config(
-        enabled=true
-    )
-}}
-{% else %}
-{{
-    config(
       alias='attribution_fact'
     )
 }}
-{% endif %}
+
 WITH
 converting_events as
     (
@@ -125,3 +119,5 @@ select
   *
 from
   final
+
+{% endif %}
