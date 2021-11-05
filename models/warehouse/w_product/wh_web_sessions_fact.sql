@@ -46,56 +46,21 @@ with sessions as
       {{ dbt_utils.group_by(n=28) }}
     )
     {% if var('marketing_warehouse_ad_campaign_sources') %}
-        ,
-      utm_campaign_mapping as
-      ( SELECT
-          *
-        FROM
-          {{ ref('utm_campaign_mapping')}}
-      ),
-      ad_campaigns as (
-        SELECT
-          *
-        FROM
-          {{ ref('wh_ad_campaigns_dim')}}
-      )
-    {% endif %}
-    {% if var("subscriptions_warehouse_sources")  %}
       ,
-      customers as (
-       SELECT
-        *
-       FROM   {{ ref('wh_customers_dim') }}
-         )
-    {% endif %}
-      ,
-      joined as (
-        SELECT
-            s.*
-            {% if var('marketing_warehouse_ad_campaign_sources') %}
-            ,a.ad_campaign_pk
-            {% endif %}
-            {% if var("subscriptions_warehouse_sources")  %}
-            ,c.customer_pk
-            {% endif %}
-        FROM
-           sessions s
-    {% if var("subscriptions_warehouse_sources")  %}
-        LEFT OUTER JOIN
-          customers c
-        ON
-          s.blended_user_id = c.customer_id
-        {% endif %}
-        {% if var('marketing_warehouse_ad_campaign_sources') %}
-         LEFT OUTER JOIN
-          utm_campaign_mapping m
-         ON
-          s.utm_campaign = m.utm_campaign
-        LEFT OUTER JOIN
-          ad_campaigns a
-        ON m.ad_campaign_id = a.ad_campaign_id
-        {% endif %}
-      ),
+ad_campaigns as (
+      SELECT *
+        FROM {{ ref('wh_ad_campaigns_dim')}}
+    ),
+joined as (
+      SELECT
+        e.*,
+        c.ad_campaign_pk
+      FROM
+        sessions e
+      LEFT JOIN
+        ad_campaigns c
+      ON e.utm_campaign = c.utm_campaign
+    ),
       ordered as (
         {% if target.type == 'bigquery' %}
         SELECT
@@ -108,13 +73,14 @@ with sessions as
           row_number() over (partition by blended_user_id order by session_start_ts) as user_session_number
         FROM
           joined)
-  SELECT
-    *
-  FROM
-    ordered
-
+    SELECT
+      *
+    FROM
+      ordered
 {% else %}
-
-{{config(enabled=false)}}
-
-{% endif %}
+    SELECT
+      *
+    FROM
+      events
+    {% endif %}
+    {% else %}{{config(enabled=false)}}{% endif %}

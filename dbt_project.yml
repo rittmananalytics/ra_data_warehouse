@@ -57,66 +57,20 @@ seeds:
     schema: seed
 
 vars:
-  crm_warehouse_company_sources: []
-  crm_warehouse_contact_sources: []
-  marketing_warehouse_channel_performance: []
-  crm_warehouse_conversations_sources: []
-  marketing_warehouse_ad_campaign_performance_sources: ['classic_google_ads']
-  marketing_warehouse_ad_group_performance_sources: ['classic_facebook_ads','classic_google_ads']
-  marketing_warehouse_ad_campaign_sources: ['classic_facebook_ads','classic_google_ads']
-  marketing_warehouse_ad_group_sources: ['classic_facebook_ads','classic_google_ads']
-  marketing_warehouse_ad_sources: ['classic_facebook_ads','classic_google_ads']
-  marketing_warehouse_email_event_sources: []
-  marketing_warehouse_email_list_sources: []
-  marketing_warehouse_deal_sources: []
-  projects_warehouse_delivery_sources: []
-  projects_warehouse_timesheet_sources: []
-  finance_warehouse_invoice_sources: []
-  finance_warehouse_currencies_sources: []
-  finance_warehouse_transaction_sources: []
-  finance_warehouse_bank_transaction_sources: []
-  finance_warehouse_journal_sources: []
-  finance_warehouse_journal_line_sources: []
-  finance_warehouse_payment_sources: []
-  product_warehouse_event_sources: []
+
+
+
+  marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
+
+  product_warehouse_event_sources: ['segment_events_page','segment_events_track']
   subscriptions_warehouse_sources: []
-  dev_warehouse_git_sources: []
-  product_warehouse_usage_sources: []
-  crm_warehouse_nps_sources: []
 
-  stg_git_repos_id-prefix: github-
-  stg_git_repos_etl: fivetran
-  stg_git_repos_fivetran_schema: fivetran_github
 
-  stg_asana_projects_id-prefix: asana-
-  stg_asana_projects_etl: stitch
-  stg_asana_projects_stitch_schema: stitch_asana
-  stg_asana_projects_staff_email_domain: rittmananalytics.com
 
-  stg_looker_usage_stats_id-prefix: looker-
-  stg_looker_usage_schema: fivetran_email
-  stg_looker_usage_stats_table: usage_stats
-
-  stg_gcp_billing_product_usage_id-prefix: gcp-billing-
-  stg_gcp_billing_product_usage_schema: gcp_billing_export
-
-  stg_bigquery_usage_id-prefix: bigquery-log-
-  stg_bigquery_usage_schema: bigquery_log_export
-
-  stg_facebook_ads_id-prefix: fbads-
-  stg_facebook_ads_etl: stitch
-  stg_facebook_ads_stitch_schema: stitch_facebook_ads
-  stg_facebook_ads_segment_schema: facebook_ads
-
-  stg_google_ads_id-prefix: gads-
-  stg_google_ads_etl: stitch
-  stg_google_ads_stitch_schema: stitch_google_ads
-  stg_google_ads_segment_schema: google_ads
-  ads_campaigns_only: true
-
-  stg_segment_events_id-prefix: segment-
   stg_segment_events_etl: segment
-  stg_segment_events_segment_schema: company_website
+  stg_segment_events_segment_schema: segment_events
   stg_segment_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
@@ -126,41 +80,8 @@ vars:
   stg_rudderstack_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
-  stg_baremetrics_analytics_id-prefix: baremetrics-
-  stg_baremetrics_analytics_etl: segment
-  stg_baremetrics_analytics_segment_schema: baremetrics
-  stg_baremetrics_analytics_segment_plan_breakdown_table: plan_breakdown
 
-  stg_harvest_projects_id-prefix: harvest-
-  stg_harvest_projects_etl: stitch
-  stg_harvest_projects_stitch_schema: stitch_harvest
-  stg_harvest_projects_staff_email_domain: rittmananalytics.com
 
-  stg_hubspot_crm_id-prefix: hubspot-
-  stg_hubspot_crm_stitch_schema: stitch_hubspot
-  stg_hubspot_crm_fivetran_schema: fivetran_hubspot_euwest2
-  stg_hubspot_crm_etl: stitch
-
-  stg_hubspot_email_id-prefix: hubspot-
-  stg_hubspot_email_stitch_schema: stitch_hubspot
-  stg_hubspot_email_etl: stitch
-
-  stg_intercom_messaging_id-prefix: intercom-
-  stg_intercom_messaging_etl: stitch
-  stg_intercom_messaging_stitch_schema: stitch_intercom
-  stg_intercom_messaging_stitch_contacts_table: contacts
-  stg_intercom_messaging_stitch_conversations_table: conversations
-  stg_intercom_messaging_tags: ["intercom", "messaging"]
-
-  stg_jira_projects_id-prefix: jira-
-  stg_jira_projects_etl: stitch
-  stg_jira_projects_stitch_schema: stitch_jira
-  stg_jira_projects_staff_email_domain: rittmananalytics.com
-  stg_jira_projects_jira_url: rittmananalytics.atlassian.net/jira
-
-  stg_mailchimp_email_id-prefix: mailchimp-
-  stg_mailchimp_email_etl: stitch
-  stg_mailchimp_email_stitch_schema: stitch_mailchimp
 
   stg_mixpanel_events_id-prefix: mixpanel-
   stg_mixpanel_events_stitch_schema: mixpanel_stitch
@@ -178,18 +99,9 @@ vars:
   stg_shopify_ecommerce_etl: fivetran
   stg_shopify_ecommerce_fivetran_schema: shopify
 
-  stg_segment_shopify_events_id-prefix: segment_shopify-
-  stg_segment_shopify_events_etl: segment
-  stg_segment_shopify_events_segment_schema: production_shopify_by_littledata
-  stg_segment_shopify_events_site: rittmananalytics.com
 
-  stg_xero_accounting_id-prefix: xero-
-  stg_xero_accounting_etl: stitch
-  stg_xero_accounting_stitch_schema: xero
-  stg_xero_accounting_fivetran_schema: fivetran_xero
-  stg_stripe_payments_id-prefix: stripe-
-  stg_stripe_payments_etl: stitch
-  stg_stripe_payments_stitch_schema: stitch_stripe
+
+
 
   stg_stripe_subscriptions_id-prefix: stripe-
   stg_stripe_subscriptions_etl: stitch
@@ -199,7 +111,7 @@ vars:
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
   attribution_create_account_event_type: account_opened
-  attribution_conversion_event_type: subscribed
+  attribution_conversion_event_type: link_clicked
   attribution_topup_event_type: account_credited
   attribution_converter_ltv: 200
 

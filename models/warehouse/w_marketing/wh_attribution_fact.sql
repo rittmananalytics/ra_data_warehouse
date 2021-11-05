@@ -1,7 +1,7 @@
-{% if (not var("enable_segment_events_source") and var("enable_mixpanel_events_source")) or (not var("enable_marketing_warehouse")) %}
+{% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
 {{
     config(
-        enabled=false
+        enabled=true
     )
 }}
 {% else %}
