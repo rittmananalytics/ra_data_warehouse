@@ -64,10 +64,9 @@ vars:
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
 
-  product_warehouse_event_sources: ['segment_events_page','segment_events_track']
+  product_warehouse_event_sources: ['segment_events_page','segment_events_track','segment_events_order_checkout']
+  order_conversion_sources: ['custom']
   subscriptions_warehouse_sources: []
-
-
 
   stg_segment_events_etl: segment
   stg_segment_events_segment_schema: segment_events
@@ -80,14 +79,14 @@ vars:
   stg_rudderstack_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
-
-
-
   stg_mixpanel_events_id-prefix: mixpanel-
   stg_mixpanel_events_stitch_schema: mixpanel_stitch
   stg_mixpanel_events_fivetran_schema: fivetran_mixpanel
   stg_mixpanel_events_etl: stitch
   stg_mixpanel_events_site: rittmananalytics.com
+
+  stg_custom_conversions_schema: analytics_staging
+
 
   stg_heap_events_id-prefix: heap-
   stg_heap_events_etl: heap
@@ -99,10 +98,6 @@ vars:
   stg_shopify_ecommerce_etl: fivetran
   stg_shopify_ecommerce_fivetran_schema: shopify
 
-
-
-
-
   stg_stripe_subscriptions_id-prefix: stripe-
   stg_stripe_subscriptions_etl: stitch
   stg_stripe_subscriptions_segment_schema: stripe
@@ -110,13 +105,14 @@ vars:
 
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
-  attribution_create_account_event_type: account_opened
-  attribution_conversion_event_type: link_clicked
-  attribution_topup_event_type: account_credited
-  attribution_converter_ltv: 200
+  attribution_create_account_event_type: pressed_button
+  attribution_conversion_event_type: order_checkout
+  attribution_order_id_column: event_text
+  attribution_orders_event_table: order_checkout
+  attribution_lookback_days_window : 30
 
-  enable_companies_merge_file: true
-  enable_ip_geo_enrichment: false
+#  enable_companies_merge_file: true
+#  enable_ip_geo_enrichment: false
 
   facebook_ads_schema: fivetran_facebook_ads
   facebook_ads_database: ra-warehouse-dev
@@ -128,48 +124,39 @@ vars:
   google_ads_schema: fivetran_google_ads
   google_ads_database: ra-warehouse-dev
 
-  ad_reporting__pinterest_enabled: false
-  ad_reporting__microsoft_ads_enabled: false
-  ad_reporting__linkedin_ads_enabled: false
-  ad_reporting__google_ads_enabled: true
-  ad_reporting__twitter_ads_enabled: false
-  ad_reporting__facebook_ads_enabled: true
-  ad_reporting__snapchat_ads_enabled: false
-
   ad_reporting__facebook_ads_schema: staging
   ad_reporting__facebook_ads_database: ra-warehouse-dev
   ad_reporting__google_ads_schema: staging
   ad_reporting__google_ads_database: ra-warehouse-dev
 
-  shopify:
-    shopify_customer:           "{{ ref('stg_shopify__customer') }}"
-    shopify_order:              "{{ ref('stg_shopify__order') }}"
-    shopify_order_line:         "{{ ref('stg_shopify__order_line') }}"
-    shopify_order_line_refund:  "{{ ref('stg_shopify__order_line_refund') }}"
-    shopify_product:            "{{ ref('stg_shopify__product') }}"
-    shopify_product_variant:    "{{ ref('stg_shopify__product_variant') }}"
-    shopify_transaction:        "{{ ref('stg_shopify__transaction') }}"
-    shopify_refund:             "{{ ref('stg_shopify__refund') }}"
-    shopify_order_adjustment:   "{{ ref('stg_shopify__order_adjustment') }}"
+#  shopify:
+#    shopify_customer:           "{{ ref('stg_shopify__customer') }}"
+#    shopify_order:              "{{ ref('stg_shopify__order') }}"
+#    shopify_order_line:         "{{ ref('stg_shopify__order_line') }}"
+#    shopify_order_line_refund:  "{{ ref('stg_shopify__order_line_refund') }}"
+#    shopify_product:            "{{ ref('stg_shopify__product') }}"
+#    shopify_product_variant:    "{{ ref('stg_shopify__product_variant') }}"
+#    shopify_transaction:        "{{ ref('stg_shopify__transaction') }}"
+#    shopify_refund:             "{{ ref('stg_shopify__refund') }}"
+#    shopify_order_adjustment:   "{{ ref('stg_shopify__order_adjustment') }}"
 
-  shopify_source:
-    customer_source:                        "{{ source('shopify','customer') }}"
-    order_line_refund_source:               "{{ source('shopify','order_line_refund') }}"
-    order_line_source:                      "{{ source('shopify','order_line') }}"
-    order_source:                           "{{ source('shopify','order') }}"
-    product_source:                         "{{ source('shopify','product') }}"
-    product_variant_source:                 "{{ source('shopify','product_variant') }}"
-    transaction_source:                     "{{ source('shopify','transaction') }}"
-    refund_source:                          "{{ source('shopify','refund') }}"
-    order_adjustment_source:                "{{ source('shopify','order_adjustment') }}"
+#  shopify_source:
+#    order_line_refund_source:               "{{ source('shopify','order_line_refund') }}"
+#    order_line_source:                      "{{ source('shopify','order_line') }}"
+#    order_source:                           "{{ source('shopify','order') }}"
+#    product_source:                         "{{ source('shopify','product') }}"
+#    product_variant_source:                 "{{ source('shopify','product_variant') }}"
+#    transaction_source:                     "{{ source('shopify','transaction') }}"
+#    refund_source:                          "{{ source('shopify','refund') }}"
+#    order_adjustment_source:                "{{ source('shopify','order_adjustment') }}"
 
-    customer_pass_through_columns:          []
-    order_line_refund_pass_through_columns: []
-    order_line_pass_through_columns:        []
-    order_pass_through_columns:             []
-    product_pass_through_columns:           []
-    product_variant_pass_through_columns:   []
-    transaction_pass_through_columns:       []
+#    customer_pass_through_columns:          []
+#    order_line_refund_pass_through_columns: []
+#    order_line_pass_through_columns:        []
+#    order_pass_through_columns:             []
+#    product_pass_through_columns:           []
+#    product_variant_pass_through_columns:   []
+#    transaction_pass_through_columns:       []
 
 
 
