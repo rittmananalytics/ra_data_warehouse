@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_jira_projects_projects
+    description: "Jira Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: lead_user_id
+        tests:
+          - not_null:
+              severity: warn

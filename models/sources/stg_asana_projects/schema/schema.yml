@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_asana_projects_projects
+    description: "Asana Delivery Projects"
+    columns:
+      - name: project_id
+        tests:
+          - unique
+          - not_null
+      - name: project_name
+        tests:
+          - unique
+          - not_null:
+              severity: warn
+      - name: project_status
+        tests:
+          - not_null:
+              severity: warn
+  - name: stg_asana_projects_tasks
+    description: "Asana Delivery Tasks"
+    columns:
+      - name: task_id
+        tests:
+          - unique
+          - not_null
+      - name: project_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_asana_projects_projects')
+              field: project_id
+      - name: task_name
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+      - name: task_creator_user_id
+        tests:
+          - not_null:
+              severity: warn

@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_xero_accounting_contacts
+    description: "Xero Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_name
+        tests:
+          - not_null:
+              severity: warn
+      - name: contact_company_id
+        tests:
+          - not_null
+      - name: contact_company_id
+        tests:
+          - not_null:
+              severity: warn
+      - name: contact_company_id
+        tests:
+          - not_null:
+              severity: warn

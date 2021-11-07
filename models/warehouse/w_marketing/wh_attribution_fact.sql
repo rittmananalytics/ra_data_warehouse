@@ -69,9 +69,9 @@ converting_sessions_deduped_labelled as
         split(net.reg_domain(referrer_host),'.')[OFFSET(0)] as referrer_domain,
         channel,
         events,
-        order_id,
-        total_revenue,
-        currency_code
+        c.order_id,
+        c.total_revenue,
+        c.currency_code
       FROM
         {{ ref('wh_web_sessions_fact') }} s
       JOIN

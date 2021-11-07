@@ -1,0 +1,18 @@
+version: 2
+
+
+models:
+  - name: stg_harvest_projects_contacts
+    columns:
+        - name: contact_id
+          description: "Unique identifier of a Harvest invoice entry, primary key"
+          tests:
+              - unique
+              - not_null
+  - name: stg_harvest_projects_timesheets
+    columns:
+        - name: timesheet_id
+          description: "Unique identifier of a Harvest time entry, primary key"
+          tests:
+              - unique
+              - not_null

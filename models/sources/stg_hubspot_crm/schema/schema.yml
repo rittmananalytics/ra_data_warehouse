@@ -1,0 +1,49 @@
+version:  2
+
+models:
+  - name: stg_hubspot_crm_contacts
+    description: "Hubspot Contacts Dimension Staging"
+    columns:
+      - name: contact_id
+        tests:
+          - unique
+          - not_null
+      - name: contact_created_date
+        tests:
+          - not_null:
+              severity: warn
+  - name: stg_hubspot_crm_companies
+    columns:
+      - name: company_id
+        description: This is a unique identifier for the customer within HubSpot
+        tests:
+          - not_null
+          - unique
+  - name: stg_hubspot_crm_deals
+    columns:
+      - name: deal_name
+        tests:
+          - not_null:
+              severity: warn
+      - name: deal_type
+        tests:
+          - not_null:
+              severity: warn
+      - name: deal_pipeline_stage_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('stg_hubspot_crm_pipeline_stages')
+              field: pipeline_stage_id
+      - name: deal_pipeline_stage_ts
+        tests:
+          - not_null:
+              severity: error
+      - name: deal_pipeline_id
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('stg_hubspot_crm_pipeline_stages')
+              field: pipeline_id

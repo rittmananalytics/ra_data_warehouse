@@ -1,0 +1,55 @@
+version: 2
+models:
+  - name: wh_timesheet_projects_dim
+    description: "Timesheet Projects Dimension"
+    columns:
+      - name: timesheet_project_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_delivery_projects_dim
+    description: "Delivery Projects Dimension"
+    columns:
+      - name: delivery_project_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_timesheet_tasks_dim
+    description: "Projects Dimension"
+    columns:
+      - name: timesheet_task_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_delivery_tasks_fact
+    description: "Projects Dimension"
+    columns:
+      - name: timesheet_task_pk
+        tests:
+          - unique
+          - not_null
+  - name: wh_timesheets_fact
+    description: "Projects Dimension"
+    columns:
+      - name: timesheet_pk
+        tests:
+          - unique
+          - not_null
+      - name: company_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('wh_companies_dim')
+              field: company_pk
+      - name: project_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('wh_timesheet_projects_dim')
+              field: timesheet_project_pk
+      - name: timesheet_task_pk
+        tests:
+          - not_null
+          - relationships:
+              to: ref('wh_timesheet_tasks_dim')
+              field: timesheet_task_pk

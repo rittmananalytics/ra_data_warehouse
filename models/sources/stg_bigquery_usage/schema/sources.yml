@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+    - name: bigquery_usage_product_usage
+      description: "BigQuery Usage Logs"
+      schema: bigquery_log_export
+      tables:
+        - name: cloudaudit_data_access
+          identifier: cloudaudit_googleapis_com_data_access_*

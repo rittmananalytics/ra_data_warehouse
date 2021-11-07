@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_bigquery_usage_companies
+    columns:
+      - name: company_id
+        tests:
+          - unique
+          - not_null
+      - name: company_name
+        tests:
+          - unique
+          - not_null
+  - name: stg_bigquery_usage_product_usage
+    columns:
+      - name: company_id
+        tests:
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('stg_bigquery_usage_companies')
+              field: company_id
+      - name: product_account_id
+        tests:
+          - not_null:
+              severity: warn
+      - name: product_id
+        tests:
+          - not_null:
+              severity: warn
