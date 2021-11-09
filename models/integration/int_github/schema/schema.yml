@@ -34,7 +34,6 @@ models:
     columns:
       - name: commit_sha
         tests:
-          - unique
           - not_null
       - name: issue_id
         tests:
