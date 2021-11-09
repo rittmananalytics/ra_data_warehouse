@@ -1,0 +1,95 @@
+version: 2
+
+models:
+  - name: int_github_commit
+    description: RA github commits
+    columns:
+      - name: commit_sha
+        tests:
+          - unique
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+  - name: int_github_contributions
+    description: Contributions to the RA github by contribution type, repo, user and the time of contribution
+    columns:
+      - name: contribution_type
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+      - name: contributed_at
+        tests:
+          - not_null
+  - name: int_github_pull_request_merged
+    description: RA github PRs that have been merged
+    columns:
+      - name: commit_sha
+        tests:
+          - not_null
+      - name: issue_id
+        tests:
+          - not_null
+      - name: merged_at
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+  - name: int_github_pull_request_review
+    description: RA github PR reviews
+    columns:
+      - name: review_id
+        tests:
+          - not_null
+      - name: commit_id
+        tests:
+          - not_null
+      - name: pull_request_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+  - name: int_github_pull_request
+    description: RA github PRs
+    columns:
+      - name: review_id
+        tests:
+          - not_null
+      - name: issue_id
+        tests:
+          - not_null
+      - name: pull_request_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+  - name: int_github_user
+    description: RA github users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: login
+        tests:
+          - not_null

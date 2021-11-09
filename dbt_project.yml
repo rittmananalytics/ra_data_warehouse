@@ -80,13 +80,14 @@ vars:
   finance_warehouse_payment_sources: []
   product_warehouse_event_sources: []
   subscriptions_warehouse_sources: []
-  dev_warehouse_git_sources: []
+  dev_warehouse_git_sources: ['github']
   product_warehouse_usage_sources: []
   crm_warehouse_nps_sources: []
 
-  stg_git_repos_id-prefix: github-
-  stg_git_repos_etl: fivetran
-  stg_git_repos_fivetran_schema: fivetran_github
+  stg_github_id-prefix: github-
+  stg_github_etl: fivetran
+  stg_git_repos_fivetran_database: ra-development
+  stg_github_fivetran_schema: fivetran_github_rittmananalytics
 
   stg_asana_projects_id-prefix: asana-
   stg_asana_projects_etl: stitch
