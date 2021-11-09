@@ -1,0 +1,112 @@
+version: 2
+
+models:
+  - name: stg_github_commit
+    description: RA github commits
+    columns:
+      - name: commit_sha
+        tests:
+          - unique
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+  - name: stg_github_issue_merged
+    description: RA github issues merged
+    columns:
+      - name: issue_id
+        tests:
+          - unique
+          - not_null
+      - name: commit_sha
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+  - name: stg_github_issue
+    description: RA github issues
+    columns:
+      - name: issue_id
+        tests:
+          - unique
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+  - name: stg_github_pull_request_review
+    description: RA github PR reviews
+    columns:
+      - name: review_id
+        tests:
+          - unique
+          - not_null
+      - name: commit_sha
+        tests:
+          - not_null
+      - name: pull_request_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+  - name: stg_github_pull_request
+    description: RA github PRs
+    columns:
+      - name: pull_request_id
+        tests:
+          - unique
+          - not_null
+      - name: issue_id
+        tests:
+          - not_null
+  - name: stg_github_release
+    description: RA github releases
+    columns:
+      - name: release_id
+        tests:
+          - unique
+          - not_null
+      - name: repository_id
+        tests:
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+  - name: stg_github_repository
+    description: RA github repos
+    columns:
+      - name: repository_id
+        tests:
+          - unique
+          - not_null
+  - name: stg_github_user_email
+    description: RA github user emails
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - not_null
+  - name: stg_github_user
+    description: RA github users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: login
+        tests:
+          - not_null
+  - name: stg_ra_github_user_flags
+    description: RA github users
+    columns:
+      - name: github_username
+        tests:
+          - unique
+          - not_null

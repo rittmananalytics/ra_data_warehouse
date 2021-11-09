@@ -1,0 +1,52 @@
+version: 2
+
+sources:
+  - name: fivetran_github_sources
+    schema: "{{ var('stg_github_fivetran_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      # - name: card
+      # - name: column
+      - name: commit
+      # - name: commit_file
+      # - name: commit_parent
+      - name: commit_pull_request
+      # - name: deployment
+      # - name: deployment_status
+      - name: issue
+      # - name: issue_assignee
+      # - name: issue_comment
+      # - name: issue_label
+      # - name: issue_label_history
+      # - name: issue_locked_history
+      # - name: issue_mention
+      - name: issue_merged
+      # - name: issue_milestone_history
+      # - name: issue_project_history
+      # - name: issue_referenced
+      # - name: issue_renamed
+      # - name: label
+      # - name: milestone
+      # - name: project
+      - name: pull_request
+      - name: pull_request_review
+      # - name: pull_request_review_dismissed
+      - name: release
+      # - name: repo_team
+      - name: repository
+      # - name: requested_reviewer_history
+      # - name: team
+      # - name: team_membership
+      - name: user
+      - name: user_email
+
+  - name: stg_dbt_seed
+    schema: dbt_seed
+
+    tables:
+      - name: ra_github_user_flags
