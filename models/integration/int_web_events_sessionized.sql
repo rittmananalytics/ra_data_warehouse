@@ -116,7 +116,10 @@ session_ids AS (
     md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
      ''), '-', coalesce(CAST(session_number AS string ),
      '')) AS string )) AS session_id,
-    site
+    site,
+    order_id,
+    total_revenue,
+    currency_code
   FROM
     session_numbers ),
 id_stitching as (

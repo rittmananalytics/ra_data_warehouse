@@ -39,14 +39,11 @@ with sessions as
         channel,
         blended_user_id,
         sum(mins_between_sessions) over (partition by session_id) as mins_between_sessions,
-        is_bounced_session,
-        order_id,
-        total_revenue,
-        currency_code
+        is_bounced_session
       FROM
         {{ ref('int_web_events_sessions_stitched') }}
       )
-      {{ dbt_utils.group_by(n=31) }}
+      {{ dbt_utils.group_by(n=28) }}
     )
     {% if var('marketing_warehouse_ad_campaign_sources') %}
       ,

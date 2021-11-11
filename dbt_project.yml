@@ -87,6 +87,60 @@ vars:
 
   stg_custom_conversions_schema: analytics_staging
 
+  stg_mailchimp_email_stitch_schema: stitch_mailchimp
+  stg_mailchimp_email_stitch_schema: stg_xero_accounting_stitch_schema
+  stg_xero_accounting_id-prefix: xero-
+  stg_xero_accounting_etl: stitch
+  stg_xero_accounting_stitch_schema: stitch_xero
+  stg_xero_accounting_fivetran_schema: fivetran_xero
+  stg_harvest_projects_stitch_schema: stitch_harvest
+  stg_harvest_projects_id-prefix: harvest-
+  stg_harvest_projects_etl: stitch
+  stg_segment_shopify_events_segment_schema: segment_shopify
+  stg_stripe_payments_stitch_schema: stitch_stripe
+  stg_stripe_payments_id-prefix: stripe-
+  stg_hubspot_crm_stitch_schema: stitch_hubspot
+  stg_hubspot_crm_fivetran_schema: fivetran_hubspot
+  stg_hubspot_crm_id-prefix: hubspot-
+  stg_hubspot_crm_etl: stitch
+  stg_hubspot_email_stitch_database: ra-warehouse-dev
+  stg_hubspot_email_stitch_schema: stitch_hubspot
+  stg_hubspot_email_etl: stitch
+  stg_intercom_messaging_id-prefix: intercom-
+  stg_intercom_messaging_stitch_schema: stitch_intercom
+  stg_intercom_messaging_etl: stitch
+  stg_jira_projects_id-prefix: jira-
+  stg_jira_projects_etl: stitch
+  stg_jira_projects_stitch_schema: stitch_jira
+  stg_jira_projects_staff_email_domain: rittmananalytics.com
+  stg_jira_projects_jira_url: rittmananalytics.atlassian.net/jira
+
+
+  stg_intercom_messaging_id-prefix: intercom-
+  stg_intercom_messaging_etl: stitch
+
+  stg_git_repos_id-prefix: github-
+  stg_git_repos_etl: fivetran
+  stg_git_repos_fivetran_database: ra-warehouse-dev
+  stg_git_repos_fivetran_schema: fivetran_github
+
+
+  stg_asana_projects_id-prefix: asana-
+  stg_asana_projects_etl: stitch
+  stg_asana_projects_stitch_schema: stitch_asana
+  stg_asana_projects_staff_email_domain: rittmananalytics.com
+
+  stg_looker_usage_stats_id-prefix: looker-
+  stg_looker_usage_schema: fivetran_email
+  stg_looker_usage_stats_table: usage_stats
+
+  stg_gcp_billing_product_usage_id-prefix: gcp-billing-
+  stg_gcp_billing_product_usage_schema: gcp_billing_export
+
+  stg_bigquery_usage_id-prefix: bigquery-log-
+  stg_bigquery_usage_database: ra-warehouse-dev
+  stg_bigquery_usage_schema: bigquery_log_export
+
 
   stg_heap_events_id-prefix: heap-
   stg_heap_events_etl: heap
