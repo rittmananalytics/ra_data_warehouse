@@ -29,7 +29,7 @@ converting_sessions_deduped as (
       currency_code,
       sum(count_conversions) as count_conversions,
       session_id  session_id,
-      MAX(converted_ts) AS last_converted_ts,
+      MAX(converted_ts) AS converted_ts,
     FROM
       converting_events
     GROUP BY
@@ -67,7 +67,7 @@ converting_sessions_deduped_labelled as
       --AND
       --  c.session_id = s.session_id
       WHERE
-        c.last_converted_ts >= s.session_start_ts
+        c.converted_ts >= s.session_start_ts
       ORDER BY
         c.blended_user_id,
         s.session_start_ts)
@@ -117,7 +117,7 @@ days_to_each_conversion as (
 add_time_decay_score as (
   select
     *,
-    POW(2, days_before_conversion / 7) AS time_decay_score,
+    POW(2, days_before_conversion / {{ var('attribution_lookback_days_window') }}) AS time_decay_score,
 from
   days_to_each_conversion
 )
@@ -143,7 +143,7 @@ session_attrib_pct as (
     IF(is_within_attribution_lookback_window,(1/COUNT(IF(is_within_attribution_lookback_window,session_id,null))
         OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)),0) AS even_click_attrib_pct,
         case when is_within_attribution_lookback_window then
-          POW(2, days_before_conversion / 7)/(SUM(time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle)) end AS time_decay_attrib_pct
+          POW(2, days_before_conversion / {{ var('attribution_lookback_days_window') }})/(SUM(time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle)) end AS time_decay_attrib_pct
 from add_time_decay_score
 ),
 final as (

@@ -47,6 +47,7 @@ renamed as (
         end as device,
         cast('{{ var('stg_segment_events_site') }}' as {{ dbt_utils.type_string() }})  as site
     from source
+    where event != 'order_checkout'
 
 )
 ,
