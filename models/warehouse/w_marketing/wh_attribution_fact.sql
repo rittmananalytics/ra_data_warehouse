@@ -115,34 +115,21 @@ converting_sessions_deduped as (
 ,
 converting_sessions_deduped_labelled_with_conversion_cycles AS (
   SELECT * ,
-  CASE
-    WHEN conversion_event = 0 THEN MAX(coalesce(user_total_conversions,0)) over (
-      PARTITION BY blended_user_id
-      ORDER BY
-        session_start_ts rows BETWEEN unbounded preceding
-        AND CURRENT ROW
-    ) + 1
-    ELSE MAX(user_total_conversions) over (
-      PARTITION BY blended_user_id
-      ORDER BY
-        session_start_ts rows BETWEEN unbounded preceding
-        AND CURRENT ROW
-    )
-  END AS user_conversion_cycle,
-  CASE
-    WHEN order_conversion_event = 0 THEN MAX(coalesce(user_total_order_conversions,0)) over (
-      PARTITION BY blended_user_id
-      ORDER BY
-        session_start_ts rows BETWEEN unbounded preceding
-        AND CURRENT ROW
-    ) + 1
-    ELSE MAX(user_total_order_conversions) over (
-      PARTITION BY blended_user_id
-      ORDER BY
-        session_start_ts rows BETWEEN unbounded preceding
-        AND CURRENT ROW
-    )
-  END AS user_order_conversion_cycle,
+
+  --CASE
+  --  WHEN order_conversion_event = 0 THEN MAX(coalesce(user_total_order_conversions,0)) over (
+  --    PARTITION BY blended_user_id
+  --    ORDER BY
+  --      session_start_ts rows BETWEEN unbounded preceding
+  --      AND CURRENT ROW
+  --  ) + 1
+  --    ELSE MAX(user_total_order_conversions) over (
+  --    PARTITION BY blended_user_id
+  --    ORDER BY
+  --      session_start_ts rows BETWEEN unbounded preceding
+  --      AND CURRENT ROW
+  --  )
+  --END AS user_order_conversion_cycle,
   CASE
       WHEN registration_conversion_event = 0 THEN MAX(coalesce(user_total_registration_conversions,0)) over (
         PARTITION BY blended_user_id
@@ -156,13 +143,42 @@ converting_sessions_deduped_labelled_with_conversion_cycles AS (
           session_start_ts rows BETWEEN unbounded preceding
           AND CURRENT ROW
       )
-      END AS user_registration_conversion_cycle
+      END AS user_registration_conversion_cycle,
+   (CASE
+        WHEN conversion_event = 0 THEN MAX(coalesce(user_total_conversions,0)) over (
+          PARTITION BY blended_user_id
+          ORDER BY
+            session_start_ts rows BETWEEN unbounded preceding
+            AND CURRENT ROW
+        ) + 1
+        ELSE MAX(user_total_conversions) over (
+          PARTITION BY blended_user_id
+          ORDER BY
+            session_start_ts rows BETWEEN unbounded preceding
+            AND CURRENT ROW
+        )
+      END
+    ) +
+    CASE WHEN (CASE
+        WHEN registration_conversion_event = 0 THEN MAX(coalesce(user_total_registration_conversions,0)) over (
+          PARTITION BY blended_user_id
+          ORDER BY
+            session_start_ts rows BETWEEN unbounded preceding
+            AND CURRENT ROW
+        ) + 1
+        ELSE MAX(user_total_registration_conversions) over (
+          PARTITION BY blended_user_id
+          ORDER BY
+            session_start_ts rows BETWEEN unbounded preceding
+            AND CURRENT ROW
+        )
+        END) is null then -1 else 0
+     END AS user_conversion_cycle,
   FROM converting_sessions_deduped_labelled_with_conversion_number
 ),
 converting_sessions_deduped_labelled_with_session_day_number as (
   select
     *,
-
 
     {{ dbt_utils.datediff('"1900-01-01"','session_start_ts','day') }}
 
@@ -281,7 +297,7 @@ final as (
     FROM
       session_attrib_pct
 
-   {{ dbt_utils.group_by(49) }}
+   {{ dbt_utils.group_by(48) }}
 )
 select
   blended_user_id,
@@ -300,7 +316,6 @@ select
   total_revenue,
   currency_code,
   user_conversion_cycle,
-  user_order_conversion_cycle,
   case when user_registration_conversion_cycle>1 and not (count_registration_conversions=1 and conversion_session) then null
        when user_registration_conversion_cycle=2 and count_registration_conversions=1 and conversion_session then 1
        else user_registration_conversion_cycle end as user_registration_conversion_cycle,
@@ -325,22 +340,60 @@ select
   last_paid_click_attrib_pct,
   even_click_attrib_pct,
   time_decay_attrib_pct,
-  first_click_attrib_conversions,
-  first_non_direct_click_attrib_conversions,
-  first_paid_click_attrib_conversions,
-  last_click_attrib_conversions,
-  last_non_direct_click_attrib_conversions,
-  last_paid_click_attrib_conversions,
-  even_click_attrib_conversions,
-  time_decay_attrib_conversions,
-  first_click_attrib_revenue,
-  first_non_direct_click_attrib_revenue,
-  first_paid_click_attrib_revenue,
-  last_click_attrib_revenue,
-  last_non_direct_click_attrib_revenue,
-  last_paid_click_attrib_revenue,
-  even_click_attrib_revenue,
-  time_decay_attrib_revenue
+
+  if(user_conversion_cycle=1,first_click_attrib_conversions,0) as user_registration_first_click_attrib_conversions,
+  if(user_conversion_cycle=1,first_non_direct_click_attrib_conversions,0) as user_registration_first_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle=1,first_paid_click_attrib_conversions,0) as user_registration_first_paid_click_attrib_conversions,
+  if(user_conversion_cycle=1,last_click_attrib_conversions,0) as user_registration_last_click_attrib_conversions,
+  if(user_conversion_cycle=1,last_non_direct_click_attrib_conversions,0) as user_registration_last_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle=1,last_paid_click_attrib_conversions,0) as user_registration_last_paid_click_attrib_conversions,
+  if(user_conversion_cycle=1,even_click_attrib_conversions,0) as user_registration_even_click_attrib_conversions,
+  if(user_conversion_cycle=1,time_decay_attrib_conversions,0) as user_registration_time_decay_attrib_conversions,
+
+  if(user_conversion_cycle=2,first_click_attrib_conversions,0) as first_order_first_click_attrib_conversions,
+  if(user_conversion_cycle=2,first_non_direct_click_attrib_conversions,0) as first_order_first_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle=2,first_paid_click_attrib_conversions,0) as first_order_first_paid_click_attrib_conversion,
+  if(user_conversion_cycle=2,last_click_attrib_conversions,0) as first_order_last_click_attrib_conversions,
+  if(user_conversion_cycle=2,last_non_direct_click_attrib_conversions,0) as first_order_last_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle=2,last_paid_click_attrib_conversions,0) as first_order_last_paid_click_attrib_conversions,
+  if(user_conversion_cycle=2,even_click_attrib_conversions,0) as first_order_even_click_attrib_conversions,
+  if(user_conversion_cycle=2,time_decay_attrib_conversions,0) as first_order_time_decay_attrib_conversions,
+
+  if(user_conversion_cycle>2,first_click_attrib_conversions,0) as repeat_order_first_click_attrib_conversions,
+  if(user_conversion_cycle>2,first_non_direct_click_attrib_conversions,0) as repeat_order_first_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle>2,first_paid_click_attrib_conversions,0) as repeat_order_first_paid_click_attrib_conversions,
+  if(user_conversion_cycle>2,last_click_attrib_conversions,0) as repeat_order_last_click_attrib_conversions,
+  if(user_conversion_cycle>2,last_non_direct_click_attrib_conversions,0) as repeat_order_last_non_direct_click_attrib_conversions,
+  if(user_conversion_cycle>2,last_paid_click_attrib_conversions,0) as repeat_order_last_paid_click_attrib_conversions,
+  if(user_conversion_cycle>2,even_click_attrib_conversions,0) as repeat_order_even_click_attrib_conversions,
+  if(user_conversion_cycle>2,time_decay_attrib_conversions,0) as repeat_order_time_decay_attrib_conversions,
+
+  if(user_conversion_cycle=1,first_click_attrib_revenue,0) as user_registration_first_click_attrib_revenue,
+  if(user_conversion_cycle=1,first_non_direct_click_attrib_revenue,0) as user_registration_first_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle=1,first_paid_click_attrib_revenue,0) as user_registration_first_paid_click_attrib_revenue,
+  if(user_conversion_cycle=1,last_click_attrib_revenue,0) as user_registration_last_click_attrib_revenue,
+  if(user_conversion_cycle=1,last_non_direct_click_attrib_revenue,0) as user_registration_last_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle=1,last_paid_click_attrib_revenue,0) as user_registration_last_paid_click_attrib_revenue,
+  if(user_conversion_cycle=1,even_click_attrib_revenue,0) as user_registration_even_click_attrib_revenue,
+  if(user_conversion_cycle=1,time_decay_attrib_revenue,0) as user_registration_time_decay_attrib_revenue,
+
+  if(user_conversion_cycle=2,first_click_attrib_revenue,0) as first_order_first_click_attrib_revenue,
+  if(user_conversion_cycle=2,first_non_direct_click_attrib_revenue,0) as first_order_first_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle=2,first_paid_click_attrib_revenue,0) as first_order_first_paid_click_attrib_revenue,
+  if(user_conversion_cycle=2,last_click_attrib_revenue,0) as first_order_last_click_attrib_revenue,
+  if(user_conversion_cycle=2,last_non_direct_click_attrib_revenue,0) as first_order_last_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle=2,last_paid_click_attrib_revenue,0) as first_order_last_paid_click_attrib_revenue,
+  if(user_conversion_cycle=2,even_click_attrib_revenue,0) as first_order_even_click_attrib_revenue,
+  if(user_conversion_cycle=2,time_decay_attrib_revenue,0) as first_order_time_decay_attrib_revenue,
+
+  if(user_conversion_cycle>2,first_click_attrib_revenue,0) as repeat_order_first_click_attrib_revenue,
+  if(user_conversion_cycle>2,first_non_direct_click_attrib_revenue,0) as repeat_order_first_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle>2,first_paid_click_attrib_revenue,0) as repeat_order_first_paid_click_attrib_revenue,
+  if(user_conversion_cycle>2,last_click_attrib_revenue,0) as repeat_order_last_click_attrib_revenue,
+  if(user_conversion_cycle>2,last_non_direct_click_attrib_revenue,0) as repeat_order_last_non_direct_click_attrib_revenue,
+  if(user_conversion_cycle>2,last_paid_click_attrib_revenue,0) as repeat_order_last_paid_click_attrib_revenue,
+  if(user_conversion_cycle>2,even_click_attrib_revenue,0) as repeat_order_even_click_attrib_revenue,
+  if(user_conversion_cycle>2,time_decay_attrib_revenue,0) as repeat_order_time_decay_attrib_revenue
 from
   final
 {% endif %}
