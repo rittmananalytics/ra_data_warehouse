@@ -159,7 +159,7 @@ vars:
 
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
-  attribution_create_account_event_type: pressed_button
+  attribution_create_account_event_type: contact_us_pressed
   attribution_conversion_event_type: order_checkout
   attribution_order_id_column: event_text
   attribution_orders_event_table: order_checkout

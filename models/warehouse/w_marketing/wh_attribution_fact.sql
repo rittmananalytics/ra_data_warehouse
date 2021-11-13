@@ -7,6 +7,22 @@
 
 
 WITH
+events_filtered as (
+  SELECT
+    *
+  FROM (
+    SELECT
+      *,
+      MIN(CASE
+          WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_id
+      END
+        ) OVER (PARTITION BY blended_user_id) AS first_registration_event_id
+    FROM
+      {{ ref ('wh_web_events_fact') }})
+  WHERE
+    event_type != '{{ var('attribution_create_account_event_type') }}'
+    OR (event_id = first_registration_event_id)
+),
 converting_events as
     (
       SELECT
@@ -16,25 +32,29 @@ converting_events as
         order_id,
         total_revenue,
         currency_code,
-        1 as count_conversions,
+        case when event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type') }}') then 1 else 0 end as count_conversions,
+        case when event_type = '{{ var('attribution_conversion_event_type') }}' then 1 else 0 end as count_order_conversions,
+        case when event_type = '{{ var('attribution_create_account_event_type') }}' then 1 else 0 end as count_registration_conversions,
         event_ts AS converted_ts
       FROM
-       {{ref ('wh_web_events_fact') }} e
+       events_filtered e
       WHERE
-        event_type = '{{ var('attribution_conversion_event_type') }}'
+        event_type in ('{{ var('attribution_conversion_event_type') }}','{{ var('attribution_create_account_event_type')}}')
   ),
 converting_sessions_deduped as (
     SELECT
-      blended_user_id AS blended_user_id,
+      max(blended_user_id) AS blended_user_id,
       sum(total_revenue) as total_revenue,
-      currency_code,
+      max(currency_code) as currency_code,
       sum(count_conversions) as count_conversions,
+      sum(count_order_conversions) as count_order_conversions,
+      sum(count_registration_conversions) as count_registration_conversions,
       session_id  session_id,
       MAX(converted_ts) AS converted_ts,
     FROM
       converting_events
     GROUP BY
-     1,3,5
+     7
   ),
   converting_sessions_deduped_labelled as
       (
@@ -52,9 +72,13 @@ converting_sessions_deduped as (
                 (select c.converted_ts from converting_sessions_deduped c where c.session_id = s.session_id) as converted_ts,
                 s.session_id AS session_id,
                 ROW_NUMBER() OVER (PARTITION BY s.blended_user_id ORDER BY s.session_start_ts) AS session_seq,
-                (select c.count_conversions from converting_sessions_deduped c where c.session_id = s.session_id) as count_conversions,
+                (select max(c.count_conversions) from converting_sessions_deduped c where c.session_id = s.session_id) as count_conversions,
+                (select max(c.count_order_conversions) from converting_sessions_deduped c where c.session_id = s.session_id) as count_order_conversions,
+                (select max(c.count_registration_conversions) from converting_sessions_deduped c where c.session_id = s.session_id) as count_registration_conversions,
                 coalesce((select CASE WHEN (c.session_id = s.session_id)     THEN TRUE ELSE FALSE END  from converting_sessions_deduped c where c.session_id = s.session_id),false) AS conversion_session,
                 coalesce((select CASE WHEN (c.session_id = s.session_id)     THEN 1 ELSE 0 END  from converting_sessions_deduped c where c.session_id = s.session_id),0) AS conversion_event,
+                coalesce((select CASE WHEN (c.session_id = s.session_id and c.count_order_conversions>1)     THEN 1 ELSE 0 END  from converting_sessions_deduped c where c.session_id = s.session_id),0) AS order_conversion_event,
+                coalesce((select CASE WHEN (c.session_id = s.session_id and c.count_registration_conversions>1)     THEN 1 ELSE 0 END  from converting_sessions_deduped c where c.session_id = s.session_id),0) AS registration_conversion_event,
                 utm_source,
                 utm_content,
                 utm_medium,
@@ -71,22 +95,26 @@ converting_sessions_deduped as (
               FROM
                 {{ ref('wh_web_sessions_fact') }} s
             )
-
-        ) WHERE
+        )   WHERE
           conversion_cycle_conversion_ts >= session_start_ts
-     )
+)
           ,
   converting_sessions_deduped_labelled_with_conversion_number AS (
           SELECT
             *,
             SUM(conversion_event) over (PARTITION BY blended_user_id ORDER BY session_start_ts rows BETWEEN unbounded preceding AND CURRENT ROW)
             AS user_total_conversions,
+            SUM(count_order_conversions) over (PARTITION BY blended_user_id ORDER BY session_start_ts rows BETWEEN unbounded preceding AND CURRENT ROW)
+            AS user_total_order_conversions,
+            SUM(count_registration_conversions) over (PARTITION BY blended_user_id ORDER BY session_start_ts rows BETWEEN unbounded preceding AND CURRENT ROW)
+            AS user_total_registration_conversions,
+
           FROM
             converting_sessions_deduped_labelled
 )
 ,
 converting_sessions_deduped_labelled_with_conversion_cycles AS (
-  SELECT *,
+  SELECT * ,
   CASE
     WHEN conversion_event = 0 THEN MAX(coalesce(user_total_conversions,0)) over (
       PARTITION BY blended_user_id
@@ -100,7 +128,35 @@ converting_sessions_deduped_labelled_with_conversion_cycles AS (
         session_start_ts rows BETWEEN unbounded preceding
         AND CURRENT ROW
     )
-  END AS user_conversion_cycle
+  END AS user_conversion_cycle,
+  CASE
+    WHEN order_conversion_event = 0 THEN MAX(coalesce(user_total_order_conversions,0)) over (
+      PARTITION BY blended_user_id
+      ORDER BY
+        session_start_ts rows BETWEEN unbounded preceding
+        AND CURRENT ROW
+    ) + 1
+    ELSE MAX(user_total_order_conversions) over (
+      PARTITION BY blended_user_id
+      ORDER BY
+        session_start_ts rows BETWEEN unbounded preceding
+        AND CURRENT ROW
+    )
+  END AS user_order_conversion_cycle,
+  CASE
+      WHEN registration_conversion_event = 0 THEN MAX(coalesce(user_total_registration_conversions,0)) over (
+        PARTITION BY blended_user_id
+        ORDER BY
+          session_start_ts rows BETWEEN unbounded preceding
+          AND CURRENT ROW
+      ) + 1
+      ELSE MAX(user_total_registration_conversions) over (
+        PARTITION BY blended_user_id
+        ORDER BY
+          session_start_ts rows BETWEEN unbounded preceding
+          AND CURRENT ROW
+      )
+      END AS user_registration_conversion_cycle
   FROM converting_sessions_deduped_labelled_with_conversion_number
 ),
 converting_sessions_deduped_labelled_with_session_day_number as (
@@ -225,7 +281,7 @@ final as (
     FROM
       session_attrib_pct
 
-   {{ dbt_utils.group_by(41) }}
+   {{ dbt_utils.group_by(49) }}
 )
 select
   blended_user_id,
@@ -244,6 +300,10 @@ select
   total_revenue,
   currency_code,
   user_conversion_cycle,
+  user_order_conversion_cycle,
+  case when user_registration_conversion_cycle>1 and not (count_registration_conversions=1 and conversion_session) then null
+       when user_registration_conversion_cycle=2 and count_registration_conversions=1 and conversion_session then 1
+       else user_registration_conversion_cycle end as user_registration_conversion_cycle,
   is_within_attribution_lookback_window,
   is_within_attribution_time_decay_days_window,
   is_non_direct_channel,
@@ -254,6 +314,9 @@ select
   days_before_conversion,
   weighting as time_decay_score_weighting,
   weighting_split_by_days_sessions as time_decay_weighting_split_by_days_sessions,
+  count_conversions,
+  count_order_conversions,
+  count_registration_conversions,
   first_click_attrib_pct,
   first_non_direct_click_attrib_pct,
   first_paid_click_attrib_pct,
