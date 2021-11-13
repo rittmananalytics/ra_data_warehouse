@@ -164,6 +164,7 @@ vars:
   attribution_order_id_column: event_text
   attribution_orders_event_table: order_checkout
   attribution_lookback_days_window : 30
+  attribution_time_decay_days_window : 7
 
 #  enable_companies_merge_file: true
 #  enable_ip_geo_enrichment: false

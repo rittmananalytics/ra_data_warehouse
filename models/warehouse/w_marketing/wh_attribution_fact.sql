@@ -35,43 +35,44 @@ converting_sessions_deduped as (
     GROUP BY
      1,3,5
   ),
-converting_sessions_deduped_labelled as
-    (
-      SELECT
-        c.blended_user_id,
-        s.session_start_ts,
-        s.session_end_ts,
-        c.converted_ts,
-        s.session_id AS session_id,
-        ROW_NUMBER() OVER (PARTITION BY c.blended_user_id ORDER BY s.session_start_ts) AS session_seq,
-        count_conversions,
-        CASE WHEN (c.session_id = s.session_id)     THEN TRUE ELSE FALSE END AS conversion_session,
-        CASE WHEN (c.session_id = s.session_id)  THEN 1 ELSE 0 END AS conversion_event,
-        utm_source,
-        utm_content,
-        utm_medium,
-        utm_campaign,
-        referrer_host,
-        first_page_url_host,
-        split(net.reg_domain(referrer_host),'.')[OFFSET(0)] as referrer_domain,
-        channel,
-        events,
-        c.total_revenue,
-        c.currency_code as currency_code
-      FROM
-        {{ ref('wh_web_sessions_fact') }} s
-      LEFT JOIN
-        converting_sessions_deduped c
-      ON
-        c.blended_user_id = s.blended_user_id
-      --AND
-      --  c.session_id = s.session_id
-      WHERE
-        c.converted_ts >= s.session_start_ts
-      ORDER BY
-        c.blended_user_id,
-        s.session_start_ts)
-        ,
+  converting_sessions_deduped_labelled as
+      (
+        SELECT
+          *
+          FROM (
+            SELECT
+              *,
+              FIRST_VALUE(converted_ts ignore nulls) over (PARTITION BY blended_user_id ORDER BY session_start_ts rows BETWEEN current row AND unbounded following) as conversion_cycle_conversion_ts
+            FROM (
+              SELECT
+                s.blended_user_id,
+                s.session_start_ts,
+                s.session_end_ts,
+                (select c.converted_ts from converting_sessions_deduped c where c.session_id = s.session_id) as converted_ts,
+                s.session_id AS session_id,
+                ROW_NUMBER() OVER (PARTITION BY s.blended_user_id ORDER BY s.session_start_ts) AS session_seq,
+                (select c.count_conversions from converting_sessions_deduped c where c.session_id = s.session_id) as count_conversions,
+                coalesce((select CASE WHEN (c.session_id = s.session_id)     THEN TRUE ELSE FALSE END  from converting_sessions_deduped c where c.session_id = s.session_id),false) AS conversion_session,
+                coalesce((select CASE WHEN (c.session_id = s.session_id)     THEN 1 ELSE 0 END  from converting_sessions_deduped c where c.session_id = s.session_id),0) AS conversion_event,
+                utm_source,
+                utm_content,
+                utm_medium,
+                utm_campaign,
+                referrer_host,
+                first_page_url_host,
+                split(net.reg_domain(referrer_host),'.')[OFFSET(0)] as referrer_domain,
+                channel,
+                events,
+                (select c.total_revenue from converting_sessions_deduped c where c.session_id = s.session_id) as total_revenue,
+                (select c.currency_code from converting_sessions_deduped c where c.session_id = s.session_id) as currency_code
+              FROM
+                {{ ref('wh_web_sessions_fact') }} s
+            )
+
+        ) WHERE
+          conversion_cycle_conversion_ts >= session_start_ts
+     )
+          ,
   converting_sessions_deduped_labelled_with_conversion_number AS (
           SELECT
             *,
@@ -110,56 +111,66 @@ days_to_each_conversion as (
   select
     *,
     session_day_number - max(session_day_number) over (partition by blended_user_id, user_conversion_cycle)  as days_before_conversion,
-    (session_day_number - max(session_day_number) over (partition by blended_user_id, user_conversion_cycle))*-1 <= {{ var('attribution_lookback_days_window') }} as is_within_attribution_lookback_window
+    (session_day_number - max(session_day_number) over (partition by blended_user_id, user_conversion_cycle))*-1 <= {{ var('attribution_lookback_days_window') }} as is_within_attribution_lookback_window,
+    (session_day_number - max(session_day_number) over (partition by blended_user_id, user_conversion_cycle))*-1 <= {{ var('attribution_time_decay_days_window') }} as is_within_attribution_time_decay_days_window
   from
     converting_sessions_deduped_labelled_with_session_day_number
 ),
 add_time_decay_score as (
   select
     *,
-    POW(2, days_before_conversion / {{ var('attribution_lookback_days_window') }}) AS time_decay_score,
+    if(is_within_attribution_time_decay_days_window,POW(2, days_before_conversion+1 / {{ var('attribution_time_decay_days_window') }}),null) AS time_decay_score,
+    count(session_id) over (PARTITION BY blended_user_id,{{ dbt_utils.date_trunc('day','session_start_ts') }} ) as sessions_within_day_to_conversion
 from
   days_to_each_conversion
+),
+split_time_decay_score_across_days_sessions as (
+  select
+    *,
+    time_decay_score/sessions_within_day_to_conversion as apportioned_time_decay_score
+  from
+    add_time_decay_score
 )
 ,
 session_attrib_pct as (
     SELECT
       * except (first_page_url_host),
-      CASE
+      if(conversion_session,0,CASE
         WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
         THEN 1
       ELSE
       0
-    END
+    END)
       AS LAST_click_attrib_pct,
-      CASE
+      if(conversion_session,0,CASE
         WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
         THEN 1
       ELSE
       0
-    END
+    END)
       AS first_click_attrib_pct,
-    IF(is_within_attribution_lookback_window,(1/COUNT(IF(is_within_attribution_lookback_window,session_id,null))
-        OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)),0) AS even_click_attrib_pct,
-        case when is_within_attribution_lookback_window then
-          POW(2, days_before_conversion / {{ var('attribution_lookback_days_window') }})/(SUM(time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle)) end AS time_decay_attrib_pct
-from add_time_decay_score
+    if(conversion_session,0,IF(is_within_attribution_lookback_window,(1/  (COUNT(IF(is_within_attribution_lookback_window,session_id,null))
+        OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)+0)-1),0)) AS even_click_attrib_pct,
+    if(conversion_session,0,case when is_within_attribution_time_decay_days_window then
+          apportioned_time_decay_score/(SUM(apportioned_time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle)) end) AS time_decay_attrib_pct
+from split_time_decay_score_across_days_sessions
 ),
 final as (
     SELECT
       * ,
-      round((MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * first_click_attrib_pct),2) AS first_click_attrib_conversions,
-      round((MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * last_click_attrib_pct),2) AS last_click_attrib_conversions,
-      round((MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * even_click_attrib_pct),2) AS even_click_attrib_conversions,
-      round((MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * time_decay_attrib_pct),2) AS time_decay_attrib_conversions,
-      round((MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * first_click_attrib_pct),2) AS first_click_attrib_revenue,
-      round((MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * last_click_attrib_pct),2) AS last_click_attrib_revenue,
-      round((MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * even_click_attrib_pct),2) AS even_click_attrib_revenue,
-      round((MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * time_decay_attrib_pct),2) AS time_decay_attrib_revenue,
+      (MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * first_click_attrib_pct) AS first_click_attrib_conversions,
+      (MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * last_click_attrib_pct) AS last_click_attrib_conversions,
+      (MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * even_click_attrib_pct) AS even_click_attrib_conversions,
+      (MAX(count_conversions) over (partition by blended_user_id, user_conversion_cycle) * time_decay_attrib_pct) AS time_decay_attrib_conversions,
+      (MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * first_click_attrib_pct) AS first_click_attrib_revenue,
+      (MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * last_click_attrib_pct) AS last_click_attrib_revenue,
+      (MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * even_click_attrib_pct) AS even_click_attrib_revenue,
+      (MAX(total_revenue) over (partition by blended_user_id, user_conversion_cycle) * time_decay_attrib_pct) AS time_decay_attrib_revenue
     FROM
       session_attrib_pct
-    {{ dbt_utils.group_by(29) }}
+
+    {{ dbt_utils.group_by(33) }}
 )
 select
   blended_user_id,
@@ -177,10 +188,15 @@ select
   channel,
   total_revenue,
   currency_code,
-  events as session_events,
   user_conversion_cycle,
   days_before_conversion,
   is_within_attribution_lookback_window,
+  is_within_attribution_time_decay_days_window,
+  sessions_within_day_to_conversion,
+  first_click_attrib_pct,
+  last_click_attrib_pct,
+  even_click_attrib_pct,
+  time_decay_attrib_pct,
   first_click_attrib_conversions,
   last_click_attrib_conversions,
   even_click_attrib_conversions,
@@ -189,7 +205,6 @@ select
   last_click_attrib_revenue,
   even_click_attrib_revenue,
   time_decay_attrib_revenue
-
 from
   final
 
