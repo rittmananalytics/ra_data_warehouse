@@ -84,6 +84,10 @@ TODO: Add customization and extension guidelines
 * Facebook Ads (Segment, Stitch)
 * Intercom Messaging (Stitch)
 * Mixpanel Events (Stitch, Fivetran)
+* Segment Events (Segment)
+* Rudderstack Events (Rudderstack)
+* Snowplow Events (Snowplow)
+* AppsFlyer Events (Stitch)
 * Baremetrics Analytics (Segment)
 * Custom data sources
 
@@ -95,7 +99,7 @@ See [Compatibility Matrix](compatibility.md) for full details.
 * CRM (Deals, Contacts, Companies)
 * Subscriptions (Plans, Subscribers, Subscriptions)
 * Projects (Timesheet Projects, Timesheet Tasks, Delivery Projects, Delivery Tasks, Timesheets, Users)
-* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Subscription Attribution)
+* Marketing (Email lists, Email sends, Email campaigns, Ad Campaigns, Ad Performance, Ad Spend, Web Page Views, Web Sessions, Multi-Touch Attribution)
 * Product (Web Page Views, Web Sessions,)
 
 ## Design Approach
