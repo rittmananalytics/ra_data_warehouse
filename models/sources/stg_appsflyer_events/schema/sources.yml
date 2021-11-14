@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: appsflyer
+    schema: "{{ var('stg_appsflyer_events_stitch_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _sdc_received_at
+
+    tables:
+      - name: tracks
+        identifier: in_app_events
