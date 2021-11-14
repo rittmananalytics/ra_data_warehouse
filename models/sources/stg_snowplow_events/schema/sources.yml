@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: snowplow
+    schema: "{{ var('stg_snowplow_events_snowplow_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: etl_tstamp
+
+    tables:
+      - name: pages
+        identifier: events

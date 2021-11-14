@@ -2,11 +2,7 @@
 {% if var("product_warehouse_event_sources") %}
 {% if 'segment_events_order_checkout' in var("product_warehouse_event_sources") %}
 
-{{
-    config(
-        materialized="table"
-    )
-}}
+
 with source as (
 
     select * from {{ source('segment', 'order_checkout') }}

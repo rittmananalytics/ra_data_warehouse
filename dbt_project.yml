@@ -64,7 +64,7 @@ vars:
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
 
-  product_warehouse_event_sources: ['segment_events_page','segment_events_track','segment_events_order_checkout']
+  product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']
   subscriptions_warehouse_sources: []
 
@@ -73,7 +73,6 @@ vars:
   stg_segment_events_site: rittmananalytics.com
   enable_event_type_mapping: true
 
-  stg_rudderstack_events_id-prefix: rudderstack-
   stg_rudderstack_events_etl: rudderstack
   stg_rudderstack_events_rudderstack_schema: rudderstack_ra_website
   stg_rudderstack_events_site: rittmananalytics.com
@@ -141,12 +140,14 @@ vars:
   stg_bigquery_usage_database: ra-warehouse-dev
   stg_bigquery_usage_schema: bigquery_log_export
 
-
   stg_heap_events_id-prefix: heap-
   stg_heap_events_etl: heap
   stg_heap_events_heap_schema: heap
   stg_heap_events_site: rittmananalytics.com
   enable_event_type_mapping: true
+
+  stg_snowplow_events_snowplow_schema: snowplow_events
+  stg_appsflyer_events_stitch_schema: stitch_appsflyer
 
   stg_shopify_ecommerce_id-prefix: shopify-
   stg_shopify_ecommerce_etl: fivetran
@@ -165,6 +166,7 @@ vars:
   attribution_orders_event_table: order_checkout
   attribution_lookback_days_window : 30
   attribution_time_decay_days_window : 7
+  attribution_include_conversion_session: true
 
 #  enable_companies_merge_file: true
 #  enable_ip_geo_enrichment: false

@@ -1,11 +1,7 @@
 {% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
 {% if var("product_warehouse_event_sources") %}
 {% if 'segment_events_page' in var("product_warehouse_event_sources") %}
-{{
-    config(
-        materialized="table"
-    )
-}}
+
 with source as (
 
   select * from {{ source('segment', 'pages') }}
