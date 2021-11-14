@@ -1,17 +1,17 @@
-{{ config(enabled=var('ad_reporting__microsoft_ads_enabled')) }}
+{% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 
 with base as (
 
     select *
-    from {{ ref('microsoft_ads__ad_adapter')}}
+    from {{ ref('google_ads__url_ad_adapter')}}
 
 ), fields as (
 
     select
-        'Microsoft Ads' as platform,
+        'Google Ads' as platform,
         cast(date_day as date) as date_day,
         account_name,
-        cast(account_id as {{ dbt_utils.type_string() }}) as account_id,
+        {% if var('google_ads_api_source','adwords') == 'google_ads' %} account_id {% else %} external_customer_id as account_id {% endif %} ,
         campaign_name,
         cast(campaign_id as {{ dbt_utils.type_string() }}) as campaign_id,
         ad_group_name,
@@ -29,8 +29,9 @@ with base as (
         coalesce(spend, 0) as spend
     from base
 
-
 )
 
 select *
 from fields
+
+{% else %} {{config(enabled=false)}} {% endif %}

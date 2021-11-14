@@ -13,25 +13,31 @@ with events_merge_list as
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
-  )
+  ),
+order_conversions as (
+  select
+    order_id,
+    user_id,
+    total_revenue,
+    currency_code
+  from {{ ref('int_order_conversions') }}
+)
 
 
 select
-  e.*
-
-{% if var("enable_event_type_mapping")   %}
-  except (event_type),
-  coalesce(m.event_type_mapped,e.event_type) as event_type
-{% endif %}
-
+  e.*,
+  cast(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
+    then e.event_details end
+    as {{ dbt_utils.type_string() }})
+    as order_id,
+    total_revenue,
+    currency_code
 from events_merge_list e
+left join order_conversions o
+on cast(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
+  then e.event_details end
+  as {{ dbt_utils.type_string() }}) = o.order_id
 
-{% if var("enable_event_type_mapping")   %}
-left outer join
-  {{ ref('event_mapping_list') }} m
-on
-  e.event_type = m.event_type_original
-{% endif %}
 
 {% else %}
 

@@ -1,4 +1,4 @@
-{% if var('marketing_warehouse_ad_group_performance_sources') %}
+{% if var('marketing_warehouse_ad_group_sources') %}
 
 with ad_group_performance as
   (

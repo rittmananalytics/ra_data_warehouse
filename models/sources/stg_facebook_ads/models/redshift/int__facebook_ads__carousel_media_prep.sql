@@ -1,4 +1,7 @@
-{{config(enabled = target.type == 'redshift')}}
+{% if target.type == 'redshift' %}
+{% if var("marketing_warehouse_ad_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
+
 with base as (
 
     select *
@@ -53,3 +56,7 @@ with base as (
 
 select *
 from extracted_fields
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

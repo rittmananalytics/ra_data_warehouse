@@ -64,7 +64,7 @@ new_sessions as (
     select
         *,
         case
-            when period_of_inactivity <= {{var('web_inactivity_cutoff')}} then 0
+            when period_of_inactivity*-1 <= {{var('web_inactivity_cutoff')}} then 0
             else 1
         end as new_session
     from diffed
@@ -116,7 +116,10 @@ session_ids AS (
     md5(CAST( CONCAT(coalesce(CAST(visitor_id AS string ),
      ''), '-', coalesce(CAST(session_number AS string ),
      '')) AS string )) AS session_id,
-    site
+    site,
+    order_id,
+    total_revenue,
+    currency_code
   FROM
     session_numbers ),
 id_stitching as (

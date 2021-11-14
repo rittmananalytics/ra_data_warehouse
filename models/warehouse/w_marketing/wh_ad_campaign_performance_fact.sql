@@ -1,5 +1,4 @@
-{% if  var("marketing_warehouse_ad_campaign_performance_sources") and var("product_warehouse_event_sources")
-and var("marketing_warehouse_ad_campaign_sources") %}
+{% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
 
 {{
     config(
@@ -49,11 +48,8 @@ on c.ad_campaign_id = s.ad_campaign_id)
     utm_campaign,
     utm_medium,
     SUM(total_reported_cost) AS total_reported_cost,
-    AVG(avg_reported_time_on_site) AS avg_reported_time_on_site,
-    AVG(avg_reported_bounce_rate) AS avg_reported_bounce_rate,
     SUM(total_reported_clicks) AS total_reported_clicks,
-    SUM(total_reported_impressions) AS total_reported_impressions,
-    SUM(total_reported_invalid_clicks) AS total_reported_invalid_clicks
+    SUM(total_reported_impressions) AS total_reported_impressions
   FROM (
     SELECT
       {{ dbt_utils.date_trunc('DAY', 'ad_campaign_serve_ts') }} AS campaign_date,
@@ -61,14 +57,9 @@ on c.ad_campaign_id = s.ad_campaign_id)
       utm_source,
       utm_campaign,
       utm_medium,
-      case when utm_source = 'newsletter' then ad_campaign_total_cost
-           when utm_source = 'adwords' then (ad_campaign_total_cost*.75)
-           else ad_campaign_total_cost end AS total_reported_cost,
-      ad_campaign_avg_time_on_site AS avg_reported_time_on_site,
-      ad_campaign_bounce_rate AS avg_reported_bounce_rate,
+      ad_campaign_total_cost as total_reported_cost,
       ad_campaign_total_clicks AS total_reported_clicks,
       ad_campaign_total_impressions AS total_reported_impressions,
-      ad_campaign_total_invalid_clicks AS total_reported_invalid_clicks
     FROM
       campaign_performance_joined)
   {{ dbt_utils.group_by(n=5) }}

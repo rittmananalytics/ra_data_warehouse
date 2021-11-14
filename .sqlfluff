@@ -1,0 +1,6 @@
+[sqlfluff]
+templater = dbt
+[sqlfluff:templater:dbt]
+project_dir = .
+profiles_dir = $HOME/.dbt
+profile = ra_data_warehouse

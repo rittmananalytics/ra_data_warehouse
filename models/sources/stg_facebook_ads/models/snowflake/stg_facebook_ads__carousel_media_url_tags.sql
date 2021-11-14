@@ -1,4 +1,7 @@
-{{config(enabled = target.type == 'snowflake')}}
+{% if target.type == 'snowflake' %}
+{% if var("marketing_warehouse_ad_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
+
 with base as (
 
     select *
@@ -21,3 +24,7 @@ with base as (
 
 select *
 from unnested
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

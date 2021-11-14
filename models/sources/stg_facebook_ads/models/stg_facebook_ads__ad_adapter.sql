@@ -1,3 +1,6 @@
+{% if var("marketing_warehouse_ad_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
+
 with report as (
 
     select *
@@ -6,7 +9,7 @@ with report as (
 ), creatives as (
 
     select *
-    from {{ ref('facebook_ads__creative_history_prep') }}
+    from {{ ref('stg_facebook_ads__creative_history_prep') }}
 
 ), accounts as (
 
@@ -75,3 +78,6 @@ with report as (
 
 select *
 from joined
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
