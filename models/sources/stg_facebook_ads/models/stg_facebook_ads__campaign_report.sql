@@ -1,7 +1,10 @@
+{% if var("marketing_warehouse_ad_sources") %}
+{% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
+
 with adapter as (
 
     select *
-    from {{ ref('facebook_ads__ad_adapter') }}
+    from {{ ref('stg_facebook_ads__ad_adapter') }}
 
 ), aggregated as (
 
@@ -21,3 +24,6 @@ with adapter as (
 
 select *
 from aggregated
+
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

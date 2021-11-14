@@ -1,4 +1,4 @@
-{{ config(enabled=var('ad_reporting__pinterest_enabled')) }}
+{% if 'pinterest_ads' in var("marketing_warehouse_ad_sources") %}
 
 with base as (
 
@@ -32,3 +32,5 @@ with base as (
 
 select *
 from fields
+
+{% else %} {{config(enabled=false)}} {% endif %}
