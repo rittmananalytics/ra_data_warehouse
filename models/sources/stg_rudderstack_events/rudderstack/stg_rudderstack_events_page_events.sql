@@ -41,9 +41,9 @@ renamed as (
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
-                split(context_user_agent,'(')[safe_offset(1)],
+              {{ dbt_utils.split_part("context_user_agent","'('","1") }},
                 ';', '')
-        end as device,
+        end  as device,
         '{{ var('stg_rudderstack_events_site') }}'  as site
 
 

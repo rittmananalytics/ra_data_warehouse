@@ -9,8 +9,8 @@ renamed as
  (
   SELECT
     concat('{{ var('stg_jira_projects_id-prefix') }}',accountid) AS contact_id,
-    split(displayname,' ')[safe_offset(0)] AS contact_first_name,
-    split(displayname,' ')[safe_offset(1)] AS contact_last_name,
+    {{ dbt_utils.split_part('displayname',' ','1') }} AS contact_first_name,
+    {{ dbt_utils.split_part('displayname',' ','1') }} AS contact_last_name,
     displayname AS contact_name,
     cast(null as {{ dbt_utils.type_string() }}) AS contact_job_title,
     emailaddress AS contact_email,

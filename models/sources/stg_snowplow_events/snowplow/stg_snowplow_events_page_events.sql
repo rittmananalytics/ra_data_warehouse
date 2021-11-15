@@ -33,9 +33,9 @@ renamed as (
     case
         when lower(useragent) like '%android%' then 'Android'
         else replace(
-          split(useragent,'(')[safe_offset(1)],
+          {{ dbt_utils.split_part("useragent","'('","1") }},
             ';', '')
-    end                                                       as device,
+    end  as device,
     cast(page_urlhost as {{ dbt_utils.type_string() }})       as site
     FROM
       source

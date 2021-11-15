@@ -3,7 +3,6 @@ version: 2
 sources:
   - name: adwords
     schema: "{{ var('google_ads_schema', var('google_ads_api_source')) }}"
-    database: "{% if target.type != 'spark'%}{{ var('google_ads_database', target.database) }}{% endif %}"
 
     loader: Fivetran
     loaded_at_field: _fivetran_synced

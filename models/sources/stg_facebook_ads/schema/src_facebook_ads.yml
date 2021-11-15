@@ -3,7 +3,6 @@ version: 2
 sources:
   - name: facebook_ads
     schema: "{{ var('facebook_ads_schema', 'facebook_ads') }}"
-    database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
     loader: Fivetran
     loaded_at_field: _fivetran_synced
     tables:
@@ -94,7 +93,7 @@ sources:
             description: Ad account ID for the account this ad creative belongs to.
           - name: name
             description: Name of this ad creative as seen in the ad account's library.
-          - name: url_tags        
+          - name: url_tags
             description: A set of query string parameters which will replace or be appended to urls clicked from page post ads, message of the post, and canvas app install creatives only.
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"

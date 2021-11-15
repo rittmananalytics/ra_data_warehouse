@@ -9,8 +9,8 @@ WITH source AS (
 renamed as (
   SELECT
     concat('{{ var('stg_asana_projects_id-prefix') }}',gid)  AS contact_id,
-    split(name,' ')[safe_offset(0)] AS contact_first_name,
-    split(name,' ')[safe_offset(1)] AS contact_last_name,
+    {{ dbt_utils.split_part('name',' ','1') }} AS contact_first_name,
+    {{ dbt_utils.split_part('name',' ','2') }} AS contact_last_name,
     name AS contact_name,
     cast(null as {{ dbt_utils.type_string() }}) AS contact_job_title,
     email AS contact_email,

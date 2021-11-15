@@ -93,7 +93,7 @@ converting_sessions_deduped as (
                 utm_campaign,
                 referrer_host,
                 first_page_url_host,
-                split(net.reg_domain(referrer_host),'.')[OFFSET(0)] as referrer_domain,
+                {{ dbt_utils.get_url_host('referrer_host') }} as page_url_host,
                 channel,
                 case when lower(channel) = 'direct' then false else true end as is_non_direct_channel,
                 case when lower(channel) like '%paid%' then true else false end as is_paid_channel,
@@ -152,7 +152,7 @@ converting_sessions_deduped_labelled_with_session_day_number as (
   select
     *,
 
-    {{ dbt_utils.datediff('"1900-01-01"','session_start_ts','day') }}
+    datediff(day,'1900-01-01',session_start_ts)
  as session_day_number
   from
     converting_sessions_deduped_labelled_with_conversion_cycles
@@ -169,17 +169,16 @@ days_to_each_conversion as (
 add_time_decay_score as (
   select
     *,
-    if(is_within_attribution_time_decay_days_window,safe_divide
-        (POW(2, (days_before_conversion-1)) ,( {{ var('attribution_time_decay_days_window') }}))
+    {{ iff() }}(is_within_attribution_time_decay_days_window,{{ safe_divide('POW(2,days_before_conversion-1)',var('attribution_time_decay_days_window')  ) }}
       ,null) AS time_decay_score,
-    if(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,POW(2, (days_before_conversion-1) )) as weighting,
-    if(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,
+    {{ iff() }}(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,POW(2, (days_before_conversion-1) )) as weighting,
+    {{ iff() }}(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,
         (count
           (case when not conversion_session or {{ var('attribution_include_conversion_session') }} then session_id end) over (PARTITION BY blended_user_id,{{ dbt_utils.date_trunc('day','session_start_ts') }}
         )
       )
     ) as sessions_within_day_to_conversion,
-    if(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,safe_divide
+    {{ iff() }}(conversion_session AND NOT {{ var('attribution_include_conversion_session') }},0,{% if target.type == 'bigquery' %}safe_divide{% elif target.type == 'snowflake' %}div0{% else %}{{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}{% endif %}
       (POW(2, (days_before_conversion-1)),count
         (case when not conversion_session or {{ var('attribution_include_conversion_session') }}  then session_id end) over (PARTITION BY blended_user_id,{{ dbt_utils.date_trunc('day','session_start_ts') }})
       )
@@ -190,15 +189,15 @@ add_time_decay_score as (
 split_time_decay_score_across_days_sessions as (
   select
     *,
-    safe_divide(time_decay_score,sessions_within_day_to_conversion) as apportioned_time_decay_score
+    {{safe_divide('time_decay_score','sessions_within_day_to_conversion') }} as apportioned_time_decay_score
   from
     add_time_decay_score
 )
 ,
 session_attrib_pct as (
     SELECT
-      * except (first_page_url_host),
-      if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+      * ,
+      {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
         WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}),session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
         THEN 1
@@ -206,7 +205,7 @@ session_attrib_pct as (
       0
     END)
       AS last_click_attrib_pct,
-      if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+      {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
         WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
         THEN 1
@@ -214,7 +213,7 @@ session_attrib_pct as (
       0
     END)
       AS last_non_direct_click_attrib_pct,
-      if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+      {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
         WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
 
         THEN 1
@@ -222,43 +221,42 @@ session_attrib_pct as (
       0
     END)
       AS last_paid_click_attrib_pct,
-      if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+      {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
         WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
         THEN 1
       ELSE
       0
     END)
       AS first_click_attrib_pct,
-    if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
         WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
         THEN 1
       ELSE
       0
     END)
       AS first_non_direct_click_attrib_pct,
-    if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
           WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window  and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
           THEN 1
         ELSE
         0
       END)
         AS first_paid_click_attrib_pct,
-    if(conversion_session and not {{ var('attribution_include_conversion_session') }},0,
-      IF(is_within_attribution_lookback_window,
-          (safe_divide
-            (1,
-              (COUNT
-                (IF
-                  (is_within_attribution_lookback_window,session_id,null)
-                )
-                OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING){% if  var('attribution_include_conversion_session')  %} +0 {% else %} -1 {% endif %}
-              )
-            )
-          ),0
+    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,
+      {{ iff() }}(is_within_attribution_lookback_window,
+          (
+            {% if target.type == 'bigquery' %}
+            safe_divide(1,(COUNT(IF(is_within_attribution_lookback_window,session_id,null)) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING){% if  var('attribution_include_conversion_session')  %} +0 {% else %} -1 {% endif %}))),0
+            {% elif target.type == 'snowflake' %}
+            div0(1,(COUNT(IF(is_within_attribution_lookback_window,session_id,null)) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING){% if  var('attribution_include_conversion_session')  %} +0 {% else %} -1 {% endif %}))),0
+            {% else %}
+            (1/NULLIF(COUNT(IF(is_within_attribution_lookback_window,session_id,null)) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING){% if  var('attribution_include_conversion_session')  %} +0 {% else %} -1 {% endif %},0)   )),0
+            {% endif %}
+
         )
       ) AS even_click_attrib_pct,
-    IF(conversion_session and not {{ var('attribution_include_conversion_session') }},0,
-      case when is_within_attribution_time_decay_days_window then safe_divide(apportioned_time_decay_score,(SUM(apportioned_time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle)))
+    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,
+      case when is_within_attribution_time_decay_days_window then {{ safe_divide('apportioned_time_decay_score','(SUM(apportioned_time_decay_score) OVER(PARTITION BY blended_user_id, user_conversion_cycle))'   ) }}
         end
       ) AS time_decay_attrib_pct
   FROM

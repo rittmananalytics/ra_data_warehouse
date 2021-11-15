@@ -18,7 +18,6 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
 
 on-run-start:
-    - "{% do create_schema(api.Relation.create(database=target.project, schema=generate_prefixed_target_name().strip() + '_logs')) %}"
     - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 
 on-run-end:

@@ -59,7 +59,7 @@ on c.ad_campaign_id = s.ad_campaign_id)
       utm_medium,
       ad_campaign_total_cost as total_reported_cost,
       ad_campaign_total_clicks AS total_reported_clicks,
-      ad_campaign_total_impressions AS total_reported_impressions,
+      ad_campaign_total_impressions AS total_reported_impressions
     FROM
       campaign_performance_joined)
   {{ dbt_utils.group_by(n=5) }}

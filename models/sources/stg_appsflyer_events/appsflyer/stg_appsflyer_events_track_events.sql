@@ -34,7 +34,7 @@ select
     case
         when lower(user_agent) like '%android%' then 'Android'
         else replace(
-          split(user_agent,'(')[safe_offset(1)],
+          {{ dbt_utils.split_part("user_agent","'('","1") }},
             ';', '')
     end                                                           as device,
     cast(af_siteid as {{ dbt_utils.type_string() }})              as site

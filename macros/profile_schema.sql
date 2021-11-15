@@ -56,7 +56,7 @@ FROM
       column_name,
       COUNT(*) AS table_rows,
       COUNT(DISTINCT column_value) AS count_distinct_values,
-      safe_divide(COUNT(DISTINCT column_value),COUNT(*)) AS pct_unique,
+      {{ safe_divide('COUNT(DISTINCT column_value)','COUNT(*)') }} AS pct_unique,
       COUNTIF(column_value IS NULL) AS _nulls,
       COUNTIF(column_value IS NOT NULL) AS _non_nulls,
       COUNTIF(column_value IS NOT NULL) / COUNT(*) AS pct_not_null,
