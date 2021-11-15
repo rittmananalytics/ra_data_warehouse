@@ -27,12 +27,12 @@ models:
   ra_data_warehouse:
 # source adapter general settings
       sources:
-          materialized: view
+          materialized: table
           schema: staging
 
 # integration layer settings
       integration:
-          materialized: view
+          materialized: table
           schema: staging
 
 # warehouse layer settings

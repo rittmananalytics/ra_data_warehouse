@@ -151,9 +151,7 @@ converting_sessions_deduped_labelled_with_conversion_cycles AS (
 converting_sessions_deduped_labelled_with_session_day_number as (
   select
     *,
-
-    datediff(day,'1900-01-01',session_start_ts)
- as session_day_number
+    {{ dbt_utils.datediff("'2018-01-01'", "session_start_ts", "day") }} as session_day_number
   from
     converting_sessions_deduped_labelled_with_conversion_cycles
 ),
