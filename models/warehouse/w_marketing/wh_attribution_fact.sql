@@ -1,4 +1,6 @@
 {% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
+{% if target.type == 'bigquery'  or target.type == 'redshift' %}
+
 {{
     config(
       alias='attribution_fact'
@@ -394,4 +396,5 @@ select
   repeat_order_time_decay_attrib_revenue
 from
   final
+{% endif %}
 {% endif %}

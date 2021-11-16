@@ -1,4 +1,6 @@
 {% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
+{% if target.type == 'bigquery' %}
+
 
 {{
     config(
@@ -102,4 +104,5 @@ where trim(utm_campaign) is not null
 
 {{config(enabled=false)}}
 
+{% endif %}
 {% endif %}

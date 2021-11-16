@@ -1,4 +1,6 @@
 {% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
+{% if target.type == 'snowflake' %}
+
 {{
     config(
       alias='attribution_fact'
@@ -14,7 +16,7 @@ WITH events_filtered AS (
         *,
         FIRST_VALUE(
           CASE
-            WHEN event_type = 'contact_us_pressed' THEN event_id
+            WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_id
           END
         ) over (
           PARTITION BY blended_user_id
@@ -24,7 +26,7 @@ WITH events_filtered AS (
         ) AS first_registration_event_id,
         FIRST_VALUE(
           CASE
-            WHEN event_type = 'order_checkout' THEN event_id
+            WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_id
           END
         ) over (
           PARTITION BY blended_user_id
@@ -33,7 +35,8 @@ WITH events_filtered AS (
             AND unbounded following
         ) AS first_order_event_id
       FROM
-        {{ ref ('wh_web_events_fact') }})
+        {{ ref ('wh_web_events_fact') }}
+
     )
     WHERE
       event_type != '{{ var('attribution_create_account_event_type') }}'
@@ -46,39 +49,39 @@ converting_events AS (
     event_type,
     order_id,
     CASE
-      WHEN event_type = 'order_checkout'
+      WHEN event_type = '{{ var('attribution_conversion_event_type') }}'
       AND event_id = first_order_event_id THEN total_revenue
       ELSE 0
     END AS first_order_total_revenue,
     CASE
-      WHEN event_type = 'order_checkout'
+      WHEN event_type = '{{ var('attribution_conversion_event_type') }}'
       AND event_id != first_order_event_id THEN total_revenue
       ELSE 0
     END AS repeat_order_total_revenue,
     currency_code,
     CASE
       WHEN event_type IN(
-        'order_checkout',
-        'contact_us_pressed'
+        '{{ var('attribution_conversion_event_type') }}',
+        '{{ var('attribution_create_account_event_type') }}'
       ) THEN 1
       ELSE 0
     END AS count_conversions,
     CASE
-      WHEN event_type = 'order_checkout'
+      WHEN event_type = '{{ var('attribution_conversion_event_type') }}'
       AND event_id = first_order_event_id THEN 1
       ELSE 0
     END AS count_first_order_conversions,
     CASE
-      WHEN event_type = 'order_checkout'
+      WHEN event_type = '{{ var('attribution_conversion_event_type') }}'
       AND event_id != first_order_event_id THEN 1
       ELSE 0
     END AS count_repeat_order_conversions,
     CASE
-      WHEN event_type = 'order_checkout' THEN 1
+      WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN 1
       ELSE 0
     END AS count_order_conversions,
     CASE
-      WHEN event_type = 'contact_us_pressed' THEN 1
+      WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN 1
       ELSE 0
     END AS count_registration_conversions,
     event_ts AS converted_ts
@@ -132,93 +135,19 @@ converting_sessions_deduped_labelled AS (
             s.blended_user_id,
             s.session_start_ts,
             s.session_end_ts,
-            C.converted_ts AS converted_ts,
+            c.converted_ts as converted_ts,
             s.session_id AS session_id,
-            MAX(
-              C.count_conversions
-            ) AS count_conversions,
-            MAX(
-              C.count_order_conversions
-            ) AS count_order_conversions,
-            MAX(
-              C.count_first_order_conversions
-            ) AS count_first_order_conversions,
-            MAX(
-              C.count_repeat_order_conversions
-            ) AS count_repeat_order_conversions,
-            MAX(
-              C.count_registration_conversions
-            ) AS count_registration_conversions,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                  ) THEN TRUE
-                  ELSE FALSE
-                END
-              ),
-              FALSE
-            ) AS conversion_session,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                  ) THEN 1
-                  ELSE 0
-                END
-              ),
-              0
-            ) AS conversion_event,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                    AND C.count_order_conversions > 1
-                  ) THEN 1
-                  ELSE 0
-                END
-              ),
-              0
-            ) AS order_conversion_event,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                    AND C.count_registration_conversions > 1
-                  ) THEN 1
-                  ELSE 0
-                END
-              ),
-              0
-            ) AS registration_conversion_event,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                    AND C.count_first_order_conversions > 1
-                  ) THEN 1
-                  ELSE 0
-                END
-              ),
-              0
-            ) AS first_order_conversion_event,
-            COALESCE(
-              (
-                CASE
-                  WHEN (
-                    C.session_id = s.session_id
-                    AND C.count_repeat_order_conversions > 1
-                  ) THEN 1
-                  ELSE 0
-                END
-              ),
-              0
-            ) AS repeat_order_conversion_event,
+            MAX(c.count_conversions)              AS count_conversions,
+            MAX(c.count_order_conversions)        AS count_order_conversions,
+            MAX(c.count_first_order_conversions)  AS count_first_order_conversions,
+            MAX(c.count_repeat_order_conversions) AS count_repeat_order_conversions,
+            MAX(c.count_registration_conversions) AS count_registration_conversions,
+            COALESCE(CASE WHEN c.count_conversions >0 THEN TRUE ELSE FALSE END  ,false)     AS conversion_session,
+            COALESCE(CASE WHEN c.count_conversions >0 THEN 1 ELSE 0 END  ,0)                AS conversion_event,
+            COALESCE(CASE WHEN c.count_order_conversions>0 THEN 1 ELSE 0 END  ,0)           AS order_conversion_event,
+            COALESCE(CASE WHEN c.count_registration_conversions>0 THEN 1 ELSE 0 END  ,0)    AS registration_conversion_event,
+            COALESCE(CASE WHEN c.count_first_order_conversions>0 THEN 1 ELSE 0 END  ,0)     AS first_order_conversion_event,
+            COALESCE(CASE WHEN c.count_repeat_order_conversions>0 THEN 1 ELSE 0 END  ,0)    AS repeat_order_conversion_event,
             utm_source,
             utm_content,
             utm_medium,
@@ -412,7 +341,7 @@ add_time_decay_score AS (
       0,
       div0 (pow(2, (days_before_conversion - 1)), COUNT(CASE
       WHEN NOT conversion_session
-      OR TRUE THEN session_idEND) over (PARTITION BY blended_user_id, DATE_TRUNC('day', CAST(session_start_ts AS DATE))))
+      OR TRUE THEN session_id END) over (PARTITION BY blended_user_id, DATE_TRUNC('day', CAST(session_start_ts AS DATE))))
     ) AS weighting_split_by_days_sessions
   FROM
     days_to_each_conversion
@@ -668,7 +597,7 @@ FINAL AS (
     (MAX(repeat_order_total_revenue) over (PARTITION BY blended_user_id, user_conversion_cycle) * time_decay_attrib_pct) AS repeat_order_time_decay_attrib_revenue
   FROM
     session_attrib_pct
-  {{ dbt_utils.group_by(57) }}
+  {{ dbt_utils.group_by(58) }}
 
 )
 SELECT
@@ -757,4 +686,5 @@ SELECT
   repeat_order_time_decay_attrib_revenue
 FROM
   FINAL
+{% endif %}
 {% endif %}
