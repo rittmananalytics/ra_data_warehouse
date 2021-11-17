@@ -198,52 +198,33 @@ session_attrib_pct as (
     SELECT
       * ,
       {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}),session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-
-        THEN 1
-      ELSE
-      0
-    END)
-      AS last_click_attrib_pct,
+        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}),session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END) AS last_click_attrib_pct,
       {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-
-        THEN 1
-      ELSE
-      0
-    END)
-      AS last_non_direct_click_attrib_pct,
+        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END) AS last_non_direct_click_attrib_pct,
       {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-
-        THEN 1
-      ELSE
-      0
-    END)
-      AS last_paid_click_attrib_pct,
+        WHEN session_id = LAST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null)  IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END) AS last_paid_click_attrib_pct,
       {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-        WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-        THEN 1
-      ELSE
-      0
-    END)
-      AS first_click_attrib_pct,
-    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-        WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-        THEN 1
-      ELSE
-      0
-    END)
+        WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END) AS first_click_attrib_pct,
+      {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
+        WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_non_direct_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END)
       AS first_non_direct_click_attrib_pct,
     {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,CASE
-          WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window  and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
-          THEN 1
-        ELSE
-        0
-      END)
+        WHEN session_id = FIRST_VALUE(if(is_within_attribution_lookback_window  and (not conversion_session or {{ var('attribution_include_conversion_session') }}) and is_paid_channel,session_id,null) IGNORE NULLS) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) THEN 1
+          ELSE 0
+        END)
         AS first_paid_click_attrib_pct,
-    {{ iff() }}(conversion_session and not {{ var('attribution_include_conversion_session') }},0,
-      {{ iff() }}(is_within_attribution_lookback_window,
+    {{ iff() }} (conversion_session and not {{ var('attribution_include_conversion_session') }},0,
+        {{ iff() }} (is_within_attribution_lookback_window,
           (
             {% if target.type == 'bigquery' %}
             safe_divide(1,(COUNT(IF(is_within_attribution_lookback_window,session_id,null)) OVER (PARTITION BY blended_user_id, user_conversion_cycle ORDER BY session_start_ts ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING){% if  var('attribution_include_conversion_session')  %} +0 {% else %} -1 {% endif %}))),0
