@@ -1,11 +1,7 @@
 {% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
 {% if target.type == 'bigquery'  or target.type == 'redshift' %}
 
-{{
-    config(
-      alias='attribution_fact'
-    )
-}}
+{{config(enabled=false)}}
 
 
 WITH
@@ -15,13 +11,13 @@ events_filtered as (
   FROM (
     SELECT
       *,
-      FIRST_VALUE(CASE WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_id END) OVER (PARTITION BY blended_user_id order by event_ts ROWS BETWEEN unbounded preceding AND unbounded following) AS first_registration_event_id,
-      FIRST_VALUE(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_id END) OVER (PARTITION BY blended_user_id order by event_ts ROWS BETWEEN unbounded preceding AND unbounded following) AS first_order_event_id
+      FIRST_VALUE(CASE WHEN event_type = '{{ var('attribution_create_account_event_type') }}' THEN event_id END IGNORE NULLS) OVER (PARTITION BY blended_user_id order by event_ts ROWS BETWEEN unbounded preceding AND unbounded following) AS first_registration_event_id,
+      FIRST_VALUE(CASE WHEN event_type = '{{ var('attribution_conversion_event_type') }}' THEN event_id END IGNORE NULLS) OVER (PARTITION BY blended_user_id order by event_ts ROWS BETWEEN unbounded preceding AND unbounded following) AS first_order_event_id
     FROM
       {{ ref ('wh_web_events_fact') }})
   WHERE
-    event_type != '{{ var('attribution_create_account_event_type') }}'
-    OR (event_id = first_registration_event_id)
+    (event_type = '{{ var('attribution_create_account_event_type') }}'
+    or (event_type = 'contact_us_pressed' and event_id = first_registration_event_id))
 ),
 converting_events as
     (
