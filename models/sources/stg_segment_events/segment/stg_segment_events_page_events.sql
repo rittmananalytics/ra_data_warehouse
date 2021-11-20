@@ -37,10 +37,24 @@ renamed AS (
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
-              {{ dbt_utils.split_part("context_user_agent","'('","1") }},
+              {{ dbt_utils.split_part('context_user_agent',"'('",1) }},
                 ';', '')
         end  AS device,
-        CAST('{{ var('stg_segment_events_site') }}' AS {{ dbt_utils.type_string() }})  AS site
+        CAST('{{ var('stg_segment_events_site') }}' AS {{ dbt_utils.type_string() }})  AS site,
+        CAST(null as {{ dbt_utils.type_string() }})                                   AS session_seq,
+        CAST(null as {{ dbt_utils.type_string() }})                                   AS session_id,
+        'Snowplow (Try Snowplow Trial)'                                     AS source,
+        'web'                                                               AS platform,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_country,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_region,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_city,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_zipcode,
+        CAST(null as {{ dbt_utils.type_float() }})                          AS ip_latitude,
+        CAST(null as {{ dbt_utils.type_float() }}) 	                        AS ip_longitude,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_region_name,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_isp,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_organization,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_domain
 
 
     FROM source

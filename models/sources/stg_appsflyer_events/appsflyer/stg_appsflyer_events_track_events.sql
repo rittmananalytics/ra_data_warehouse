@@ -34,10 +34,24 @@ SELECT
     case
         when lower(user_agent) like '%android%' then 'Android'
         else replace(
-          {{ dbt_utils.split_part("user_agent","'('","1") }},
+          {{ dbt_utils.split_part('user_agent',"'('",1) }},
             ';', '')
     end                                                           AS device,
-    CAST(af_siteid AS {{ dbt_utils.type_string() }})              AS site
+    CAST(af_siteid AS {{ dbt_utils.type_string() }})              AS site,
+    CAST(null as {{ dbt_utils.type_string() }})                                   AS session_seq,
+    CAST(null as {{ dbt_utils.type_string() }})                                   AS session_id,
+    'Snowplow (Try Snowplow Trial)'                                     AS source,
+    platform                                                            AS platform,
+    CAST(null as {{ dbt_utils.type_string() }})                         AS ip_country,
+    CAST(null as {{ dbt_utils.type_string() }})                         AS ip_region,
+    CAST(city as {{ dbt_utils.type_string() }}) 	                      AS ip_city,
+    CAST(postal_code as {{ dbt_utils.type_string() }}) 	                      AS ip_zipcode,
+    CAST(null as {{ dbt_utils.type_float() }})                          AS ip_latitude,
+    CAST(null as {{ dbt_utils.type_float() }}) 	                        AS ip_longitude,
+    CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_region_name,
+    CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_isp,
+    CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_organization,
+    CAST(null as {{ dbt_utils.type_string() }})                         AS ip_domain
       FROM
     source
 ),

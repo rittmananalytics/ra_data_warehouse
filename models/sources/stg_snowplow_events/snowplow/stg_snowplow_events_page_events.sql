@@ -28,15 +28,29 @@ renamed AS (
     CAST(mkt_campaign AS {{ dbt_utils.type_string() }})       AS utm_campaign,
     CAST(mkt_source AS {{ dbt_utils.type_string() }})         AS utm_source,
     CAST(user_ipaddress AS {{ dbt_utils.type_string() }})     AS ip,
-    CAST(coalesce(network_userid,domain_userid) AS {{ dbt_utils.type_string() }}) AS visitor_id,
+    CAST(domain_userid AS {{ dbt_utils.type_string() }}) AS visitor_id,
     CAST(user_id AS {{ dbt_utils.type_string() }})            AS user_id,
     case
         when lower(useragent) like '%android%' then 'Android'
         else replace(
-          {{ dbt_utils.split_part("useragent","'('","1") }},
+          {{ dbt_utils.split_part('useragent',"'('",1) }},
             ';', '')
     end  AS device,
-    CAST(page_urlhost AS {{ dbt_utils.type_string() }})       AS site
+    CAST(page_urlhost AS {{ dbt_utils.type_string() }})       AS site,
+    CAST(domain_sessionidx)                                   AS session_seq,
+    CAST(domain_sessionid)                                    AS session_id,
+    'Snowplow (Try Snowplow Trial)'                           AS source,
+    CAST(platform AS {{ dbt_utils.type_string() }})           AS platform,
+    CAST(geo_country AS {{ dbt_utils.type_string() }})        AS ip_country,
+    CAST(geo_region AS {{ dbt_utils.type_string() }})         AS ip_region,
+    CAST(geo_city AS {{ dbt_utils.type_string() }})	          AS ip_city,
+    CAST(geo_zipcode AS {{ dbt_utils.type_string() }})	      AS ip_zipcode,
+    CAST(geo_latitude AS {{ dbt_utils.type_float() }})        AS ip_latitude,
+    CAST(geo_longitude AS {{ dbt_utils.type_float() }})	      AS ip_longitude,
+    CAST(geo_region_name AS {{ dbt_utils.type_string() }})	  AS ip_region_name,
+    CAST(ip_isp AS {{ dbt_utils.type_string() }})	            AS ip_isp,
+    CAST(ip_organization AS {{ dbt_utils.type_string() }})	  AS ip_organization,
+    CAST(ip_domain AS {{ dbt_utils.type_string() }})          AS ip_domain
     FROM
       source
 ),
