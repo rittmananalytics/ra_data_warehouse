@@ -6,79 +6,79 @@
 {% if var("product_warehouse_event_sources") %}
 {% if 'mixpanel_events' in var("product_warehouse_event_sources") %}
 
-WITH source as (
+WITH source AS (
   {{ filter_stitch_relation(relation=source('stitch_mixpanel_events','event'),unique_column='mp_reserved_insert_id') }}
 
 ),
-renamed_full as (
+renamed_full AS (
   SELECT
-      cast(mp_reserved_insert_id as string)       as event_id,
-     event as event_type,
-     path as event_property_path,
-     title as event_property_title,
-     url as event_property_url,
-     target as event_property_target,
-     episode as event_property_episode,
-     product as event_property_product,
-     type as event_property_type,
-     time as event_ts,
-     mp_reserved_current_url as event_current_url,
-     mp_processing_time_ms as event_processing_ts,
-     mp_reserved_insert_id as event_insert_id,
-     distinct_id as user_id,
-     mp_reserved_browser as browser_type,
-     mp_reserved_browser_version  as browser_version,
-     mp_reserved_city as city,
-     mp_reserved_device as device,
-     mp_reserved_device_id as device_id,
-     mp_country_code as country_code,
-     mp_reserved_os as os,
-     mp_reserved_region as region,
-     mp_reserved_screen_height as screen_height,
-     mp_reserved_screen_width as screen_width,
-     mp_reserved_search_engine as search_engine,
-     mp_reserved_initial_referrer as initial_referrer,
-     mp_reserved_initial_referring_domain as referring_domain,
-     mp_reserved_referring_domain as referring_domain,
-     referrer as referrer
+      CAST(mp_reserved_insert_id AS string)       AS event_id,
+     event AS event_type,
+     path AS event_property_path,
+     title AS event_property_title,
+     url AS event_property_url,
+     target AS event_property_target,
+     episode AS event_property_episode,
+     product AS event_property_product,
+     type AS event_property_type,
+     time AS event_ts,
+     mp_reserved_current_url AS event_current_url,
+     mp_processing_time_ms AS event_processing_ts,
+     mp_reserved_insert_id AS event_insert_id,
+     distinct_id AS user_id,
+     mp_reserved_browser AS browser_type,
+     mp_reserved_browser_version  AS browser_version,
+     mp_reserved_city AS city,
+     mp_reserved_device AS device,
+     mp_reserved_device_id AS device_id,
+     mp_country_code AS country_code,
+     mp_reserved_os AS os,
+     mp_reserved_region AS region,
+     mp_reserved_screen_height AS screen_height,
+     mp_reserved_screen_width AS screen_width,
+     mp_reserved_search_engine AS search_engine,
+     mp_reserved_initial_referrer AS initial_referrer,
+     mp_reserved_initial_referring_domain AS referring_domain,
+     mp_reserved_referring_domain AS referring_domain,
+     referrer AS referrer
 FROM
   source
 )
 ,
-renamed as (
-    select
-    event_id                    as event_id,
-    'Page View'                  as event_type,
-    event_ts                   as event_ts,
-    coalesce(event_property_episode,event_property_product,event_property_target,concat(event_property_type,event_property_product)) as event_details,
-    event_property_title        as page_title,
-    event_property_path         as page_url_path,
+renamed AS (
+    SELECT
+    event_id                    AS event_id,
+    'Page View'                  AS event_type,
+    event_ts                   AS event_ts,
+    coalesce(event_property_episode,event_property_product,event_property_target,CONCAT(event_property_type,event_property_product)) AS event_details,
+    event_property_title        AS page_title,
+    event_property_path         AS page_url_path,
     replace(
         {{ dbt_utils.get_url_host('referrer') }},
         'www.',
         ''
-    )                           as referrer_host,
-    search_engine               as search,
-    event_current_url           as page_url,
-    {{ dbt_utils.get_url_host('event_current_url') }} as page_url_host,
-    {{ dbt_utils.get_url_parameter('event_current_url', 'gclid') }} as gclid,
-    cast(null as {{ dbt_utils.type_string() }})        as utm_term,
-    cast(null as {{ dbt_utils.type_string() }})        as utm_content,
-    cast(null as {{ dbt_utils.type_string() }})        as utm_medium,
-    cast(null as {{ dbt_utils.type_string() }})        as utm_campaign,
-    cast(null as {{ dbt_utils.type_string() }})        as utm_source,
-    cast(null as {{ dbt_utils.type_string() }})        as ip,
-    user_id                     as visitor_id,
-    user_id                     as user_id,
-    device                      as device,
-    '{{ var('stg_mixpanel_events_site') }}'  as site
+    )                           AS referrer_host,
+    search_engine               AS search,
+    event_current_url           AS page_url,
+    {{ dbt_utils.get_url_host('event_current_url') }} AS page_url_host,
+    {{ dbt_utils.get_url_parameter('event_current_url', 'gclid') }} AS gclid,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS utm_term,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS utm_content,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS utm_medium,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS utm_campaign,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS utm_source,
+    CAST(null AS {{ dbt_utils.type_string() }})        AS ip,
+    user_id                     AS visitor_id,
+    user_id                     AS user_id,
+    device                      AS device,
+    '{{ var('stg_mixpanel_events_site') }}'  AS site
 
-    from renamed_full
+    FROM renamed_full
     where event_type = 'Loaded a Page'
     ),
-    final as (
+    final AS (
 
-        select
+        SELECT
             *,
             case
                 when device = 'iPhone' then 'iPhone'
@@ -86,11 +86,11 @@ renamed as (
                 when device in ('iPad', 'iPod') then 'Tablet'
                 when device in ('Windows', 'Macintosh', 'X11') then 'Desktop'
                 else 'Uncategorized'
-            end as device_category
-        from renamed
+            end AS device_category
+        FROM renamed
 
     )
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -3,7 +3,7 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'google_ads' %}
 
-select * from {{ source('adwords','account') }}
+SELECT * FROM {{ source('adwords','account') }}
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

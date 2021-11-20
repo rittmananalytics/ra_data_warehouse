@@ -1,21 +1,21 @@
 {% if 'microsoft_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('microsoft_ads__ad_adapter')}}
+    SELECT *
+    FROM {{ ref('microsoft_ads__ad_adapter')}}
 
-), fields as (
+), fields AS (
 
-    select
-        'Microsoft Ads' as platform,
-        cast(date_day as date) as date_day,
+    SELECT
+        'Microsoft Ads' AS platform,
+        CAST(date_day AS date) AS date_day,
         account_name,
-        cast(account_id as {{ dbt_utils.type_string() }}) as account_id,
+        CAST(account_id AS {{ dbt_utils.type_string() }}) AS account_id,
         campaign_name,
-        cast(campaign_id as {{ dbt_utils.type_string() }}) as campaign_id,
+        CAST(campaign_id AS {{ dbt_utils.type_string() }}) AS campaign_id,
         ad_group_name,
-        cast(ad_group_id as {{ dbt_utils.type_string() }}) as ad_group_id,
+        CAST(ad_group_id AS {{ dbt_utils.type_string() }}) AS ad_group_id,
         base_url,
         url_host,
         url_path,
@@ -24,15 +24,15 @@ with base as (
         utm_campaign,
         utm_content,
         utm_term,
-        coalesce(clicks, 0) as clicks,
-        coalesce(impressions, 0) as impressions,
-        coalesce(spend, 0) as spend
-    from base
+        coalesce(clicks, 0) AS clicks,
+        coalesce(impressions, 0) AS impressions,
+        coalesce(spend, 0) AS spend
+    FROM base
 
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}

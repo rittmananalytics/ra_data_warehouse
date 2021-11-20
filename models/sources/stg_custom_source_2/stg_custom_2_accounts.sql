@@ -7,28 +7,28 @@
 {% endif %}
 
 WITH source AS (
-    select *
+    SELECT *
     from
     {{ source('custom_source_2','s_accounts' ) }}
 ),
 renamed as
 (
-select  concat('custom_2-',id) as       account_id,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_name,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_code,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_type,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_class,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_status,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_description,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_reporting_code,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_reporting_code_name,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_currency_code,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_bank_account_type,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_bank_account_number,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_is_system_account,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_tax_type,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_show_in_expense_claims,
-        cast (null as {{ dbt_utils.type_string() }}) as        account_enable_payments_to_account
-from source
+SELECT  CONCAT('custom_2-',id) AS       account_id,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_name,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_code,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_type,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_class,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_status,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_description,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_reporting_code,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_reporting_code_name,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_currency_code,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_bank_account_type,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_bank_account_number,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_is_system_account,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_tax_type,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_show_in_expense_claims,
+        CAST(null AS {{ dbt_utils.type_string() }}) AS        account_enable_payments_to_account
+FROM source
 )
-select * from renamed
+SELECT * FROM renamed

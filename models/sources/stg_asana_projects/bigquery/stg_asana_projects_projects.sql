@@ -8,17 +8,17 @@ WITH source AS (
 
 renamed AS (
   SELECT
-  concat('{{ var('stg_asana_projects_id-prefix') }}',gid) as project_id,
-  concat('{{ var('stg_asana_projects_id-prefix') }}',owner.gid) as lead_user_id,
-  concat('{{ var('stg_asana_projects_id-prefix') }}',workspace.gid) as company_id,
-  name as project_name,
-  current_status as project_status,
-  notes as project_notes,
-  cast (null as {{ dbt_utils.type_string() }}) as project_type,
-  cast (null as {{ dbt_utils.type_string() }}) as project_category_description,
-  cast (null as {{ dbt_utils.type_string() }}) as project_category_name,
-  created_at as project_created_at_ts,
-  modified_at as project_modified_at_ts,
+  CONCAT('{{ var('stg_asana_projects_id-prefix') }}',gid) AS project_id,
+  CONCAT('{{ var('stg_asana_projects_id-prefix') }}',owner.gid) AS lead_user_id,
+  CONCAT('{{ var('stg_asana_projects_id-prefix') }}',workspace.gid) AS company_id,
+  name AS project_name,
+  current_status AS project_status,
+  notes AS project_notes,
+  CAST(null AS {{ dbt_utils.type_string() }}) AS project_type,
+  CAST(null AS {{ dbt_utils.type_string() }}) AS project_category_description,
+  CAST(null AS {{ dbt_utils.type_string() }}) AS project_category_name,
+  created_at AS project_created_at_ts,
+  modified_at AS project_modified_at_ts,
   FROM
     source
 

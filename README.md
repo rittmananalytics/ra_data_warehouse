@@ -1,13 +1,13 @@
 ## Introduction
 
-The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use as the core set of models and transformations on all of our client projects.
+The RA Warehouse dbt framework is a set of data models, data transformations and data warehousing design patterns for use with dbt ("Data Build Tool"), an open-source data transformation and orchestration toolkit we use AS the core set of models and transformations on all of our client projects.
 
 The RA Warehouse dbt framework:
 
 * Contains pre-built, standardised data source models for popular SaaS applications (Hubspot, Xero, Facebook Ads, Segment etc)
 * Supports Stitch, Fivetran and Segment data pipeline services
 * Works with both Google BigQuery and Snowflake data warehouse targets
-* Combines and integrates data from multiple sources, deduplicates and creates single contact and company records
+* Combines and integrates data FROM multiple sources, deduplicates and creates single contact and company records
 * Creates subject-area dimensional warehouses e.g. Finance, Marketing, Product, CRM
 * Provides utilities for data profiling, ETL run logging and analysis
 * Is configured through a set of variables in the dbt_project.yml file
@@ -39,7 +39,7 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 2. To enable merging of customer, product, contact and other shared entity data with no single authoratitive source
 3. To provide fast time-to-value on client projects by pre-building and pre-integrating common SaaS data sources
 4. To pre-create derived analytics measures for individual and combinations of sources
-5. To create a means of selecting sources and warehouses and have just those sources/warehouses loaded (and deployed for a customer)
+5. To create a means of SELECTing sources and warehouses and have just those sources/warehouses loaded (and deployed for a customer)
 6. To support use of multiple warehouse platforms and combinations of extract technologies while maintaining a single code base
 7. To make it simpler to run data quality tests than to not, by defining these tests in-advance
 8. To enable loading and integration of custom (customer app database) sources into the warehouse
@@ -50,7 +50,7 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 
 Unlike most dbt packages this one isn't intended to be included in the packages.yml file of another, master package.
 
-Instead, we typically clone or fork the entire repo when starting a new client project and then enable or disable data sources and targets as appropriate using the configuration settings in the dbt_project.yml file (see "Setup Steps" later in this readme)
+Instead, we typically clone or fork the entire repo when starting a new client project and then enable or disable data sources and targets AS appropriate using the configuration settings in the dbt_project.yml file (see "Setup Steps" later in this readme)
 
 Thereafter we typically extend and customise the data sources and warehouses already included in the package (submitting those changes back to the master repo if we think they'd be useful for other clients on subsequent projects), or we add new source modules, integration and warehouse models if they're not already in the framework (and again, publish them back to the master repo if they're generally applicable).
 
@@ -104,7 +104,7 @@ See [Compatibility Matrix](compatibility.md) for full details.
 
 There are three distinct layers in the data warehouse:
 
-1. A layer of source and ETL pipeline-specific data sources, containing SQL code used to transform and rename incoming tables from each source into common formats
+1. A layer of source and ETL pipeline-specific data sources, containing SQL code used to transform and rename incoming tables FROM each source into common formats
 
 2. An Integration layer, containing SQL transformations used to integrate, merge, deduplicate and transform data ready for loading into the main warehouse fact and dimension tables.
 
@@ -208,7 +208,7 @@ dbt models inside this project are grouped together by these layers, with each d
 
 ### Dimension Union and Merge Deduplication Design Pattern
 
-Customers, contacts, projects and other shared dimensions are automatically created from all data sources, deduplicating by name and merge lookup files using a process that preserves source system keys whilst assigning a unique ID for each customer, contact etc.
+Customers, contacts, projects and other shared dimensions are automatically created FROM all data sources, deduplicating by name and merge lookup files using a process that preserves source system keys whilst assigning a unique ID for each customer, contact etc.
 
 1. Each set of dbt source module provides a unique ID, prefixed with the source name, and another field value (for example, user name) that can be used for deduplicating dimension members downstream.
 
@@ -233,8 +233,8 @@ WITH source AS (
       properties.linkedinbio.value AS               company_linkedin_bio,
       properties.twitterhandle.value AS             company_twitterhandle,
       properties.description.value AS               company_description,
-      cast (null as {{ dbt_utils.type_string() }}) AS                      company_finance_status,
-      cast (null as {{ dbt_utils.type_string() }})      as                 company_currency_code,
+      CAST(null AS {{ dbt_utils.type_string() }}) AS                      company_finance_status,
+      CAST(null AS {{ dbt_utils.type_string() }})      AS                 company_currency_code,
       properties.createdate.value AS                company_created_date,
       properties.hs_lastmodifieddate.value          company_last_modified_date
     FROM
@@ -257,15 +257,15 @@ crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accountin
 Unioning takes place using a Jinja "for" loop
 
 ```
-with t_companies_pre_merged as (
+with t_companies_pre_merged AS (
 
     {% for source in var('crm_warehouse_company_sources') %}
       {% set relation_source = 'stg_' + source + '_companies' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
@@ -278,8 +278,8 @@ with t_companies_pre_merged as (
 ```
 {% if target.type == 'bigquery' %}
 
-  all_company_ids as (
-             SELECT company_name, array_agg(distinct company_id ignore nulls) as all_company_ids
+  all_company_ids AS (
+             SELECT company_name, array_agg(distinct company_id ignore nulls) AS all_company_ids
              FROM t_companies_pre_merged
              group by 1),
 ```
@@ -287,13 +287,13 @@ with t_companies_pre_merged as (
 Any other multivalue columns are similarly-grouped by the deduplication column in further CTEs within the i_ integration view, for example list of email addresses for a user.
 
 ```
-all_company_addresses as (
+all_company_addresses AS (
              SELECT company_name, array_agg(struct(company_address,
                                                    company_address2,
-                                                   case when length(trim(company_city)) = 0 then null else company_city end as company_city,
-                                                   case when length(trim(company_state)) = 0 then null else company_state end as company_state,
-                                                   case when length(trim(company_country)) = 0 then null else company_country end as company_country,
-                                                   case when length(trim(company_zip)) = 0 then null else company_zip  end as company_zip) ignore nulls) as all_company_addresses
+                                                   case when length(trim(company_city)) = 0 then null else company_city end AS company_city,
+                                                   case when length(trim(company_state)) = 0 then null else company_state end AS company_state,
+                                                   case when length(trim(company_country)) = 0 then null else company_country end AS company_country,
+                                                   case when length(trim(company_zip)) = 0 then null else company_zip  end AS company_zip) ignore nulls) AS all_company_addresses
 
 ```
 
@@ -302,25 +302,25 @@ If the target warehouse is Snowflake rather than BigQuery, this is detected thro
 ```
 {% elif target.type == 'snowflake' %}
 
-      all_company_ids as (
+      all_company_ids AS (
           SELECT company_name,
                  array_agg(
                     distinct company_id
-                  ) as all_company_ids
+                  ) AS all_company_ids
             FROM t_companies_pre_merged
           group by 1),
-      all_company_addresses as (
+      all_company_addresses AS (
           SELECT company_name,
                  array_agg(
                       parse_json (
-                        concat('{"company_address":"',company_address,
+                        CONCAT('{"company_address":"',company_address,
                                '", "company_address2":"',company_address2,
                                '", "company_city":"',company_city,
                                '", "company_state":"',company_state,
                                '", "company_country":"',company_country,
                                '", "company_zip":"',company_zip,'"} ')
                       )
-                 ) as all_company_addresses
+                 ) AS all_company_addresses
 
 ```
 
@@ -329,28 +329,28 @@ For dimensions where merging of members by name is not sufficient (for example, 
 ```
 {% if target.type == 'bigquery' %}
 
-from companies_pre_merged c
+FROM companies_pre_merged c
        left outer join (
-            select company_name,
+            SELECT company_name,
             ARRAY(SELECT DISTINCT x
-                    FROM UNNEST(all_company_ids) AS x) as all_company_ids
-            from (
-                 select company_name, array_concat_agg(all_company_ids) as all_company_ids
-                 from (
-                      select * from (
-                          select
-                          c2.company_name as company_name,
-                          c2.all_company_ids as all_company_ids
-                          from   {{ ref('companies_merge_list') }} m
+                    FROM UNNEST(all_company_ids) AS x) AS all_company_ids
+            FROM (
+                 SELECT company_name, array_concat_agg(all_company_ids) AS all_company_ids
+                 FROM (
+                      SELECT * FROM (
+                          SELECT
+                          c2.company_name AS company_name,
+                          c2.all_company_ids AS all_company_ids
+                          FROM   {{ ref('companies_merge_list') }} m
                           join companies_pre_merged c1 on m.old_company_id in UNNEST(c1.all_company_ids)
                           join companies_pre_merged c2 on m.company_id in UNNEST(c2.all_company_ids)
                           )
                       union all
-                      select * from (
-                          select
-                          c2.company_name as company_name,
-                          c1.all_company_ids as all_company_ids
-                          from   {{ ref('companies_merge_list') }} m
+                      SELECT * FROM (
+                          SELECT
+                          c2.company_name AS company_name,
+                          c1.all_company_ids AS all_company_ids
+                          FROM   {{ ref('companies_merge_list') }} m
                           join companies_pre_merged c1 on m.old_company_id in UNNEST(c1.all_company_ids)
                           join companies_pre_merged c2 on m.company_id in UNNEST(c2.all_company_ids)
                           )
@@ -359,9 +359,9 @@ from companies_pre_merged c
             )) m
        on c.company_name = m.company_name
        where c.company_name not in (
-           select
+           SELECT
            c2.company_name
-           from   {{ ref('companies_merge_list') }} m
+           FROM   {{ ref('companies_merge_list') }} m
            join companies_pre_merged c2 on m.old_company_id in UNNEST(c2.all_company_ids)
          ))
 ```
@@ -372,39 +372,39 @@ and if the target is Snowflake the following SQL is executed instead:
 {% elif target.type == 'snowflake' %}
 
              left outer join (
-                      select company_name, array_agg(all_company_ids) as all_company_ids
-                           from (
-                             select
-                               c2.company_name as company_name,
-                               c2.all_company_ids as all_company_ids
-                             from   {{ ref('companies_merge_list') }} m
+                      SELECT company_name, array_agg(all_company_ids) AS all_company_ids
+                           FROM (
+                             SELECT
+                               c2.company_name AS company_name,
+                               c2.all_company_ids AS all_company_ids
+                             FROM   {{ ref('companies_merge_list') }} m
                              join (
-                               SELECT c1.company_name, c1f.value::string as all_company_ids from {{ ref('int_companies_pre_merged') }} c1,table(flatten(c1.all_company_ids)) c1f) c1
+                               SELECT c1.company_name, c1f.value::string AS all_company_ids FROM {{ ref('int_companies_pre_merged') }} c1,table(flatten(c1.all_company_ids)) c1f) c1
                              on m.old_company_id = c1.all_company_ids
                              join (
-                               SELECT c2.company_name, c2f.value::string as all_company_ids from {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
+                               SELECT c2.company_name, c2f.value::string AS all_company_ids FROM {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
                              on m.company_id = c2.all_company_ids
                              union all
-                             select
-                               c2.company_name as company_name,
-                               c1.all_company_ids as all_company_ids
-                             from   {{ ref('companies_merge_list') }} m
+                             SELECT
+                               c2.company_name AS company_name,
+                               c1.all_company_ids AS all_company_ids
+                             FROM   {{ ref('companies_merge_list') }} m
                              join (
-                               SELECT c1.company_name, c1f.value::string as all_company_ids from {{ ref('int_companies_pre_merged') }} c1,table(flatten(c1.all_company_ids)) c1f) c1
+                               SELECT c1.company_name, c1f.value::string AS all_company_ids FROM {{ ref('int_companies_pre_merged') }} c1,table(flatten(c1.all_company_ids)) c1f) c1
                                on m.old_company_id = c1.all_company_ids
                                join (
-                                 SELECT c2.company_name, c2f.value::string as all_company_ids from {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
+                                 SELECT c2.company_name, c2f.value::string AS all_company_ids FROM {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
                                on m.company_id = c2.all_company_ids
                              )
                        group by 1
                   ) m
              on c.company_name = m.company_name
              where c.company_name not in (
-                 select
+                 SELECT
                  c2.company_name
-                 from   {{ ref('companies_merge_list') }} m
-                 join (SELECT c2.company_name, c2f.value::string as all_company_ids
-                       from {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
+                 FROM   {{ ref('companies_merge_list') }} m
+                 join (SELECT c2.company_name, c2f.value::string AS all_company_ids
+                       FROM {{ ref('int_companies_pre_merged') }} c2,table(flatten(c2.all_company_ids)) c2f) c2
                        on m.old_company_id = c2.all_company_ids)
 ```
 
@@ -412,15 +412,15 @@ and if the target is Snowflake the following SQL is executed instead:
 
 ```
 SELECT user_name,
-		MAX(contact_is_contractor) as contact_is_contractor,
-		MAX(contact_is_staff) as contact_is_staff,
-		MAX(contact_weekly_capacity) as contact_weekly_capacity ,
-		MAX(user_phone) as user_phone,
-		MAX(contact_default_hourly_rate) as contact_default_hourly_rate,
-		MAX(contact_cost_rate) as contact_cost_rate,
-		MAX(contact_is_active) as contact_is_active,
-		MAX(user_created_ts) as user_created_ts,
-		MAX(user_last_modified_ts) as user_last_modified_ts,
+		MAX(contact_is_contractor) AS contact_is_contractor,
+		MAX(contact_is_staff) AS contact_is_staff,
+		MAX(contact_weekly_capacity) AS contact_weekly_capacity ,
+		MAX(user_phone) AS user_phone,
+		MAX(contact_default_hourly_rate) AS contact_default_hourly_rate,
+		MAX(contact_cost_rate) AS contact_cost_rate,
+		MAX(contact_is_active) AS contact_is_active,
+		MAX(user_created_ts) AS user_created_ts,
+		MAX(user_last_modified_ts) AS user_last_modified_ts,
 	FROM t_users_merge_list
 	GROUP BY 1
 ```
@@ -433,15 +433,15 @@ SELECT i.all_user_ids,
         e.all_user_emails
  FROM (
 	SELECT user_name,
-		MAX(contact_is_contractor) as contact_is_contractor,
-		MAX(contact_is_staff) as contact_is_staff,
-		MAX(contact_weekly_capacity) as contact_weekly_capacity ,
-		MAX(user_phone) as user_phone,
-		MAX(contact_default_hourly_rate) as contact_default_hourly_rate,
-		MAX(contact_cost_rate) as contact_cost_rate,
-		MAX(contact_is_active) as contact_is_active,
-		MAX(user_created_ts) as user_created_ts,
-		MAX(user_last_modified_ts) as user_last_modified_ts,
+		MAX(contact_is_contractor) AS contact_is_contractor,
+		MAX(contact_is_staff) AS contact_is_staff,
+		MAX(contact_weekly_capacity) AS contact_weekly_capacity ,
+		MAX(user_phone) AS user_phone,
+		MAX(contact_default_hourly_rate) AS contact_default_hourly_rate,
+		MAX(contact_cost_rate) AS contact_cost_rate,
+		MAX(contact_is_active) AS contact_is_active,
+		MAX(user_created_ts) AS user_created_ts,
+		MAX(user_last_modified_ts) AS user_last_modified_ts,
 	FROM t_users_merge_list
 	GROUP BY 1) u
 JOIN user_emails e
@@ -453,19 +453,19 @@ ON u.user_name = i.user_name
 5. The wh_ warehouse dimension table then adds a surrogate key for each dimension member.
 
 ```
-WITH companies_dim as (
+WITH companies_dim AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['company_name']) }} as company_pk,
+    {{ dbt_utils.surrogate_key(['company_name']) }} AS company_pk,
     *
   FROM
     {{ ref('int_companies') }} c
 )
-select * from companies_dim
+SELECT * FROM companies_dim
 ```
 
 6. The i_ integration view for the associated fact table contains rows referencing these deduplicated dimension members using the source system IDs e.g. 'harvest-2122', 'asana-22122'
 
-7. When loading the associated wh_ fact table, the lookup to the wh_ dimension table uses UNNEST() to query the array of source system IDs when the target is BigQuery, returning the company_pk as the dimension surrogate key
+7. When loading the associated wh_ fact table, the lookup to the wh_ dimension table uses UNNEST() to query the array of source system IDs when the target is BigQuery, returning the company_pk AS the dimension surrogate key
 
 ```
 WITH delivery_projects AS
@@ -474,9 +474,9 @@ WITH delivery_projects AS
   FROM   {{ ref('int_delivery_projects') }}
 ),
 {% if target.type == 'bigquery' %}
-  companies_dim as (
+  companies_dim AS (
     SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
-    from {{ ref('wh_companies_dim') }}
+    FROM {{ ref('wh_companies_dim') }}
   )
 SELECT
 	...
@@ -491,9 +491,9 @@ Wheras when Snowflake is the target warehouse, the following SQL is used instead
 
 ```
 {% elif target.type == 'snowflake' %}
-companies_dim as (
-    SELECT c.company_pk, cf.value::string as company_id
-    from {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
+companies_dim AS (
+    SELECT c.company_pk, cf.value::string AS company_id
+    FROM {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
 )
 SELECT
    ...
@@ -504,16 +504,16 @@ FROM
        ON p.company_id = c.company_id
 ```
 
-8. The wh_ dimension table contains the source system IDs and other multivalue dimension columns as repeating columns for BigQuery warehouse targets and Variant datatypes containing JSON values for Snowflake.
+8. The wh_ dimension table contains the source system IDs and other multivalue dimension columns AS repeating columns for BigQuery warehouse targets and Variant datatypes containing JSON values for Snowflake.
 
 ## Automatic Data Profiling of Source, Integration and Warehouse Tables
 
-One of the challenges when centralising data from a new source is how to efficiently audit the data it provides, and one of the most fundamental tasks in a data audit is to understand the content and structure of each of those data source tables. The data profiling feature within the RA Warehouse dbt Framework automates, for any schema (dataset) in BigQuery, production of the following audit information for every table or view column in that schema:
+One of the challenges when centralising data FROM a new source is how to efficiently audit the data it provides, and one of the most fundamental tasks in a data audit is to understand the content and structure of each of those data source tables. The data profiling feature within the RA Warehouse dbt Framework automates, for any schema (dataset) in BigQuery, production of the following audit information for every table or view column in that schema:
 
 * Count of nulls, not nulls and percentage null
-* Whether column is Not Nullable, and based on a configurable % threshold (default 90%) whether the column should be considered Not Nullable with nulls then classed as data errors
+* Whether column is Not Nullable, and based on a configurable % threshold (default 90%) whether the column should be considered Not Nullable with nulls then classed AS data errors
 * Count of unique values and percentage unique
-* based on a configurable % threshold (default 90%) whether the column should be considered Unique with duplicate values then classed as data errors
+* based on a configurable % threshold (default 90%) whether the column should be considered Unique with duplicate values then classed AS data errors
 * Data Type
 * Min, Max and Average values
 * Most frequently occuring value, and count of rows containing most frequent value
@@ -539,16 +539,16 @@ SELECT column_stats.table_catalog,
        column_stats.table_schema,
        column_stats.table_name,
        column_stats.column_name,
-       case when column_metadata.is_nullable = 'YES' then false else true end as is_not_nullable_column,
-       case when column_stats.pct_not_null > {{ not_null_profile_threshold_pct }} then true else false end as is_recommended_not_nullable_column,
+       case when column_metadata.is_nullable = 'YES' then false else true end AS is_not_nullable_column,
+       case when column_stats.pct_not_null > {{ not_null_profile_threshold_pct }} then true else false end AS is_recommended_not_nullable_column,
 
-       column_stats._nulls as count_nulls,
-       column_stats._non_nulls as count_not_nulls,
-       column_stats.pct_not_null as pct_not_null,
+       column_stats._nulls AS count_nulls,
+       column_stats._non_nulls AS count_not_nulls,
+       column_stats.pct_not_null AS pct_not_null,
        column_stats.table_rows,
        column_stats.count_distinct_values,
        column_stats.pct_unique,
-       case when column_stats.pct_unique >= {{ unique_profile_threshold_pct }} then true else false end as is_recommended_unique_column,
+       case when column_stats.pct_unique >= {{ unique_profile_threshold_pct }} then true else false end AS is_recommended_unique_column,
 
        column_metadata.* EXCEPT (table_catalog,
                        table_schema,
@@ -578,9 +578,9 @@ FROM
               FROM table_as_json,UNNEST(SPLIT(ROW, ',"')) AS z,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(0)]]) AS column_name,UNNEST([SPLIT(z, ':')[SAFE_OFFSET(1)]]) AS column_value ),
     profile AS (
     SELECT
-      split(replace('{{ table }}','`',''),'.' )[safe_offset(0)] as table_catalog,
-      split(replace('{{ table }}','`',''),'.' )[safe_offset(1)] as table_schema,
-      split(replace('{{ table }}','`',''),'.' )[safe_offset(2)] as table_name,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(0)] AS table_catalog,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(1)] AS table_schema,
+      split(replace('{{ table }}','`',''),'.' )[safe_offset(2)] AS table_name,
       column_name,
       COUNT(*) AS table_rows,
       COUNT(DISTINCT column_value) AS count_distinct_values,
@@ -588,9 +588,9 @@ FROM
       COUNTIF(column_value IS NULL) AS _nulls,
       COUNTIF(column_value IS NOT NULL) AS _non_nulls,
       COUNTIF(column_value IS NOT NULL) / COUNT(*) AS pct_not_null,
-      min(column_value) as _min_value,
-      max(column_value) as _max_value,
-      avg(SAFE_CAST(column_value AS numeric)) as _avg_value,
+      min(column_value) AS _min_value,
+      max(column_value) AS _max_value,
+      avg(SAFE_CAST(column_value AS numeric)) AS _avg_value,
       APPROX_TOP_COUNT(column_value, 1)[OFFSET(0)] AS _most_frequent_value,
       MIN(LENGTH(SAFE_CAST(column_value AS STRING))) AS _min_length,
       MAX(LENGTH(SAFE_CAST(column_value AS STRING))) AS _max_length,
@@ -635,7 +635,7 @@ AND column_stats.column_name = column_metadata.column_name
 
 Note that the threshold at which the profiler recommends that a columm should be considered for a unique key or NOT NULL test is configurable at the start of the macro code.
 
-Then, within each data source adapter you will find a model definition such as this one for the Asana Projects source :
+Then, within each data source adapter you will find a model definition such AS this one for the Asana Projects source :
 
 ```
 {% if not var("enable_asana_projects_source") %}
@@ -652,7 +652,7 @@ Then, within each data source adapter you will find a model definition such as t
 {% endif %}
 ```
 
-These models when run will automatically create views within the the "profile" dataset (e.g. `analytics_profile`) that you can use to audit and profile the data from newly-enabled data source adapters (note that you will need to create corresponding model files yourself for any new, custom data source adapters).
+These models when run will automatically create views within the the "profile" dataset (e.g. `analytics_profile`) that you can use to audit and profile the data FROM newly-enabled data source adapters (note that you will need to create corresponding model files yourself for any new, custom data source adapters).
 
 There is also a "profile_wh_tables.sql" model within the /models/utils folder that runs the following jinja code:
 
@@ -670,7 +670,7 @@ Note that these are fairly basic instructions and more documentation will be add
 
 1. Fork or clone the repo to create a fresh copy for your project.
 
-2. Install dbt and create your profile.yml file with either Google BigQuery (Standard SQL) or Snowflake as your target data warehouse. The RA Warehouse framework will automatically run either BigQuery or Snowflake-dialect SQL code depending on which warehouse target is being used.
+2. Install dbt and create your profile.yml file with either Google BigQuery (Standard SQL) or Snowflake AS your target data warehouse. The RA Warehouse framework will automatically run either BigQuery or Snowflake-dialect SQL code depending on which warehouse target is being used.
 
 3. Edit the dbt_project.yml configuration file to specify which data sources provide data for the various integration modules. See [Compatibility Matrix](compatibility.md) for what targets and sources are compatible with individual warehouse types.
 
@@ -693,7 +693,7 @@ vars:
   marketing_warehouse_ad_campaign_sources: ['google_ads','facebook_ads','mailchimp_email','hubspot_email']
 ```
 
-4. Now edit the variable settings for the source modules you have chosen to use, for example for Facebook Ads you can choose from Stitch or Segment as the data pipeline (ETL) technology, specify the database name and schema name.
+4. Now edit the variable settings for the source modules you have chosen to use, for example for Facebook Ads you can choose FROM Stitch or Segment AS the data pipeline (ETL) technology, specify the database name and schema name.
 
 ```
 stg_facebook_ads_id-prefix: fbads-
@@ -702,7 +702,7 @@ stg_facebook_ads_id-prefix: fbads-
   stg_facebook_ads_stitch_ad_performance_table: "{{ source('stitch_facebook_ads', 'insights') }}"
 ```
 
-5. Note also the settings as the end of the dbt_project.yml file:
+5. Note also the settings AS the end of the dbt_project.yml file:
 
 ```
 web_sessionization_trailing_window: 3

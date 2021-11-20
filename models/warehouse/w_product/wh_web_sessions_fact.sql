@@ -38,7 +38,7 @@ with sessions as
         referrer_source,
         channel,
         blended_user_id,
-        sum(mins_between_sessions) over (partition by session_id) as mins_between_sessions,
+        sum(mins_between_sessions) over (PARTITION BYsession_id) AS mins_between_sessions,
         is_bounced_session
       FROM
         {{ ref('int_web_events_sessions_stitched') }}
@@ -47,11 +47,11 @@ with sessions as
     )
     {% if var('marketing_warehouse_ad_campaign_sources') %}
       ,
-ad_campaigns as (
+ad_campaigns AS (
       SELECT *
         FROM {{ ref('wh_ad_campaigns_dim')}}
     ),
-joined as (
+joined AS (
       SELECT
         e.*,
         c.ad_campaign_pk
@@ -61,16 +61,16 @@ joined as (
         ad_campaigns c
       ON e.utm_campaign = c.utm_campaign
     ),
-      ordered as (
+      ordered AS (
         {% if target.type == 'bigquery' %}
         SELECT
-          {{ dbt_utils.surrogate_key(['to_hex(session_id)']) }} as web_sessions_pk,
+          {{ dbt_utils.surrogate_key(['to_hex(session_id)']) }} AS web_sessions_pk,
       {% else %}
         SELECT
-          {{ dbt_utils.surrogate_key(['session_id']) }} as web_sessions_pk,
+          {{ dbt_utils.surrogate_key(['session_id']) }} AS web_sessions_pk,
       {% endif %}
           * ,
-          row_number() over (partition by blended_user_id order by session_start_ts) as user_session_number
+          row_number() over (PARTITION BYblended_user_id order by session_start_ts) AS user_session_number
         FROM
           joined)
     SELECT

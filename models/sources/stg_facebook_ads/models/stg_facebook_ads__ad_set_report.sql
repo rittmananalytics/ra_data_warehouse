@@ -1,14 +1,14 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with adapter as (
+with adapter AS (
 
-    select *
-    from {{ ref('stg_facebook_ads__ad_adapter') }}
+    SELECT *
+    FROM {{ ref('stg_facebook_ads__ad_adapter') }}
 
-), aggregated as (
+), aggregated AS (
 
-    select
+    SELECT
         date_day,
         account_id,
         account_name,
@@ -16,16 +16,16 @@ with adapter as (
         campaign_name,
         ad_set_id,
         ad_set_name,
-        sum(clicks) as clicks,
-        sum(impressions) as impressions,
-        sum(spend) as spend
-    from adapter
+        sum(clicks) AS clicks,
+        sum(impressions) AS impressions,
+        sum(spend) AS spend
+    FROM adapter
     {{ dbt_utils.group_by(7) }}
 
 )
 
-select *
-from aggregated
+SELECT *
+FROM aggregated
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

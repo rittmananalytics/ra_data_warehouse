@@ -8,17 +8,17 @@
 
 with events as
   (
-    SELECT {{ dbt_utils.surrogate_key(['event_id']) }} as web_event_pk,
+    SELECT {{ dbt_utils.surrogate_key(['event_id']) }} AS web_event_pk,
     *
     FROM   {{ ref('int_web_events_sessionized') }}
   )
 {% if var('marketing_warehouse_ad_campaign_sources') %}
   ,
-ad_campaigns as (
+ad_campaigns AS (
   SELECT *
     FROM {{ ref('wh_ad_campaigns_dim')}}
 ),
-joined as (
+joined AS (
   SELECT
     e.*,
     c.ad_campaign_pk

@@ -27,21 +27,21 @@ models:
       - name: creative_name
         description: The name of the related creative.     
       - name: base_url
-        description: The base URL of the ad, extracted from the page_link and template_page_link.
+        description: The base URL of the ad, extracted FROM the page_link and template_page_link.
       - name: url_host
-        description: The URL host of the ad, extracted from the page_link and template_page_link.
+        description: The URL host of the ad, extracted FROM the page_link and template_page_link.
       - name: url_path
-        description: The URL path of the ad, extracted from the page_link and template_page_link.
+        description: The URL path of the ad, extracted FROM the page_link and template_page_link.
       - name: utm_source
-        description: The utm_source parameter of the ad, extracted from the page_link and template_page_link.
+        description: The utm_source parameter of the ad, extracted FROM the page_link and template_page_link.
       - name: utm_medium
-        description: The utm_medium parameter of the ad, extracted from the page_link and template_page_link.
+        description: The utm_medium parameter of the ad, extracted FROM the page_link and template_page_link.
       - name: utm_campaign
-        description: The utm_campaign parameter of the ad, extracted from the page_link and template_page_link.
+        description: The utm_campaign parameter of the ad, extracted FROM the page_link and template_page_link.
       - name: utm_content
-        description: The utm_content parameter of the ad, extracted from the page_link and template_page_link.
+        description: The utm_content parameter of the ad, extracted FROM the page_link and template_page_link.
       - name: utm_term
-        description: The utm_term parameter of the ad, extracted from the page_link and template_page_link.
+        description: The utm_term parameter of the ad, extracted FROM the page_link and template_page_link.
       - name: clicks
         description: The number of clicks the ad had on the given day.
       - name: impressions

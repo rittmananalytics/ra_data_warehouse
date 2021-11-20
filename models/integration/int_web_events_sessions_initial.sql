@@ -2,10 +2,10 @@
 
 {{config(materialized="table")}}
 
-{% set partition_by = "partition by session_id" %}
+{% set partition_by = "PARTITION BYsession_id" %}
 
 {% set window_clause = "
-    partition by session_id
+    PARTITION BYsession_id
     order by event_number
     rows between unbounded preceding and unbounded following
     " %}
@@ -32,71 +32,71 @@
     'page_url_path' : 'last_page_url_path',
     } %}
 
-with events_sessionized as (
+with events_sessionized AS (
 
-    select * from {{ref('int_web_events_sessionized')}}
+    SELECT * FROM {{ref('int_web_events_sessionized')}}
 
     {% if is_incremental() %}
-        where cast(event_ts as datetime) > (
-          select
+        where CAST(event_ts AS datetime) > (
+          SELECT
             {{ dbt_utils.dateadd(
                 'hour',
                 -var('web_sessionization_trailing_window'),
                 'max(session_start_ts)'
             ) }}
-          from {{ this }})
+          FROM {{ this }})
     {% endif %}
 
 ),
 
-referrer_mapping as (
+referrer_mapping AS (
 
-    select * from {{ ref('referrer_mapping') }}
-
-),
-
-additional_referrer_mapping as (
-
-    select * from {{ ref('additional_referrer_mapping') }}
-
-),
-marketing_channel_mapping as (
-
-    select * from {{ ref('marketing_channel_mapping') }}
+    SELECT * FROM {{ ref('referrer_mapping') }}
 
 ),
 
-channel_mapping as (
+additional_referrer_mapping AS (
 
-    select * from {{ ref('marketing_channel_mapping') }}
+    SELECT * FROM {{ ref('additional_referrer_mapping') }}
 
 ),
-agg as (
+marketing_channel_mapping AS (
 
-    select distinct
+    SELECT * FROM {{ ref('marketing_channel_mapping') }}
+
+),
+
+channel_mapping AS (
+
+    SELECT * FROM {{ ref('marketing_channel_mapping') }}
+
+),
+agg AS (
+
+    SELECT distinct
         session_id,
         visitor_id,
         user_id,
         site,
-        min(event_ts) over ( {{partition_by}} ) as session_start_ts,
-        max(event_ts) over ( {{partition_by}} ) as session_end_ts,
-        count(*) over ( {{partition_by}} ) as events,
+        min(event_ts) over ( {{partition_by}} ) AS session_start_ts,
+        max(event_ts) over ( {{partition_by}} ) AS session_end_ts,
+        count(*) over ( {{partition_by}} ) AS events,
 
         {% for (key, value) in first_values.items() %}
-        first_value({{key}}) over ({{window_clause}}) as {{value}},
+        first_value({{key}}) over ({{window_clause}}) AS {{value}},
         {% endfor %}
 
         {% for (key, value) in last_values.items() %}
-        last_value({{key}}) over ({{window_clause}}) as {{value}}{% if not loop.last %},{% endif %}
+        last_value({{key}}) over ({{window_clause}}) AS {{value}}{% if not loop.last %},{% endif %}
         {% endfor %}
 
-    from events_sessionized
+    FROM events_sessionized
 
 ),
 
-diffs as (
+diffs AS (
 
-    select
+    SELECT
 
         *,
 
@@ -105,15 +105,15 @@ diffs as (
         'session_end_ts',
         'SECOND') }}
 
- as duration_in_s
+ AS duration_in_s
 
-    from agg
+    FROM agg
 
 ),
 
-tiers as (
+tiers AS (
 
-    select
+    SELECT
 
         *,
 
@@ -123,33 +123,33 @@ tiers as (
             when duration_in_s between 30 and 59 then '30s to 59s'
             when duration_in_s > 59 then '60s or more'
             else null
-        end as duration_in_s_tier
+        end AS duration_in_s_tier
 
-    from diffs
+    FROM diffs
 
 ),
 
-mapped as (
+mapped AS (
 
-    select
+    SELECT
         tiers.*,
-        referrer_mapping.medium as referrer_medium,
-        referrer_mapping.source as referrer_source
+        referrer_mapping.medium AS referrer_medium,
+        referrer_mapping.source AS referrer_source
 
-    from tiers
+    FROM tiers
 
     left join referrer_mapping on tiers.referrer_host = referrer_mapping.host
 
 ),
 
-channel_mapped as (
+channel_mapped AS (
 
-    select
+    SELECT
       mapped.*,
       case when coalesce(marketing_channel_mapping.channel,additional_referrer_mapping.channel) is not null then coalesce(marketing_channel_mapping.channel,additional_referrer_mapping.channel)
            when coalesce(marketing_channel_mapping.channel,additional_referrer_mapping.channel) is null and mapped.referrer_host is not null then 'Referral'
-           else 'Direct' end as channel
-      from mapped
+           else 'Direct' end AS channel
+      FROM mapped
       left join additional_referrer_mapping
       on mapped.referrer_host = additional_referrer_mapping.domain
       left join marketing_channel_mapping
@@ -157,7 +157,7 @@ channel_mapped as (
 
 )
 
-select * from channel_mapped
+SELECT * FROM channel_mapped
 
 {% else %}
 

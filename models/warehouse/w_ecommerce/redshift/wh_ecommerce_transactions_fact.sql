@@ -14,9 +14,9 @@ WITH transactions AS
   FROM
      {{ ref('int_ecommerce_transactions') }} o
 )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['transaction_id']
-        ) }} as transaction_pk,
+        ) }} AS transaction_pk,
           *
 FROM      transactions
 

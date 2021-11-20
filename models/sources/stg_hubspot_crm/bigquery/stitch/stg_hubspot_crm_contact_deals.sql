@@ -7,19 +7,19 @@
 {% if 'hubspot_crm' in var("crm_warehouse_contact_sources") and 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
 
-with source as (
+with source AS (
   {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','deals'),unique_column='dealid') }}
 ),
-renamed as (
+renamed AS (
 SELECT
-  dealid as deal_id,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',associatedvids.value) as contact_id,
+  dealid AS deal_id,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',associatedvids.value) AS contact_id,
 FROM
   source,
-  unnest(associations.associatedvids) as associatedvids
+  unnest(associations.associatedvids) AS associatedvids
 )
-select *
-from   renamed
+SELECT *
+FROM   renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

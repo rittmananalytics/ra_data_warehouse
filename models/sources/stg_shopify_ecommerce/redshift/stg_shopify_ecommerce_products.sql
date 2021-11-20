@@ -2,14 +2,14 @@
 {% if var("ecommerce_warehouse_product_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_product_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__products') }}
+  SELECT * FROM {{ ref('shopify__products') }}
 
 
 ),
-renamed as (
-    select
+renamed AS (
+    SELECT
       created_timestamp,
       handle ,
       product_id ,
@@ -26,9 +26,9 @@ renamed as (
       subtotal_sold_net_refunds ,
       first_order_timestamp,
       most_recent_order_timestamp
-    from source
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

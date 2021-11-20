@@ -2,42 +2,42 @@
 {% if var("projects_warehouse_timesheet_sources") %}
 {% if 'harvest_projects' in var("projects_warehouse_timesheet_sources") %}
 
-with t_harvest_time_entries as (
+with t_harvest_time_entries AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'timesheets'),unique_column='id') }}
 ),
-t_harvest_projects as (
+t_harvest_projects AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'projects'),unique_column='id') }}
 ),
-t_harvest_users_project_tasks as (
+t_harvest_users_project_tasks AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'user_project_tasks'),unique_column='project_task_id') }}
   ),
-t_harvest_project_tasks as (
+t_harvest_project_tasks AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'project_tasks'),unique_column='id') }}
   ),
-t_harvest_tasks as (
+t_harvest_tasks AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'tasks'),unique_column='id') }}
   ),
-t_harvest_users as (
+t_harvest_users AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'users'),unique_column='id') }}
 ),
-renamed as (
+renamed AS (
 SELECT
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.client_id as string))               as company_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.id as string))      as timesheet_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.user_id as string))  as timesheet_users_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.project_id as string))             as timesheet_project_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.task_assignment_id as string))   as timesheet_task_assignment_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(coalesce(ht.id,-999) as string)) as timesheet_task_id,
-  concat('{{ var('stg_harvest_projects_id-prefix') }}',cast(t.invoice_id as string)) as timesheet_invoice_id,
-  t.spent_date              as timesheet_billing_date,
-  t.hours                   as timesheet_hours_billed,
-  case when t.is_billed then t.billable_rate * t.hours else 0 end as timesheet_total_amount_billed,
-  t.billable                as timesheet_is_billable,
-  t.is_billed               as timesheet_has_been_billed,
-  t.is_locked               as timesheet_has_been_locked,
-  t.billable_rate           as timesheet_billable_hourly_rate_amount,
-  t.cost_rate               as timesheet_billable_hourly_cost_amount,
-  t.notes                   as timesheet_notes
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.client_id AS string))               AS company_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.id AS string))      AS timesheet_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.user_id AS string))  AS timesheet_users_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.project_id AS string))             AS timesheet_project_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.task_assignment_id AS string))   AS timesheet_task_assignment_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(coalesce(ht.id,-999) AS string)) AS timesheet_task_id,
+  CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',CAST(t.invoice_id AS string)) AS timesheet_invoice_id,
+  t.spent_date              AS timesheet_billing_date,
+  t.hours                   AS timesheet_hours_billed,
+  case when t.is_billed then t.billable_rate * t.hours else 0 end AS timesheet_total_amount_billed,
+  t.billable                AS timesheet_is_billable,
+  t.is_billed               AS timesheet_has_been_billed,
+  t.is_locked               AS timesheet_has_been_locked,
+  t.billable_rate           AS timesheet_billable_hourly_rate_amount,
+  t.cost_rate               AS timesheet_billable_hourly_cost_amount,
+  t.notes                   AS timesheet_notes
 FROM
   t_harvest_time_entries t
   join t_harvest_projects p on t.project_id = p.id

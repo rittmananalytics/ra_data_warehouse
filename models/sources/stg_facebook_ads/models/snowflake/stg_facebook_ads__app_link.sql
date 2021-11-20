@@ -2,55 +2,55 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-  select *
-  from {{ ref('stg_facebook_ads__creative_history') }}
+  SELECT *
+  FROM {{ ref('stg_facebook_ads__creative_history') }}
 
-), required_fields as (
+), required_fields AS (
 
-  select
+  SELECT
     _fivetran_id,
     creative_id,
-    parse_json(template_app_link_spec_ios) as template_app_link_spec_ios,
-    parse_json(template_app_link_spec_ipad) as template_app_link_spec_ipad,
-    parse_json(template_app_link_spec_android) as template_app_link_spec_android,
-    parse_json(template_app_link_spec_iphone) as template_app_link_spec_iphone
-  from base
+    parse_json(template_app_link_spec_ios) AS template_app_link_spec_ios,
+    parse_json(template_app_link_spec_ipad) AS template_app_link_spec_ipad,
+    parse_json(template_app_link_spec_android) AS template_app_link_spec_android,
+    parse_json(template_app_link_spec_iphone) AS template_app_link_spec_iphone
+  FROM base
 
 {% for app in ['ios','ipad','android','iphone'] %}
 
-), flattened_{{ app }} as (
+), flattened_{{ app }} AS (
 
-  select
+  SELECT
     _fivetran_id,
     creative_id,
-    '{{ app }}' as app_type,
-    element.value:index::string as index,
-    element.value:app_name::string as app_name,
-    element.value:app_store_id::string as app_store_id,
-    element.value:class_name::string as class_name,
-    element.value:package_name::string as package_name,
-    element.value:template_page::string as template_page
-  from required_fields,
-  lateral flatten( input => template_app_link_spec_{{ app }} ) as element
+    '{{ app }}' AS app_type,
+    element.value:index::string AS index,
+    element.value:app_name::string AS app_name,
+    element.value:app_store_id::string AS app_store_id,
+    element.value:class_name::string AS class_name,
+    element.value:package_name::string AS package_name,
+    element.value:template_page::string AS template_page
+  FROM required_fields,
+  lateral flatten( input => template_app_link_spec_{{ app }} ) AS element
 
 {% endfor %}
 
-), unioned as (
+), unioned AS (
 
-    select * from flattened_ios
+    SELECT * FROM flattened_ios
     union all
-    select * from flattened_iphone
+    SELECT * FROM flattened_iphone
     union all
-    select * from flattened_ipad
+    SELECT * FROM flattened_ipad
     union all
-    select * from flattened_android
+    SELECT * FROM flattened_android
 
 )
 
-select *
-from unioned
+SELECT *
+FROM unioned
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -2,13 +2,13 @@
 {% if var("ecommerce_warehouse_transaction_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_transaction_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__transactions') }}
+  SELECT * FROM {{ ref('shopify__transactions') }}
 
 ),
-renamed as (
-    select
+renamed AS (
+    SELECT
       transaction_id ,
       order_id ,
       refund_id ,
@@ -42,9 +42,9 @@ renamed as (
       source_relation ,
       exchange_rate ,
       currency_exchange_calculated_amount
-    from source
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

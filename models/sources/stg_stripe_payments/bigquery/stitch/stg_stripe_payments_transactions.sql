@@ -7,19 +7,19 @@ WITH source AS (
 ),
 renamed AS (
   SELECT
-      concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as transaction_id,
-      description as transaction_description,
-      cast(null as {{ dbt_utils.type_string() }}) as account_code,
-      currency as transaction_currency,
-      exchange_rate as transaction_exchange_rate,
-      amount/100 as transaction_gross_amount,
-      fee/100 as transaction_fee_amount,
-      cast (null as numeric) as transaction_tax_amount,
-      net/100 as transaction_net_amount,
-      status as transaction_status,
-      type as transaction_type,
-      created as transaction_created_ts,
-      updated as transaction_last_modified_ts,
+      CONCAT('{{ var('stg_stripe_payments_id-prefix') }}',id) AS transaction_id,
+      description AS transaction_description,
+      CAST(null AS {{ dbt_utils.type_string() }}) AS account_code,
+      currency AS transaction_currency,
+      exchange_rate AS transaction_exchange_rate,
+      amount/100 AS transaction_gross_amount,
+      fee/100 AS transaction_fee_amount,
+      CAST(null AS numeric) AS transaction_tax_amount,
+      net/100 AS transaction_net_amount,
+      status AS transaction_status,
+      type AS transaction_type,
+      created AS transaction_created_ts,
+      updated AS transaction_last_modified_ts,
   FROM
     source
 )

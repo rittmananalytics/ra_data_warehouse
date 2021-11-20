@@ -3,16 +3,16 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'google_ads' %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_google_ads__account_tmp') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__account_tmp') }}
 
 ),
 
-fields as (
+fields AS (
 
-    select
+    SELECT
         {{
             fivetran_utils.fill_staging_columns(
                 source_columns=adapter.get_columns_in_relation(ref('stg_google_ads__account_tmp')),
@@ -20,21 +20,21 @@ fields as (
             )
         }}
 
-    from base
+    FROM base
 ),
 
-final as (
+final AS (
 
-    select
-        id as account_id,
+    SELECT
+        id AS account_id,
         _fivetran_synced,
         account_label_name,
         currency_code,
-        name as account_name
-    from fields
+        name AS account_name
+    FROM fields
 )
 
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

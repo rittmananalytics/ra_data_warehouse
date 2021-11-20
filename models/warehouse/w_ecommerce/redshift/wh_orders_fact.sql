@@ -22,9 +22,9 @@ WITH orders AS
 
 
   )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['order_id']
-        ) }} as order_pk,
+        ) }} AS order_pk,
           c.customer_pk,
           o.*
 FROM      orders o

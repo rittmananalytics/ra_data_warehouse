@@ -2,13 +2,13 @@
 {% if var("marketing_warehouse_email_event_sources") %}
 {% if 'mailchimp_email' in var("marketing_warehouse_email_event_sources") %}
 
-with source as (
+with source AS (
   SELECT
     id,
-    concat('mailchimp-',id) AS ad_campaign_id,
+    CONCAT('mailchimp-',id) AS ad_campaign_id,
     settings.subject_line AS ad_campaign_name,
     status AS ad_campaign_status,
-    cast (null as {{ dbt_utils.type_string() }}) AS campaign_buying_type,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS campaign_buying_type,
     content_type AS campaign_content_type,
     {{ dbt_utils.date_trunc('DAY', 'send_time') }} AS ad_campaign_start_date,
     {{ dbt_utils.date_trunc('DAY', 'send_time') }} AS ad_campaign_end_date,
@@ -16,7 +16,7 @@ with source as (
   FROM `ra-development.stitch_mailchimp.campaigns`
   group by 1,2,3,4,5,6,7,8
 ),
-renamed as (
+renamed AS (
   SELECT
     ad_campaign_id,
     ad_campaign_name,
@@ -28,8 +28,8 @@ renamed as (
   FROM
     source
 )
-select *
-from renamed
+SELECT *
+FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

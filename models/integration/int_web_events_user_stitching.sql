@@ -1,36 +1,36 @@
 {% if var('product_warehouse_event_sources') %}
 
-with events as (
+with events AS (
 
-    select * from {{ ref('int_web_events') }}
+    SELECT * FROM {{ ref('int_web_events') }}
 
 ),
 
-mapping as (
+mapping AS (
 
-    select distinct
+    SELECT distinct
 
-        visitor_id as visitor_id,
+        visitor_id AS visitor_id,
 
         last_value(user_id ignore nulls) over (
-            partition by visitor_id
+            PARTITION BYvisitor_id
             order by event_ts
             rows between unbounded preceding and unbounded following
-        ) as user_id,
+        ) AS user_id,
 
         min(event_ts) over (
-            partition by visitor_id
-        ) as first_seen_at,
+            PARTITION BYvisitor_id
+        ) AS first_seen_at,
 
         max(event_ts) over (
-            partition by visitor_id
-        ) as last_seen_at
+            PARTITION BYvisitor_id
+        ) AS last_seen_at
 
-    from events
+    FROM events
 
 )
 
-select * from mapping
+SELECT * FROM mapping
 
 {% else %}
 

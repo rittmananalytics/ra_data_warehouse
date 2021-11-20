@@ -14,9 +14,9 @@ WITH contacts AS
   FROM
      {{ ref('int_contacts') }} c
 )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['contact_name']
-          ) }} as contact_pk,
+          ) }} AS contact_pk,
           *
           FROM
           contacts c

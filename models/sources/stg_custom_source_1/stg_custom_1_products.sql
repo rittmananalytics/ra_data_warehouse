@@ -7,34 +7,34 @@
 {% endif %}
 
 WITH source AS (
-    select *
+    SELECT *
     from
     {{ source('custom_source_1','s_products' ) }}
 ),
-renamed as (
+renamed AS (
   SELECT
-      concat('custom_1-',id) as product_id,
-      cast(null as {{ dbt_utils.type_string() }})  as product_name,
-      cast(null as {{ dbt_utils.type_string() }})  as product_description,
-      cast(null as {{ dbt_utils.type_string() }})  as product_manufacturer,
-      cast(null as {{ dbt_utils.type_string() }})  as product_brand,
-      cast(null as {{ dbt_utils.type_string() }})  as product_is_digital,
-      cast(null as {{ dbt_utils.type_string() }})  as product_is_active,
-      cast(null as {{ dbt_utils.type_string() }})  as product_subcategory_id,
-      cast(null as {{ dbt_utils.type_string() }})  as product_subcategory_name,
-      cast(null as numeric) as product_category_id,
-      cast(null as numeric) as product_category_name,
-      cast(null as numeric) as product_type_id,
-      cast(null as numeric) as product_type_name,
-      cast(null as numeric) as product_sku,
-      cast(null as {{ dbt_utils.type_string() }})  as product_color,
-      cast(null as {{ dbt_utils.type_string() }})  as product_size,
-      cast(null as numeric)  as product_pack_size,
-      cast(null as numeric)  as product_price,
-      cast(null as numeric)  as product_cost,
-       cast(null as {{ dbt_utils.type_timestamp() }}) as transaction_created_ts,
-       cast(null as {{ dbt_utils.type_timestamp() }}) as transaction_updated_ts
+      CONCAT('custom_1-',id) AS product_id,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_name,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_description,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_manufacturer,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_brand,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_is_digital,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_is_active,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_subcategory_id,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_subcategory_name,
+      CAST(null AS numeric) AS product_category_id,
+      CAST(null AS numeric) AS product_category_name,
+      CAST(null AS numeric) AS product_type_id,
+      CAST(null AS numeric) AS product_type_name,
+      CAST(null AS numeric) AS product_sku,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_color,
+      CAST(null AS {{ dbt_utils.type_string() }})  AS product_size,
+      CAST(null AS numeric)  AS product_pack_size,
+      CAST(null AS numeric)  AS product_price,
+      CAST(null AS numeric)  AS product_cost,
+       CAST(null AS {{ dbt_utils.type_timestamp() }}) AS transaction_created_ts,
+       CAST(null AS {{ dbt_utils.type_timestamp() }}) AS transaction_updated_ts
   FROM
     source
 )
-select * from renamed
+SELECT * FROM renamed

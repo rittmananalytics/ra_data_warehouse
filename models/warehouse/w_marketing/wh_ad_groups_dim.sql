@@ -9,10 +9,10 @@
 
 WITH ad_groups AS
   (
-  SELECT * from {{ ref('int_ad_groups') }}
+  SELECT * FROM {{ ref('int_ad_groups') }}
 )
-select {{ dbt_utils.surrogate_key(['ad_group_id']) }}  as ad_group_pk,
+SELECT {{ dbt_utils.surrogate_key(['ad_group_id']) }}  AS ad_group_pk,
        a.*
-from ad_groups a
+FROM ad_groups a
 
 {% else %} {{config(enabled=false)}} {% endif %}

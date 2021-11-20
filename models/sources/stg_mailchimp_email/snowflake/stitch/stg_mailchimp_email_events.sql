@@ -2,38 +2,38 @@
 {% if var("marketing_warehouse_email_event_sources") %}
 {% if 'mailchimp_email' in var("marketing_warehouse_email_event_sources") %}
 
-with source as (
+with source AS (
   SELECT *
   FROM (
     SELECT
       *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY list_id,campaign_id,  email_id,  timestamp,  action,  type,  email_address ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BYlist_id,campaign_id,  email_id,  timestamp,  action,  type,  email_address ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ var('stg_mailchimp_email_stitch_reports_email_activity_table') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at
 ),
-joined as (
+joined AS (
 SELECT
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',list_id) as list_id,
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) as ad_campaign_id,
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',email_id) as contact_id,
-  timestamp as event_ts,
+  CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',list_id) AS list_id,
+  CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',campaign_id) AS ad_campaign_id,
+  CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',email_id) AS contact_id,
+  timestamp AS event_ts,
   action,
   type,
   email_address,
-  replace(url,'[UNIQID]',email_id) as url
-from source
+  replace(url,'[UNIQID]',email_id) AS url
+FROM source
 union all
 SELECT
   s.list_id,
-  s.send_id as ad_campaign_id,
+  s.send_id AS ad_campaign_id,
   c.contact_id,
-  s.campaign_sent_ts as event_ts,
+  s.campaign_sent_ts AS event_ts,
   'stg_enrichment_clearbit_schema' AS action,
   NULL AS type,
-  c.contact_email as email_address,
-  cast (null as {{ dbt_utils.type_string() }}) as url
+  c.contact_email AS email_address,
+  CAST(null AS {{ dbt_utils.type_string() }}) AS url
 FROM
   {{ ref('stg_mailchimp_email_sends') }}  s
 JOIN
@@ -44,8 +44,8 @@ JOIN
   {{ ref('stg_mailchimp_email_contacts') }} c
 ON
   c.contact_email = m.contact_email)
-select *
-from joined
+SELECT *
+FROM joined
 
 
 {% else %} {{config(enabled=false)}} {% endif %}

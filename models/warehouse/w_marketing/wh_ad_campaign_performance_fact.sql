@@ -11,23 +11,23 @@
 WITH
   campaign_performance AS
   (
-  SELECT * from {{ ref('int_ad_campaign_performance') }}
+  SELECT * FROM {{ ref('int_ad_campaign_performance') }}
 ),
-  campaigns as (
-  SELECT * from {{ ref('wh_ad_campaigns_dim') }}
+  campaigns AS (
+  SELECT * FROM {{ ref('wh_ad_campaigns_dim') }}
   )
 ,
- web_sessions as (
-   SELECT * from {{ ref('wh_web_sessions_fact') }}
+ web_sessions AS (
+   SELECT * FROM {{ ref('wh_web_sessions_fact') }}
  ),
-campaign_performance_joined as (
+campaign_performance_joined AS (
   SELECT
        s.ad_campaign_pk,
        s.utm_source,
        s.utm_campaign,
        s.utm_medium,
        c.*
-from campaign_performance c
+FROM campaign_performance c
 left join campaigns s
 on c.ad_campaign_id = s.ad_campaign_id)
 ,
@@ -59,19 +59,19 @@ on c.ad_campaign_id = s.ad_campaign_id)
       utm_source,
       utm_campaign,
       utm_medium,
-      ad_campaign_total_cost as total_reported_cost,
+      ad_campaign_total_cost AS total_reported_cost,
       ad_campaign_total_clicks AS total_reported_clicks,
       ad_campaign_total_impressions AS total_reported_impressions
     FROM
       campaign_performance_joined)
   {{ dbt_utils.group_by(n=5) }}
     ),
- joined as (
+ joined AS (
 SELECT
   a.*,
-  coalesce(s.total_clicks,0) as total_clicks,
+  coalesce(s.total_clicks,0) AS total_clicks,
   {{ safe_divide('s.total_clicks','A.total_reported_clicks') }} AS actual_vs_reported_clicks_pct,
-  {{ safe_divide('a.total_reported_cost','a.total_reported_clicks') }} as reported_cpc,
+  {{ safe_divide('a.total_reported_cost','a.total_reported_clicks') }} AS reported_cpc,
   {{ safe_divide('a.total_reported_cost','s.total_clicks') }}   AS actual_cpc,
   {{ safe_divide('a.total_reported_clicks','a.total_reported_impressions') }}   AS reported_ctr,
   {{ safe_divide('s.total_clicks','a.total_reported_impressions') }}   AS actual_ctr,
@@ -84,8 +84,8 @@ ON
   s.ad_campaign_pk = a.ad_campaign_pk
   AND s.campaign_date = a.campaign_date
 )
-select
-      {{ dbt_utils.surrogate_key(['ad_campaign_pk','campaign_date']) }} as ad_campaign_performance_pk,
+SELECT
+      {{ dbt_utils.surrogate_key(['ad_campaign_pk','campaign_date']) }} AS ad_campaign_performance_pk,
       campaign_date,
       ad_campaign_pk,
       total_clicks,
@@ -97,7 +97,7 @@ select
       actual_ctr,
       total_reported_impressions,
       reported_cpm
-      from joined
+      FROM joined
 where trim(utm_campaign) is not null
 
 {% else %}

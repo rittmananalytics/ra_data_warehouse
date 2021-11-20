@@ -5,13 +5,13 @@
 {% if var("stg_xero_accounting_etl") == 'fivetran' %}
 
 SELECT
-  concat('{{ var('stg_xero_accounting_id-prefix') }}',t.bank_transaction_id) as bank_transaction_id,
-  concat('{{ var('stg_xero_accounting_id-prefix') }}',t.bank_account_id) as bank_account_id,
-  concat('{{ var('stg_xero_accounting_id-prefix') }}',t.contact_id) as contact_id,
-  concat('{{ var('stg_xero_accounting_id-prefix') }}',t.currency_code) as currency_code,
+  CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',t.bank_transaction_id) AS bank_transaction_id,
+  CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',t.bank_account_id) AS bank_account_id,
+  CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',t.contact_id) AS contact_id,
+  CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',t.currency_code) AS currency_code,
   a.account_id,
   t.currency_rate,
-  timestamp(t.date) as transaction_ts,
+  timestamp(t.date) AS transaction_ts,
   t.is_reconciled,
   t.line_amount_types,
   t.reference,

@@ -177,7 +177,7 @@ WITH
       contact_pk,
       event_ts,
       page_title,
-      ROW_NUMBER() OVER (PARTITION BY contact_pk ORDER BY event_ts DESC) AS visit_seq_desc
+      ROW_NUMBER() OVER (PARTITION BYcontact_pk ORDER BY event_ts DESC) AS visit_seq_desc
     FROM
       {{ ref('wh_contact_web_event_history')}}
     WHERE

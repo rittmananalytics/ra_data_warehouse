@@ -4,16 +4,16 @@
 {% if var("google_ads_api_source") == 'google_ads' %}
 
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_group_history_tmp') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_group_history_tmp') }}
 
 ),
 
-fields as (
+fields AS (
 
-    select
+    SELECT
         {{
             fivetran_utils.fill_staging_columns(
                 source_columns=adapter.get_columns_in_relation(ref('stg_google_ads__ad_group_history_tmp')),
@@ -21,33 +21,33 @@ fields as (
             )
         }}
 
-    from base
+    FROM base
 ),
 
-final as (
+final AS (
 
-    select
-        id as ad_group_id,
-        updated_at as updated_timestamp,
+    SELECT
+        id AS ad_group_id,
+        updated_at AS updated_timestamp,
         _fivetran_synced,
         ad_group_type,
         campaign_id,
         campaign_name,
-        name as ad_group_name,
-        status as ad_group_status
-    from fields
+        name AS ad_group_name,
+        status AS ad_group_status
+    FROM fields
 ),
 
-most_recent as (
+most_recent AS (
 
-    select
+    SELECT
         *,
-        row_number() over (partition by ad_group_id order by updated_timestamp desc) = 1 as is_most_recent_record
-    from final
+        row_number() over (PARTITION BYad_group_id order by updated_timestamp desc) = 1 AS is_most_recent_record
+    FROM final
 
 )
 
-select * from most_recent
+SELECT * FROM most_recent
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

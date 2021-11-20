@@ -7,24 +7,24 @@
 {% endif %}
 
 WITH source AS (
-    select *
+    SELECT *
     from
     {{ source('custom_source_2','s_transactions' ) }}
 ),
-renamed as (
-  select
-         concat('custom_1-',id)                     as user_id,
-         cast(null as {{ dbt_utils.type_string() }})                     as user_name,
-         cast(null as {{ dbt_utils.type_string() }})                     as user_email,
-         cast(null as {{ dbt_utils.type_boolean() }})                    as contact_is_contractor,
-         cast(null as {{ dbt_utils.type_boolean() }})                    as contact_is_staff,
-         cast(null as numeric)                    as contact_weekly_capacity,
-         cast(null as {{ dbt_utils.type_string() }})                     as user_phone,
-         cast(null as numeric)                    as contact_default_hourly_rate,
-         cast(null as numeric)                    as contact_cost_rate,
-         cast(null as {{ dbt_utils.type_boolean() }})                    as contact_is_active,
-          cast(null as {{ dbt_utils.type_timestamp() }})                  as user_created_ts,
-          cast(null as {{ dbt_utils.type_timestamp() }})                  as user_last_modified_ts
-  from source)
+renamed AS (
+  SELECT
+         CONCAT('custom_1-',id)                     AS user_id,
+         CAST(null AS {{ dbt_utils.type_string() }})                     AS user_name,
+         CAST(null AS {{ dbt_utils.type_string() }})                     AS user_email,
+         CAST(null AS {{ dbt_utils.type_boolean() }})                    AS contact_is_contractor,
+         CAST(null AS {{ dbt_utils.type_boolean() }})                    AS contact_is_staff,
+         CAST(null AS numeric)                    AS contact_weekly_capacity,
+         CAST(null AS {{ dbt_utils.type_string() }})                     AS user_phone,
+         CAST(null AS numeric)                    AS contact_default_hourly_rate,
+         CAST(null AS numeric)                    AS contact_cost_rate,
+         CAST(null AS {{ dbt_utils.type_boolean() }})                    AS contact_is_active,
+          CAST(null AS {{ dbt_utils.type_timestamp() }})                  AS user_created_ts,
+          CAST(null AS {{ dbt_utils.type_timestamp() }})                  AS user_last_modified_ts
+  FROM source)
 )
-select * from renamed
+SELECT * FROM renamed

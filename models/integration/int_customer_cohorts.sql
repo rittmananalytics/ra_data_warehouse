@@ -7,15 +7,15 @@ with customer_cohorts_merge_list as
     {% for source in var('ecommerce_warehouse_customer_cohorts_sources') %}
       {% set relation_source = 'stg_' + source + '_customer_cohorts' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select * from customer_cohorts_merge_list
+SELECT * FROM customer_cohorts_merge_list
 
 
 {% else %}

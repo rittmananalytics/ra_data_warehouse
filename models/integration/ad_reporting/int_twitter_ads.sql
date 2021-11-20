@@ -1,19 +1,19 @@
 {% if 'twitter_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('twitter__ad_adapter')}}
+    SELECT *
+    FROM {{ ref('twitter__ad_adapter')}}
 
-), fields as (
+), fields AS (
 
-    select
-        'Twitter Ads' as platform,
-        cast(date_day as date) as date_day,
+    SELECT
+        'Twitter Ads' AS platform,
+        CAST(date_day AS date) AS date_day,
         campaign_name,
-        cast(campaign_id as {{ dbt_utils.type_string() }}) as campaign_id,
-        line_item_name as ad_group_name,
-        cast(line_item_id as {{ dbt_utils.type_string() }}) as ad_group_id,
+        CAST(campaign_id AS {{ dbt_utils.type_string() }}) AS campaign_id,
+        line_item_name AS ad_group_name,
+        CAST(line_item_id AS {{ dbt_utils.type_string() }}) AS ad_group_id,
         base_url,
         url_host,
         url_path,
@@ -22,14 +22,14 @@ with base as (
         utm_campaign,
         utm_content,
         utm_term,
-        coalesce(clicks, 0) as clicks,
-        coalesce(impressions, 0) as impressions,
-        coalesce(spend, 0) as spend
-    from base
+        coalesce(clicks, 0) AS clicks,
+        coalesce(impressions, 0) AS impressions,
+        coalesce(spend, 0) AS spend
+    FROM base
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -14,7 +14,7 @@ WITH chart_of_accounts AS
   )
 
 SELECT
-   {{ dbt_utils.surrogate_key(['account_id']) }} as account_pk,
+   {{ dbt_utils.surrogate_key(['account_id']) }} AS account_pk,
    *
 FROM
    chart_of_accounts

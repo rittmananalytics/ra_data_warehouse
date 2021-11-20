@@ -3,42 +3,42 @@
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('int__facebook_ads__carousel_media_prep') }}
+    SELECT *
+    FROM {{ ref('int__facebook_ads__carousel_media_prep') }}
 
-), numbers as (
+), numbers AS (
 
-    select *
-    from {{ ref('utils__facebook_ads__numbers') }}
+    SELECT *
+    FROM {{ ref('utils__facebook_ads__numbers') }}
 
-), unnested as (
+), unnested AS (
 
-    select
+    SELECT
 
         base._fivetran_id,
         base.creative_id,
         base.index,
-        json_extract_array_element_text(base.url_tags, numbers.generated_number::int - 1, true) as element
-    from base
+        json_extract_array_element_text(base.url_tags, numbers.generated_number::int - 1, true) AS element
+    FROM base
     inner join numbers
         on json_array_length(base.url_tags) >= numbers.generated_number
 
-), extracted_fields as (
+), extracted_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
         index,
-        json_extract_path_text(element,'key') as key,
-        json_extract_path_text(element,'value') as value
-    from unnested
+        json_extract_path_text(element,'key') AS key,
+        json_extract_path_text(element,'value') AS value
+    FROM unnested
 
 )
 
-select *
-from extracted_fields
+SELECT *
+FROM extracted_fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

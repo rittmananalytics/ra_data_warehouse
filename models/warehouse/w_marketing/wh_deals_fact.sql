@@ -9,22 +9,22 @@
 
 {% if target.type == 'bigquery' %}
 
-    with companies_dim as (
-      select *
-      from {{ ref('wh_companies_dim') }}
+    with companies_dim AS (
+      SELECT *
+      FROM {{ ref('wh_companies_dim') }}
   )
 {% elif target.type == 'snowflake' %}
 
-    with companies_dim as (
-      SELECT c.company_pk, cf.value::string as company_id
-      from {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
+    with companies_dim AS (
+      SELECT c.company_pk, cf.value::string AS company_id
+      FROM {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
       )
 {% else %}
   {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 
 SELECT
-  {{ dbt_utils.surrogate_key(['deal_id']) }} as deal_pk,
+  {{ dbt_utils.surrogate_key(['deal_id']) }} AS deal_pk,
    c.company_pk,
    d.*
 FROM

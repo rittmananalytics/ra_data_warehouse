@@ -6,37 +6,37 @@ with events_merge_list as
 
       {% set relation_source = 'stg_' + source + '_events' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   ),
-order_conversions as (
-  select
+order_conversions AS (
+  SELECT
     order_id,
     user_id,
     total_revenue,
     currency_code
-  from {{ ref('int_order_conversions') }}
+  FROM {{ ref('int_order_conversions') }}
 )
 
 
-select
+SELECT
   e.*,
-  cast(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
+  CAST(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
     then e.event_details end
-    as {{ dbt_utils.type_string() }})
-    as order_id,
+    AS {{ dbt_utils.type_string() }})
+    AS order_id,
     total_revenue,
     currency_code
-from events_merge_list e
+FROM events_merge_list e
 left join order_conversions o
-on cast(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
+on CAST(case when e.event_type = '{{ var('attribution_conversion_event_type') }}'
   then e.event_details end
-  as {{ dbt_utils.type_string() }}) = o.order_id
+  AS {{ dbt_utils.type_string() }}) = o.order_id
 
 
 {% else %}

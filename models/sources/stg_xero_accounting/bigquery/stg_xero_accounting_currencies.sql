@@ -4,16 +4,16 @@
 
 {% if var("stg_xero_accounting_etl") == 'fivetran' %}
 
-with source as (
-  select *
-  from {{ source('fivetran_xero_accounting','currency') }}
+with source AS (
+  SELECT *
+  FROM {{ source('fivetran_xero_accounting','currency') }}
 
 ),
-renamed as (
-select concat('{{ var('stg_xero_accounting_id-prefix') }}',code) as currency_code,
-       description as currency_name, from source)
+renamed AS (
+SELECT CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',code) AS currency_code,
+       description AS currency_name, FROM source)
 
-select * from renamed
+SELECT * FROM renamed
 
 {% endif %}
 

@@ -12,13 +12,13 @@
 }}
 {% endif %}
 
-with ad_campaigns_dim as (
-      select *
-      from {{ ref('wh_ad_campaigns_dim') }}
+with ad_campaigns_dim AS (
+      SELECT *
+      FROM {{ ref('wh_ad_campaigns_dim') }}
 ),
-email_lists_dim as (
-  select *
-  from {{ ref('wh_email_lists_dim') }}
+email_lists_dim AS (
+  SELECT *
+  FROM {{ ref('wh_email_lists_dim') }}
 )
 ,
 contacts_dim AS
@@ -33,7 +33,7 @@ email_events AS
   )
 SELECT
 
-    GENERATE_UUID() as email_event_pk,
+    GENERATE_UUID() AS email_event_pk,
     c.contact_pk,
 --    l.list_pk,
     k.ad_campaign_pk,

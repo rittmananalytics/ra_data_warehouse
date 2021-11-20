@@ -17,15 +17,15 @@ WITH transactions AS
   )
 
 SELECT
-   {{ dbt_utils.surrogate_key(['transaction_id']) }}  as transaction_pk,
+   {{ dbt_utils.surrogate_key(['transaction_id']) }}  AS transaction_pk,
    *
 FROM
    transactions
 
    {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where transaction_created_ts > (select max(transaction_created_ts) from {{ this }})
-        or    transaction_last_modified_ts > (select max(transaction_last_modified_ts) from {{ this }})
+        where transaction_created_ts > (SELECT max(transaction_created_ts) FROM {{ this }})
+        or    transaction_last_modified_ts > (SELECT max(transaction_last_modified_ts) FROM {{ this }})
    {% endif %}
 
    {% else %} {{config(enabled=false)}} {% endif %}

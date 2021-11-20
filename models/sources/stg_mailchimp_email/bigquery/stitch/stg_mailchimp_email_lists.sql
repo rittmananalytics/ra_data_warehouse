@@ -5,10 +5,10 @@
 WITH source AS (
   {{ filter_stitch_relation(relation=source('stitch_mailchimp_email', 'lists'),unique_column='id') }}
 ),
-renamed as (
-select
-    concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) as list_id,
-    name as audience_name,
+renamed AS (
+SELECT
+    CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS list_id,
+    name AS audience_name,
     stats.avg_sub_rate AS avg_sub_rate_pct,
     stats.avg_unsub_rate AS avg_unsub_rate_pct,
     stats.campaign_count AS total_campaigns,
@@ -25,9 +25,9 @@ select
     stats.target_sub_rate AS target_sub_rate_pct,
     stats.unsubscribe_count AS total_unsubscribes,
     stats.unsubscribe_count_since_send AS total_unsubscribes_since_send
-from source)
-select *
-from renamed
+FROM source)
+SELECT *
+FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

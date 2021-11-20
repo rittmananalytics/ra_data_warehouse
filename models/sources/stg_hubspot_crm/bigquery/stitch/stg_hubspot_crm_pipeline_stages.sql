@@ -6,22 +6,22 @@
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
-with source as (
+with source AS (
   {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','deal_pipelines'),unique_column='pipelineid') }}
 
 ),
-renamed as (
-    select
-      pipelineid as pipeline_id,
-      stages.value.stageid as pipeline_stage_id,
-      stages.value.label as pipeline_stage_label,
-      stages.value.displayorder as pipeline_stage_display_order,
-      stages.value.probability as pipeline_stage_close_probability_pct,
-      stages.value.closedwon as pipeline_stage_closed_won
-    from source,
+renamed AS (
+    SELECT
+      pipelineid AS pipeline_id,
+      stages.value.stageid AS pipeline_stage_id,
+      stages.value.label AS pipeline_stage_label,
+      stages.value.displayorder AS pipeline_stage_display_order,
+      stages.value.probability AS pipeline_stage_close_probability_pct,
+      stages.value.closedwon AS pipeline_stage_closed_won
+    FROM source,
     unnest (stages) stages
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

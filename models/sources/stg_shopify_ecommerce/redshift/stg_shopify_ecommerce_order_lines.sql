@@ -2,25 +2,25 @@
 {% if var("ecommerce_warehouse_order_lines_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_order_lines_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__order_lines') }}
+  SELECT * FROM {{ ref('shopify__order_lines') }}
 
 
 ),
-     order_lines_tax as (
+     order_lines_tax AS (
 
-       select
+       SELECT
               order_line_id,
-              title as tax_type,
-              price as tax_amount,
-              rate as tax_rate
-        from shopify.tax_line t
+              title AS tax_type,
+              price AS tax_amount,
+              rate AS tax_rate
+        FROM shopify.tax_line t
        where index =
-       (select max(index) from shopify.tax_line d where d.order_line_id = t.order_line_id)
+       (SELECT max(index) FROM shopify.tax_line d where d.order_line_id = t.order_line_id)
 
      ),
-joined as (
+joined AS (
   SELECT
     o.*,
     t.tax_type,
@@ -33,8 +33,8 @@ joined as (
   ON o.order_line_id = t.order_line_id
 )
 ,
-renamed as (
-    select
+renamed AS (
+    SELECT
       fulfillable_quantity ,
       fulfillment_service ,
       fulfillment_status ,
@@ -90,9 +90,9 @@ renamed as (
       variant_option_3 ,
       variant_tax_code ,
       variant_is_requiring_shipping
-    from joined
+    FROM joined
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

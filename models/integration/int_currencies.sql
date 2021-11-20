@@ -5,10 +5,10 @@ WITH t_currencies_merge_list AS (
   {% for source in var('finance_warehouse_payment_sources') %}
     {% set relation_source = 'stg_' + source + '_currencies' %}
 
-    select
-      '{{source}}' as source,
+    SELECT
+      '{{source}}' AS source,
       *
-      from {{ ref(relation_source) }}
+      FROM {{ ref(relation_source) }}
 
       {% if not loop.last %}union all{% endif %}
     {% endfor %}

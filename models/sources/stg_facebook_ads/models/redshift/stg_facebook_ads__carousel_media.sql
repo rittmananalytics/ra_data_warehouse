@@ -3,14 +3,14 @@
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('int__facebook_ads__carousel_media_prep') }}
+    SELECT *
+    FROM {{ ref('int__facebook_ads__carousel_media_prep') }}
 
-), fields as (
+), fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
         caption,
@@ -18,12 +18,12 @@ with base as (
         message,
         link,
         index
-    from base
+    FROM base
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

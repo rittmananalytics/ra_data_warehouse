@@ -27,11 +27,11 @@ deleted AS (
 )
 SELECT
 	orders.order_id,
-	checkout_id as order_checkout_id,
+	checkout_id AS order_checkout_id,
 	event,
 	event_text,
 	original_timestamp AS order_ts,
-	md5(concat(concat(concat(json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'shopify_product_id')::varchar, json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'shopify_variant_id')::varchar), json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'category')::varchar), json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'variant')::varchar)) AS product_uid,
+	md5(CONCAT(CONCAT(CONCAT(json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'shopify_product_id')::varchar, json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'shopify_variant_id')::varchar), json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'category')::varchar), json_extract_path_text(replace(replace(products, '[', ''), ']', ''), 'variant')::varchar)) AS product_uid,
 	user_id AS user_id,
 	presentment_amount,
 	shipping,

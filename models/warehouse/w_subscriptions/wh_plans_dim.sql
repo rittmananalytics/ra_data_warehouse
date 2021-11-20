@@ -14,7 +14,7 @@ with plans as
   )
 SELECT
 
-    GENERATE_UUID() as plan_pk,
+    GENERATE_UUID() AS plan_pk,
     p.*
 FROM
    plans p

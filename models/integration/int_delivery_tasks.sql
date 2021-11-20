@@ -5,16 +5,16 @@ with t_tasks_merge_list as
     {% for source in var('projects_warehouse_delivery_sources') %}
       {% set relation_source = 'stg_' + source + '_tasks' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select *
+SELECT *
 
- from t_tasks_merge_list
+ FROM t_tasks_merge_list
 
 {% else %} {{config(enabled=false)}} {% endif %}

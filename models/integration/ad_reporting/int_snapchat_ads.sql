@@ -1,14 +1,14 @@
 {% if 'snapchat_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('snapchat__ad_adapter')}}
+    SELECT *
+    FROM {{ ref('snapchat__ad_adapter')}}
 
-), fields as (
+), fields AS (
 
-    select
-        cast(date_day as date) as date_day,
+    SELECT
+        CAST(date_day AS date) AS date_day,
         base_url,
         url_host,
         url_path,
@@ -17,21 +17,21 @@ with base as (
         utm_campaign,
         utm_content,
         utm_term,
-        cast(campaign_id as {{ dbt_utils.type_string() }}) as campaign_id,
+        CAST(campaign_id AS {{ dbt_utils.type_string() }}) AS campaign_id,
         campaign_name,
-        cast(ad_squad_id as {{ dbt_utils.type_string() }}) as ad_group_id,
-        ad_squad_name as ad_group_name,
-        'Snapchat Ads' as platform,
-        sum(coalesce(swipes, 0)) as swipes,
-        sum(coalesce(impressions, 0)) as impressions,
-        sum(coalesce(spend, 0)) as spend
-    from base
+        CAST(ad_squad_id AS {{ dbt_utils.type_string() }}) AS ad_group_id,
+        ad_squad_name AS ad_group_name,
+        'Snapchat Ads' AS platform,
+        sum(coalesce(swipes, 0)) AS swipes,
+        sum(coalesce(impressions, 0)) AS impressions,
+        sum(coalesce(spend, 0)) AS spend
+    FROM base
     {{ dbt_utils.group_by(14) }}
 
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -3,43 +3,43 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'google_ads' %}
 
-with stats as (
+with stats AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_stats') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_stats') }}
 
-), accounts as (
+), accounts AS (
 
-    select *
-    from {{ ref('stg_google_ads__account') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__account') }}
 
-), campaigns as (
+), campaigns AS (
 
-    select *
-    from {{ ref('stg_google_ads__campaign_history') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__campaign_history') }}
     where is_most_recent_record = True
 
-), ad_groups as (
+), ad_groups AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_group_history') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_group_history') }}
     where is_most_recent_record = True
 
-), ads as (
+), ads AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_history') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_history') }}
     where is_most_recent_record = True
 
-), final_url as (
+), final_url AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_final_url_history') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_final_url_history') }}
     where is_most_recent_record = True
 
-), fields as (
+), fields AS (
 
-    select
+    SELECT
         stats.date_day,
         accounts.account_name,
         accounts.account_id,
@@ -55,15 +55,15 @@ with stats as (
         final_url.utm_campaign,
         final_url.utm_content,
         final_url.utm_term,
-        sum(stats.spend) as spend,
-        sum(stats.clicks) as clicks,
-        sum(stats.impressions) as impressions
+        sum(stats.spend) AS spend,
+        sum(stats.clicks) AS clicks,
+        sum(stats.impressions) AS impressions
 
         {% for metric in var('google_ads__ad_stats_passthrough_metrics') %}
-        , sum(stats.{{ metric }}) as {{ metric }}
+        , sum(stats.{{ metric }}) AS {{ metric }}
         {% endfor %}
 
-    from stats
+    FROM stats
     left join ads
         on stats.ad_id = ads.ad_id
     left join final_url
@@ -78,8 +78,8 @@ with stats as (
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

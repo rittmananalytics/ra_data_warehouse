@@ -7,15 +7,15 @@ with bank_transactions_merge_list as
 
       {% set relation_source = 'stg_' + source + '_bank_transactions' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select * from bank_transactions_merge_list
+SELECT * FROM bank_transactions_merge_list
 
 {% else %}
 

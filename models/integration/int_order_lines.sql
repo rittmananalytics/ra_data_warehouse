@@ -6,15 +6,15 @@ with t_orders_merge_list as
     {% for source in var('ecommerce_warehouse_order_lines_sources') %}
       {% set relation_source = 'stg_' + source + '_order_lines' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select * from t_orders_merge_list
+SELECT * FROM t_orders_merge_list
 
 {% else %}
 

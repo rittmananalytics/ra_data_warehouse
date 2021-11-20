@@ -2,20 +2,20 @@
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
-WITH source as (
-  select * from
-  from {{ source('fivetran_hubspot_crm','owners') }}
+WITH source AS (
+  SELECT * from
+  FROM {{ source('fivetran_hubspot_crm','owners') }}
 ),
-renamed as (
-    select
-      safe_cast (owner_id as int64) as owner_id,
-      concat(concat(first_name,' '),last_name) as owner_full_name,
+renamed AS (
+    SELECT
+      safe_CAST(owner_id AS int64) AS owner_id,
+      CONCAT(CONCAT(first_name,' '),last_name) AS owner_full_name,
       first_name,
       last_name,
-      email as owner_email
-    from source
+      email AS owner_email
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

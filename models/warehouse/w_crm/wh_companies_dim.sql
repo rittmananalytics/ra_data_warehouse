@@ -2,13 +2,13 @@
 
 {{config(alias='companies_dim')}}
 
-WITH companies_dim as (
+WITH companies_dim AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['company_name']) }} as company_pk,
+    {{ dbt_utils.surrogate_key(['company_name']) }} AS company_pk,
     *
   FROM
     {{ ref('int_companies') }} c
 )
-select * from companies_dim
+SELECT * FROM companies_dim
 
 {% else %} {{config(enabled=false)}} {% endif %}

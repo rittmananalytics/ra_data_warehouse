@@ -10,10 +10,10 @@
 
 WITH campaigns AS
   (
-  SELECT * from {{ ref('int_ad_campaigns') }}
+  SELECT * FROM {{ ref('int_ad_campaigns') }}
 )
-select {{ dbt_utils.surrogate_key(['ad_campaign_id']) }}  as ad_campaign_pk,
+SELECT {{ dbt_utils.surrogate_key(['ad_campaign_id']) }}  AS ad_campaign_pk,
        c.*
-from campaigns c
+FROM campaigns c
 
 {% else %} {{config(enabled=false)}} {% endif %}

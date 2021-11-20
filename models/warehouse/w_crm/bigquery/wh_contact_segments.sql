@@ -7,8 +7,8 @@ SELECT
   name,
   case when visits_l90_days > 30 then 'Highly Engaged'
        when visits_l90_days between 1 and 30 then 'Engaged'
-       else 'Historic' end as engagement_level,
-  case when pricing_views > 0 then 'Buying' else 'Researching' end as buying_stage,
+       else 'Historic' end AS engagement_level,
+  case when pricing_views > 0 then 'Buying' else 'Researching' end AS buying_stage,
   CASE
     WHEN influencer_status IS NULL AND (pricing_views >0 OR casestudy_views > 0) THEN 'Prospect'
     WHEN influencer_status IS NULL AND(pricing_views =0

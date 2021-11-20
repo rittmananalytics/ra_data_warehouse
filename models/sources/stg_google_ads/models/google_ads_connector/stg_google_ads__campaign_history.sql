@@ -3,16 +3,16 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'google_ads' %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_google_ads__campaign_history_tmp') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__campaign_history_tmp') }}
 
 ),
 
-fields as (
+fields AS (
 
-    select
+    SELECT
         {{
             fivetran_utils.fill_staging_columns(
                 source_columns=adapter.get_columns_in_relation(ref('stg_google_ads__campaign_history_tmp')),
@@ -20,30 +20,30 @@ fields as (
             )
         }}
 
-    from base
+    FROM base
 ),
 
-final as (
+final AS (
 
-    select
-        id as campaign_id,
-        updated_at as updated_timestamp,
+    SELECT
+        id AS campaign_id,
+        updated_at AS updated_timestamp,
         _fivetran_synced,
-        name as campaign_name,
-        customer_id as account_id
-    from fields
+        name AS campaign_name,
+        customer_id AS account_id
+    FROM fields
 ),
 
-most_recent as (
+most_recent AS (
 
-    select
+    SELECT
         *,
-        row_number() over (partition by campaign_id order by updated_timestamp desc) = 1 as is_most_recent_record
-    from final
+        row_number() over (PARTITION BYcampaign_id order by updated_timestamp desc) = 1 AS is_most_recent_record
+    FROM final
 
 )
 
-select * from most_recent
+SELECT * FROM most_recent
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -6,15 +6,15 @@ models:
     description: >
       Each record in this table represents the daily performance of ads.
 
-      LinkedIn Ads has a slightly different hierarchy than the other marketing platforms. As identified within [Microsoft's Campaign Groups](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/ads/account-structure/create-and-manage-campaign-groups?tabs=http)
-      documentation, the hierarchy consists of multiple campaigns for a single campaign group. As this hierarchy is the inverse of the standard hierarchy seen within the
+      LinkedIn Ads has a slightly different hierarchy than the other marketing platforms. AS identified within [Microsoft's Campaign Groups](https://docs.microsoft.com/en-us/linkedin/marketing/integrations/ads/account-structure/create-and-manage-campaign-groups?tabs=http)
+      documentation, the hierarchy consists of multiple campaigns for a single campaign group. AS this hierarchy is the inverse of the standard hierarchy seen within the
       other platforms, the `campaign` and `campaign_group` are switched for LinkedIn Ads within the ad_reporting table for consistency across platforms.
     columns:
       - name: campaign_name
         description: A label for the campaign. For LinkedIn Ads this field is the `campaign_group_name` field.
 
       - name: ad_group_name
-        description: A label for the ad group, if present in the source data. Mapped from fields including `campaign_group_name`. For LinkedIn Ads this field is the `campaign_name` field.
+        description: A label for the ad group, if present in the source data. Mapped FROM fields including `campaign_group_name`. For LinkedIn Ads this field is the `campaign_name` field.
 
       - name: account_name
         description: A label for the account.
@@ -23,7 +23,7 @@ models:
         description: The ID representing the campaign. For LinkedIn Ads this field is the `campaign_group_id` field.
 
       - name: ad_group_id
-        description: The ID representing the ad group, if present in the source data. Mapped from fields including `campaign_group_id`. For LinkedIn Ads this field is the `campaign_id` field.
+        description: The ID representing the ad group, if present in the source data. Mapped FROM fields including `campaign_group_id`. For LinkedIn Ads this field is the `campaign_id` field.
 
       - name: account_id
         description: The ID representing the account.

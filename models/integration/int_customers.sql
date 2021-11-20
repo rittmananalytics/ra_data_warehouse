@@ -19,26 +19,26 @@ with customers_merge_list as
 
     {% endif %}
   ),
-merged as (
+merged AS (
 
-    select customer_id,
-    max(customer_email) as customer_email,
-    max(customer_description) as customer_description,
-    max(customer_alternative_id) as customer_alternative_id,
-    max(customer_plan) as customer_plan,
-    max(customer_source) as customer_source,
-    max(customer_type) as customer_type,
-    max(customer_industry) as customer_industry,
-    max(customer_currency) as customer_currency,
-    max(customer_is_enterprise) as customer_is_enterprise,
-    max(customer_is_delinquent) as customer_is_delinquent,
-    max(customer_is_deleted) as customer_is_deleted,
-    max(customer_created_date) as customer_created_date,
-    max(customer_last_modified_date) as customer_last_modified_date
-  from customers_merge_list
+    SELECT customer_id,
+    max(customer_email) AS customer_email,
+    max(customer_description) AS customer_description,
+    max(customer_alternative_id) AS customer_alternative_id,
+    max(customer_plan) AS customer_plan,
+    max(customer_source) AS customer_source,
+    max(customer_type) AS customer_type,
+    max(customer_industry) AS customer_industry,
+    max(customer_currency) AS customer_currency,
+    max(customer_is_enterprise) AS customer_is_enterprise,
+    max(customer_is_delinquent) AS customer_is_delinquent,
+    max(customer_is_deleted) AS customer_is_deleted,
+    max(customer_created_date) AS customer_created_date,
+    max(customer_last_modified_date) AS customer_last_modified_date
+  FROM customers_merge_list
     group by 1
 )
-select * from merged
+SELECT * FROM merged
 
 {% else %}
 

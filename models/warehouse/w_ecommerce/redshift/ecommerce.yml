@@ -7,7 +7,7 @@ models:
       - name: cohort_month
         description: The month the cohort belongs to, i.e the first month the customer had an order.
       - name: cohort_month_number
-        description: The 'number' of the `date_month` of the record, i.e. how many months from their start month this cohort occurred
+        description: The 'number' of the `date_month` of the record, i.e. how many months FROM their start month this cohort occurred
       - name: customer_cohort_pk
         description: Unique key representing a customer in a given month.
         tests:
@@ -75,7 +75,7 @@ models:
       - name: browser_ip
         description: The IP address of the browser used by the customer when they placed the order.
       - name: has_buyer_accepted_marketing
-        description: Whether the customer consented to receive email updates from the shop.
+        description: Whether the customer consented to receive email updates FROM the shop.
       - name: cancel_reason
         description: The reason why the order was canceled.
       - name: cancelled_timestamp
@@ -97,7 +97,7 @@ models:
       - name: fulfillment_status
         description: The order's status in terms of fulfilled line items.
       - name: order_id
-        description: The ID of the order, used for API purposes. This is different from the order_number property, which is the ID used by the shop owner and customer.
+        description: The ID of the order, used for API purposes. This is different FROM the order_number property, which is the ID used by the shop owner and customer.
       - name: landing_site_base_url
         description: The URL for the page where the buyer landed when they entered the shop.
       - name: location_id
@@ -173,7 +173,7 @@ models:
       - name: line_item_count
         description: Number of line items included in the order.
       - name: customer_order_seq_number
-        description: The sequential number of the order as it relates to the customer
+        description: The sequential number of the order AS it relates to the customer
       - name: new_vs_repeat
         description: Whether the order was a new or repeat order for the customer.
       - name: shipping_cost
@@ -188,7 +188,7 @@ models:
         description: Total tax applied to the refund on the order.
       - name: order_adjusted_total
         description: >
-          Order total adjusted for refunds and other adjustments. The calculation used for this field is as follows:
+          Order total adjusted for refunds and other adjustments. The calculation used for this field is AS follows:
           total price listed on the original order (including shipping costs and discounts) + adjustments + adjustments tax - total refunds - refunds tax
           The order_adjusted_total will equate to the total sales - refunds listed within the transactions table for the order (after currency exchange).
       - name: index
@@ -229,7 +229,7 @@ models:
       - name: account_state
         description: The state of the customer's account with a shop.
       - name: is_tax_exempt
-        description: Whether the customer is exempt from paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
+        description: Whether the customer is exempt FROM paying taxes on their order. If true, then taxes won't be applied to an order at checkout. If false, then taxes will be applied at checkout.
       - name: updated_timestamp
         description: The date and time when the customer information was last updated.
       - name: is_verified_email
@@ -258,13 +258,13 @@ models:
       - name: created_timestamp
         description: The date and time when the product was created.
       - name: handle
-        description: A unique human-friendly string for the product. Automatically generated from the product's title.
+        description: A unique human-friendly string for the product. Automatically generated FROM the product's title.
       - name: product_pk
-        description: An unsigned 64-bit integer that's used as a unique identifier for the product. Each id is unique across the Shopify system. No two products will have the same id, even if they're from different shops.
+        description: An unsigned 64-bit integer that's used AS a unique identifier for the product. Each id is unique across the Shopify system. No two products will have the same id, even if they're FROM different shops.
       - name: product_type
         description: A categorization for the product used for filtering and searching products.
       - name: published_timestamp
-        description: The date and time (ISO 8601 format) when the product was published. Can be set to null to unpublish the product from the Online Store channel.
+        description: The date and time (ISO 8601 format) when the product was published. Can be set to null to unpublish the product FROM the Online Store channel.
       - name: published_scope
         description: Whether the product is published to the Point of Sale channel.
       - name: title
@@ -295,7 +295,7 @@ models:
             - source
     columns:
       - name: fulfillable_quantity
-        description: "The amount available to fulfill, calculated as follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity"
+        description: "The amount available to fulfill, calculated AS follows: quantity - max(refunded_quantity, fulfilled_quantity) - pending_fulfilled_quantity - open_fulfilled_quantity"
       - name: fulfillment_service
         description: The service provider that's fulfilling the item.
       - name: fulfillment_status
@@ -345,7 +345,7 @@ models:
       - name: variant_grams
         description: The weight of the product variant in grams.
       - name: variant_image_id
-        description: The unique numeric identifier for a product's image. The image must be associated to the same product as the variant.
+        description: The unique numeric identifier for a product's image. The image must be associated to the same product AS the variant.
       - name: inventory_item_id
         description: The unique identifier for the inventory item, which is used in the Inventory API to query for inventory information.
       - name: variant_inventory_management
@@ -422,11 +422,11 @@ models:
       - name: parent_id
         description: The ID of an associated transaction.
       - name: payment_avs_result_code
-        description: The response code from the address verification system.
+        description: The response code FROM the address verification system.
       - name: payment_credit_card_bin
-        description: The issuer identification number (IIN), formerly known as bank identification number (BIN) of the customer's credit card.
+        description: The issuer identification number (IIN), formerly known AS bank identification number (BIN) of the customer's credit card.
       - name: payment_cvv_result_code
-        description: The response code from the credit card company indicating whether the customer entered the card security code, or card verification value, correctly.
+        description: The response code FROM the credit card company indicating whether the customer entered the card security code, or card verification value, correctly.
       - name: payment_credit_card_number
         description: The customer's credit card number, with most of the leading digits redacted.
       - name: payment_credit_card_company

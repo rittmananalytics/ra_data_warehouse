@@ -2,20 +2,20 @@
 {% if var("product_warehouse_event_sources") %}
 {% if 'segment_events_page' in var("product_warehouse_event_sources") %}
 
-with source as (
+with source AS (
 
-    select * from {{ source('segment', 'users') }}
+    SELECT * FROM {{ source('segment', 'users') }}
 
 ),
-renamed as (
-  select concat('stg_segment_events_id-prefix',id) as user_id,
-  email as customer_email,
-  min(received_at) over (partition by id) as user_created_date,
-  max(received_at) over (partition by id) as user_last_modified_date
+renamed AS (
+  SELECT CONCAT('stg_segment_events_id-prefix',id) AS user_id,
+  email AS customer_email,
+  min(received_at) over (PARTITION BYid) AS user_created_date,
+  max(received_at) over (PARTITION BYid) AS user_last_modified_date
 FROM
  source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

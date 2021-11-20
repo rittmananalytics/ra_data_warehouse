@@ -13,20 +13,20 @@ WITH timesheet_projects AS
   FROM   {{ ref('int_timesheet_projects') }}
 ),
 {% if target.type == 'bigquery' %}
-  companies_dim as (
+  companies_dim AS (
     SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
-    from {{ ref('wh_companies_dim') }}
+    FROM {{ ref('wh_companies_dim') }}
   )
 {% elif target.type == 'snowflake' %}
-companies_dim as (
-    SELECT c.company_pk, cf.value::string as company_id
-    from {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
+companies_dim AS (
+    SELECT c.company_pk, cf.value::string AS company_id
+    FROM {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
 )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 SELECT
-  {{ dbt_utils.surrogate_key(['p.timesheet_project_id']) }} as timesheet_project_pk,
+  {{ dbt_utils.surrogate_key(['p.timesheet_project_id']) }} AS timesheet_project_pk,
    c.company_pk,
    p.timesheet_project_id,
    p.project_name,

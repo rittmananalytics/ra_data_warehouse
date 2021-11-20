@@ -22,17 +22,17 @@ WITH tasks AS
     contacts_dim AS (
       SELECT
         {{ dbt_utils.star(
-          from = ref('wh_contacts_dim')
+          FROM = ref('wh_contacts_dim')
         ) }}
       FROM
         {{ ref('wh_contacts_dim') }}
     )
     {% elif target.type == 'snowflake' %}
-    contacts_dim as (
+    contacts_dim AS (
       SELECT
         c.contact_pk,
-        cf.value::string as contact_id
-      from {{ ref('wh_contacts_dim') }}
+        cf.value::string AS contact_id
+      FROM {{ ref('wh_contacts_dim') }}
         c,table(flatten(c.all_contact_ids)) cf)
   {% else %}
     {{ exceptions.raise_compiler_error(
@@ -40,7 +40,7 @@ WITH tasks AS
     ) }}
   {% endif %}
 SELECT
-  {{ dbt_utils.surrogate_key(['task_id']) }} as delivery_task_pk,
+  {{ dbt_utils.surrogate_key(['task_id']) }} AS delivery_task_pk,
    p.delivery_project_pk,
    u.contact_pk,
    t.*

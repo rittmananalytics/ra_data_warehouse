@@ -15,8 +15,8 @@
 
 WITH lists AS
   (
-  SELECT * from {{ ref('int_email_lists') }}
+  SELECT * FROM {{ ref('int_email_lists') }}
 )
-select {{ dbt_utils.surrogate_key(['list_id']) }} as list_pk,
+SELECT {{ dbt_utils.surrogate_key(['list_id']) }} AS list_pk,
        l.*
-from lists l
+FROM lists l

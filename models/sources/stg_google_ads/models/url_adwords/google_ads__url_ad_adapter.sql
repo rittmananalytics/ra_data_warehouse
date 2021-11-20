@@ -3,14 +3,14 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'adwords' %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_google_ads__final_url_performance') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__final_url_performance') }}
 
-), fields as (
+), fields AS (
 
-    select
+    SELECT
         date_day,
         account_name,
         external_customer_id,
@@ -26,20 +26,20 @@ with base as (
         utm_campaign,
         utm_content,
         utm_term,
-        sum(spend) as spend,
-        sum(clicks) as clicks,
-        sum(impressions) as impressions
+        sum(spend) AS spend,
+        sum(clicks) AS clicks,
+        sum(impressions) AS impressions
 
         {% for metric in var('google_ads__url_passthrough_metrics') %}
-        , sum({{ metric }}) as {{ metric }}
+        , sum({{ metric }}) AS {{ metric }}
         {% endfor %}
-    from base
+    FROM base
     {{ dbt_utils.group_by(15) }}
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

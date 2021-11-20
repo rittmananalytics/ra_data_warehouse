@@ -9,7 +9,7 @@
 
       SELECT
         {{ dbt_utils.star(
-          from = ref('wh_companies_dim')
+          FROM = ref('wh_companies_dim')
         ) }}
       FROM
         {{ ref('wh_companies_dim') }}
@@ -17,7 +17,7 @@
     contacts_dim AS (
       SELECT
         {{ dbt_utils.star(
-          from = ref('wh_contacts_dim')
+          FROM = ref('wh_contacts_dim')
         ) }}
       FROM
         {{ ref('wh_contacts_dim') }}
@@ -31,9 +31,9 @@
         {{ ref('wh_companies_dim') }} C,
         TABLE(FLATTEN(C.all_company_ids)) cf
     ),
-contacts_dim as (
-    SELECT c.contact_pk, cf.value::string as contact_id
-    from {{ ref('wh_contacts_dim') }} c,table(flatten(c.all_contact_ids)) cf),
+contacts_dim AS (
+    SELECT c.contact_pk, cf.value::string AS contact_id
+    FROM {{ ref('wh_contacts_dim') }} c,table(flatten(c.all_contact_ids)) cf),
 
   {% else %}
     {{ exceptions.raise_compiler_error(
@@ -43,7 +43,7 @@ contacts_dim as (
   tasks_dim AS (
     SELECT
       {{ dbt_utils.star(
-        from = ref('wh_timesheet_tasks_dim')
+        FROM = ref('wh_timesheet_tasks_dim')
       ) }}
     FROM
       {{ ref('wh_timesheet_tasks_dim') }}
@@ -51,7 +51,7 @@ contacts_dim as (
   projects_dim AS (
     SELECT
       {{ dbt_utils.star(
-        from = ref('wh_timesheet_projects_dim')
+        FROM = ref('wh_timesheet_projects_dim')
       ) }}
     FROM
       {{ ref('wh_timesheet_projects_dim') }}
@@ -59,21 +59,21 @@ contacts_dim as (
   timesheets AS (
     SELECT
       {{ dbt_utils.star(
-        from = ref('int_timesheets')
+        FROM = ref('int_timesheets')
       ) }}
     FROM
       {{ ref('int_timesheets') }}
   )
 SELECT
-{{ dbt_utils.surrogate_key(['timesheet_id']) }} as timesheet_pk,
+{{ dbt_utils.surrogate_key(['timesheet_id']) }} AS timesheet_pk,
   C.company_pk,
   u.contact_pk,
   p.timesheet_project_pk,
   ta.timesheet_task_pk,
   timesheet_invoice_id,
   timesheet_billing_date,
-  min(timesheet_billing_date) over (partition by c.company_pk order by timesheet_billing_date RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as first_company_timesheet_billing_date,
-  max(timesheet_billing_date) over (partition by c.company_pk order by timesheet_billing_date RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_company_timesheet_billing_date,
+  min(timesheet_billing_date) over (PARTITION BYc.company_pk order by timesheet_billing_date RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS first_company_timesheet_billing_date,
+  max(timesheet_billing_date) over (PARTITION BYc.company_pk order by timesheet_billing_date RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_company_timesheet_billing_date,
   timesheet_hours_billed,
   timesheet_total_amount_billed,
   timesheet_is_billable,

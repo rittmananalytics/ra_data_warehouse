@@ -6,50 +6,50 @@
         alias='profit_and_loss_report_fact'
     )
 }}
-with spine as (
+with spine AS (
 
     {{
         dbt_utils.date_spine(
             datepart="month",
-            start_date="cast('2019-01-01' as date)",
+            start_date="CAST('2019-01-01' AS date)",
             end_date=dbt_utils.dateadd(datepart='month', interval=1, from_date_or_timestamp="current_date")
         )
     }}
 
-), cleaned as (
+), cleaned AS (
 
-    select cast(date_month as date) as date_month
-    from spine
+    SELECT CAST(date_month AS date) AS date_month
+    FROM spine
 
 ),
-calendar as (
-  select *
-  from cleaned)
-, ledger as (
+calendar AS (
+  SELECT *
+  FROM cleaned)
+, ledger AS (
 
-    select *
-    from {{ ref('wh_general_ledger_fact') }}
+    SELECT *
+    FROM {{ ref('wh_general_ledger_fact') }}
 
-), joined as (
+), joined AS (
 
-    select
-        {{ dbt_utils.surrogate_key(['calendar.date_month','ledger.account_id']) }} as profit_and_loss_pk,
+    SELECT
+        {{ dbt_utils.surrogate_key(['calendar.date_month','ledger.account_id']) }} AS profit_and_loss_pk,
         calendar.date_month,
         ledger.account_id,
         ledger.account_name,
         ledger.account_code,
         ledger.account_type,
         ledger.account_class,
-        coalesce(sum(ledger.net_amount * -1),0) as net_amount
-    from calendar
+        coalesce(sum(ledger.net_amount * -1),0) AS net_amount
+    FROM calendar
     left join ledger
-        on calendar.date_month = cast({{ dbt_utils.date_trunc('month', 'ledger.journal_date') }} as date)
+        on calendar.date_month = CAST({{ dbt_utils.date_trunc('month', 'ledger.journal_date') }} AS date)
     where ledger.account_class in ('REVENUE','EXPENSE')
     {{ dbt_utils.group_by(7) }}
 
 )
 
-select *
-from joined
+SELECT *
+FROM joined
 
 {% else %} {{config(enabled=false)}} {% endif %}

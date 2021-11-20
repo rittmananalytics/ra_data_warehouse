@@ -2,13 +2,13 @@
 {% if var("ecommerce_warehouse_customer_cohorts_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_customer_cohorts_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__customer_cohorts') }}
+  SELECT * FROM {{ ref('shopify__customer_cohorts') }}
 
 ),
-renamed as (
-    select
+renamed AS (
+    SELECT
       date_month ,
       customer_id ,
       first_order_timestamp ,
@@ -22,9 +22,9 @@ renamed as (
       line_item_count_lifetime ,
       cohort_month_number ,
       customer_cohort_id
-    from source
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -3,47 +3,47 @@
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_facebook_ads__creative_history') }}
+    SELECT *
+    FROM {{ ref('stg_facebook_ads__creative_history') }}
 
-), numbers as (
+), numbers AS (
 
-    select *
-    from {{ ref('utils__facebook_ads__numbers') }}
+    SELECT *
+    FROM {{ ref('utils__facebook_ads__numbers') }}
 
-), required_fields as (
+), required_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         asset_feed_spec_link_urls
-    from base
+    FROM base
     where asset_feed_spec_link_urls is not null
 
-), flattened as (
+), flattened AS (
 
-    select
+    SELECT
         _fivetran_id,
-        json_extract_array_element_text(required_fields.asset_feed_spec_link_urls, numbers.generated_number::int - 1, true) as element,
-        numbers.generated_number - 1 as index
-    from required_fields
+        json_extract_array_element_text(required_fields.asset_feed_spec_link_urls, numbers.generated_number::int - 1, true) AS element,
+        numbers.generated_number - 1 AS index
+    FROM required_fields
     inner join numbers
         on json_array_length(required_fields.asset_feed_spec_link_urls) >= numbers.generated_number
 
-), extracted_fields as (
+), extracted_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         index,
-        json_extract_path_text(element,'display_url') as display_url,
-        json_extract_path_text(element,'website_url') as website_url
-    from flattened
+        json_extract_path_text(element,'display_url') AS display_url,
+        json_extract_path_text(element,'website_url') AS website_url
+    FROM flattened
 
 )
 
-select *
-from extracted_fields
+SELECT *
+FROM extracted_fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

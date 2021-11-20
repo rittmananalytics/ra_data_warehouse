@@ -2,45 +2,45 @@
 
 {% set sessionization_cutoff %}
 (
-    select
+    SELECT
         {{ dbt_utils.dateadd(
             'hour',
             -var('web_sessionization_trailing_window'),
             'max(session_start_ts)'
         ) }}
-    from {{this}}
+    FROM {{this}}
 )
 {% endset %}
 
 {#
 Window functions are challenging to make incremental. This approach grabs
-existing values from the existing table and then adds the value of session_number
+existing values FROM the existing table and then adds the value of session_number
 on top of that seed. During development, this decreased the model runtime
-by 25x on 2 years of data (from 600 to 25 seconds), so even though the code is
+by 25x on 2 years of data (FROM 600 to 25 seconds), so even though the code is
 more complicated, the performance tradeoff is worth it.
 #}
 
-with sessions as (
+with sessions AS (
 
-    select * from {{ref('int_web_events_sessions_stitched')}}
+    SELECT * FROM {{ref('int_web_events_sessions_stitched')}}
 
     {% if is_incremental() %}
-    where cast(session_start_ts as datetime) > {{sessionization_cutoff}}
+    where CAST(session_start_ts AS datetime) > {{sessionization_cutoff}}
     {% endif %}
 
 ),
 
 {% if is_incremental() %}
 
-agg as (
+agg AS (
 
-    select
+    SELECT
         blended_user_id,
-        count(*) as starting_session_number
-    from {{this}}
+        count(*) AS starting_session_number
+    FROM {{this}}
 
     -- only include sessions that are not going to be resessionized in this run
-    where cast(session_start_ts as datetime) <= {{sessionization_cutoff}}
+    where CAST(session_start_ts AS datetime) <= {{sessionization_cutoff}}
 
     group by 1
 
@@ -48,20 +48,20 @@ agg as (
 
 {% endif %}
 
-windowed as (
+windowed AS (
 
-    select
+    SELECT
 
         *,
 
         row_number() over (
-            partition by blended_user_id
+            PARTITION BYblended_user_id
             order by sessions.session_start_ts
             )
             {% if is_incremental() %}+ coalesce(agg.starting_session_number, 0) {% endif %}
-            as session_number
+            AS session_number
 
-    from sessions
+    FROM sessions
 
     {% if is_incremental() %}
     left join agg using (blended_user_id)
@@ -70,7 +70,7 @@ windowed as (
 
 )
 
-select * from windowed
+SELECT * FROM windowed
 
 {% else %}
 

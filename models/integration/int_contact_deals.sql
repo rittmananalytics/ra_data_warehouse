@@ -6,10 +6,10 @@ WITH t_contact_deals_list AS (
   {% for source in var('marketing_warehouse_deal_sources') %}
     {% set relation_source = 'stg_' + source + '_contact_deals' %}
 
-    select
-      '{{source}}' as source,
+    SELECT
+      '{{source}}' AS source,
       *
-      from {{ ref(relation_source) }}
+      FROM {{ ref(relation_source) }}
 
       {% if not loop.last %}union all{% endif %}
     {% endfor %}

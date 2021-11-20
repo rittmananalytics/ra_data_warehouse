@@ -2,19 +2,19 @@
 {% if var("ecommerce_warehouse_customer_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_customer_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__customers') }}
+  SELECT * FROM {{ ref('shopify__customers') }}
 
-
-),
-   customer_tags as (
-
-  select * from {{ source('fivetran_shopify', 'customer_tag') }}
 
 ),
-renamed as (
-    select
+   customer_tags AS (
+
+  SELECT * FROM {{ source('fivetran_shopify', 'customer_tag') }}
+
+),
+renamed AS (
+    SELECT
       created_timestamp ,
       default_address_id ,
       email ,
@@ -34,14 +34,14 @@ renamed as (
       {{ fivetran_utils.string_agg(
         't.value',
         ','
-      ) }} AS  as customer_tags
+      ) }} AS  AS customer_tags
 
-    from source c
+    FROM source c
     left join customer_tags t
     on c.customer_id = t.customer_id
     {{ dbt_utils.group_by(n=16) }}
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

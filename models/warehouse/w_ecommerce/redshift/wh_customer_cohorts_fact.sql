@@ -22,9 +22,9 @@ WITH customer_cohorts AS
 
 
   )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['h.customer_id','h.date_month']
-        ) }} as customer_cohort_pk,
+        ) }} AS customer_cohort_pk,
           h.*
 FROM      customer_cohorts h
 LEFT JOIN customers c

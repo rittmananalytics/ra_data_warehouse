@@ -4,8 +4,8 @@
          materialized="view")}}
 WITH contacts_dim AS (SELECT
   ct.*,
-  hb.contact_id as hubspot_contact_id,
-  ce.contact_email as contact_email,
+  hb.contact_id AS hubspot_contact_id,
+  ce.contact_email AS contact_email,
 
   c.company_pk
 FROM (
@@ -27,7 +27,7 @@ LEFT JOIN
     contact_pk,
     contact_id
    FROM {{ ref('wh_contacts_dim') }},
-   UNNEST( all_contact_ids) as contact_id
+   UNNEST( all_contact_ids) AS contact_id
    WHERE
     contact_id like '%hubspot%' ) hb
 ON ct.contact_pk = hb.contact_pk
@@ -36,7 +36,7 @@ LEFT JOIN
     contact_pk,
     contact_email
    FROM {{ ref('wh_contacts_dim') }},
-   UNNEST( all_contact_emails ) as contact_email
+   UNNEST( all_contact_emails ) AS contact_email
     ) ce
 ON ct.contact_pk = ce.contact_pk
 WHERE
@@ -61,7 +61,7 @@ SELECT
 	COALESCE(SUM(contacts_web_interests_xa.visits_l90_days ), 0) AS visits_l90_days
 FROM contacts_dim
 LEFT JOIN {{ ref('wh_contacts_influencers_xa') }}
-     AS contacts_influencer_list_xa ON contacts_dim.hubspot_contact_id = (concat('hubspot-',contacts_influencer_list_xa.hubspot_contact_id))
+     AS contacts_influencer_list_xa ON contacts_dim.hubspot_contact_id = (CONCAT('hubspot-',contacts_influencer_list_xa.hubspot_contact_id))
 LEFT JOIN {{ ref('wh_contact_web_interests_xa') }}
      AS contacts_web_interests_xa ON contacts_dim.contact_pk = contacts_web_interests_xa.contact_pk
 

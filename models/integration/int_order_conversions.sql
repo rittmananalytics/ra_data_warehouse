@@ -5,10 +5,10 @@ WITH t_order_conversions AS (
   {% for source in var('order_conversion_sources') %}
     {% set relation_source = 'stg_' + source + '_order_conversions' %}
 
-    select
-      '{{source}}' as source,
+    SELECT
+      '{{source}}' AS source,
       *
-      from {{ ref(relation_source) }}
+      FROM {{ ref(relation_source) }}
 
       {% if not loop.last %}union all{% endif %}
     {% endfor %}

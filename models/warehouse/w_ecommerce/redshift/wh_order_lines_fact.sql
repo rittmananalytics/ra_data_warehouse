@@ -32,9 +32,9 @@ WITH order_lines AS
 
 
   )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['l.order_id','l.order_line_id']
-        ) }} as order_line_pk,
+        ) }} AS order_line_pk,
           o.order_pk,
           p.product_pk,
           l.*

@@ -2,48 +2,48 @@
 {% if var("product_warehouse_event_sources") %}
 {% if 'snowplow_events_page' in var("product_warehouse_event_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ source('snowplow', 'pages') }}
+  SELECT * FROM {{ source('snowplow', 'pages') }}
 
 ),
 
-renamed as (
+renamed AS (
 
   SELECT
-    cast(event_id as {{ dbt_utils.type_string() }})           as event_id,
-    cast(event as {{ dbt_utils.type_string() }})              as event_type,
-    dvce_created_tstamp                                       as event_ts,
-    cast(page_title as {{ dbt_utils.type_string() }})         as event_details,
-    cast(page_title as {{ dbt_utils.type_string() }})         as page_title,
-    cast(page_urlpath as {{ dbt_utils.type_string() }})       as page_url_path,
-    cast(refr_urlhost as {{ dbt_utils.type_string() }})       as referrer_host,
-    cast(null as {{ dbt_utils.type_string() }})               as search,
-    cast(page_url as {{ dbt_utils.type_string() }})           as page_url,
-    cast(page_urlhost as {{ dbt_utils.type_string() }})       as page_url_host,
-    cast(null as {{ dbt_utils.type_string() }})               as gclid,
-    cast(mkt_term as {{ dbt_utils.type_string() }})           as utm_term,
-    cast(mkt_content as {{ dbt_utils.type_string() }})        as utm_content,
-    cast(mkt_medium as {{ dbt_utils.type_string() }})         as utm_medium,
-    cast(mkt_campaign as {{ dbt_utils.type_string() }})       as utm_campaign,
-    cast(mkt_source as {{ dbt_utils.type_string() }})         as utm_source,
-    cast(user_ipaddress as {{ dbt_utils.type_string() }})     as ip,
-    cast(coalesce(network_userid,domain_userid) as {{ dbt_utils.type_string() }}) as visitor_id,
-    cast(user_id as {{ dbt_utils.type_string() }})            as user_id,
+    CAST(event_id AS {{ dbt_utils.type_string() }})           AS event_id,
+    CAST(event AS {{ dbt_utils.type_string() }})              AS event_type,
+    dvce_created_tstamp                                       AS event_ts,
+    CAST(page_title AS {{ dbt_utils.type_string() }})         AS event_details,
+    CAST(page_title AS {{ dbt_utils.type_string() }})         AS page_title,
+    CAST(page_urlpath AS {{ dbt_utils.type_string() }})       AS page_url_path,
+    CAST(refr_urlhost AS {{ dbt_utils.type_string() }})       AS referrer_host,
+    CAST(null AS {{ dbt_utils.type_string() }})               AS search,
+    CAST(page_url AS {{ dbt_utils.type_string() }})           AS page_url,
+    CAST(page_urlhost AS {{ dbt_utils.type_string() }})       AS page_url_host,
+    CAST(null AS {{ dbt_utils.type_string() }})               AS gclid,
+    CAST(mkt_term AS {{ dbt_utils.type_string() }})           AS utm_term,
+    CAST(mkt_content AS {{ dbt_utils.type_string() }})        AS utm_content,
+    CAST(mkt_medium AS {{ dbt_utils.type_string() }})         AS utm_medium,
+    CAST(mkt_campaign AS {{ dbt_utils.type_string() }})       AS utm_campaign,
+    CAST(mkt_source AS {{ dbt_utils.type_string() }})         AS utm_source,
+    CAST(user_ipaddress AS {{ dbt_utils.type_string() }})     AS ip,
+    CAST(coalesce(network_userid,domain_userid) AS {{ dbt_utils.type_string() }}) AS visitor_id,
+    CAST(user_id AS {{ dbt_utils.type_string() }})            AS user_id,
     case
         when lower(useragent) like '%android%' then 'Android'
         else replace(
           {{ dbt_utils.split_part("useragent","'('","1") }},
             ';', '')
-    end  as device,
-    cast(page_urlhost as {{ dbt_utils.type_string() }})       as site
+    end  AS device,
+    CAST(page_urlhost AS {{ dbt_utils.type_string() }})       AS site
     FROM
       source
 ),
 
-final as (
+final AS (
 
-    select
+    SELECT
         *,
         case
             when device = 'iPhone' then 'iPhone'
@@ -51,12 +51,12 @@ final as (
             when device in ('iPad', 'iPod') then 'Tablet'
             when device in ('Windows', 'Macintosh', 'X11') then 'Desktop'
             else 'Uncategorized'
-        end as device_category
-    from renamed
+        end AS device_category
+    FROM renamed
 
 )
 
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

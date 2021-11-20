@@ -5,28 +5,28 @@
 WITH source AS (
       {{ filter_stitch_relation(relation=source('stitch_intercom_messaging', 'conversations'),unique_column='id') }}
   ),
-renamed as (
+renamed AS (
   SELECT
-    concat('{{ var('stg_intercom_messaging_id-prefix') }}',id) as conversation_id,
-    concat('{{ var('stg_intercom_messaging_id-prefix') }}',user.id) AS conversation_user_id,
-    concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.author.id) AS conversation_author_id,
-    cast (null as {{ dbt_utils.type_string() }}) as company_id,
+    CONCAT('{{ var('stg_intercom_messaging_id-prefix') }}',id) AS conversation_id,
+    CONCAT('{{ var('stg_intercom_messaging_id-prefix') }}',user.id) AS conversation_user_id,
+    CONCAT('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.author.id) AS conversation_author_id,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_id,
     conversation_message.author.type AS conversation_author_type,
     user.type AS  conversation_user_type,
-    concat('{{ var('stg_intercom_messaging_id-prefix') }}',assignee.id) AS conversation_assignee_id,
+    CONCAT('{{ var('stg_intercom_messaging_id-prefix') }}',assignee.id) AS conversation_assignee_id,
     assignee.type  AS conversation_assignee_state,
-    concat('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.id) AS conversation_message_id,
+    CONCAT('{{ var('stg_intercom_messaging_id-prefix') }}',conversation_message.id) AS conversation_message_id,
     conversation_message.type AS  conversation_message_type,
     conversation_message.body AS conversation_body,
-    conversation_message.subject as  conversation_subject,
-    created_at as contact_created_date,
-    updated_at as contact_last_modified_date,
+    conversation_message.subject AS  conversation_subject,
+    created_at AS contact_created_date,
+    updated_at AS contact_last_modified_date,
     read AS is_conversation_read,
     open AS is_conversation_open,
-    null as deal_id
+    null AS deal_id
   FROM
     source)
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

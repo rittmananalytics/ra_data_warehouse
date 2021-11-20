@@ -1,11 +1,11 @@
-{%- macro cast(value,datatype) -%}
+{%- macro CAST(value,datatype) -%}
 
 {%- if datatype|default('string') == 'string' %}
 
 {% if target.type == 'bigquery' or target.type == 'snowflake' %}
-  cast({{ value |default("null")}}  as string )
+  CAST({{ value |default("null")}}  AS string )
 {% elif target.type == 'redshift' %}
-  cast({{ value|default("null")}} as varchar )
+  CAST({{ value|default("null")}} AS varchar )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
@@ -13,9 +13,9 @@
 {% elif datatype == 'integer' %}
 
 {% if target.type == 'bigquery'  %}
-  cast({{ value|default("null")}} as int64 )
+  CAST({{ value|default("null")}} AS int64 )
 {% elif target.type == 'redshift' or target.type == 'snowflake' %}
-  cast({{ value|default("null")}} as int )
+  CAST({{ value|default("null")}} AS int )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
@@ -23,9 +23,9 @@
 {% elif datatype == 'float' %}
 
 {% if target.type == 'bigquery'  %}
-  cast({{ value|default("null")}} as float64 )
+  CAST({{ value|default("null")}} AS float64 )
 {% elif target.type == 'redshift' or target.type == 'snowflake' %}
-  cast({{ value|default("null")}} as float )
+  CAST({{ value|default("null")}} AS float )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
@@ -33,7 +33,7 @@
 {% elif datatype == 'timestamp' %}
 
 {% if target.type == 'bigquery' or target.type == 'redshift' or target.type == 'snowflake' %}
-  cast({{ value|default("null")}} as timestamp )
+  CAST({{ value|default("null")}} AS timestamp )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}

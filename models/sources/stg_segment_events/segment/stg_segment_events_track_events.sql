@@ -3,53 +3,53 @@
 {% if 'segment_events_track' in var("product_warehouse_event_sources") %}
 
 
-with source as (
+with source AS (
 
-    select * from {{ source('segment', 'tracks') }}
+    SELECT * FROM {{ source('segment', 'tracks') }}
 
 ),
 
-renamed as (
+renamed AS (
 
-    select
-        id                          as event_id,
-        event                       as event_type,
-        received_at                 as event_ts,
-        cast(event_text as {{ dbt_utils.type_string() }})                  as event_details,
-        cast(null as {{ dbt_utils.type_string() }})       as page_title,
-        cast(context_page_path as {{ dbt_utils.type_string() }})           as page_url_path,
-        cast(replace(
+    SELECT
+        id                          AS event_id,
+        event                       AS event_type,
+        received_at                 AS event_ts,
+        CAST(event_text AS {{ dbt_utils.type_string() }})                  AS event_details,
+        CAST(null AS {{ dbt_utils.type_string() }})       AS page_title,
+        CAST(context_page_path AS {{ dbt_utils.type_string() }})           AS page_url_path,
+        CAST(replace(
             {{ dbt_utils.get_url_host('context_page_referrer') }},
             'www.',
             ''
-        ) as {{ dbt_utils.type_string() }})                           as referrer_host,
-        cast(context_page_search as {{ dbt_utils.type_string() }})         as search,
-        cast(context_page_url as {{ dbt_utils.type_string() }})            as page_url,
-        cast({{ dbt_utils.get_url_host('context_page_url') }} as {{ dbt_utils.type_string() }}) as page_url_host,
-        cast({{ dbt_utils.get_url_parameter('context_page_url', 'gclid') }}  as {{ dbt_utils.type_string() }}) as gclid,
-        cast(context_campaign_term as {{ dbt_utils.type_string() }})       as utm_term,
-        cast(context_campaign_content as {{ dbt_utils.type_string() }})    as utm_content,
-        cast(context_campaign_medium as {{ dbt_utils.type_string() }})     as utm_medium,
-        cast(context_campaign_name as {{ dbt_utils.type_string() }})       as utm_campaign,
-        cast(context_campaign_source as {{ dbt_utils.type_string() }})     as utm_source,
-        cast(context_ip as {{ dbt_utils.type_string() }})                  as ip,
-        cast(anonymous_id as {{ dbt_utils.type_string() }})                as visitor_id,
-        cast(user_id as {{ dbt_utils.type_string() }})                     as user_id,
+        ) AS {{ dbt_utils.type_string() }})                           AS referrer_host,
+        CAST(context_page_search AS {{ dbt_utils.type_string() }})         AS search,
+        CAST(context_page_url AS {{ dbt_utils.type_string() }})            AS page_url,
+        CAST({{ dbt_utils.get_url_host('context_page_url') }} AS {{ dbt_utils.type_string() }}) AS page_url_host,
+        CAST({{ dbt_utils.get_url_parameter('context_page_url', 'gclid') }}  AS {{ dbt_utils.type_string() }}) AS gclid,
+        CAST(context_campaign_term AS {{ dbt_utils.type_string() }})       AS utm_term,
+        CAST(context_campaign_content AS {{ dbt_utils.type_string() }})    AS utm_content,
+        CAST(context_campaign_medium AS {{ dbt_utils.type_string() }})     AS utm_medium,
+        CAST(context_campaign_name AS {{ dbt_utils.type_string() }})       AS utm_campaign,
+        CAST(context_campaign_source AS {{ dbt_utils.type_string() }})     AS utm_source,
+        CAST(context_ip AS {{ dbt_utils.type_string() }})                  AS ip,
+        CAST(anonymous_id AS {{ dbt_utils.type_string() }})                AS visitor_id,
+        CAST(user_id AS {{ dbt_utils.type_string() }})                     AS user_id,
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
               {{ dbt_utils.split_part("context_user_agent","'('","1") }},
                 ';', '')
-        end  as device,
-        cast('{{ var('stg_segment_events_site') }}' as {{ dbt_utils.type_string() }})  as site
-    from source
+        end  AS device,
+        CAST('{{ var('stg_segment_events_site') }}' AS {{ dbt_utils.type_string() }})  AS site
+    FROM source
     where event != 'order_checkout'
 
 )
 ,
-final as (
+final AS (
 
-    select
+    SELECT
         *,
         case
             when device = 'iPhone' then 'iPhone'
@@ -57,11 +57,11 @@ final as (
             when device in ('iPad', 'iPod') then 'Tablet'
             when device in ('Windows', 'Macintosh', 'X11') then 'Desktop'
             else 'Uncategorized'
-        end as device_category
-    from renamed
+        end AS device_category
+    FROM renamed
 
 )
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

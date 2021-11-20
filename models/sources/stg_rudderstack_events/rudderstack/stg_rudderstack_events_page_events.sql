@@ -6,54 +6,54 @@
         materialized="table"
     )
 }}
-with source as (
+with source AS (
 
-  select * from {{ source('rudderstack', 'pages') }}
+  SELECT * FROM {{ source('rudderstack', 'pages') }}
 
 ),
 
-renamed as (
+renamed AS (
 
-    select
-        id                          as event_id,
-        'Page View'                 as event_type,
-        received_at                 as event_ts,
-        context_page_title                  as event_details,
-        context_page_title                  as page_title,
-        path                        as page_url_path,
+    SELECT
+        id                          AS event_id,
+        'Page View'                 AS event_type,
+        received_at                 AS event_ts,
+        context_page_title                  AS event_details,
+        context_page_title                  AS page_title,
+        path                        AS page_url_path,
         replace(
             {{ dbt_utils.get_url_host('context_page_referrer') }},
             'www.',
             ''
-        )                           as referrer_host,
-        search                      as search,
-        url                         as page_url,
-        {{ dbt_utils.get_url_host('url') }} as page_url_host,
-        {{ dbt_utils.get_url_parameter('url', 'gclid') }} as gclid,
-        cast(null as {{ dbt_utils.type_string() }})        as utm_term,
-        cast(null as {{ dbt_utils.type_string() }})     as utm_content,
-        cast(null as {{ dbt_utils.type_string() }})      as utm_medium,
-        cast(null as {{ dbt_utils.type_string() }})        as utm_campaign,
-        cast(null as {{ dbt_utils.type_string() }})      as utm_source,
-        context_ip                  as ip,
-        anonymous_id                as visitor_id,
-        user_id                     as user_id,
+        )                           AS referrer_host,
+        search                      AS search,
+        url                         AS page_url,
+        {{ dbt_utils.get_url_host('url') }} AS page_url_host,
+        {{ dbt_utils.get_url_parameter('url', 'gclid') }} AS gclid,
+        CAST(null AS {{ dbt_utils.type_string() }})        AS utm_term,
+        CAST(null AS {{ dbt_utils.type_string() }})     AS utm_content,
+        CAST(null AS {{ dbt_utils.type_string() }})      AS utm_medium,
+        CAST(null AS {{ dbt_utils.type_string() }})        AS utm_campaign,
+        CAST(null AS {{ dbt_utils.type_string() }})      AS utm_source,
+        context_ip                  AS ip,
+        anonymous_id                AS visitor_id,
+        user_id                     AS user_id,
         case
             when lower(context_user_agent) like '%android%' then 'Android'
             else replace(
               {{ dbt_utils.split_part("context_user_agent","'('","1") }},
                 ';', '')
-        end  as device,
-        '{{ var('stg_rudderstack_events_site') }}'  as site
+        end  AS device,
+        '{{ var('stg_rudderstack_events_site') }}'  AS site
 
 
-    from source
+    FROM source
 
 ),
 
-final as (
+final AS (
 
-    select
+    SELECT
         *,
         case
             when device = 'iPhone' then 'iPhone'
@@ -61,12 +61,12 @@ final as (
             when device in ('iPad', 'iPod') then 'Tablet'
             when device in ('Windows', 'Macintosh', 'X11') then 'Desktop'
             else 'Uncategorized'
-        end as device_category
-    from renamed
+        end AS device_category
+    FROM renamed
 
 )
 
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -7,40 +7,40 @@
 {% if 'hubspot_crm' in var("crm_warehouse_contact_sources") %}
 
 
-WITH source as (
+WITH source AS (
   {{ filter_stitch_relation(relation=source('stitch_hubspot_crm','contacts'),unique_column='canonical_vid') }}
 
 ),
-renamed as (
-    select
-       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(canonical_vid as string)) as contact_id,
-       properties.firstname.value as contact_first_name,
-       properties.lastname.value as contact_last_name,
-       coalesce(concat(properties.firstname.value,' ',properties.lastname.value),properties.email.value) as contact_name,
+renamed AS (
+    SELECT
+       CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',CAST(canonical_vid AS string)) AS contact_id,
+       properties.firstname.value AS contact_first_name,
+       properties.lastname.value AS contact_last_name,
+       coalesce(CONCAT(properties.firstname.value,' ',properties.lastname.value),properties.email.value) AS contact_name,
        properties.jobtitle.value contact_job_title,
-       properties.email.value as contact_email,
-       properties.phone.value as contact_phone,
+       properties.email.value AS contact_email,
+       properties.phone.value AS contact_phone,
        properties.address.value contact_address,
        properties.city.value contact_city,
        properties.state.value contact_state,
-       properties.country.value as contact_country,
+       properties.country.value AS contact_country,
        properties.zip.value contact_postcode_zip,
        properties.company.value contact_company,
        properties.website.value contact_website,
-       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.associatedcompanyid.value as string)) as contact_company_id,
-       concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(properties.hubspot_owner_id.value as string)) as contact_owner_id,
-       properties.lifecyclestage.value as contact_lifecycle_stage,
-       cast(null as {{ dbt_utils.type_boolean() }})         as contact_is_contractor,
-       cast(null as {{ dbt_utils.type_boolean() }}) as contact_is_staff,
-        cast(null as {{ dbt_utils.type_int() }})           as contact_weekly_capacity,
-        cast(null as {{ dbt_utils.type_int() }})           as contact_default_hourly_rate,
-        cast(null as {{ dbt_utils.type_int() }})           as contact_cost_rate,
-       false                          as contact_is_active,
-       properties.createdate.value as contact_created_date,
-       properties.lastmodifieddate.value as contact_last_modified_date,
-    from source
+       CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',CAST(properties.associatedcompanyid.value AS string)) AS contact_company_id,
+       CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',CAST(properties.hubspot_owner_id.value AS string)) AS contact_owner_id,
+       properties.lifecyclestage.value AS contact_lifecycle_stage,
+       CAST(null AS {{ dbt_utils.type_boolean() }})         AS contact_is_contractor,
+       CAST(null AS {{ dbt_utils.type_boolean() }}) AS contact_is_staff,
+        CAST(null AS {{ dbt_utils.type_int() }})           AS contact_weekly_capacity,
+        CAST(null AS {{ dbt_utils.type_int() }})           AS contact_default_hourly_rate,
+        CAST(null AS {{ dbt_utils.type_int() }})           AS contact_cost_rate,
+       false                          AS contact_is_active,
+       properties.createdate.value AS contact_created_date,
+       properties.lastmodifieddate.value AS contact_last_modified_date,
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

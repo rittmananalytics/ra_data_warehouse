@@ -3,16 +3,16 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'adwords' %}
 
-with source as (
+with source AS (
 
-  select *
-  from {{ source('adwords','criteria_performance') }}
+  SELECT *
+  FROM {{ source('adwords','criteria_performance') }}
 
 ),
 
-renamed as (
+renamed AS (
 
-    select
+    SELECT
 
         {{
             fivetran_utils.fill_staging_columns(
@@ -25,11 +25,11 @@ renamed as (
         , {{ metric }}
         {% endfor %}
 
-    from source
+    FROM source
 
 )
 
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

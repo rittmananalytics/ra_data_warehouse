@@ -3,70 +3,70 @@
 {% if 'hubspot_crm' in var("crm_warehouse_conversations_sources") %}
 
 {% if var("stg_hubspot_crm_etl") == 'fivetran' %}
-with source as (
-  select * from
-  from {{ var('stg_hubspot_crm_fivetran_engagements_table') }}
+with source AS (
+  SELECT * from
+  FROM {{ var('stg_hubspot_crm_fivetran_engagements_table') }}
 
 ),
 SELECT
-  engagement_id                     as message_id,
-  companyids.value                  as company_id,
-  contactids.value                  as contact_id,
-  engagement.createdat              as message_created_ts,
-  engagement.type                   as message_type_ts,
-  engagement.ownerid                as owner_id,
-  dealids.value                     as deal_id,
-  engagement.timestamp              as emessage_ts,
-  metadata.status                   as emessage_status,
-  metadata.from.firstname           as message_from_first_name,
-  metadata.from.lastname            as message_from_last_name,
-  metadata.from.email               as message_from_email,
-  metadata.title                    as message_title,
-  metadata.subject                  as message_subject,
-  metadata_to.value.email           as message_to_email,
-  metadata.text                     as message_text,
-  engagement.lastupdated            as message_lastupdated,
+  engagement_id                     AS message_id,
+  companyids.value                  AS company_id,
+  contactids.value                  AS contact_id,
+  engagement.createdat              AS message_created_ts,
+  engagement.type                   AS message_type_ts,
+  engagement.ownerid                AS owner_id,
+  dealids.value                     AS deal_id,
+  engagement.timestamp              AS emessage_ts,
+  metadata.status                   AS emessage_status,
+  metadata.from.firstname           AS message_from_first_name,
+  metadata.from.lastname            AS message_from_last_name,
+  metadata.from.email               AS message_from_email,
+  metadata.title                    AS message_title,
+  metadata.subject                  AS message_subject,
+  metadata_to.value.email           AS message_to_email,
+  metadata.text                     AS message_text,
+  engagement.lastupdated            AS message_lastupdated,
 FROM
   source,
-  unnest(associations.contactids) as contactids,
-  unnest(associations.companyids) as companyids,
-  unnest(associations.dealids) as dealids,
-  unnest(metadata.to) as metadata_to
+  unnest(associations.contactids) AS contactids,
+  unnest(associations.companyids) AS companyids,
+  unnest(associations.dealids) AS dealids,
+  unnest(metadata.to) AS metadata_to
 {{ dbt_utils.group_by(n=17) }}
 )
 {% elif var("stg_hubspot_crm_etl") == 'stitch' %}
-with source as (
+with source AS (
   {{ filter_stitch_relation(relation=var('stg_hubspot_crm_stitch_engagements_table'),unique_column='engagement_id') }}
 ),
-renamed as (
+renamed AS (
 SELECT
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id)                    as conversation_id,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)                  as conversation_user_id,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)                  as conversation_author_id,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',companyids.value)                  as company_id,
-  cast (null as {{ dbt_utils.type_string() }}) 		AS conversation_author_type,
-  cast (null as {{ dbt_utils.type_string() }})  AS  conversation_user_type,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)  AS conversation_assignee_id,
-  cast (null as {{ dbt_utils.type_string() }})    AS conversation_assignee_state,
-  concat('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id )  AS conversation_message_id,
-  coalesce(engagement.type,cast(null as {{ dbt_utils.type_string() }}))   AS  conversation_message_type,
-  coalesce(metadata.text,cast(null as {{ dbt_utils.type_string() }}))    AS conversation_body,
-  coalesce(metadata.subject,cast(null as {{ dbt_utils.type_string() }}))    as  conversation_subject,
-  engagement.createdat as conversation_created_date,
-  engagement.lastupdated as contact_last_modified_date,
-  cast(null as {{ dbt_utils.type_boolean() }}) AS is_conversation_read,
-  cast(null as {{ dbt_utils.type_boolean() }}) AS is_conversation_open,
-  dealids.value                    as deal_id
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id)                    AS conversation_id,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)                  AS conversation_user_id,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)                  AS conversation_author_id,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',companyids.value)                  AS company_id,
+  CAST(null AS {{ dbt_utils.type_string() }}) 		AS conversation_author_type,
+  CAST(null AS {{ dbt_utils.type_string() }})  AS  conversation_user_type,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',contactids.value)  AS conversation_assignee_id,
+  CAST(null AS {{ dbt_utils.type_string() }})    AS conversation_assignee_state,
+  CONCAT('{{ var('stg_hubspot_crm_id-prefix') }}',engagement_id )  AS conversation_message_id,
+  coalesce(engagement.type,CAST(null AS {{ dbt_utils.type_string() }}))   AS  conversation_message_type,
+  coalesce(metadata.text,CAST(null AS {{ dbt_utils.type_string() }}))    AS conversation_body,
+  coalesce(metadata.subject,CAST(null AS {{ dbt_utils.type_string() }}))    AS  conversation_subject,
+  engagement.createdat AS conversation_created_date,
+  engagement.lastupdated AS contact_last_modified_date,
+  CAST(null AS {{ dbt_utils.type_boolean() }}) AS is_conversation_read,
+  CAST(null AS {{ dbt_utils.type_boolean() }}) AS is_conversation_open,
+  dealids.value                    AS deal_id
 FROM
   source,
-  unnest(associations.contactids) as contactids,
-  unnest(associations.companyids) as companyids,
-  unnest(associations.dealids) as dealids,
-  unnest(metadata.to) as metadata_to
+  unnest(associations.contactids) AS contactids,
+  unnest(associations.companyids) AS companyids,
+  unnest(associations.dealids) AS dealids,
+  unnest(metadata.to) AS metadata_to
 {{ dbt_utils.group_by(n=17) }}
 {% endif %}
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

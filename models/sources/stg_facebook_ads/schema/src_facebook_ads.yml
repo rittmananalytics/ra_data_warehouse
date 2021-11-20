@@ -92,9 +92,9 @@ sources:
           - name: account_id
             description: Ad account ID for the account this ad creative belongs to.
           - name: name
-            description: Name of this ad creative as seen in the ad account's library.
+            description: Name of this ad creative AS seen in the ad account's library.
           - name: url_tags
-            description: A set of query string parameters which will replace or be appended to urls clicked from page post ads, message of the post, and canvas app install creatives only.
+            description: A set of query string parameters which will replace or be appended to urls clicked FROM page post ads, message of the post, and canvas app install creatives only.
           - name: _fivetran_synced
             description: "{{ doc('_fivetran_synced') }}"
           - name: template_page_link

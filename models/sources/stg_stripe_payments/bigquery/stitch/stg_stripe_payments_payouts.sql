@@ -6,23 +6,23 @@ WITH source AS (
     {{ filter_stitch_relation(relation=source('stitch_stripe_payments','payouts'),unique_column='id') }}
 ),
 
-renamed as (
+renamed AS (
 
-    select
-    id as payout_id,
-    amount/100 as payout_local_amount,
-    amount_reversed/100 as payout_local_reversed_amount,
-    status as payout_status,
-    currency as payout_currency,
-    arrival_date as payout_arrived_ts,
-    bank_account.bank_name as payout_bank_name,
-    bank_account.routing_number as payout_bank_sort_code,
-    created as payout_created_ts
-from source
+    SELECT
+    id AS payout_id,
+    amount/100 AS payout_local_amount,
+    amount_reversed/100 AS payout_local_reversed_amount,
+    status AS payout_status,
+    currency AS payout_currency,
+    arrival_date AS payout_arrived_ts,
+    bank_account.bank_name AS payout_bank_name,
+    bank_account.routing_number AS payout_bank_sort_code,
+    created AS payout_created_ts
+FROM source
 
 )
 
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

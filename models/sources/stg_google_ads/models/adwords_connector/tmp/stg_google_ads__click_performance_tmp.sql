@@ -4,8 +4,8 @@
 {% if var("google_ads_api_source") == 'adwords' %}
 
 
-select *
-from {{ source('adwords','click_performance') }}
+SELECT *
+FROM {{ source('adwords','click_performance') }}
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -3,16 +3,16 @@
 {% if 'google_ads' in var("marketing_warehouse_ad_sources") %}
 {% if var("google_ads_api_source") == 'google_ads' %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_google_ads__ad_stats_tmp') }}
+    SELECT *
+    FROM {{ ref('stg_google_ads__ad_stats_tmp') }}
 
 ),
 
-fields as (
+fields AS (
 
-    select
+    SELECT
         {{
             fivetran_utils.fill_staging_columns(
                 source_columns=adapter.get_columns_in_relation(ref('stg_google_ads__ad_stats_tmp')),
@@ -20,28 +20,28 @@ fields as (
             )
         }}
 
-    from base
+    FROM base
 ),
 
-final as (
+final AS (
 
-    select
-        customer_id as account_id,
-        date as date_day,
-        ad_group as ad_group_id,
+    SELECT
+        customer_id AS account_id,
+        date AS date_day,
+        ad_group AS ad_group_id,
         ad_id,
         campaign_id,
         clicks,
-        cost_micros / 1000000.0 as spend,
+        cost_micros / 1000000.0 AS spend,
         impressions
 
         {% for metric in [] %}
         , {{ metric }}
         {% endfor %}
-    from fields
+    FROM fields
 )
 
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -13,16 +13,16 @@ WITH payments AS
   SELECT *
   FROM   {{ ref('int_payments') }}
   ),
-  companies_dim as (
-      select *
-      from {{ ref('wh_companies_dim') }}
+  companies_dim AS (
+      SELECT *
+      FROM {{ ref('wh_companies_dim') }}
   ),
-  currencies_dim as (
-    select *
-    from {{ ref('wh_currencies_dim') }}
+  currencies_dim AS (
+    SELECT *
+    FROM {{ ref('wh_currencies_dim') }}
 )
 SELECT
-   {{ dbt_utils.surrogate_key(['payment_id']) }} as payment_pk,
+   {{ dbt_utils.surrogate_key(['payment_id']) }} AS payment_pk,
    p.*
 FROM
    payments p

@@ -1,8 +1,8 @@
 # What's New in Version 1.2.0
 
-1. Reworking all of the stg_ source modules to use dbt sources and source freshness metadata, as has become the standard after recent client project implementations of the framework
+1. Reworking all of the stg_ source modules to use dbt sources and source freshness metadata, AS has become the standard after recent client project implementations of the framework
 
-2. Adopted the new way of selecting which sources to implement for companies, contacts, campaigns and other sources we merge together as well as the new way of defining variables in dbt version 17.0+;  to specify which sources of company data we merge together there's a variable in the dbt_project.yml file like this:
+2. Adopted the new way of SELECTing which sources to implement for companies, contacts, campaigns and other sources we merge together AS well AS the new way of defining variables in dbt version 17.0+;  to specify which sources of company data we merge together there's a variable in the dbt_project.yml file like this:
 
 ```
 vars:
@@ -20,10 +20,10 @@ and then merges the ones listed in the variable array using a for loop:
 ```
 {% for source in var('crm_warehouse_company_sources') %}
       {% set relation_source = 'stg_' + source + '_companies' %}
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
     ),
@@ -32,23 +32,23 @@ and then merges the ones listed in the variable array using a for loop:
 3. Adopted the use of dbt_utils.surrogate_key to replace the BigQuery-specific GENERATE_UUID()
 
 ```
-select
+SELECT
       {{ dbt_utils.surrogate_key(
       ['contact_pk','deal_pk']
-      ) }} as contact_deal_pk,
+      ) }} AS contact_deal_pk,
 ```
 
-4. And throughout the project, made use of dbt_utils cross-database functions as much as possible, for example
+4. And throughout the project, made use of dbt_utils cross-database functions AS much AS possible, for example
 
 ```
 SELECT {{ dbt_utils.star(from=ref('int_delivery_tasks')) }}
   FROM   {{ ref('int_delivery_tasks') }}
 and
 case when fields.status.name	 not in ('Done','Done/Passed Client QA') then timestamp_diff({{ dbt_utils.current_timestamp() }},fields.created,HOUR)
-         end as total_task_hours_incomplete,
+         end AS total_task_hours_incomplete,
 ```
 
-5. Items #3 and #4 were in support of the last new feature - the framework now also runs on Snowflake Data Warehouse, using this same dbt package and git repo. Depending on whether you run the package with BigQuery or Snowflake as the target, e.g.:
+5. Items #3 and #4 were in support of the last new feature - the framework now also runs on Snowflake Data Warehouse, using this same dbt package and git repo. Depending on whether you run the package with BigQuery or Snowflake AS the target, e.g.:
 
 ```
 dbt run --profile ra_data_warehouse --target prod
@@ -56,7 +56,7 @@ or
 dbt run --profile ra_data_warehouse --target snowflake_dev
 ```
 
-as long as you've got the two destinations defined properly in your profiles.yml file:
+as long AS you've got the two destinations defined properly in your profiles.yml file:
 
 ```
 ra_data_warehouse:
@@ -100,12 +100,12 @@ then the jinja code in the project will enable either the BigQuery or Snowflake 
 {{config(enabled = target.type == 'bigquery')}}
 {% if var("projects_warehouse_delivery_sources") %}
 {% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
-with source as (
+with source AS (
   {{ filter_stitch_relation(relation=var('stg_jira_projects_stitch_issues_table'),unique_column='key') }}
 ),
 ```
 
-and the int_ and wh_ modules should as much as possible be target system agnostic; where this isn't possible then there's conditional execution code in the models that detects what platform it's running on and runs the SQL appropriate for that platform:
+and the int_ and wh_ modules should AS much AS possible be target system agnostic; where this isn't possible then there's conditional execution code in the models that detects what platform it's running on and runs the SQL appropriate for that platform:
 
 ```
   {% if target.type == 'bigquery' %}

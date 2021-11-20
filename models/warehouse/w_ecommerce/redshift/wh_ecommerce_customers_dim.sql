@@ -14,9 +14,9 @@ WITH customers AS
   FROM
      {{ ref('int_customers') }} o
 )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['customer_id']
-        ) }} as customer_pk,
+        ) }} AS customer_pk,
           *
 FROM      customers
 

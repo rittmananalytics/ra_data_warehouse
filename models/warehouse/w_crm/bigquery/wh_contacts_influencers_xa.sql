@@ -13,7 +13,7 @@ WITH
     FROM
       {{ ref('wh_contacts_dim') }},
       UNNEST( all_contact_company_ids) AS company_id,
-      UNNEST( all_contact_ids) as contact_id) ct
+      UNNEST( all_contact_ids) AS contact_id) ct
   JOIN (
     SELECT
       *
@@ -84,7 +84,7 @@ WITH
   and contact_id like '%hubspot%')
 SELECT
   contact_name,
-  replace(contact_id,'hubspot-','') as hubspot_contact_id,
+  replace(contact_id,'hubspot-','') AS hubspot_contact_id,
   contact_influencer_score,
   CASE
     WHEN contact_influencer_score <= 4 THEN 'None'

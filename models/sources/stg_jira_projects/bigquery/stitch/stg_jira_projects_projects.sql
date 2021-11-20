@@ -2,66 +2,66 @@
 {% if var("projects_warehouse_delivery_sources") %}
 {% if 'jira_projects' in var("projects_warehouse_delivery_sources") %}
 
-with source as (SELECT
+with source AS (SELECT
   * except (projectkeys)
   FROM (
   SELECT
-    concat('{{ var('stg_jira_projects_id-prefix') }}',id) as project_id,
-    concat('{{ var('stg_jira_projects_id-prefix') }}',replace(name,' ','_')) AS company_id,
-    concat('{{ var('stg_jira_projects_id-prefix') }}',lead.accountid) as lead_user_id,
-    name as project_name,
+    CONCAT('{{ var('stg_jira_projects_id-prefix') }}',id) AS project_id,
+    CONCAT('{{ var('stg_jira_projects_id-prefix') }}',replace(name,' ','_')) AS company_id,
+    CONCAT('{{ var('stg_jira_projects_id-prefix') }}',lead.accountid) AS lead_user_id,
+    name AS project_name,
     projectkeys ,
-    projecttypekey as project_type_id,
-    cast (null as {{ dbt_utils.type_string() }}) as project_status,
-    cast (null as {{ dbt_utils.type_string() }}) as project_notes,
+    projecttypekey AS project_type_id,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS project_status,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS project_notes,
 
-    projectcategory.id as project_category_id,
+    projectcategory.id AS project_category_id,
     _sdc_batched_at,
-    MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+    MAX(_sdc_batched_at) OVER (PARTITION BYid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
   FROM
     source('stitch_jira_projects','projects')
   ),
     unnest(projectkeys) jira_project_key
 WHERE
   _sdc_batched_at = max_sdc_batched_at),
-types as (SELECT
+types AS (SELECT
     *
     FROM (
     SELECT
-      key as project_type_id,
-      formattedKey as project_type,
+      key AS project_type_id,
+      formattedKey AS project_type,
         _sdc_batched_at,
-      MAX(_sdc_batched_at) OVER (PARTITION BY key ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BYkey ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ source('stitch_jira_projects','project_types') }})
   WHERE
     _sdc_batched_at = max_sdc_batched_at),
-categories as (SELECT
+categories AS (SELECT
       *
       FROM (
       SELECT
-        id as project_category_id,
-        description as project_category_description,
-        name as project_category_name,
+        id AS project_category_id,
+        description AS project_category_description,
+        name AS project_category_name,
           _sdc_batched_at,
-        MAX(_sdc_batched_at) OVER (PARTITION BY id ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+        MAX(_sdc_batched_at) OVER (PARTITION BYid ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
       FROM
         {{ source('stitch_jira_projects','project_categories') }})
     WHERE
       _sdc_batched_at = max_sdc_batched_at)
-select p.project_id,
+SELECT p.project_id,
        p.lead_user_id,
        p.company_id,
        p.project_name,
        p.project_status,
        p.project_notes,
-       t.project_type as project_type,
+       t.project_type AS project_type,
        c.project_category_description,
        c.project_category_name,
-       cast (null as timestamp) as project_created_at_ts,
-       cast (null as timestamp) as project_modified_at_ts
+       CAST(null AS timestamp) AS project_created_at_ts,
+       CAST(null AS timestamp) AS project_modified_at_ts
 
-from source p
+FROM source p
 left outer join types t on p.project_type_id = t.project_type_id
 left outer join categories c on p.project_category_id = c.project_category_id
 

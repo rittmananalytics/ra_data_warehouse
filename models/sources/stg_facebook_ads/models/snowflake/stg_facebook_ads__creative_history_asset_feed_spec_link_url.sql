@@ -2,33 +2,33 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_facebook_ads__creative_history') }}
+    SELECT *
+    FROM {{ ref('stg_facebook_ads__creative_history') }}
 
-), required_fields as (
+), required_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
-        parse_json(asset_feed_spec_link_urls) as asset_feed_spec_link_urls
-    from base
+        parse_json(asset_feed_spec_link_urls) AS asset_feed_spec_link_urls
+    FROM base
     where asset_feed_spec_link_urls is not null
 
-), flattened as (
+), flattened AS (
 
-    select
+    SELECT
         _fivetran_id,
-        nullif(asset_feed_spec_link_urls.value:display_url::string, '') as display_url,
-        nullif(asset_feed_spec_link_urls.value:website_url::string, '') as website_url,
-        asset_feed_spec_link_urls.index as index
-    from required_fields,
-    lateral flatten( input => asset_feed_spec_link_urls ) as asset_feed_spec_link_urls
+        nullif(asset_feed_spec_link_urls.value:display_url::string, '') AS display_url,
+        nullif(asset_feed_spec_link_urls.value:website_url::string, '') AS website_url,
+        asset_feed_spec_link_urls.index AS index
+    FROM required_fields,
+    lateral flatten( input => asset_feed_spec_link_urls ) AS asset_feed_spec_link_urls
 
 )
 
-select *
-from flattened
+SELECT *
+FROM flattened
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

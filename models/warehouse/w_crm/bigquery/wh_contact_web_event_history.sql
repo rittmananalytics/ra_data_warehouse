@@ -4,7 +4,7 @@
 
 SELECT
   c.contact_pk,
-  e.blended_user_id as contact_email,
+  e.blended_user_id AS contact_email,
   e.web_event_pk,
   e.event_type,
   e.event_ts,

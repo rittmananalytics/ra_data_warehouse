@@ -7,16 +7,16 @@
 }}
 
 
-with companies_dim as (
-    select *
-    from {{ ref('wh_companies_dim') }}
+with companies_dim AS (
+    SELECT *
+    FROM {{ ref('wh_companies_dim') }}
 ),
-    contacts_dim as (
-    select *
-    from {{ ref('wh_contacts_dim') }}
+    contacts_dim AS (
+    SELECT *
+    FROM {{ ref('wh_contacts_dim') }}
     )
 SELECT
-   GENERATE_UUID() as conversation_pk,
+   GENERATE_UUID() AS conversation_pk,
    p.contact_pk,
    m.* except (conversation_author_id,conversation_user_id,conversation_assignee_id)
 FROM

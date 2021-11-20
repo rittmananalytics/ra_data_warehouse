@@ -6,7 +6,7 @@ FROM
   (
     SELECT
       *,
-      MAX(_sdc_batched_at) OVER (PARTITION BY {{ unique_column }} ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
+      MAX(_sdc_batched_at) OVER (PARTITION BY{{ unique_column }} ORDER BY _sdc_batched_at RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS max_sdc_batched_at
     FROM
       {{ relation }}
   )

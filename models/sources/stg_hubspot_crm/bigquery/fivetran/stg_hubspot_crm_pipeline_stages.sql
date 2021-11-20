@@ -2,22 +2,22 @@
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
-with source as (
-  select * from
-  from {{ source('fivetran_hubspot_crm','pipeline_stages') }}
+with source AS (
+  SELECT * from
+  FROM {{ source('fivetran_hubspot_crm','pipeline_stages') }}
 
 ),
-renamed as (
-    select
+renamed AS (
+    SELECT
       pipeline_id,
-      stage_id as pipeline_stage_id,
-      label as pipeline_stage_label,
-      display_order as pipeline_stage_display_order,
-      probability as pipeline_stage_close_probability_pct,
-      closed_won as pipeline_stage_closed_won
-    from source
+      stage_id AS pipeline_stage_id,
+      label AS pipeline_stage_label,
+      display_order AS pipeline_stage_display_order,
+      probability AS pipeline_stage_close_probability_pct,
+      closed_won AS pipeline_stage_closed_won
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

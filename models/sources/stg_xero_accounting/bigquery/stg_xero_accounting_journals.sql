@@ -4,33 +4,33 @@
 
 {% if var("stg_xero_accounting_etl") == 'fivetran' %}
 
-with journals as (
-    select *
-    from {{ source('fivetran_xero_accounting','journal') }}
+with journals AS (
+    SELECT *
+    FROM {{ source('fivetran_xero_accounting','journal') }}
 ),
-journal_lines as (
-    select *
-    from {{ source('fivetran_xero_accounting','journal_line') }}
+journal_lines AS (
+    SELECT *
+    FROM {{ source('fivetran_xero_accounting','journal_line') }}
 ),
-accounts as (
-    select *
-    from {{ source('fivetran_xero_accounting','account') }}
+accounts AS (
+    SELECT *
+    FROM {{ source('fivetran_xero_accounting','account') }}
 ),
-renamed as (
+renamed AS (
   SELECT
-    concat('{{ var('stg_xero_accounting_id-prefix') }}',j.journal_id) as journal_id,
+    CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',j.journal_id) AS journal_id,
     journal_date,
     journal_number,
     reference,
     source_id,
     source_type,
     l.account_code,
-    a.account_id as account_id,
+    a.account_id AS account_id,
     l.account_name,
     l.account_type,
     description,
     gross_amount,
-    concat('{{ var('stg_xero_accounting_id-prefix') }}',journal_line_id) as journal_line_id,
+    CONCAT('{{ var('stg_xero_accounting_id-prefix') }}',journal_line_id) AS journal_line_id,
     net_amount,
     tax_amount,
     tax_name,
@@ -44,8 +44,8 @@ ON
 LEFT JOIN
    accounts a
 ON l.account_code = a.account_code)
-select *
-from renamed
+SELECT *
+FROM renamed
 
 {% endif %}
 

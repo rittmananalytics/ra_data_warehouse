@@ -6,14 +6,14 @@ WITH source AS (
   SELECT *
   FROM {{ var('stg_mailchimp_email_stitch_campaigns_table') }}
 ),
-renamed as (
+renamed AS (
 SELECT
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS send_id,
+  CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',id) AS send_id,
   content_type AS campaign_content_type,
   create_time AS campaign_created_at_ts,
   emails_sent AS total_campaign_emails_sent,
   long_archive_url AS campaign_archive_url,
-  concat('{{ var('stg_mailchimp_email_id-prefix') }}',recipients.list_id) AS list_id,
+  CONCAT('{{ var('stg_mailchimp_email_id-prefix') }}',recipients.list_id) AS list_id,
   recipients.list_is_active AS campaign_list_is_active,
   recipients.list_name AS list_name,
   recipients.recipient_count AS total_recipient_count,
@@ -33,7 +33,7 @@ SELECT
   tracking.text_clicks AS campaign_tracking_text_clicks
 FROM
   source)
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -2,19 +2,19 @@
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
 
-with source as (
-  select * from
-  from {{ source('fivetran_hubspot_crm','pipelines') }}
+with source AS (
+  SELECT * from
+  FROM {{ source('fivetran_hubspot_crm','pipelines') }}
 ),
-renamed as (
-    select
-      label as pipeline_label,
+renamed AS (
+    SELECT
+      label AS pipeline_label,
       pipeline_id,
-      display_order as pipeline_display_order,
-      active as pipeline_active
-    from source
+      display_order AS pipeline_display_order,
+      active AS pipeline_active
+    FROM source
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -6,32 +6,32 @@
     )
 }}
 
-with contacts_dim as (
+with contacts_dim AS (
   SELECT
     contact_pk,
-    all_contact_ids as contact_id
+    all_contact_ids AS contact_id
   FROM
     {{ ref('wh_contacts_dim') }},
-    unnest (all_contact_ids) as all_contact_ids
+    unnest (all_contact_ids) AS all_contact_ids
   ),
-  deals_fact as (
+  deals_fact AS (
   SELECT
     *
   FROM
     {{ ref('wh_deals_fact') }}),
-  contact_deals as (
+  contact_deals AS (
     SELECT
       *
     FROM
       {{ ref('int_contact_deals') }}
   )
-select
+SELECT
       {{ dbt_utils.surrogate_key(
       ['contact_pk','deal_pk']
-      ) }} as contact_deal_pk,
+      ) }} AS contact_deal_pk,
        contact_pk,
        deal_pk
-from   contact_deals cd
+FROM   contact_deals cd
 join   contacts_dim c
 on     cd.contact_id = c.contact_id
 join   deals_fact d

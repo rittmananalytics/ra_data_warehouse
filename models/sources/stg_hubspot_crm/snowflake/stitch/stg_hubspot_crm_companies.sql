@@ -34,10 +34,10 @@
       property_linkedinbio AS company_linkedin_bio,
       property_twitterhandle AS company_twitterhandle,
       property_description AS company_description,
-      CAST (
+      CAST(
         NULL AS STRING
       ) AS company_finance_status,
-      cast (null as {{ dbt_utils.type_string() }})     as company_currency_code,
+      CAST(null AS {{ dbt_utils.type_string() }})     AS company_currency_code,
       property_createdate AS company_created_date,
       property_hs_lastmodifieddate company_last_modified_date
     FROM
@@ -71,10 +71,10 @@
       property_linkedinbio:value::STRING AS company_linkedin_bio,
       property_twitterhandle:value::STRING AS company_twitterhandle,
       property_description:value::STRING AS company_description,
-      CAST (
+      CAST(
         NULL AS STRING
       ) AS company_finance_status,
-      cast (null as {{ dbt_utils.type_string() }})      as company_currency_code,
+      CAST(null AS {{ dbt_utils.type_string() }})      AS company_currency_code,
       property_createdate:value::TIMESTAMP AS company_created_date,
       property_hs_lastmodifieddate:value::TIMESTAMP company_last_modified_date
     FROM

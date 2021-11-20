@@ -2,26 +2,26 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('int__facebook_ads__carousel_media_prep') }}
+    SELECT *
+    FROM {{ ref('int__facebook_ads__carousel_media_prep') }}
 
-), unnested as (
+), unnested AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
         index,
-        json_extract_scalar(element, '$.key') as key,
-        json_extract_scalar(element, '$.value') as value
-    from base
-    inner join unnest(url_tags) as element
+        json_extract_scalar(element, '$.key') AS key,
+        json_extract_scalar(element, '$.value') AS value
+    FROM base
+    inner join unnest(url_tags) AS element
 
 )
 
-select *
-from unnested
+SELECT *
+FROM unnested
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

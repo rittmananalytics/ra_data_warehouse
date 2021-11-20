@@ -3,70 +3,70 @@
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
 
-with base as (
+with base AS (
 
-  select *
-  from {{ ref('stg_facebook_ads__creative_history') }}
+  SELECT *
+  FROM {{ ref('stg_facebook_ads__creative_history') }}
 
-), numbers as (
+), numbers AS (
 
-  select *
-  from {{ ref('utils__facebook_ads__numbers')}}
+  SELECT *
+  FROM {{ ref('utils__facebook_ads__numbers')}}
 
-), required_fields as (
+), required_fields AS (
 
-  select
+  SELECT
     _fivetran_id,
     creative_id,
     template_app_link_spec_ios,
     template_app_link_spec_ipad,
     template_app_link_spec_android,
     template_app_link_spec_iphone
-  from base
+  FROM base
 
 {% for app in ['ios','ipad','android','iphone'] %}
 
-), flattened_{{ app }} as (
+), flattened_{{ app }} AS (
 
-  select
+  SELECT
     _fivetran_id,
     creative_id,
-    '{{ app }}'::varchar as app_type,
-    json_extract_array_element_text(required_fields.template_app_link_spec_{{ app }}, numbers.generated_number::int - 1, true) as element
-  from required_fields
+    '{{ app }}'::varchar AS app_type,
+    json_extract_array_element_text(required_fields.template_app_link_spec_{{ app }}, numbers.generated_number::int - 1, true) AS element
+  FROM required_fields
   inner join numbers
       on json_array_length(required_fields.template_app_link_spec_{{ app }}) >= numbers.generated_number
 
-), extracted_{{ app }} as (
+), extracted_{{ app }} AS (
 
-  select
+  SELECT
     _fivetran_id,
     creative_id,
     app_type,
-    json_extract_path_text(element,'index') as index,
-    json_extract_path_text(element,'app_name') as app_name,
-    json_extract_path_text(element,'app_store_id') as app_store_id,
-    json_extract_path_text(element,'class') as class_name,
-    json_extract_path_text(element,'package') as package_name,
-    json_extract_path_text(element,'template_page') as template_page
-  from flattened_{{ app }}
+    json_extract_path_text(element,'index') AS index,
+    json_extract_path_text(element,'app_name') AS app_name,
+    json_extract_path_text(element,'app_store_id') AS app_store_id,
+    json_extract_path_text(element,'class') AS class_name,
+    json_extract_path_text(element,'package') AS package_name,
+    json_extract_path_text(element,'template_page') AS template_page
+  FROM flattened_{{ app }}
 
 {% endfor %}
 
-), unioned as (
+), unioned AS (
 
-    select * from extracted_ios
+    SELECT * FROM extracted_ios
     union all
-    select * from extracted_iphone
+    SELECT * FROM extracted_iphone
     union all
-    select * from extracted_ipad
+    SELECT * FROM extracted_ipad
     union all
-    select * from extracted_android
+    SELECT * FROM extracted_android
 
 )
 
-select *
-from unioned
+SELECT *
+FROM unioned
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

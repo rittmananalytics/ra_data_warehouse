@@ -14,9 +14,9 @@ WITH products AS
   FROM
      {{ ref('int_products') }} o
 )
-select    {{ dbt_utils.surrogate_key(
+SELECT    {{ dbt_utils.surrogate_key(
           ['product_id']
-        ) }} as product_pk,
+        ) }} AS product_pk,
           *
 FROM      products
 

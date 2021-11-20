@@ -1,16 +1,16 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_facebook_ads__ad_set_history_tmp') }}
+    SELECT *
+    FROM {{ ref('stg_facebook_ads__ad_set_history_tmp') }}
 
 ),
 
-fields as (
+fields AS (
 
-    select
+    SELECT
         {{
             fivetran_utils.fill_staging_columns(
                 source_columns=adapter.get_columns_in_relation(ref('stg_facebook_ads__ad_set_history_tmp')),
@@ -18,22 +18,22 @@ fields as (
             )
         }}
 
-    from base
+    FROM base
 ),
 
-fields_xf as (
+fields_xf AS (
 
-    select
-        id as ad_set_id,
+    SELECT
+        id AS ad_set_id,
         account_id,
         campaign_id,
-        name as ad_set_name,
-        row_number() over (partition by id order by _fivetran_synced desc) = 1 as is_most_recent_record
-    from fields
+        name AS ad_set_name,
+        row_number() over (PARTITION BYid order by _fivetran_synced desc) = 1 AS is_most_recent_record
+    FROM fields
 
 )
 
-select * from fields_xf
+SELECT * FROM fields_xf
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

@@ -13,26 +13,26 @@ WITH delivery_projects AS
   FROM   {{ ref('int_delivery_projects') }}
 ),
 {% if target.type == 'bigquery' %}
-  companies_dim as (
+  companies_dim AS (
     SELECT {{ dbt_utils.star(from=ref('wh_companies_dim')) }}
-    from {{ ref('wh_companies_dim') }}
+    FROM {{ ref('wh_companies_dim') }}
   )
 {% elif target.type == 'snowflake' %}
-companies_dim as (
-    SELECT c.company_pk, cf.value::string as company_id
-    from {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
+companies_dim AS (
+    SELECT c.company_pk, cf.value::string AS company_id
+    FROM {{ ref('wh_companies_dim') }} c,table(flatten(c.all_company_ids)) cf
 )
 {% else %}
     {{ exceptions.raise_compiler_error(target.type ~" not supported in this project") }}
 {% endif %}
 SELECT
-   {{ dbt_utils.surrogate_key(['p.project_id']) }} as delivery_project_pk,
+   {{ dbt_utils.surrogate_key(['p.project_id']) }} AS delivery_project_pk,
    p.project_id,
    c.company_pk,
    p.project_name,
    p.project_status,
    p.project_notes,
-   p.project_type as project_type,
+   p.project_type AS project_type,
    p.project_category_description,
    p.project_category_name,
    p.project_created_at_ts,

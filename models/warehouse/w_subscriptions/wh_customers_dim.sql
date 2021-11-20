@@ -13,7 +13,7 @@ with customers as
   )
 SELECT
 
-    GENERATE_UUID() as customer_pk,
+    GENERATE_UUID() AS customer_pk,
     c.*
 FROM
    customers c

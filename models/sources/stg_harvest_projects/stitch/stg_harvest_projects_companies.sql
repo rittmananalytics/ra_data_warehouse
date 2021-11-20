@@ -5,27 +5,27 @@
 WITH source AS (
   {{ filter_stitch_relation(relation=source('stitch_harvest_projects', 'companies'),unique_column='id') }}
 ),
-renamed as (
+renamed AS (
   SELECT
-    concat('{{ var('stg_harvest_projects_id-prefix') }}',id) AS company_id,
+    CONCAT('{{ var('stg_harvest_projects_id-prefix') }}',id) AS company_id,
     replace(replace(replace(name,'Limited',''),'ltd',''),', Inc.','') AS company_name,
-    address as company_address,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_address2,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_city,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_state,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_country,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_zip,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_phone,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_website,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_industry,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_linkedin_company_page,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_linkedin_bio,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_twitterhandle,
-    cast (null as {{ dbt_utils.type_string() }}) AS company_description,
-    cast (null as {{ dbt_utils.type_string() }}) as company_finance_status,
-    currency              as company_currency_code,
-    created_at as company_created_date,
-    updated_at as company_last_modified_date
+    address AS company_address,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_address2,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_city,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_state,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_country,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_zip,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_phone,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_website,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_industry,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_linkedin_company_page,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_linkedin_bio,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_twitterhandle,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_description,
+    CAST(null AS {{ dbt_utils.type_string() }}) AS company_finance_status,
+    currency              AS company_currency_code,
+    created_at AS company_created_date,
+    updated_at AS company_last_modified_date
 FROM
   source
 )

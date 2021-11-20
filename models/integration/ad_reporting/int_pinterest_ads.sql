@@ -1,14 +1,14 @@
 {% if 'pinterest_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('pinterest_ads__ad_adapter')}}
+    SELECT *
+    FROM {{ ref('pinterest_ads__ad_adapter')}}
 
-), fields as (
+), fields AS (
 
-    select
-        cast(campaign_date as date) as date_day,
+    SELECT
+        CAST(campaign_date AS date) AS date_day,
         base_url,
         url_host,
         url_path,
@@ -17,20 +17,20 @@ with base as (
         utm_campaign,
         utm_content,
         utm_term,
-        cast(campaign_id as {{ dbt_utils.type_string() }}) as campaign_id,
+        CAST(campaign_id AS {{ dbt_utils.type_string() }}) AS campaign_id,
         campaign_name,
-        cast(ad_group_id as {{ dbt_utils.type_string() }}) as ad_group_id,
+        CAST(ad_group_id AS {{ dbt_utils.type_string() }}) AS ad_group_id,
         ad_group_name,
         platform,
-        coalesce(clicks, 0) as clicks,
-        coalesce(impressions, 0) as impressions,
-        coalesce(spend, 0) as spend
-    from base
+        coalesce(clicks, 0) AS clicks,
+        coalesce(impressions, 0) AS impressions,
+        coalesce(spend, 0) AS spend
+    FROM base
 
 
 )
 
-select *
-from fields
+SELECT *
+FROM fields
 
 {% else %} {{config(enabled=false)}} {% endif %}

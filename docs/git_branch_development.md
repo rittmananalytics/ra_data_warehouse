@@ -11,13 +11,13 @@ This SOP documents the standard approach adopted by Rittman Analytics to work co
 3. If you do already have an account, ask Mark for access to the "rittmananalytics" account
     - You will also need a login, via github, for dbtCloud. If you are setup on Github and your account is associated with rittmananalytics, you should be able to login to dbtCloud without the need for any further credentials
 4. Sign-in, and if you've just installed Github Desktop then type in your full name when prompted so that commits to our repo are properly labelled
-5. Select **Github** > **Install Command-Line Tool** to install the git command-line utilities, if you've not installed git before
+5. SELECT **Github** > **Install Command-Line Tool** to install the git command-line utilities, if you've not installed git before
 
 ## Install Atom
 
 1. For Mac: [https://atom.io/download/mac](https://atom.io/download/mac)
 2. Install Atom by dragging and dropping the Atom executable to your Applications folder
-3. Then go back to Github Desktop, select **Preferences** > **Advanced** and select Atom as your **External Editor**.
+3. Then go back to Github Desktop, SELECT **Preferences** > **Advanced** and SELECT Atom AS your **External Editor**.
 4. Start Atom, and then press **Install a Package** > **Open Installer**, then search for the package atom-dbt by Fishtown Analytics, then press **Install**. Then search for and install the language-sql-bigquery 
 
 ## Set Up A Project
@@ -34,14 +34,14 @@ This SOP documents the standard approach adopted by Rittman Analytics to work co
             - `rm -rf ra_data_warehouse.git`
     2. Add upstream remotes
         1. Clone the client’s repository
-        2. Add the ra-data-warehouse repository as the a remote to fetch future changes
+        2. Add the ra-data-warehouse repository AS the a remote to fetch future changes
             - `git remote add upstream https://github.com/rittmananalytics/ra_data_warehouse.git`
         3. List remotes
             - `git remote -v`
     3. To update client’s repository with upstream changes (**Still needs to be validated)**
         1. Fetch and merge changes
             - `git pull upstream master`
-- If you're added as a collaborator to an existing project
+- If you're added AS a collaborator to an existing project
     1. Clone the repository to your local environment
     2. Ask the project's technical lead for instructions to specific configurations required for that project
 - Ask your project's technical lead for the following:
@@ -70,7 +70,7 @@ This SOP documents the standard approach adopted by Rittman Analytics to work co
 
 ## Install dbt and its virtual environment
 
-Each project has its own version of dbt and packages that it depends on. To not run into dependancy issues, virtual environments are used to development under the same environment as the one in production. Talk to your project's technical lead to learn about this project's dbt version and packages used.
+Each project has its own version of dbt and packages that it depends on. To not run into dependancy issues, virtual environments are used to development under the same environment AS the one in production. Talk to your project's technical lead to learn about this project's dbt version and packages used.
 
 1. Setup your virtual environment: pyenv virtualenvs
     - If you require a new python environment
@@ -84,7 +84,7 @@ Each project has its own version of dbt and packages that it depends on. To not 
     - `nano .python-version`
     - Write name of virtual environment to use: `venv_clientA`
     - Save and exit
-    - Exclude `.python-version` from `.gitignore`
+    - Exclude `.python-version` FROM `.gitignore`
 
 # Development Process
 
@@ -94,11 +94,11 @@ Each project has its own version of dbt and packages that it depends on. To not 
 - Development steps
     - Create a development branch: `git checkout -b my_development_branch`
     - dbt development, testing and documentation
-    - Regularly compile your under-development models: `dbt run --model my_cool_model` (implicitly, this will run against the `dev` profile as we have made it the default)
+    - Regularly compile your under-development models: `dbt run --model my_cool_model` (implicitly, this will run against the `dev` profile AS we have made it the default)
     - View results of your changes using your favorite SQL IDE. For example:
 
     ```sql
-    select * from analytics_olivier.transactions_fact
+    SELECT * FROM analytics_olivier.transactions_fact
     ```
 
     - Compile the whole dbt project: `dbt run`

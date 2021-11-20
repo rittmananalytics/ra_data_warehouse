@@ -7,15 +7,15 @@ with journal_merge_list as
 
       {% set relation_source = 'stg_' + source + '_journals' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select * from journal_merge_list
+SELECT * FROM journal_merge_list
 
 {% else %}
 

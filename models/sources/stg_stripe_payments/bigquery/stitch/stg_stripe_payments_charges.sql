@@ -6,23 +6,23 @@ WITH source AS (
     {{ filter_stitch_relation(relation=source('stitch_stripe_payments','charges'),unique_column='id') }}
 ),
 
-renamed as (
+renamed AS (
 
-    select
-    concat('{{ var('stg_stripe_payments_id-prefix') }}',id) as charge_id,
-    concat('{{ var('stg_stripe_payments_id-prefix') }}',metadata.client_name) as customer_id,
-    metadata.invoice_id as invoice_number,
-    description as charge_description,
-    created as payment_created_ts,
-    created as charge_paid_at_ts,
-    currency as charge_currency,
-    amount as total_local_amount,
-    paid as is_paid,
-    'Sales' as charge_type
-    from source
+    SELECT
+    CONCAT('{{ var('stg_stripe_payments_id-prefix') }}',id) AS charge_id,
+    CONCAT('{{ var('stg_stripe_payments_id-prefix') }}',metadata.client_name) AS customer_id,
+    metadata.invoice_id AS invoice_number,
+    description AS charge_description,
+    created AS payment_created_ts,
+    created AS charge_paid_at_ts,
+    currency AS charge_currency,
+    amount AS total_local_amount,
+    paid AS is_paid,
+    'Sales' AS charge_type
+    FROM source
     where livemode is true
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

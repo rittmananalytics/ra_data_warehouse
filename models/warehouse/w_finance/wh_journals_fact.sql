@@ -16,7 +16,7 @@ WITH journals AS
   )
 
 SELECT
-   {{ dbt_utils.surrogate_key(['journal_id','journal_line_id']) }}  as journal_pk,
+   {{ dbt_utils.surrogate_key(['journal_id','journal_line_id']) }}  AS journal_pk,
    *
 FROM
    journals

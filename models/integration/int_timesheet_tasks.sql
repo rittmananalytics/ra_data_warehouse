@@ -5,17 +5,17 @@ with t_tasks_merge_list as
     {% for source in var('projects_warehouse_timesheet_sources') %}
       {% set relation_source = 'stg_' + source + '_tasks' %}
 
-      select
-        '{{source}}' as source,
+      SELECT
+        '{{source}}' AS source,
         *
-        from {{ ref(relation_source) }}
+        FROM {{ ref(relation_source) }}
 
         {% if not loop.last %}union all{% endif %}
       {% endfor %}
   )
-select * from t_tasks_merge_list
+SELECT * FROM t_tasks_merge_list
 union all
-select 'unknown_values' as source,
-* from {{ ref('stg_unknown_projects_tasks') }}
+SELECT 'unknown_values' AS source,
+* FROM {{ ref('stg_unknown_projects_tasks') }}
 
 {% else %} {{config(enabled=false)}} {% endif %}

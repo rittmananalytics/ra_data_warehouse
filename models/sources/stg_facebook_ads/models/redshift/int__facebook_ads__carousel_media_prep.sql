@@ -2,60 +2,60 @@
 {% if var("marketing_warehouse_ad_sources") %}
 {% if 'facebook_ads' in var("marketing_warehouse_ad_sources") %}
 
-with base as (
+with base AS (
 
-    select *
-    from {{ ref('stg_facebook_ads__creative_history') }}
+    SELECT *
+    FROM {{ ref('stg_facebook_ads__creative_history') }}
 
-), numbers as (
+), numbers AS (
 
-    select *
-    from {{ ref('utils__facebook_ads__numbers') }}
+    SELECT *
+    FROM {{ ref('utils__facebook_ads__numbers') }}
 
-), required_fields as (
+), required_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
         object_story_link_data_caption,
         object_story_link_data_description,
         object_story_link_data_link,
         object_story_link_data_message,
-        object_story_link_data_child_attachments as child_attachments
-    from base
+        object_story_link_data_child_attachments AS child_attachments
+    FROM base
     where object_story_link_data_child_attachments is not null
 
-), flattened_child_attachments as (
+), flattened_child_attachments AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
-        object_story_link_data_caption as caption,
-        object_story_link_data_description as description,
-        object_story_link_data_message as message,
-        numbers.generated_number - 1 as index,
-        json_extract_array_element_text(required_fields.child_attachments, numbers.generated_number::int - 1, true) as element
-    from required_fields
+        object_story_link_data_caption AS caption,
+        object_story_link_data_description AS description,
+        object_story_link_data_message AS message,
+        numbers.generated_number - 1 AS index,
+        json_extract_array_element_text(required_fields.child_attachments, numbers.generated_number::int - 1, true) AS element
+    FROM required_fields
     inner join numbers
         on json_array_length(required_fields.child_attachments) >= numbers.generated_number
 
-), extracted_fields as (
+), extracted_fields AS (
 
-    select
+    SELECT
         _fivetran_id,
         creative_id,
         caption,
         description,
         message,
         index,
-        json_extract_path_text(element,'link') as link,
-        json_extract_path_text(element,'url_tags') as url_tags
-    from flattened_child_attachments
+        json_extract_path_text(element,'link') AS link,
+        json_extract_path_text(element,'url_tags') AS url_tags
+    FROM flattened_child_attachments
 
 )
 
-select *
-from extracted_fields
+SELECT *
+FROM extracted_fields
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

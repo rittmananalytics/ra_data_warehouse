@@ -11,16 +11,16 @@ WITH subscriptions AS
   SELECT {{ dbt_utils.star(from=ref('int_subscriptions')) }}
   FROM   {{ ref('int_subscriptions') }}
 ),
-customers as (
+customers AS (
   SELECT {{ dbt_utils.star(from=ref('wh_customers_dim')) }}
   FROM   {{ ref('wh_customers_dim') }}
   ),
-plans as (
+plans AS (
   SELECT {{ dbt_utils.star(from=ref('wh_plans_dim')) }}
   FROM   {{ ref('wh_plans_dim') }}
   )
 SELECT
-   GENERATE_UUID() as subscription_pk,
+   GENERATE_UUID() AS subscription_pk,
    c.customer_pk,
    p.plan_pk,
    s.*

@@ -2,49 +2,49 @@
 {% if var("product_warehouse_event_sources") %}
 {% if 'appsflyer_events_track' in var("product_warehouse_event_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ source('appsflyer', 'tracks') }}
+  SELECT * FROM {{ source('appsflyer', 'tracks') }}
 
 ),
 
-renamed as (
+renamed AS (
 
-select
+SELECT
 
-    cast(appsflyer_id as {{ dbt_utils.type_string() }})           as event_id,
-    cast(event_name as {{ dbt_utils.type_string() }})             as event_type,
-    event_time                                                    as event_ts,
-    cast( event_value as {{ dbt_utils.type_string() }})           as event_details,
-    cast(app_name as {{ dbt_utils.type_string() }})               as page_title,
-    cast(null as {{ dbt_utils.type_string() }})                   as page_url_path,
-    cast(http_referrer as {{ dbt_utils.type_string() }})          as referrer_host,
-    cast(null as {{ dbt_utils.type_string() }})                   as search,
-    cast(original_url as {{ dbt_utils.type_string() }})           as page_url,
-    cast(null as {{ dbt_utils.type_string() }})                   as page_url_host,
-    cast(null as {{ dbt_utils.type_string() }})                   as gclid,
-    cast(af_keywords as {{ dbt_utils.type_string() }})            as utm_term,
-    cast(af_adset as {{ dbt_utils.type_string() }})               as utm_content,
-    cast(af_ad_type as {{ dbt_utils.type_string() }})             as utm_medium,
-    cast(campaign as {{ dbt_utils.type_string() }})               as utm_campaign,
-    cast(media_source as {{ dbt_utils.type_string() }})           as utm_source,
-    cast(ip as {{ dbt_utils.type_string() }})                     as ip,
-    cast(idfa as {{ dbt_utils.type_string() }})                   as visitor_id,
-    cast(customer_user_id as {{ dbt_utils.type_string() }})       as user_id,
+    CAST(appsflyer_id AS {{ dbt_utils.type_string() }})           AS event_id,
+    CAST(event_name AS {{ dbt_utils.type_string() }})             AS event_type,
+    event_time                                                    AS event_ts,
+    CAST( event_value AS {{ dbt_utils.type_string() }})           AS event_details,
+    CAST(app_name AS {{ dbt_utils.type_string() }})               AS page_title,
+    CAST(null AS {{ dbt_utils.type_string() }})                   AS page_url_path,
+    CAST(http_referrer AS {{ dbt_utils.type_string() }})          AS referrer_host,
+    CAST(null AS {{ dbt_utils.type_string() }})                   AS search,
+    CAST(original_url AS {{ dbt_utils.type_string() }})           AS page_url,
+    CAST(null AS {{ dbt_utils.type_string() }})                   AS page_url_host,
+    CAST(null AS {{ dbt_utils.type_string() }})                   AS gclid,
+    CAST(af_keywords AS {{ dbt_utils.type_string() }})            AS utm_term,
+    CAST(af_adset AS {{ dbt_utils.type_string() }})               AS utm_content,
+    CAST(af_ad_type AS {{ dbt_utils.type_string() }})             AS utm_medium,
+    CAST(campaign AS {{ dbt_utils.type_string() }})               AS utm_campaign,
+    CAST(media_source AS {{ dbt_utils.type_string() }})           AS utm_source,
+    CAST(ip AS {{ dbt_utils.type_string() }})                     AS ip,
+    CAST(idfa AS {{ dbt_utils.type_string() }})                   AS visitor_id,
+    CAST(customer_user_id AS {{ dbt_utils.type_string() }})       AS user_id,
     case
         when lower(user_agent) like '%android%' then 'Android'
         else replace(
           {{ dbt_utils.split_part("user_agent","'('","1") }},
             ';', '')
-    end                                                           as device,
-    cast(af_siteid as {{ dbt_utils.type_string() }})              as site
+    end                                                           AS device,
+    CAST(af_siteid AS {{ dbt_utils.type_string() }})              AS site
       FROM
     source
 ),
 
-final as (
+final AS (
 
-    select
+    SELECT
         *,
         case
             when device = 'iPhone' then 'iPhone'
@@ -52,12 +52,12 @@ final as (
             when device in ('iPad', 'iPod') then 'Tablet'
             when device in ('Windows', 'Macintosh', 'X11') then 'Desktop'
             else 'Uncategorized'
-        end as device_category
-    from renamed
+        end AS device_category
+    FROM renamed
 
 )
 
-select * from final
+SELECT * FROM final
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

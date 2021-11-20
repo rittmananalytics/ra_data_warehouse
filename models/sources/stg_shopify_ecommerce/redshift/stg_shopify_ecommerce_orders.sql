@@ -2,19 +2,19 @@
 {% if var("ecommerce_warehouse_order_sources") %}
 {% if 'shopify_ecommerce' in var("ecommerce_warehouse_order_sources") %}
 
-with source as (
+with source AS (
 
-  select * from {{ ref('shopify__orders') }}
+  SELECT * FROM {{ ref('shopify__orders') }}
 
-
-),
-   order_tags as (
-
-  select * from {{ source('fivetran_shopify', 'order_tag') }}
 
 ),
-renamed as (
-    select
+   order_tags AS (
+
+  SELECT * FROM {{ source('fivetran_shopify', 'order_tag') }}
+
+),
+renamed AS (
+    SELECT
       billing_address_address_1 ,
       billing_address_address_2 ,
       billing_address_city ,
@@ -94,13 +94,13 @@ renamed as (
       {{ fivetran_utils.string_agg(
         't.value',
         ','
-      ) }}  as order_tags
-    from source o
+      ) }}  AS order_tags
+    FROM source o
     left join order_tags t
     on o.order_id = t.order_id
     {{ dbt_utils.group_by(n=76) }}
 )
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

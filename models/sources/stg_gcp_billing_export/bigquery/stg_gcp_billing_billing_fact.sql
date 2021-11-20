@@ -7,7 +7,7 @@
 }}
 {% endif %}
 
-with source as (
+with source AS (
     SELECT
       *
     FROM
@@ -18,8 +18,8 @@ with source as (
   SELECT
         billing_account_id,
         project.id AS project_id,
-        location.location as billing_data_location,
-        location.country  as billing_data_country,
+        location.location AS billing_data_location,
+        location.country  AS billing_data_country,
         location.region,
         location.zone,
         SUM(cost) AS total_cost,
@@ -29,7 +29,7 @@ with source as (
         usage.pricing_unit,
         currency,
         AVG(coalesce(currency_conversion_rate,0)) AS avg_currency_conversion_rate,
-        invoice.month as billing_month,
+        invoice.month AS billing_month,
         service.id AS service_id,
         service.description
         FROM

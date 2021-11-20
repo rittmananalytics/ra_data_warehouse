@@ -2,38 +2,38 @@
 {% if var("crm_warehouse_company_sources") %}
 {% if 'salesforce_crm' in var("crm_warehouse_company_sources")  %}
 
-with source as (
+with source AS (
 
-    select * from account
+    SELECT * FROM account
 
 ),
 
-renamed as (
+renamed AS (
 
-    select
+    SELECT
 
-        id as account_id,
-        parentid as parent_id,
-        ownerid as owner_id,
-        type as account_type,
-        billingstreet as company_street,
-        billingcity as company_city,
-        billingstate as company_state,
-        billingcountry as company_country,
-        billingpostalcode as company_zipcode,
-        name as company_name,
+        id AS account_id,
+        parentid AS parent_id,
+        ownerid AS owner_id,
+        type AS account_type,
+        billingstreet AS company_street,
+        billingcity AS company_city,
+        billingstate AS company_state,
+        billingcountry AS company_country,
+        billingpostalcode AS company_zipcode,
+        name AS company_name,
         industry,
         description,
-        numberofemployees as number_of_employees,
-        lastactivitydate as last_activity_date,
-        createddate as created_at,
-        lastmodifieddate as updated_at
+        numberofemployees AS number_of_employees,
+        lastactivitydate AS last_activity_date,
+        createddate AS created_at,
+        lastmodifieddate AS updated_at
 
-    from source
+    FROM source
 
 )
 
-select * from renamed
+SELECT * FROM renamed
 
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

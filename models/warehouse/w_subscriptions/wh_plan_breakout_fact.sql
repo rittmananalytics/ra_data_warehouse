@@ -11,12 +11,12 @@ WITH plans AS
   SELECT *
   FROM   {{ ref('wh_plans_dim') }}
 ),
-plan_breakouts as (
+plan_breakouts AS (
   SELECT *
   FROM   {{ ref('int_plan_breakout_metrics') }}
   )
 SELECT
-   GENERATE_UUID() as plan_breakout_pk,
+   GENERATE_UUID() AS plan_breakout_pk,
    p.plan_pk,
    b.*
 FROM
