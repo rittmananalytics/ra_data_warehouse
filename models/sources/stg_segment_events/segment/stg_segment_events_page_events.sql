@@ -43,7 +43,7 @@ renamed AS (
         CAST('{{ var('stg_segment_events_site') }}' AS {{ dbt_utils.type_string() }})  AS site,
         CAST(null as {{ dbt_utils.type_string() }})                                   AS session_seq,
         CAST(null as {{ dbt_utils.type_string() }})                                   AS session_id,
-        'Snowplow (Try Snowplow Trial)'                                     AS source,
+        'Segment'                                                           AS source,
         'web'                                                               AS platform,
         CAST(null as {{ dbt_utils.type_string() }})                         AS ip_country,
         CAST(null as {{ dbt_utils.type_string() }})                         AS ip_region,

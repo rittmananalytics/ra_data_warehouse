@@ -1,0 +1,37 @@
+version: 2
+
+models: 
+  - name: stg_facebook_ads__app_link
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - _fivetran_id
+            - app_type
+            - index
+            - template_page
+  - name: stg_facebook_ads__carousel_media
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - _fivetran_id
+            - index
+  - name: stg_facebook_ads__carousel_media_url_tags
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - _fivetran_id
+            - index
+            - key
+  - name: stg_facebook_ads__creative_history_asset_feed_spec_link_url
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - _fivetran_id
+            - index
+  - name: stg_facebook_ads__url_tag
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - _fivetran_id
+            - key
+            - type

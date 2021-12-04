@@ -40,7 +40,7 @@ SELECT
     CAST(af_siteid AS {{ dbt_utils.type_string() }})              AS site,
     CAST(null as {{ dbt_utils.type_string() }})                                   AS session_seq,
     CAST(null as {{ dbt_utils.type_string() }})                                   AS session_id,
-    'Snowplow (Try Snowplow Trial)'                                     AS source,
+    'Appsflyer'                                     AS source,
     platform                                                            AS platform,
     CAST(null as {{ dbt_utils.type_string() }})                         AS ip_country,
     CAST(null as {{ dbt_utils.type_string() }})                         AS ip_region,

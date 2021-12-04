@@ -41,7 +41,19 @@ renamed AS (
               {{ dbt_utils.split_part('context_user_agent',"'('",1) }},
                 ';', '')
         end  AS device,
-        '{{ var('stg_segment_events_site') }}'  AS site
+        '{{ var('stg_segment_events_site') }}'  AS site,
+        'Segment'                                                           AS source,
+        'ecommerce'                                                         AS platform,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_country,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_region,
+        CAST(city as {{ dbt_utils.type_string() }}) 	                      AS ip_city,
+        CAST(postal_code as {{ dbt_utils.type_string() }}) 	                AS ip_zipcode,
+        CAST(null as {{ dbt_utils.type_float() }})                          AS ip_latitude,
+        CAST(null as {{ dbt_utils.type_float() }}) 	                        AS ip_longitude,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_region_name,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_isp,
+        CAST(null as {{ dbt_utils.type_string() }}) 	                      AS ip_organization,
+        CAST(null as {{ dbt_utils.type_string() }})                         AS ip_domain
     FROM source
 
 )

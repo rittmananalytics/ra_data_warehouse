@@ -63,7 +63,7 @@ vars:
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
 
-  product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
+  product_warehouse_event_sources: ['segment_events_page','ga4_events_all','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']
   subscriptions_warehouse_sources: []
 
@@ -147,6 +147,7 @@ vars:
 
   stg_snowplow_events_snowplow_schema: snowplow_events
   stg_appsflyer_events_stitch_schema: stitch_appsflyer
+  stg_ga4_events_export_schema: events_277223877
 
   stg_shopify_ecommerce_id-prefix: shopify-
   stg_shopify_ecommerce_etl: fivetran
