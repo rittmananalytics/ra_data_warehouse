@@ -63,6 +63,7 @@ vars:
   marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
+  attribution_model_types: ['first_click','last_click','even_click','time_series','first_non_direct_click','first_paid_click']
 
   product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']
@@ -160,6 +161,7 @@ vars:
 
   web_sessionization_trailing_window: 3
   web_inactivity_cutoff: 30 * 60
+  marketing_attribution_enabled: true
   attribution_create_account_event_type: user_registration
   attribution_conversion_event_type: confirmed_order
   attribution_order_id_column: event_text
