@@ -1,4 +1,4 @@
-{% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") and var("marketing_attribution_enabled")%}
+{% if  var("marketing_warehouse_ad_campaign_sources") and var("product_warehouse_event_sources") %}
 {% if target.type == 'snowflake' %}
 
 {{
