@@ -1,10 +1,7 @@
-{{config
-  (enabled =
-      (target.type == 'bigquery' and var("stg_hubspot_crm_etl") == 'stitch')
-   )
-}}
+{% if target.type == 'bigquery' %}
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
+{% if var("stg_hubspot_crm_etl") == 'stitch' %}
 
 
 WITH source as (
@@ -22,5 +19,7 @@ renamed as (
 )
 select * from renamed
 
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

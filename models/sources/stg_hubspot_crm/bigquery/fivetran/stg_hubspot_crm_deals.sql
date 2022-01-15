@@ -1,7 +1,7 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' %}
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
-
+{% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 
 
 with source as (
@@ -10,11 +10,11 @@ with source as (
 ),
 hubspot_deal_company as (
   select *
-  from {{ source('fivetran_hubspot_crm','companies') }}
+  from {{ source('fivetran_hubspot_crm','deal_companies') }}
 ),
 hubspot_deal_pipelines_source as (
   select *
-  from  {{ source('fivetran_hubspot_crm','deal_pipelines') }}
+  from  {{ source('fivetran_hubspot_crm','pipelines') }}
 )
 ,
 hubspot_deal_property_history as (
@@ -28,7 +28,7 @@ hubspot_deal_stages as (
 ),
 hubspot_deal_owners as (
   SELECT *
-  FROM {{ source('fivetran_hubspot_crm','deal_owners') }}
+  FROM {{ source('fivetran_hubspot_crm','owners') }}
 ),
 renamed as (
   SELECT
@@ -55,22 +55,40 @@ joined as (
     concat('{{ var('stg_hubspot_crm_id-prefix') }}',cast(a.company_id as string)) as company_id,
     d.* except (deal_id),
     timestamp_millis(safe_cast(h.value as int64)) as deal_pipeline_stage_ts,
-    p.pipeline_label,
-    p.pipeline_display_order,
-    s.pipeline_stage_label,
-    s.pipeline_stage_display_order,
-    s.pipeline_stage_close_probability_pct,
-    s.pipeline_stage_closed_won,
-    u.owner_full_name,
-    u.owner_email
-    from renamed d
-    left outer join hubspot_deal_company a on d.deal_id = a.deal_id
-    left outer join hubspot_deal_property_history h on d.deal_id = h.deal_id and h.name = concat('hs_date_entered_',d.deal_pipeline_stage_id)
-    join hubspot_deal_stages s on d.deal_pipeline_stage_id = s.pipeline_stage_id
-    join hubspot_deal_pipelines_source p on s.pipeline_id = p.pipeline_id
-    left outer join hubspot_deal_owners u on safe_cast(d.deal_owner_id as int64) = u.owner_id
+    p.label as pipeline_label,
+    p.display_order as pipeline_display_order,
+    s.label as pipeline_stage_label,
+    s.display_order as pipeline_stage_display_order,
+    s.probability as pipeline_stage_close_probability_pct,
+    s.closed_won as pipeline_stage_closed_won,
+    concat(u.first_name,' ',u.last_name) as owner_full_name,
+    u.email as owner_email
+  from
+    renamed d
+  left outer join
+    hubspot_deal_company a
+  on
+    d.deal_id = a.deal_id
+  left outer join
+    hubspot_deal_property_history h
+  on
+    d.deal_id = h.deal_id and h.name = concat('hs_date_entered_',d.deal_pipeline_stage_id)
+  join
+    hubspot_deal_stages s
+  on
+    d.deal_pipeline_stage_id = s.stage_id
+  join
+    hubspot_deal_pipelines_source p
+  on
+    s.pipeline_id = p.pipeline_id
+  left outer join
+    hubspot_deal_owners u
+  on
+    safe_cast(d.deal_owner_id as int64) = u.owner_id
 )
 select * from joined
 
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

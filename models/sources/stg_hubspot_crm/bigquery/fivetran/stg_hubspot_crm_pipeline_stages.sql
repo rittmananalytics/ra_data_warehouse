@@ -1,9 +1,10 @@
-{{config(enabled = target.type == 'bigquery')}}
+{% if target.type == 'bigquery' %}
 {% if var("marketing_warehouse_deal_sources") %}
 {% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
+{% if var("stg_hubspot_crm_etl") == 'fivetran' %}
 
 with source as (
-  select * from
+  select *
   from {{ source('fivetran_hubspot_crm','pipeline_stages') }}
 
 ),
@@ -19,5 +20,7 @@ renamed as (
 )
 select * from renamed
 
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

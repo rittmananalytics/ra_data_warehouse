@@ -67,6 +67,7 @@ vars:
   product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']
   subscriptions_warehouse_sources: []
+  marketing_warehouse_deal_sources: ['hubspot_crm']
 
   stg_segment_events_etl: segment
   stg_segment_events_segment_schema: segment_events
@@ -101,7 +102,7 @@ vars:
   stg_hubspot_crm_stitch_schema: stitch_hubspot
   stg_hubspot_crm_fivetran_schema: fivetran_hubspot
   stg_hubspot_crm_id-prefix: hubspot-
-  stg_hubspot_crm_etl: stitch
+  stg_hubspot_crm_etl: fivetran
   stg_hubspot_email_stitch_database: ra-warehouse-dev
   stg_hubspot_email_stitch_schema: stitch_hubspot
   stg_hubspot_email_etl: stitch

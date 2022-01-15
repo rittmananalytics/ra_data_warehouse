@@ -32,12 +32,13 @@ sources:
         identifier: deal
       - name: owners
         identifier: owner
-      - name: deal_pipelines
-        identifier: pipeline
+      - name: pipelines
+        identifier: deal_pipeline
       - name: pipeline_stages
-        identifier: pipeline_stage
+        identifier: deal_pipeline_stage
       - name: deal_companies
         identifier: deal_company
       - name: engagements
         identifier: engagements
       - name: property_history
+        identifier: deal_property_history
