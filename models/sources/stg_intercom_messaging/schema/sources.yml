@@ -12,3 +12,4 @@ sources:
     tables:
       - name: email_events
       - name: campaigns
+      - name: conversations

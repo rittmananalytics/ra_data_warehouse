@@ -1,5 +1,8 @@
-{% if var("crm_warehouse_contact_sources") and var("marketing_warehouse_deal_sources")%}
-
+{% if target.type == 'bigquery' %}
+{% if var("crm_warehouse_contact_sources") %}
+{% if 'hubspot_crm' in var("crm_warehouse_contact_sources") %}
+{% if 'hubspot_crm' in var("marketing_warehouse_deal_sources") %}
+{% if var("stg_hubspot_crm_etl") == 'stitch' %}
 
 WITH t_contact_deals_list AS (
 
@@ -19,13 +22,9 @@ SELECT
 FROM
   t_contact_deals_list
 
-{% else %}
 
-{{
-    config(
-        enabled=false
-    )
-}}
-
-
-{% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}
+{% else %} {{config(enabled=false)}} {% endif %}

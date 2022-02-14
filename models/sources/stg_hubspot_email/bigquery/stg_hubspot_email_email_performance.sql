@@ -1,7 +1,6 @@
-{% if target.type == 'bigquery' or target.type == 'snowflake' or target.type == 'redshift' %}
+{{config(enabled = target.type == 'bigquery')}}
 {% if var("marketing_warehouse_email_event_sources") %}
 {% if 'hubspot_email' in var("marketing_warehouse_email_event_sources") %}
-{% if var("stg_xero_accounting_etl") == 'stitch' %}
 
 with source as (
   SELECT *
@@ -10,7 +9,7 @@ with source as (
     *,
     max(_sdc_received_at) over (partition by id, date(_sdc_received_at)) as max_sdc_received_at_for_day
   from
-    {{ source('stitch_hubspot_email', 'campaigns') }}
+    {{ var('stg_hubspot_email_stitch_campaigns_table') }}
   )
   where _sdc_received_at = max_sdc_received_at_for_day
   ORDER BY
@@ -19,7 +18,7 @@ with source as (
 renamed as (
   SELECT
     concat('{{ var('stg_hubspot_email_id-prefix') }}',id) as ad_campaign_id,
-    {{ dbt_utils.date_trunc('DAY','_sdc_received_at') }} AS ad_campaign_serve_ts,
+    timestamp(DATE(_sdc_received_at)) AS ad_campaign_serve_ts,
     coalesce(numincluded,0)-coalesce(lag(numincluded) over (partition by id order by _sdc_received_at),0) as ad_campaign_total_audience,
     coalesce(counters.processed,0)-coalesce(lag(counters.processed) over (partition by id order by _sdc_received_at),0) as ad_campaign_emails_processed,
     coalesce(counters.bounce,0)-coalesce(lag(counters.bounce) over (partition by id order by _sdc_received_at),0) as ad_campaign_bounces,
@@ -36,7 +35,5 @@ renamed as (
 )
 select * from renamed
 
-{% else %} {{config(enabled=false)}} {% endif %}
-{% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}
 {% else %} {{config(enabled=false)}} {% endif %}

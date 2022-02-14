@@ -46,7 +46,6 @@ SELECT
 	contacts_dim.contact_name  AS name,
 	contacts_web_interests_xa.last_page_title  AS last_page_title,
 	CAST(contacts_web_interests_xa.last_visit_ts  AS DATE) AS last_visit_date,
-	contacts_influencer_list_xa.influencer_status  AS influencer_status,
 	COALESCE(SUM(contacts_web_interests_xa.attribution_interest ), 0) AS attribution_interest,
 	COALESCE(SUM(contacts_web_interests_xa.casestudy_views ), 0) AS casestudy_views,
 	COALESCE(SUM(contacts_web_interests_xa.customer_journey_interest ), 0) AS customer_journey_interest,
@@ -60,10 +59,8 @@ SELECT
 	COALESCE(SUM(contacts_web_interests_xa.segment_interest ), 0) AS segment_interest,
 	COALESCE(SUM(contacts_web_interests_xa.visits_l90_days ), 0) AS visits_l90_days
 FROM contacts_dim
-LEFT JOIN {{ ref('wh_contacts_influencers_xa') }}
-     AS contacts_influencer_list_xa ON contacts_dim.hubspot_contact_id = (concat('hubspot-',contacts_influencer_list_xa.hubspot_contact_id))
 LEFT JOIN {{ ref('wh_contact_web_interests_xa') }}
      AS contacts_web_interests_xa ON contacts_dim.contact_pk = contacts_web_interests_xa.contact_pk
 
-GROUP BY 1,2,3,4,5
+GROUP BY 1,2,3,4
   {% else %} {{config(enabled=false)}} {% endif %}

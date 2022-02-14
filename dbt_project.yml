@@ -58,11 +58,16 @@ seeds:
 
 vars:
 
+  crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects']
+  crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects']
+  crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
 
 
   marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
+  marketing_warehouse_email_event_sources: ['hubspot_email','mailchimp_email']
+  marketing_warehouse_email_list_sources: ['mailchimp_email']
 
   product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']

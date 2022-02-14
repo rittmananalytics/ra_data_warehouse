@@ -11,6 +11,7 @@ sources:
 
     tables:
       - name: list_members
-      - name: reports_email_activity
+      - name: email_activity
+        identifier: reports_email_activity
       - name: lists
       - name: campaigns
