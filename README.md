@@ -44,7 +44,7 @@ You can read more about our work with dbt, Google BigQuery, Snowflake and other 
 7. To make it simpler to run data quality tests than to not, by defining these tests in-advance
 8. To enable loading and integration of custom (customer app database) sources into the warehouse
 
-[Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://rittmananalytics.com/blog/2020/5/28/introducing-the-ra-warehouse-dbt-framework-how-rittman-analytics-does-data-centralization) on the Rittman Analytics blog talks more about the background to this package.
+[Introducing the RA Warehouse dbt Framework : How Rittman Analytics Does Data Centralization using dbt, Google BigQuery, Stitch and Looker](https://blog.rittmananalytics.com/how-rittman-analytics-centralizes-saas-data-sources-using-dbt-and-google-bigquery-3fd952773ec1) on the Rittman Analytics blog talks more about the background to this package.
 
 ## How Do We Use It?
 
