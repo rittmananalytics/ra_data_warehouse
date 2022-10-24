@@ -1,0 +1,4 @@
+name: 'fivetran_utils_integration_tests'
+version: '0.2.9'
+config-version: 2
+profile: 'integration_tests'

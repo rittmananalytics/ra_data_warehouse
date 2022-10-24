@@ -1,0 +1,12 @@
+name: 'fivetran_utils'
+version: '0.2.9'
+config-version: 2
+
+source-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+require-dbt-version: ">=0.20.0"

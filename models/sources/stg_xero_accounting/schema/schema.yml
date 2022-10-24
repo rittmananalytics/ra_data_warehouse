@@ -11,14 +11,7 @@ models:
       - name: contact_name
         tests:
           - not_null:
-              severity: warn
-      - name: contact_company_id
-        tests:
-          - not_null
-      - name: contact_company_id
-        tests:
-          - not_null:
-              severity: warn
+              severity: warn   
       - name: contact_company_id
         tests:
           - not_null:

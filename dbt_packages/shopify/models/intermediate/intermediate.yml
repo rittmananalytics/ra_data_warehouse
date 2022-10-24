@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: shopify__customers__order_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - customer_id
+            - source_relation
+  - name: shopify__orders__order_line_aggregates
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - source_relation
+  - name: shopify__orders__order_refunds

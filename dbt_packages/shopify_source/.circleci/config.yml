@@ -1,0 +1,87 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.9-stretch
+
+    steps:
+      - checkout
+
+      - run:
+          run: setup_creds
+          command: |
+            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+      - run:
+          name: "Setup dbt"
+          command: |
+            sudo apt install libsasl2-dev
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip setuptools
+            pip install -r integration_tests/requirements.txt
+            mkdir -p ~/.dbt
+            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+      - run:
+          name: "Run Tests - Spark"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target spark --full-refresh
+            dbt run --target spark --full-refresh
+            dbt test --target spark
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target spark --full-refresh
+            dbt test --target spark
+      - run:
+          name: "Run Tests - Redshift"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target redshift --full-refresh
+            dbt run --target redshift --full-refresh
+            dbt test --target redshift
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target redshift --full-refresh
+            dbt test --target redshift
+      - run:
+          name: "Run Tests - Postgres"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target postgres --full-refresh
+            dbt run --target postgres --full-refresh
+            dbt test --target postgres
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target postgres --full-refresh
+            dbt test --target postgres
+      - run:
+          name: "Run Tests - Snowflake"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target snowflake --full-refresh
+            dbt run --target snowflake --full-refresh
+            dbt test --target snowflake
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target snowflake --full-refresh
+            dbt test --target snowflake
+      - run:
+          name: "Run Tests - BigQuery"
+          environment:
+              GCLOUD_SERVICE_KEY_PATH: "/home/circleci/gcloud-service-key.json"
+
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt deps
+            dbt seed --target bigquery --full-refresh
+            dbt run --target bigquery --full-refresh
+            dbt test --target bigquery
+            dbt run --vars '{shopify__using_order_adjustment: false, shopify__using_order_line_refund: false, shopify__using_refund: false}' --target bigquery --full-refresh
+            dbt test --target bigquery
