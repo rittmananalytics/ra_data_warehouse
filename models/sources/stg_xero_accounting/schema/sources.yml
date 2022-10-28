@@ -36,3 +36,25 @@ sources:
       - name: bank_transaction_line_items
       - name: journal
       - name: journal_line
+
+  - name: datalakehouse_xero_accounting
+    schema: "{{ var('stg_xero_accounting_datalakehouse_schema') }}"
+
+    freshness:
+      warn_after: {count: 1, period: day}
+
+    loaded_at_field: _fivetran_synced
+
+    tables:
+      - name: account
+        identifier: accounts
+      - name: contact
+        identifier: contacts
+      - name: contact_address
+      - name: currency
+      - name: invoice
+      - name: payment
+      - name: bank_transaction
+      - name: bank_transaction_line_items
+      - name: journal
+      - name: journal_line
