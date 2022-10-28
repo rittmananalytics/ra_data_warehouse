@@ -18,7 +18,7 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "dbt_modules"
 
 on-run-start:
-    - "{% do create_schema(api.Relation.create(database=target.database, schema=generate_prefixed_target_name().strip() + '_logs')) %}"
+    - "{% do create_schema(api.Relation.create(database=target.project, schema=generate_prefixed_target_name().strip() + '_logs')) %}"
     - "create table if not exists {{ generate_prefixed_target_name() }}_logs.audit_dbt_results (object string, status string, row_count numeric, execution_time numeric, load_ts timestamp)"
 
 on-run-end:
@@ -58,27 +58,22 @@ seeds:
 
 vars:
 
-  crm_warehouse_company_sources: ['xero_accounting']
-  crm_warehouse_contact_sources: ['xero_accounting']
-  finance_warehouse_payment_sources: ['xero_accounting']
-  finance_warehouse_currencies_sources: ['xero_accounting']
-  finance_warehouse_invoice_sources: ['xero_accounting']
-  finance_warehouse_journal_sources: ['xero_accounting']
-  finance_warehouse_bank_transaction_sources: ['xero_accounting']
-  #crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
-  projects_warehouse_timesheet_sources: []
+  crm_warehouse_company_sources: ['hubspot_crm','harvest_projects','xero_accounting','stripe_payments','asana_projects','jira_projects']
+  crm_warehouse_contact_sources: ['hubspot_crm','harvest_projects','xero_accounting','mailchimp_email','asana_projects','jira_projects']
+  crm_warehouse_conversations_sources: ['hubspot_crm','intercom_messaging']
+
 
   marketing_warehouse_ad_campaign_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_group_sources: ['facebook_ads','google_ads']
   marketing_warehouse_ad_sources: ['facebook_ads','google_ads']
-  #marketing_warehouse_email_event_sources: ['hubspot_email','mailchimp_email']
-  #marketing_warehouse_email_list_sources: ['mailchimp_email']
+  marketing_warehouse_email_event_sources: ['hubspot_email','mailchimp_email']
+  marketing_warehouse_email_list_sources: ['mailchimp_email']
 
-  #product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
+  product_warehouse_event_sources: ['segment_events_page','segment_events_track','snowplow_events_page','segment_events_order_checkout','appsflyer_events_track']
   order_conversion_sources: ['custom']
   subscriptions_warehouse_sources: []
   marketing_warehouse_deal_sources: ['hubspot_crm']
-  
+
   stg_segment_events_etl: segment
   stg_segment_events_segment_schema: segment_events
   stg_segment_events_site: rittmananalytics.com
@@ -100,10 +95,10 @@ vars:
   stg_mailchimp_email_stitch_schema: stitch_mailchimp
   stg_mailchimp_email_stitch_schema: stg_xero_accounting_stitch_schema
   stg_xero_accounting_id-prefix: xero-
-  stg_xero_accounting_etl: datalakehouse_io
+  stg_xero_accounting_etl: stitch
   stg_xero_accounting_stitch_schema: stitch_xero
-  stg_xero_accounting_datalakehouse_schema: demo_xero
   stg_xero_accounting_fivetran_schema: fivetran_xero
+  stg_xero_accounting_datalakehouse_schema: datalakehouse_xero
   stg_harvest_projects_stitch_schema: stitch_harvest
   stg_harvest_projects_id-prefix: harvest-
   stg_harvest_projects_etl: stitch
@@ -180,7 +175,7 @@ vars:
   attribution_time_decay_days_window : 7
   attribution_include_conversion_session: true
 
-  enable_companies_merge_file: false
+#  enable_companies_merge_file: true
 #  enable_ip_geo_enrichment: false
 
   facebook_ads_schema: fivetran_facebook_ads
