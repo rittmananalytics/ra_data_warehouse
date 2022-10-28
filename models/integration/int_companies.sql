@@ -10,7 +10,11 @@ select
 ),
 merged as (
 select c.company_name,
+      {% if var("enable_companies_merge_file") %}
        case when m.company_name is not null then m.all_company_ids else c.all_company_ids end as all_company_ids,
+      {% else %}
+       c.all_company_ids as all_company_ids,
+      {% endif %}
        c.company_phone,
        c.company_website,
        c.company_industry,

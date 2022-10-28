@@ -16,7 +16,8 @@ with t_invoices_merge_list as (
 
     ),
     all_invoice_ids as (
-           SELECT invoice_number, array_agg(distinct invoice_id ignore nulls) as all_invoice_ids
+           SELECT invoice_number, 
+           {{ dbt.listagg("invoice_id","','") }} AS all_invoice_ids           
            FROM t_invoices_merge_list
            group by 1),
        merged as (
@@ -55,9 +56,10 @@ with t_invoices_merge_list as (
     joined as (
       SELECT i.*,
       a.all_invoice_ids,
-      timestamp_diff(invoice_paid_at_ts,invoice_issue_at_ts,DAY) as invoice_total_days_to_pay,
-      30-timestamp_diff(invoice_paid_at_ts,invoice_issue_at_ts,DAY) as invoice_total_days_variance_on_payment_terms,
-      timestamp_diff(invoice_paid_at_ts,invoice_due_at_ts,DAY) as invoice_total_days_overdue
+      {{ dbt.datediff("invoice_paid_at_ts","invoice_issue_at_ts","day") }} as invoice_total_days_to_pay,
+      30-      
+      30-{{ dbt.datediff("invoice_paid_at_ts","invoice_issue_at_ts","day") }} as invoice_total_days_variance_on_payment_terms,      
+      {{ dbt.datediff("invoice_paid_at_ts","invoice_due_at_ts","day") }} as invoice_total_days_overdue
       FROM  merged i
       join all_invoice_ids a on i.invoice_number = a.invoice_number
     )

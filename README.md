@@ -65,13 +65,14 @@ TODO: Add customization and extension guidelines
 * Stitch
 * Fivetran
 * Segment
+* DataLakeHouse.io
 
 ## What SaaS Sources are Supported?
 
 * Hubspot CRM (Stitch, Fivetran)
 * Hubspot Marketing (Stitch)
 * Harvest Timesheets (Stitch)
-* Xero Accounting (Stitch)
+* Xero Accounting (Stitch, DataLakeHouse.io)
 * Salesforce CRM (Stitch)
 * Stripe Payments (Stitch)
 * Stripe Subscriptions (Segment)
@@ -200,6 +201,8 @@ dbt models inside this project are grouped together by these layers, with each d
 │   │   └── stg_xero_accounting
 │   │   │   ├── bigquery
 │   │   │   │   ├── stitch
+│   │   │   ├── snowflake
+│   │   │   │   ├── datalakehouse_io
 │   ├── utils                           <-- "utils" models, for example for row count logging
 │   └── warehouse                       <-- "warehouse" models containing fact and dimension tables,
 │       ├── w_crm                           grouped by subject area
